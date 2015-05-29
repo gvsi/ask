@@ -14,7 +14,6 @@ momentjs:moment
 gromo:jquery.scrollbar
 mrt:modernizr-meteor
 fortawesome:fontawesome
-iron:router
 revox:pages-core
-mrt:external-file-loader
-manuelschoebel:wait-on-lib
+iron:router
+cwaring:modernizr
