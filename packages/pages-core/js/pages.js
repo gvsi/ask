@@ -1412,7 +1412,6 @@
     //===================
 
     $(window).on('load', function() {
-
         $('[data-pages="quickview"]').each(function() {
             var $quickview = $(this)
             $quickview.quickview($quickview.data())
@@ -1777,13 +1776,6 @@
 
      // SIDEBAR PROGRESS DATA API
      //===================
-
-     $(document).on('ready', function() {
-         $('[data-pages="sidebar"]').each(function() {
-             var $sidebar = $(this)
-             $sidebar.sidebar($sidebar.data())
-         })
-     })
 
      $(document).on('click.pg.sidebar.data-api', '[data-toggle-pin="sidebar"]', function(e) {
          e.preventDefault();
