@@ -6,3 +6,15 @@ Router.route('/', function () {
 },{
  layoutTemplate:"defaultLayout" 
 });
+
+Router.route('/social', function () {
+  this.render('socialApp');
+},{
+ layoutTemplate:"socialLayout" 
+});
+
+Router.route('/calendar', function () {
+  this.render('calendarApp');
+},{
+ layoutTemplate:"calendarLayout" 
+});
