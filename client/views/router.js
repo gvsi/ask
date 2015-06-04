@@ -18,3 +18,9 @@ Router.route('/calendar', function () {
 },{
  layoutTemplate:"calendarLayout" 
 });
+
+Router.route('/notifications', function () {
+  this.render('notificationsPage');
+},{
+ layoutTemplate:"defaultLayout" 
+});
