@@ -24,3 +24,9 @@ Router.route('/notifications', function () {
 },{
  layoutTemplate:"defaultLayout" 
 });
+
+Router.route('/login', function () {
+  this.render('loginPage');
+},{
+ layoutTemplate:"loginLayout" 
+});
