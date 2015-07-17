@@ -17,12 +17,6 @@
             var type = 'info' // Info, Success, Error etc
             var position = 'top-right' // Placement of the notification
             
-            console.log(button);
-            console.log(style);
-            console.log(message);
-            console.log(type);
-            console.log(position);
-
             if (style == 'Notification Bar') {
                 // Show an bar notification attached to top and bottom of the screen
                 $('body').pgNotification({

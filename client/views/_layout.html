@@ -6,6 +6,28 @@
         <div class="page-container">
             {{ >header }}
             <!-- START PAGE CONTENT WRAPPER -->
+            <div class="page-content-wrapper">
+                <!-- START PAGE CONTENT -->
+                <div class="content">
+                    {{>yield}}
+                </div>
+                {{ >footer }}
+            </div>
+        </div>
+        {{ >quickView }}
+        {{ >overlaySearch }}
+    </body>
+</template>
+
+
+<!-- DASHBOARD LAYOUT -->
+<template name="dashboardLayout">
+    <body class="fixed-header">
+        {{ >sideBar }}
+        <!-- START PAGE-CONTAINER -->
+        <div class="page-container">
+            {{ >header }}
+            <!-- START PAGE CONTENT WRAPPER -->
             <div class="page-content-wrapper full-height">
                 <!-- START PAGE CONTENT -->
                 <div class="content full-height">
@@ -18,6 +40,7 @@
         {{ >overlaySearch }}
     </body>
 </template>
+
 
 <!-- SOCIAL LAYOUT -->
 <template name="socialLayout">
@@ -61,8 +84,32 @@
     </body>
 </template>
 
-<template name="loginLayout">
+<!-- EMAIL LAYOUT -->
+<template name="emailLayout">
     <body class="fixed-header">
-        {{>yield}}
+        {{ >sideBar }}
+        <!-- START PAGE-CONTAINER -->
+        <div class="page-container">
+            {{ >emailHeader }}
+            <!-- START PAGE CONTENT WRAPPER -->
+            <div class="page-content-wrapper full-height">
+                <!-- START PAGE CONTENT -->
+                <div class="content full-height">
+                    <div class="email-wrapper">
+                        <!-- START EMAIL SIDEBAR MENU-->
+                        {{ >emailSidebar }}
+                        {{>yield}}
+                        <!-- START COMPOSE BUTTON FOR TABS -->
+                        <div class="compose-wrapper visible-xs">
+                          <a class="compose-email text-info pull-right m-r-10 m-t-10" href="email_compose.html"><i class="fa fa-pencil-square-o"></i></a>
+                        </div>
+                        <!-- END COMPOSE BUTTON -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        {{ >quickView }}
+        {{ >calendarEventManager }}
+        {{ >overlaySearch }}
     </body>
 </template>

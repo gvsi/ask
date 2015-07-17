@@ -262,10 +262,10 @@
                     (t ==  moment(settings.ui.week.startOfTheWeek,'d').format('ddd') || i == 1) ? content += '<div class="week ' + activeClass + '">': '';
                     content += '<div class="day-wrapper date-selector">';
                     content += '<div class="week-day">';
-                    content += '<div class="day week-header">' + moment([calendar.year, calendar.month, i]).format('dd') + '</div>';
+                    content += '<div class="day week-header">' + moment([calendar.year, calendar.month, i]).format(settings.ui.week.header.format) + '</div>';
                     content += '</div>';
                     content += '<div class="week-date ' + activeClass + '">';
-                    content += '<div class="day"><a href="#" data-date=' + moment([calendar.year, calendar.month, i]).format('D') + '>' + i + '</a></div>';
+                    content += '<div class="day"><a href="#" data-date=' + moment([calendar.year, calendar.month, i]).format(settings.ui.week.day.format) + '>' + i + '</a></div>';
                     content += '</div>';
                     content += '</div>';
                     (t == moment(settings.ui.week.endOfTheWeek,'d').format('ddd')) ? content += '</div>': '';
