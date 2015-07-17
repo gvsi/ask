@@ -1,67 +1,4 @@
-<template name="emailApp">
-  <!-- START EMAIL -->
-  <div class="email-wrapper">
-    <!-- START EMAIL SIDEBAR MENU-->
-    <nav class="email-sidebar padding-30">
-      <a href="email_compose.html" class="btn btn-complete btn-block btn-compose m-b-30">Compose</a>
-      <p class="menu-title">BROWSE</p>
-      <ul class="main-menu">
-        <li class="active">
-          <a href="#">
-            <span class="title"><i class="pg-inbox"></i> Inbox</span>
-            <span class="badge pull-right">5</span>
-          </a>
-        </li>
-        <li class="">
-          <a href="#">
-            <span class="title"><i class="pg-folder"></i> All mail</span>
-          </a>
-          <ul class="sub-menu no-padding">
-            <li>
-              <a href="#">
-                <span class="title">Important</span>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <span class="title">Labeled</span>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <li>
-          <a href="#">
-            <span class="title"><i class="pg-sent"></i> Sent</span>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <span class="title"><i class="pg-spam"></i> Spam</span>
-            <span class="badge pull-right">10</span>
-          </a>
-        </li>
-      </ul>
-      <p class="menu-title m-t-20 all-caps">Quick view</p>
-      <ul class="sub-menu no-padding">
-        <li>
-          <a href="#">
-            <span class="title">Documents</span>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <span class="title">Flagged</span>
-            <span class="badge pull-right">5</span>
-          </a>
-        </li>
-        <li>
-          <a href="#">
-            <span class="title">Images</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
-    <!-- END EMAL SIDEBAR MENU -->
+<template name="emailList">
     <!-- START EMAILS LIST -->
     <div class="email-list b-r b-grey"> <a class="email-refresh" href="#"><i class="fa fa-refresh"></i></a>
       <div id="emailList">
@@ -80,7 +17,7 @@
           <ul class="actions menuclipper-menu no-margin p-l-20 ">
             <li class="visible-sm-inline-block visible-xs-inline-block">
               <a href="#" class="email-list-toggle"><i class="fa fa-angle-left"></i> All Inboxes
-              </a>
+                        </a>
             </li>
             <li class="no-padding "><a href="#" class="text-info">Reply</a>
             </li>
@@ -98,7 +35,7 @@
         <div class="email-content">
           <div class="email-content-header">
             <div class="thumbnail-wrapper d48 circular bordered">
-              <img width="40" height="40" alt="" data-src-retina="img/profiles/avatar2x.jpg" data-src="img/profiles/avatar.jpg" src="img/profiles/avatar2x.jpg">
+              <img width="40" height="40" alt="" data-src-retina="assets/img/profiles/avatar2x.jpg" data-src="assets/img/profiles/avatar.jpg" src="assets/img/profiles/avatar2x.jpg">
             </div>
             <div class="sender inline m-l-10">
               <p class="name no-margin bold">
@@ -112,9 +49,9 @@
               <div class="pull-left">
                 <div class="btn-group dropdown-default">
                   <a class="btn dropdown-toggle btn-small btn-rounded" data-toggle="dropdown" href="#">
-                    David Nester
-                    <span class="caret"></span>
-                  </a>
+                                David Nester
+                                <span class="caret"></span>
+                                </a>
                   <ul class="dropdown-menu">
                     <li><a href="#">Action</a>
                     </li>
@@ -141,11 +78,4 @@
       </div>
     </div>
     <!-- END OPENED EMAIL -->
-    <!-- START COMPOSE BUTTON FOR TABS -->
-    <div class="compose-wrapper visible-xs">
-      <a class="compose-email text-info pull-right m-r-10 m-t-10" href="email_compose.html"><i class="fa fa-pencil-square-o"></i></a>
-    </div>
-    <!-- END COMPOSE BUTTON -->
-  </div>
-  <!-- END EMAIL -->
 </template>
