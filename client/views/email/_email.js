@@ -38,7 +38,11 @@ Template.emailCompose.rendered = function(){
 Template.emailList.rendered = function (){
 (function($) {
     'use strict';
-
+            if ($(window).width() < 980) {
+            $('.email-list').attr('id', 'slide-left');
+        }else{
+            $('.email-list').removeAttr('id', 'slide-left');
+        }
     // Wysiwyg editor custom options
 
     var editorTemplate = {
@@ -198,6 +202,8 @@ Template.emailList.rendered = function (){
         $('.item').removeClass('active');
         $(this).addClass('active');
 
+        $('#slide-left').addClass('slideLeft'); 
+        
     });
 
     // Toggle email sidebar on mobile view
@@ -215,6 +221,11 @@ Template.emailList.rendered = function (){
     })
 
     $(window).resize(function() {
+        if ($(window).width() < 980) {
+            $('.email-list').attr('id', 'slide-left');
+        }else{
+            $('.email-list').removeAttr('id', 'slide-left');
+        }
 
         if ($(window).width() <= 1024) {
             $('.email-sidebar').hide();
@@ -222,6 +233,7 @@ Template.emailList.rendered = function (){
         } else {
             $('.email-list').length && $('.email-list').removeClass('slideLeft');
             $('.email-sidebar').show();
+
         }
     });
 
