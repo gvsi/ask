@@ -10,7 +10,7 @@ Router.route('/', function () {
 Router.route('/social', function () {
   this.render('socialApp');
 },{
- layoutTemplate:"socialLayout" 
+ layoutTemplate:"socialLayout",
 });
 
 Router.route('/email', function () {
@@ -19,10 +19,16 @@ Router.route('/email', function () {
  layoutTemplate:"emailLayout" 
 });
 
+Router.route('/email/:_id', function () {
+  this.render('emailList');
+},{
+ layoutTemplate:"emailLayout" 
+});
+
 Router.route('/email/compose', function () {
   this.render('emailCompose');
 },{
- layoutTemplate:"emailLayout" 
+ layoutTemplate:"composeEmailLayout" 
 });
 
 Router.route('/calendar', function () {

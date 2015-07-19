@@ -90,7 +90,6 @@ Template.emailList.rendered = function (){
         url: "http://localhost:3000/emails.json",
         success: function(data) {
 
-
             $.each(data.emails, function(i) {
                 var obj = data.emails[i];
                 var group = obj.group;
@@ -150,7 +149,7 @@ Template.emailList.rendered = function (){
 
     $('body').on('click', '.item', function(e) {
         e.stopPropagation();
-
+        
         var id = $(this).attr('data-email-id');
         var email = null;
         var thumbnailWrapper = $(this).find('.thumbnail-wrapper');
