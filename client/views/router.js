@@ -1,7 +1,4 @@
-
 Router.route('/', function () {
-  //ADD YOU ROUTES HERE
-  //eg : this.render('home');
   this.render('blankPage');
 },{
  layoutTemplate:"dashboardLayout" 
@@ -123,6 +120,21 @@ Router.route('/forms/layouts', function () {
 
 Router.route('/forms/wizard', function () {
   this.render('formWizard');
+},{
+ layoutTemplate:"defaultLayout" 
+});
+
+Router.route('/login', function() {
+  this.render('loginPage');
+}, {
+  layoutTemplate:"loginLayout"
+});
+
+Router.route('/logout', function () {
+  Meteor.logout(function() {
+      // Redirect to login
+      Router.go('/login');
+    });
 },{
  layoutTemplate:"defaultLayout" 
 });

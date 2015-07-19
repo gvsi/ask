@@ -90,7 +90,7 @@
         {{ >sideBar }}
         <!-- START PAGE-CONTAINER -->
         <div class="page-container">
-            {{ >header }}
+            {{ >emailHeader }}
             <!-- START PAGE CONTENT WRAPPER -->
             <div class="page-content-wrapper full-height">
                 <!-- START PAGE CONTENT -->
@@ -111,5 +111,11 @@
         {{ >quickView }}
         {{ >calendarEventManager }}
         {{ >overlaySearch }}
+    </body>
+</template>
+
+<template name="loginLayout">
+    <body class="fixed-header">
+        {{>yield}}
     </body>
 </template>
