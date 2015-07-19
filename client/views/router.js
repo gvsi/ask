@@ -19,7 +19,8 @@ Router.route('/email', function () {
 Router.route('/email/:_id', function () {
   this.render('emailList');
 },{
- layoutTemplate:"emailLayout" 
+  layoutTemplate:"emailLayout",
+  name: 'email.id' 
 });
 
 Router.route('/email/compose', function () {

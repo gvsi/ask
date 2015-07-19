@@ -35,14 +35,17 @@ Template.emailCompose.rendered = function(){
     }, 500);
 };
 
-Template.emailList.rendered = function (){
+Template.emailList.rendered = function () {
 (function($) {
     'use strict';
-            if ($(window).width() < 980) {
+        if ($(window).width() < 980) {
             $('.email-list').attr('id', 'slide-left');
         }else{
             $('.email-list').removeAttr('id', 'slide-left');
         }
+
+
+
     // Wysiwyg editor custom options
 
     var editorTemplate = {
@@ -116,7 +119,7 @@ Template.emailList.rendered = function (){
                     var color = colors[Math.floor(Math.random() * (6))];
                     var li = '<li class="item padding-15" data-email-id="' + id + '"> \
                                 <div class="thumbnail-wrapper d32 circular bordered ' + color + '"> \
-                                    <img width="40" height="40" alt="" data-src-retina="' + dpRetina + '" data-src="' + dp + '" src="' + dpRetina + '"> \
+                                    <img width="40" height="40" alt="" data-src-retina="' + dpRetina + '" data-src="' + dp + '" src="/' + dpRetina + '"> \
                                 </div> \
                                 <div class="checkbox  no-margin p-l-10"> \
                                     <input type="checkbox" value="1" id="emailcheckbox-' + i + "-" + j + '"> \
@@ -143,67 +146,132 @@ Template.emailList.rendered = function (){
         }
     });
 
+   
+
     $('body').on('click', '.item .checkbox', function(e) {
         e.stopPropagation();
     });
 
     $('body').on('click', '.item', function(e) {
         e.stopPropagation();
+        var redirect = $(this).attr('data-email-id');
+        Router.go('email.id', {_id: redirect});
+
         
-        var id = $(this).attr('data-email-id');
-        var email = null;
-        var thumbnailWrapper = $(this).find('.thumbnail-wrapper');
-        $.ajax({
-            dataType: "json",
-            url: "http://revox.io/json/emails.json",
-            success: function(data) {
-                $.each(data.emails, function(i) {
-                    var obj = data.emails[i];
-                    var list = obj.list;
-                    $.each(list, function(j) {
-                        if (list[j].id == id) {
-                            email = list[j];
+            var id = redirect;//Router.current().params._id;
+            var email = null;
+            var thumbnailWrapper = $(this).find('.thumbnail-wrapper');
+           // alert(Router.current().params._id);
+            $.ajax({
+                dataType: "json",
+                url: "http://revox.io/json/emails.json",
+                success: function(data) {
+                    $.each(data.emails, function(i) {
+                        var obj = data.emails[i];
+                        var list = obj.list;
+                        $.each(list, function(j) {
+                            if (list[j].id == id) {
+                                email = list[j];
 
-                            return;
-                        }
+                                return;
+                            }
+                        });
+
+                        if (email != null) return;
                     });
+                    var emailOpened = $('.email-opened');
 
-                    if (email != null) return;
-                });
-                var emailOpened = $('.email-opened');
+                    emailOpened.find('.sender .name').text(email.from);
+                    emailOpened.find('.sender .datetime').text(email.datetime);
+                    emailOpened.find('.subject').text(email.subject);
+                    emailOpened.find('.email-content-body').html(email.body);
 
-                emailOpened.find('.sender .name').text(email.from);
-                emailOpened.find('.sender .datetime').text(email.datetime);
-                emailOpened.find('.subject').text(email.subject);
-                emailOpened.find('.email-content-body').html(email.body);
+                    var thumbnailClasses = thumbnailWrapper.attr('class').replace('d32', 'd48');
+                    emailOpened.find('.thumbnail-wrapper').html(thumbnailWrapper.html()).attr('class', thumbnailClasses);
 
-                var thumbnailClasses = thumbnailWrapper.attr('class').replace('d32', 'd48');
-                emailOpened.find('.thumbnail-wrapper').html(thumbnailWrapper.html()).attr('class', thumbnailClasses);
+                    $('.no-email').hide();
+                    $('.actions-dropdown').toggle();
+                    $('.actions, .email-content-wrapper').show();
+                    if ($.Pages.isVisibleSm() || $.Pages.isVisibleXs()) {
+                        $('.email-list').toggleClass('slideLeft');
+                    }
 
-                $('.no-email').hide();
-                $('.actions-dropdown').toggle();
-                $('.actions, .email-content-wrapper').show();
-                if ($.Pages.isVisibleSm() || $.Pages.isVisibleXs()) {
-                    $('.email-list').toggleClass('slideLeft');
+                    !$('.email-reply').data('wysihtml5') && $('.email-reply').wysihtml5(editorOptions);
+
+                    $(".email-content-wrapper").scrollTop(0);
+
+                    // Initialize email action menu 
+                    $('.menuclipper').menuclipper({
+                        bufferWidth: 20
+                    });
                 }
+            });
 
-                !$('.email-reply').data('wysihtml5') && $('.email-reply').wysihtml5(editorOptions);
+            $('.item').removeClass('active');
+            $(this).addClass('active');
 
-                $(".email-content-wrapper").scrollTop(0);
-
-                // Initialize email action menu 
-                $('.menuclipper').menuclipper({
-                    bufferWidth: 20
-                });
-            }
-        });
-
-        $('.item').removeClass('active');
-        $(this).addClass('active');
-
-        $('#slide-left').addClass('slideLeft'); 
+            $('#slide-left').addClass('slideLeft'); 
+        
         
     });
+
+    
+     if(Router.current().params._id){
+        //alert(Router.current().params._id);
+            var id = Router.current().params._id;
+            var email = null;
+            var thumbnailWrapper = $("[data-email-id="+ id +"]").find('.thumbnail-wrapper');
+            
+            $.ajax({
+                dataType: "json",
+                url: "http://revox.io/json/emails.json",
+                success: function(data) {
+                    $.each(data.emails, function(i) {
+                        var obj = data.emails[i];
+                        var list = obj.list;
+                        $.each(list, function(j) {
+                            if (list[j].id == id) {
+                                email = list[j];
+
+                                return;
+                            }
+                        });
+
+                        if (email != null) return;
+                    });
+                    var emailOpened = $('.email-opened');
+
+                    emailOpened.find('.sender .name').text(email.from);
+                    emailOpened.find('.sender .datetime').text(email.datetime);
+                    emailOpened.find('.subject').text(email.subject);
+                    emailOpened.find('.email-content-body').html(email.body);
+
+                    var thumbnailClasses = thumbnailWrapper.attr('class').replace('d32', 'd48');
+                    emailOpened.find('.thumbnail-wrapper').html(thumbnailWrapper.html()).attr('class', thumbnailClasses);
+
+                    $('.no-email').hide();
+                    $('.actions-dropdown').toggle();
+                    $('.actions, .email-content-wrapper').show();
+                    if ($.Pages.isVisibleSm() || $.Pages.isVisibleXs()) {
+                        $('.email-list').toggleClass('slideLeft');
+                    }
+
+                    !$('.email-reply').data('wysihtml5') && $('.email-reply').wysihtml5(editorOptions);
+
+                    $(".email-content-wrapper").scrollTop(0);
+
+                    // Initialize email action menu 
+                    $('.menuclipper').menuclipper({
+                        bufferWidth: 20
+                    });
+                }
+            });
+
+            $('.item').removeClass('active');
+            $(this).addClass('active');
+
+            $('#slide-left').addClass('slideLeft'); 
+    }
 
     // Toggle email sidebar on mobile view
     $('.toggle-email-sidebar').click(function(e) {
