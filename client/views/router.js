@@ -16,6 +16,12 @@ Router.route('/email', function () {
  layoutTemplate:"emailLayout" 
 });
 
+Router.route('/email/compose', function () {
+  this.render('emailCompose');
+},{
+ layoutTemplate:"composeEmailLayout" 
+});
+
 Router.route('/email/:_id', function () {
   this.render('emailList');
 },{
@@ -23,11 +29,6 @@ Router.route('/email/:_id', function () {
   name: 'email.id' 
 });
 
-Router.route('/email/compose', function () {
-  this.render('emailCompose');
-},{
- layoutTemplate:"composeEmailLayout" 
-});
 
 Router.route('/calendar', function () {
   this.render('calendarApp');
