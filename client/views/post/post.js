@@ -112,9 +112,18 @@ Template.postList.rendered = function () {
 Template.postList.events({
     'click .item': function(e) {
         var postId = $(e.currentTarget).attr('data-email-id');
-        Router.go('room', {}, {query: 'p='+postId});
-        var thumbnailWrapper = $(e.currentTarget).find('.thumbnail-wrapper');
+        Router.go('room', {course_id: Router.current().params.course_id}, {query: 'p='+postId});
+      //  var thumbnailWrapper = $(e.currentTarget).find('.thumbnail-wrapper');
 
+        loadPage(postId);
+    }
+});
+
+
+Template.postCompose.events({
+    'click .item': function(e) {
+        var postId = $(e.currentTarget).attr('data-email-id');
+        Router.go('room', {course_id: Router.current().params.course_id}, {query: 'p='+postId});
         loadPage(postId);
     }
 });
@@ -190,7 +199,13 @@ function loadPage(postId) {
 
 Template.postList.helpers({
     posts: function () {
-      return Posts.find({});
+      return Posts.find({}, {sort: {created_at: -1}});
+    }
+});
+
+Template.postCompose.helpers({
+    posts: function () {
+      return Posts.find({}, {sort: {created_at: -1}});
     }
 });
 
@@ -207,7 +222,7 @@ Template.postCompose.events({
    var post = {
      title: $(e.target).find('[name=subject]').val(),
      text: $(e.target).find('textarea').val(),
-     //course_id: Router.current().params.course_id,
+     course_id: Router.current().params.course_id,
      tags: ""
    };
    
@@ -222,7 +237,7 @@ Template.postCompose.events({
      
      // show this result but route anyway
      
-     //Router.go('room.id', {_id: result._id, course_id: Router.current().params.course_id});  
+     Router.go('room', {course_id: Router.current().params.course_id}, {query: "p="+result._id});  
    });
  }
 });

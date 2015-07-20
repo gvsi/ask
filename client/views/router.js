@@ -10,33 +10,26 @@ Router.route('/social', function () {
  layoutTemplate:"socialLayout",
 });
 
-Router.route('/room', function () {
+Router.route('/:course_id/room', function () {
   this.render('postList');
 },{
  layoutTemplate:"postLayout",
  name:"room",
  waitOn: function() {
     return [
-      Meteor.subscribe('posts')
-    ];
+      Meteor.subscribe('posts', this.params.course_id),
+    ];   
   }
 });
 
-Router.route('/room/compose', function () {
+
+Router.route('/:course_id/room/compose', function () {
   this.render('postCompose');
 },{
- layoutTemplate:"composePostLayout" 
-});
-
-Router.route('/room/:_id', function () {
-  this.render('postList');
-},{
-  layoutTemplate:"postLayout",
-  name: 'post.id',
-  waitOn: function() {
+ layoutTemplate:"composePostLayout" ,
+ waitOn: function() {
     return [
-      Meteor.subscribe('posts'),
-      Meteor.subscribe('singlePost', this.params._id)
+      Meteor.subscribe('posts', this.params.course_id),
     ];
   }
 });
