@@ -14,6 +14,7 @@ Router.route('/room', function () {
   this.render('postList');
 },{
  layoutTemplate:"postLayout",
+ name:"room",
  waitOn: function() {
     return [
       Meteor.subscribe('posts')
