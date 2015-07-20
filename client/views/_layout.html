@@ -85,12 +85,12 @@
 </template>
 
 <!-- EMAIL LAYOUT -->
-<template name="emailLayout">
+<template name="postLayout">
     <body class="fixed-header">
         {{ >sideBar }}
         <!-- START PAGE-CONTAINER -->
         <div class="page-container">
-            {{ >emailHeader }}
+            {{ >postHeader }}
             <!-- START PAGE CONTENT WRAPPER -->
             <div class="page-content-wrapper full-height">
                 <!-- START PAGE CONTENT -->
@@ -101,7 +101,7 @@
                         {{>yield}}
                         <!-- START COMPOSE BUTTON FOR TABS -->
                         <div class="compose-wrapper visible-xs">
-                          <a class="compose-email text-info pull-right m-r-10 m-t-10" href="email_compose.html"><i class="fa fa-pencil-square-o"></i></a>
+                          <a class="compose-email text-info pull-right m-r-10 m-t-10" href="{{pathFor 'room/compose'}}"><i class="fa fa-pencil-square-o"></i></a>
                         </div>
                         <!-- END COMPOSE BUTTON -->
                     </div>
@@ -114,7 +114,7 @@
     </body>
 </template>
 
-<template name="composeEmailLayout">
+<template name="composePostLayout">
     <body class="fixed-header">
         {{ >sideBar }}
         <!-- START PAGE-CONTAINER -->
@@ -126,11 +126,11 @@
                 <div class="content full-height">
                     <div class="email-wrapper">
                         <!-- START EMAIL SIDEBAR MENU-->
-                        {{>emailSidebar}}
+                        <!-- {{>emailSidebar}} -->
                         {{>yield}}
                         <!-- START COMPOSE BUTTON FOR TABS -->
                         <div class="compose-wrapper visible-xs">
-                          <a class="compose-email text-info pull-right m-r-10 m-t-10" href="email_compose.html"><i class="fa fa-pencil-square-o"></i></a>
+                          <a class="compose-email text-info pull-right m-r-10 m-t-10" href="{{pathFor 'room/compose'}}"><i class="fa fa-pencil-square-o"></i></a>
                         </div>
                         <!-- END COMPOSE BUTTON -->
                     </div>

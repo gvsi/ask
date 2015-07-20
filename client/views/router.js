@@ -10,23 +10,34 @@ Router.route('/social', function () {
  layoutTemplate:"socialLayout",
 });
 
-Router.route('/email', function () {
-  this.render('emailList');
+Router.route('/room', function () {
+  this.render('postList');
 },{
- layoutTemplate:"emailLayout" 
+ layoutTemplate:"postLayout",
+ waitOn: function() {
+    return [
+      Meteor.subscribe('posts')
+    ];
+  }
 });
 
-Router.route('/email/compose', function () {
-  this.render('emailCompose');
+Router.route('/room/compose', function () {
+  this.render('postCompose');
 },{
- layoutTemplate:"composeEmailLayout" 
+ layoutTemplate:"composePostLayout" 
 });
 
-Router.route('/email/:_id', function () {
-  this.render('emailList');
+Router.route('/room/:_id', function () {
+  this.render('postList');
 },{
-  layoutTemplate:"emailLayout",
-  name: 'email.id' 
+  layoutTemplate:"postLayout",
+  name: 'post.id',
+  waitOn: function() {
+    return [
+      Meteor.subscribe('posts'),
+      Meteor.subscribe('singlePost', this.params._id)
+    ];
+  }
 });
 
 
