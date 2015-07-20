@@ -125,10 +125,10 @@ function loadPage(postId) {
 
         var emailOpened = $('.email-opened');
 
-        emailOpened.find('.sender .name').text(post.owner);
-        emailOpened.find('.sender .datetime').text(post.created_at);
-        emailOpened.find('.subject').text(post.title);
-        emailOpened.find('.email-content-body').html(post.text);
+        //emailOpened.find('.sender .name').text(post.owner);
+        //emailOpened.find('.sender .datetime').text(post.created_at);
+        //emailOpened.find('.subject').text(post.title);
+        //emailOpened.find('.email-content-body').html(post.text);
 
         //var thumbnailClasses = thumbnailWrapper.attr('class').replace('d32', 'd48');
         //emailOpened.find('.thumbnail-wrapper').html(thumbnailWrapper.html()).attr('class', thumbnailClasses);
@@ -191,8 +191,13 @@ function loadPage(postId) {
 Template.postList.helpers({
     posts: function () {
       return Posts.find({});
-}
+    }
+});
 
+Template.postContent.helpers({
+    post: function() {
+        return Posts.findOne(Router.current().params.query.p);
+    }
 });
 
 

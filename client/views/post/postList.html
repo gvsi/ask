@@ -58,11 +58,15 @@
         </div>
         <div class="sender inline m-l-10">
           <p class="name no-margin bold">
+          {{post.owner}}
           </p>
-          <p class="datetime no-margin"></p>
+          <p class="datetime no-margin">
+          {{post.create_at}}
+          </p>
         </div>
         <div class="clearfix"></div>
         <div class="subject m-t-20 m-b-20 semi-bold">
+          {{post.title}}
         </div>
         <div class="fromto">
           <div class="pull-left">
@@ -89,6 +93,7 @@
       </div>
       <div class="clearfix"></div>
       <div class="email-content-body m-t-20">
+        {{{post.text}}}
       </div>
       <div class="wysiwyg5-wrapper b-a b-grey m-t-30">
         <textarea class="email-reply" placeholder="Reply"></textarea>
