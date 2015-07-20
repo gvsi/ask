@@ -194,6 +194,13 @@ Template.postList.helpers({
     }
 });
 
+Template.postThumbnail.helpers({
+    dateFromNow: function() {
+        return moment(this.created_at).fromNow();
+    }
+});
+
+
 Template.postContent.helpers({
     post: function() {
         return Posts.findOne(Router.current().params.query.p);

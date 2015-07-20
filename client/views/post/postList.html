@@ -9,8 +9,8 @@
         <div class="list-view-group-header"><span>Today April 23</span></div>
         <ul class="no-padding">
           {{#each posts}}
-        {{> postThumbnail}}
-      {{/each}}
+            {{> postThumbnail}}
+          {{/each}}
 
         </ul>
       </div>
@@ -115,9 +115,9 @@
     <div class="inline m-l-15">
       <p class="recipients no-margin hint-text small">{{author}}</p>
       <p class="subject no-margin">{{title}}</p>
-      <p class="body no-margin">{{text}}</p>
+      <p class="body no-margin">{{{text}}}</p>
     </div>
-    <div class="datetime">5 Mins ago</div>
+    <div class="datetime">{{dateFromNow}}</div>
     <div class="clearfix"></div>
   </li>
 </template>
