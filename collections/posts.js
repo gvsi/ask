@@ -6,7 +6,7 @@ Meteor.methods({
           title: String,
           text: String,
           tags: String,
-          //course_id: String
+          course_id: String
         });
         
         

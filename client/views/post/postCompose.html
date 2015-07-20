@@ -1,4 +1,19 @@
 <template name="postCompose">
+ <div class="email-list b-r b-grey"> <a class="email-refresh" href="#"><i class="fa fa-refresh"></i></a>
+    <!-- BUUUUUTOOOOONNNN <a href="/email/compose" class="btn btn-complete btn-block btn-compose m-b-30">Compose</a> -->
+    <div id="emailList">
+      <!-- START EMAIL LIST SORTED BY DATE -->
+      <!-- END EMAIL LIST SORTED BY DATE -->
+      <div class="list-view-group-container">
+        <div class="list-view-group-header"><span>Today April 23</span></div>
+        <ul class="no-padding">
+          {{#each posts}}
+            {{> postThumbnail}}
+          {{/each}}
+        </ul>
+      </div>
+    </div>
+  </div>
   <form id="form-project" role="form" autocomplete="off">
    <!-- START COMPOSE EMAIL -->
    <div class="email-composer container-fluid">
