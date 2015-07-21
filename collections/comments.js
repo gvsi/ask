@@ -16,7 +16,7 @@ Meteor.methods({
     
     answer = _.extend(answerAttributes, {
       userId: user._id,
-      author: user.username,
+      //author: user.username,
       created_at: new Date(),
       updated_at: new Date(),
       isAnonymous: false //TODO

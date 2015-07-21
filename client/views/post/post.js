@@ -113,9 +113,9 @@ Template.postList.events({
     'click .item': function(e) {
         var postId = $(e.currentTarget).attr('data-email-id');
         Router.go('room', {course_id: Router.current().params.course_id}, {query: 'p='+postId});
-      //  var thumbnailWrapper = $(e.currentTarget).find('.thumbnail-wrapper');
-
         loadPage(postId);
+        $('#summernote').code(""); //cleaning answer form
+
     }
 });
 
@@ -239,6 +239,33 @@ Template.postContent.helpers({
     }
 });
 
+Template.postContent.events({
+    'click #sendCommentBtn': function(e) {
+        var body = $('#summernote').code();
+        var answer = {
+          body: body,
+          postId: Router.current().params.query.p
+        };
+        
+        //console.log(answer);
+        
+        //TODO: Error handling
+        /*var errors = {};
+        if (! answer.body) {
+          errors.body = "Please write some content";
+          return Session.set('commentSubmitErrors', errors);
+        }*/
+        
+        Meteor.call('answerInsert', answer, function(error, commentId) {
+          if (error){
+            throwError(error.reason);
+          } else {
+            $('#summernote').code("");
+          }
+        });
+    }
+
+});
 
 Template.postCompose.events({
  'submit form': function(e) {
