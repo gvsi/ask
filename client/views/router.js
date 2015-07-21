@@ -15,6 +15,7 @@ Router.route('/:course_id/room', function () {
 },{
  layoutTemplate:"postLayout",
  name:"room",
+ loadingTemplate: 'loading',
  waitOn: function() {
     return [
       Meteor.subscribe('posts', this.params.course_id),
@@ -27,6 +28,7 @@ Router.route('/:course_id/room/compose', function () {
   this.render('postCompose');
 },{
  layoutTemplate:"composePostLayout" ,
+  loadingTemplate: 'loading',
  waitOn: function() {
     return [
       Meteor.subscribe('posts', this.params.course_id),
