@@ -4,4 +4,10 @@ Template.sideBar.rendered = function (){
 		 var $sidebar = $(this)
 		 $sidebar.sidebar($sidebar.data())
 	})
-};
+}; 
+
+Template.sideBar.helpers({
+	courses: function () {
+		return Courses.find({});
+	}
+});

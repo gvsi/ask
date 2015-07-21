@@ -1,3 +1,10 @@
+Router.configure({
+    loadingTemplate: 'loading', 
+    waitOn: function() { 
+        return Meteor.subscribe('courses', Meteor.userId());
+    }
+});
+
 Router.route('/', function () {
   this.render('blankPage');
 },{

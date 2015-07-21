@@ -120,13 +120,63 @@ Template.postList.events({
 });
 
 
+
 Template.postCompose.events({
-    'click .item': function(e) {
+ 'submit form': function(e) {
+   e.preventDefault();
+   var post = {
+     title: $(e.target).find('[name=subject]').val(),
+     text: $(e.target).find('textarea').val(),
+     course_id: Router.current().params.course_id,
+     tags: ""
+   };
+   
+   //var errors = validatePost(post);
+   //if (errors.title || errors.url)
+   // return Session.set('postSubmitErrors', errors);
+   
+   Meteor.call('postInsert', post, function(error, result) {
+     // display the error to the user and abort
+     if (error)
+       return throwError(error.reason);
+     
+     // show this result but route anyway
+     
+     Router.go('room', {course_id: Router.current().params.course_id}, {query: "p="+result._id});  
+   });
+ },
+ 'click .item': function(e) {
         var postId = $(e.currentTarget).attr('data-email-id');
         Router.go('room', {course_id: Router.current().params.course_id}, {query: 'p='+postId});
         loadPage(postId);
     }
 });
+
+
+Template.postList.helpers({
+    posts: function () {
+      return Posts.find({}, {sort: {created_at: -1}});
+    }
+});
+
+Template.postCompose.helpers({
+    posts: function () {
+      return Posts.find({}, {sort: {created_at: -1}});
+    }
+});
+
+Template.postThumbnail.helpers({
+    dateFromNow: function() {
+        return moment(this.created_at).fromNow();
+    }
+});
+
+Template.postContent.helpers({
+    post: function() {
+        return Posts.findOne(Router.current().params.query.p);
+    }
+});
+
 
 function loadPage(postId) {
     var post = Posts.findOne(postId);
@@ -134,20 +184,9 @@ function loadPage(postId) {
 
         var emailOpened = $('.email-opened');
 
-        //emailOpened.find('.sender .name').text(post.owner);
-        //emailOpened.find('.sender .datetime').text(post.created_at);
-        //emailOpened.find('.subject').text(post.title);
-        //emailOpened.find('.email-content-body').html(post.text);
-
-        //var thumbnailClasses = thumbnailWrapper.attr('class').replace('d32', 'd48');
-        //emailOpened.find('.thumbnail-wrapper').html(thumbnailWrapper.html()).attr('class', thumbnailClasses);
-
         $('.no-email').hide();
         $('.actions-dropdown').toggle();
         $('.actions, .email-content-wrapper').show();
-        //if ($.Pages.isVisibleSm() || $.Pages.isVisibleXs()) {
-        //    $('.email-list').toggleClass('slideLeft');
-        //}
 
         var editorTemplate = {
             "font-styles": function(locale) {
@@ -196,55 +235,3 @@ function loadPage(postId) {
 
         $('#slide-left').addClass('slideLeft'); 
 }
-
-Template.postList.helpers({
-    posts: function () {
-      return Posts.find({}, {sort: {created_at: -1}});
-    }
-});
-
-Template.postCompose.helpers({
-    posts: function () {
-      return Posts.find({}, {sort: {created_at: -1}});
-    }
-});
-
-Template.postThumbnail.helpers({
-    dateFromNow: function() {
-        return moment(this.created_at).fromNow();
-    }
-});
-
-
-Template.postContent.helpers({
-    post: function() {
-        return Posts.findOne(Router.current().params.query.p);
-    }
-});
-
-
-Template.postCompose.events({
- 'submit form': function(e) {
-   e.preventDefault();
-   var post = {
-     title: $(e.target).find('[name=subject]').val(),
-     text: $(e.target).find('textarea').val(),
-     course_id: Router.current().params.course_id,
-     tags: ""
-   };
-   
-   //var errors = validatePost(post);
-   //if (errors.title || errors.url)
-   // return Session.set('postSubmitErrors', errors);
-   
-   Meteor.call('postInsert', post, function(error, result) {
-     // display the error to the user and abort
-     if (error)
-       return throwError(error.reason);
-     
-     // show this result but route anyway
-     
-     Router.go('room', {course_id: Router.current().params.course_id}, {query: "p="+result._id});  
-   });
- }
-});
