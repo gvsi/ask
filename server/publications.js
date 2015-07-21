@@ -5,3 +5,7 @@ Meteor.publish('posts', function(id) {
 Meteor.publish('singlePost', function(id) {
  	return Posts.find({_id: id});
 });
+
+Meteor.publish('courses', function (user_id) {
+	return Courses.find({});
+})

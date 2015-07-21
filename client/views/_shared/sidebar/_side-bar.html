@@ -1,5 +1,5 @@
 <template name="sideBar">
-    <!-- BEGIN SIDEBAR -->
+    <!-- BEGIN SIDEBAR --> 
     <div class="page-sidebar" data-pages="sidebar">
       <div id="appMenu" class="sidebar-overlay-slide from-top">
       </div>
@@ -50,10 +50,12 @@
             <span class="arrow"></span></a>
             <span class="icon-thumbnail"><i class="fa fa-book"></i></span>
             <ul class="sub-menu" style="display:block;">
+              {{#each courses}}
               <li class="">
-                <a href="#">Object-Oriented Programming</a>
-                <span class="icon-thumbnail">OP</span>
+                <a href="#">{{name}}</a>
+                <span class="icon-thumbnail">{{code}}</span>
               </li>
+              {{/each}}
               <li class="">
                 <a href="#">Data &amp; Analysis</a>
                 <span class="icon-thumbnail">DA</span>
