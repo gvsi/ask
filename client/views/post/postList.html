@@ -65,38 +65,15 @@
           </p>
         </div>
         <div class="clearfix"></div>
-        <div class="subject m-t-20 m-b-20 semi-bold">
-          {{post.title}}
-        </div>
-        <div class="fromto">
-          <div class="pull-left">
-            <div class="btn-group dropdown-default">
-              <a class="btn dropdown-toggle btn-small btn-rounded" data-toggle="dropdown" href="#">
-                David Nester
-                <span class="caret"></span>
-              </a>
-              <ul class="dropdown-menu">
-                <li><a href="#">Action</a>
-                </li>
-                <li><a href="#">Friend</a>
-                </li>
-                <li><a href="#">Report</a>
-                </li>
-              </ul>
-            </div>
-            <label class="inline">
-              <span class="muted">&nbsp;&nbsp;to</span>
-              <span class=" small-text">johnsmith@skyace.com</span>
-            </label>
-          </div>
-        </div>
+        <h2><strong>{{post.title}}</strong></h2>
       </div>
       <div class="clearfix"></div>
       <div class="email-content-body m-t-20">
         {{{post.text}}}
       </div>
-      <div class="wysiwyg5-wrapper b-a b-grey m-t-30">
-        <textarea class="email-reply" placeholder="Reply"></textarea>
+      <br/><br/>
+      <div class="summernote-wrapper">
+        <div id="summernote"></div>
       </div>
     </div>
   </div>
