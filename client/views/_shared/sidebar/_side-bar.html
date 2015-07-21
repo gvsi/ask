@@ -31,7 +31,7 @@
             </a>
             <span class="icon-thumbnail "><i class="fa fa-home"></i></span>
           </li>
-          <li class="">
+          <!--<<li class="">
             <a href="#" class="detailed">
               <span class="title">Notifications</span>
               <span class="details">1 unread notification</span>
@@ -44,7 +44,7 @@
               <span class="details">No deadlines this week</span>
             </a>
             <span class="icon-thumbnail "><i class="fa fa-warning"></i></span>
-          </li>
+          </li>-->
           <li class="open">
             <a href="javascript:;"><span class="title">Courses</span>
             <span class="arrow"></span></a>
@@ -52,29 +52,13 @@
             <ul class="sub-menu" style="display:block;">
               {{#each courses}}
               <li class="">
-                <a href="#">{{name}}</a>
+                <a href="{{pathFor 'room' course_id=this._id._str }}">{{name}}</a>
                 <span class="icon-thumbnail">{{code}}</span>
               </li>
               {{/each}}
-              <li class="">
-                <a href="#">Data &amp; Analysis</a>
-                <span class="icon-thumbnail">DA</span>
-              </li>
-              <li class="">
-                <a href="#">Calculus and its Applications</a>
-                <span class="icon-thumbnail">CAP</span>
-              </li>
-              <li class="">
-                <a href="#">Foundation of Spanish</a>
-                <span class="icon-thumbnail">FS</span>
-              </li>
-              <li class="">
-                <a href="#">Cognitive Science</a>
-                <span class="icon-thumbnail">CG</span>
-              </li>
             </ul>
           </li>
-          <li class="">
+         <!-- <li class="">
             <a href="javascript:;">
               <span class="title">Demo</span>
               <span class="arrow
@@ -164,7 +148,7 @@
                 <span class="icon-thumbnail">fw</span>
               </li>
             </ul>
-          </li>
+          </li>-->
         </ul>
         <div class="clearfix"></div>
       </div>
