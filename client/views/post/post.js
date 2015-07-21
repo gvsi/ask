@@ -223,6 +223,23 @@ function loadPage(postId) {
 
         !$('.email-reply').data('wysihtml5') && $('.email-reply').wysihtml5(editorOptions);
 
+        $('#summernote').summernote({
+            height: 250,
+            onfocus: function(e) {
+                $('body').addClass('overlay-disabled');
+            },
+            onblur: function(e) {
+                $('body').removeClass('overlay-disabled');
+            },
+            toolbar: [
+                ['misc', ['undo','redo','fullscreen']],
+                ['style', ['bold', 'italic', 'underline']],
+                ['insert', ['picture', 'link']],
+                ['fontsize', ['fontsize']],
+                ['para', ['ul', 'ol', 'paragraph']]
+              ]
+        });
+
         $(".email-content-wrapper").scrollTop(0);
 
         // Initialize email action menu 
