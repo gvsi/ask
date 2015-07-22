@@ -1,5 +1,19 @@
 Template.postCompose.rendered = function(){
 
+    if ($(window).width() < 1024) {
+            $('.email-list').hide();
+    }else{
+           $('.email-list').show();
+    }
+
+
+    $(window).resize(function() {
+        if ($(window).width() < 1024) {
+            $('.email-list').hide();
+        }else{
+           $('.email-list').show();
+        }
+    });
 
     var emailComposerToolbarTemplate = {
         "font-styles": function(locale) {
