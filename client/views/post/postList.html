@@ -53,6 +53,14 @@
     </div>
     <div class="email-content">
       <div class="email-content-header">
+        <h2><strong>{{post.title}}</strong></h2>
+      </div>
+      <div class="clearfix"></div>
+      <div class="email-content-body m-t-20">
+        {{{post.text}}}
+      </div>
+      
+      <div>
         <div class="thumbnail-wrapper d48 circular bordered">
           <img width="40" height="40" alt="" data-src-retina="assets/img/profiles/avatar2x.jpg" data-src="assets/img/profiles/avatar.jpg" src="/assets/img/profiles/avatar2x.jpg">
         </div>
@@ -61,17 +69,15 @@
           {{post.owner}}
           </p>
           <p class="datetime no-margin">
-          {{post.create_at}}
+          {{dateFromNow}}
           </p>
         </div>
         <div class="clearfix"></div>
-        <h2><strong>{{post.title}}</strong></h2>
       </div>
-      <div class="clearfix"></div>
-      <div class="email-content-body m-t-20">
-        {{{post.text}}}
-      </div>
-      <br/><br/>
+
+      <hr style="margin-top:40px; margin-bottom:40px">
+      {{{post.text}}}
+      <br><br>
       <div class="summernote-wrapper">
         <div id="summernote"></div>
       </div>

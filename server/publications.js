@@ -7,5 +7,5 @@ Meteor.publish('singlePost', function(id) {
 });
 
 Meteor.publish('courses', function (user_id) {
-	return Courses.find({});
+	return Courses.find({'year': '2014/5', 'semester':'SEM2'});
 })
