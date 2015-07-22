@@ -60,22 +60,29 @@
         {{{post.text}}}
       </div>
       
-      <div>
-        <div class="thumbnail-wrapper d48 circular bordered">
-          <img width="40" height="40" alt="" data-src-retina="assets/img/profiles/avatar2x.jpg" data-src="assets/img/profiles/avatar.jpg" src="/assets/img/profiles/avatar2x.jpg">
+      <div class="q-footer">
+        <div style="float:left">
+          <div class="thumbnail-wrapper bordered circular" >
+            <img width="40" height="40" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="/img/profiles/avatar2x.jpg">
+          </div>
+          <div class="sender inline m-l-10">
+            <p class="name no-margin bold">
+            {{post.owner}}
+            </p>
+            <p class="datetime no-margin">
+            {{dateFromNow}}
+            </p>
+          </div>
+         
         </div>
-        <div class="sender inline m-l-10">
-          <p class="name no-margin bold">
-          {{post.owner}}
-          </p>
-          <p class="datetime no-margin">
-          {{dateFromNow}}
-          </p>
+        <div class="buttons">
+          <button class="btn btn-default btn-lg btn-rounded"><i class="fa fa-angle-up"></i></button>
+          <button class="btn btn-default btn-lg btn-rounded">Follow</button>
         </div>
-        <div class="clearfix"></div>
+         <div class="clearfix"></div>
       </div>
 
-      <hr style="margin-top:40px; margin-bottom:40px">
+      <hr>
       {{{post.text}}}
       <br><br>
       <div class="summernote-wrapper">
@@ -89,9 +96,9 @@
 
 <template name="postThumbnail">
   <li class="item padding-15" data-email-id="{{_id}}">
-    <div class="thumbnail-wrapper d32 circular bordered b-complete">
+    <!--<div class="thumbnail-wrapper d32 circular bordered b-complete">
       <img width="40" height="40" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="/img/profiles/avatar2x.jpg">
-    </div>
+    </div> -->
     <div class="checkbox  no-margin p-l-10">
       <input type="checkbox" value="1" id="emailcheckbox-0-0">
       <label for="emailcheckbox-0-0"></label>
