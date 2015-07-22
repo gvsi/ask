@@ -1,7 +1,10 @@
 Router.configure({
     loadingTemplate: 'loading', 
     waitOn: function() { 
-        return Meteor.subscribe('courses', Meteor.userId());
+        return [
+          Meteor.subscribe('courses', Meteor.userId()),
+          //Meteor.subscribe("singleStudent", Meteor.user().username.toUpperCase())
+        ];
     }
 });
 

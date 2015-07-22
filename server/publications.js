@@ -9,3 +9,7 @@ Meteor.publish('singlePost', function(id) {
 Meteor.publish('courses', function (user_id) {
 	return Courses.find({'year': '2014/5', 'semester':'SEM2'});
 })
+
+Meteor.publish('singleStudent', function(uun) {
+	return Students.find({'STU_CODE': uun.toUpperCase()});
+})
