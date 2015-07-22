@@ -38,29 +38,23 @@
           <a href="#" class="email-list-toggle"><i class="fa fa-angle-left"></i> All Inboxes
           </a>
         </li>
+        
+        <li class="no-padding "><a href="#" class="text-muted">Upvotes: 0</a>
+        </li>
+        <li class="no-padding "><a href="#" class="text-muted">Views: 0</a>
+        </li>
         <li class="no-padding "><a href="#" class="text-info">Reply</a>
         </li>
-        <li class="no-padding "><a href="#">Reply all</a>
-        </li>
-        <li class="no-padding "><a href="#">Forward</a>
-        </li>
-        <li class="no-padding "><a href="#">Mark as read</a>
+        <li class="no-padding "><a href="#" style="color:#344988">Edit</a>
         </li>
         <li class="no-padding "><a href="#" class="text-danger">Delete</a>
         </li>
+        
       </ul>
       <div class="clearfix"></div>
     </div>
     <div class="email-content">
-      <div class="email-content-header">
-        <h2><strong>{{post.title}}</strong></h2>
-      </div>
-      <div class="clearfix"></div>
-      <div class="email-content-body m-t-20">
-        {{{post.text}}}
-      </div>
-      
-      <div class="q-footer">
+        <div class="q-footer">
         <div style="float:left">
           <div class="thumbnail-wrapper bordered circular" >
             <img width="40" height="40" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="/img/profiles/avatar2x.jpg">
@@ -76,14 +70,28 @@
          
         </div>
         <div class="buttons">
-          <button class="btn btn-default btn-lg btn-rounded"><i class="fa fa-angle-up"></i></button>
+          <button class="btn btn-default btn-lg btn-rounded"><i class="fa fa-thumbs-up"></i></button>
           <button class="btn btn-default btn-lg btn-rounded">Follow</button>
         </div>
          <div class="clearfix"></div>
       </div>
+      <hr style="margin-bottom: 20px; margin-top: 15px">
+      <div class="email-content-header">
+        <h2><strong>{{post.title}}</strong></h2>
+      </div>
+      <div class="clearfix"></div>
+      <div class="email-content-body m-t-20">
+        {{{post.text}}}
+      </div>
+      
+    
 
-      <hr>
-      {{{post.text}}}
+     
+      {{#each answers}}
+        <hr>
+        {{{body}}}
+      {{/each}}
+      
       <br><br>
       <div class="summernote-wrapper">
         <div id="summernote"></div>

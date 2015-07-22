@@ -77,7 +77,12 @@ Template.postContent.helpers({
     dateFromNow: function(template) {
         var post = Posts.findOne(Router.current().params.query.p, {'created_at': true});
         return moment(post.created_at).fromNow();
-    }
+    },
+    answers: function() {
+        var id = Router.current().params.query.p;
+        Meteor.subscribe('answers', id);
+        return Answers.find();
+    },
 });
 
 Template.postContent.events({
