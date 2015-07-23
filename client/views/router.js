@@ -27,6 +27,8 @@ Router.route('/:course_id/room', function () {
  name:"room",
  loadingTemplate: 'loading',
  waitOn: function() {
+    $(".toggle-email-sidebar").remove();
+    $(".header-inner").prepend("<a href=\"#\" class=\"toggle-email-sidebar\">Room <span class=\"text-info\">(12)</span> <span class=\"caret\"></span></a>");
     return [
       Meteor.subscribe('posts', this.params.course_id),
     ];   

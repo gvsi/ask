@@ -88,9 +88,10 @@ Template.postContent.helpers({
             //if not anonymous
             Meteor.subscribe('singleUser', post.owner);
             var o = Meteor.users.findOne(post.owner);
-            post.ownerName = o.profile.name;
-            post.ownerSurname = o.profile.surname;
-
+            if (o) {
+                post.ownerName = o.profile.name;
+                post.ownerSurname = o.profile.surname;
+            }
             return post;
         }
     },
