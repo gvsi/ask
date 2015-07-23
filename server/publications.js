@@ -15,6 +15,10 @@ Meteor.publish('coursesForStudent', function (user_id) {
 	return Courses.find({'_id': {$in: courses}, 'AYR_CODE': '2014/5', $or: [{'PSL_CODE':'SEM2'}, {'PSL_CODE':'YR'}]});
 });
 
+Meteor.publish('singleUser', function(id) {
+ 	return Meteor.users.find({_id: id},{fields: {'profile.name': 1, 'profile.surname': 1}});
+});
+
 Meteor.publish('singleStudent', function(uun) {
 	return Students.find({'STU_CODE': uun.toUpperCase()});
 });

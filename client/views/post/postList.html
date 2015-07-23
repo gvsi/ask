@@ -130,7 +130,7 @@
           </div>
           <div class="sender inline m-l-10">
             <p class="name no-margin bold">
-            {{post.owner}}
+            {{post.ownerName}} {{post.ownerSurname}}
             </p>
             <p class="datetime no-margin">
             {{dateFromNow}}
@@ -153,32 +153,9 @@
         {{{post.text}}}
       </div>
       
-    
-
-     
       {{#each answers}}
-        <hr>
-        <div class="answer">
-          <div class="left">
-            <div class="thumbnail-wrapper bordered circular" >
-               <img width="40" height="40" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="/img/profiles/avatar2x.jpg">
-            </div>
-            <br>
-            Martin
-            <br>
-            Georgiev
-          </div>
-          <div class="body">
-            {{{body}}}
-          </div>
-          <div class="vote">
-              <button class="btn btn-default btn-lg btn-rounded" style="margin-bottom: 5px;"><i class="fa fa-angle-up"></i></button>
-              <div>5</div>
-              <button class="btn btn-default btn-lg btn-rounded" style="margin-top: 5px;"><i class="fa fa-angle-down"></i></button>
-          </div>
-        </div>
-        
-    {{/each}}
+        {{ >answer}}    
+      {{/each}}
       
       <br><br>
       <div class="summernote-wrapper">
@@ -200,11 +177,33 @@
       <label for="emailcheckbox-0-0"></label>
     </div>
     <div class="inline m-l-15">
-      <p class="recipients no-margin hint-text small">{{author}}</p>
       <p class="subject no-margin">{{title}}</p>
       <p class="body no-margin">{{{text}}}</p>
     </div>
     <div class="datetime">{{dateFromNow}}</div>
     <div class="clearfix"></div>
   </li>
+</template>
+
+<template name="answer">
+  <hr>
+  <div class="answer">
+    <div class="left">
+      <div class="thumbnail-wrapper bordered circular" >
+         <img width="40" height="40" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="/img/profiles/avatar2x.jpg">
+      </div>
+      <br>
+      {{answerAuthor.profile.name}}
+      <br>
+      {{answerAuthor.profile.surname}}
+    </div>
+    <div class="body">
+      {{{body}}}
+    </div>
+    <div class="vote">
+        <button class="btn btn-default btn-lg btn-rounded" style="margin-bottom: 5px;"><i class="fa fa-angle-up"></i></button>
+        <div>5</div>
+        <button class="btn btn-default btn-lg btn-rounded" style="margin-top: 5px;"><i class="fa fa-angle-down"></i></button>
+    </div>
+  </div>
 </template>
