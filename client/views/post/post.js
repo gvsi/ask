@@ -55,7 +55,7 @@ Template.postList.events({
         var postId = $(e.currentTarget).attr('data-email-id');
         Router.go('room', {course_id: Router.current().params.course_id}, {query: 'p='+postId});
         loadPage(postId);
-        $('#summernote').code(""); //cleaning answer form
+        $('#summernote').code(""); //cleaning answer form       
     }
 });
 
@@ -105,6 +105,16 @@ Template.postContent.helpers({
         Meteor.subscribe('answers', id);
         return Answers.find();
     },
+    button: function(){
+        var postId = Router.current().params.query.p;
+        var voters = Posts.findOne(postId).upvoters;
+        var userId = Meteor.user()._id;
+        if(voters.indexOf(userId) != -1){
+            return 'btn-success';
+        }else{
+             return 'btn-default';
+        }
+    }
 });
 
 Template.postContent.events({
@@ -131,6 +141,16 @@ Template.postContent.events({
             $('#summernote').code("");
           }
         });
+    },
+    'click .upvote': function(e) {
+          var id = Router.current().params.query.p;
+          Meteor.call('upvote', id, function(error, commentId) {
+          if (error){
+            throwError(error.reason);
+          } else {
+             $('#' + id).addClass('btn-success').removeClass('btn-default');
+          }
+        });
     }
 });
 
@@ -144,7 +164,7 @@ Template.answer.helpers({
 
 function loadPage(postId) {
 
-    Meteor.subscribe('singlePost', postId);
+    var workoutsSubcription = Meteor.subscribe('singlePost', postId);
 
 
     var post = Posts.findOne(postId);

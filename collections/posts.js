@@ -32,5 +32,11 @@ Meteor.methods({
         return {
           _id: postId
         };
+    },
+    upvote: function(post_id){
+      var user_id = Meteor.user()._id;
+      Posts.update({_id: post_id}, {$addToSet : {
+            "upvoters": user_id
+          }});
     }
 })
