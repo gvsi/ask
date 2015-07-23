@@ -1,3 +1,5 @@
+var lastSub;
+
 Template.postList.rendered = function () {
 
     if ($(window).width() < 980) {
@@ -6,11 +8,15 @@ Template.postList.rendered = function () {
         $('.email-list').removeAttr('id', 'slide-left');
     }
 
+    if(lastSub)
+        lastSub.stop();
 
     if (Router.current().params.query.p) {
         var postId = Router.current().params.query.p;
         loadPage(postId);
     }
+
+
 
     $('#mark-email').click(function() {
         $('.item .checkbox').toggle();
@@ -117,7 +123,12 @@ Template.postContent.events({
 
 
 function loadPage(postId) {
-    Meteor.subscribe('singlePost', postId);
+    if(lastSub){
+        lastSub.stop();
+    }
+    
+    lastSub = Meteor.subscribe('singlePost', postId);
+
 
     var post = Posts.findOne(postId);
     var email = null;
