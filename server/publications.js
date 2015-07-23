@@ -12,13 +12,13 @@ Meteor.publish('coursesForStudent', function (user_id) {
 		throw new Meteor.Error("Student does not exist in database");
 	}
 
-	return Courses.find({'_id': {$in: courses}, 'year': '2014/5', $or: [{'semester':'SEM2'}, {'semester':'YR'}]});
-})
+	return Courses.find({'_id': {$in: courses}, 'AYR_CODE': '2014/5', $or: [{'PSL_CODE':'SEM2'}, {'PSL_CODE':'YR'}]});
+});
 
 Meteor.publish('singleStudent', function(uun) {
 	return Students.find({'STU_CODE': uun.toUpperCase()});
-})
+});
 
 Meteor.publish('answers', function (post_id) {
 	return Answers.find({'postId': post_id});
-})
+});

@@ -21,7 +21,7 @@ Meteor.methods({
 			if (Meteor.users.findOne({username: enrolments[i].STU_CODE.toLowerCase()})) {
 				
 				// find if there's a course from the enrolment
-				var course = Courses.findOne({code: enrolments[i].MOD_CODE, year: enrolments[i].AYR_CODE, semester: enrolments[i].PSL_CODE});
+				var course = Courses.findOne({MOD_CODE: enrolments[i].MOD_CODE, AYR_CODE: enrolments[i].AYR_CODE, PSL_CODE: enrolments[i].PSL_CODE});
 				if (course) {
 					Meteor.users.update({username : enrolments[i].STU_CODE.toLowerCase()}, {$addToSet : {
 						"profile.courses": course._id
