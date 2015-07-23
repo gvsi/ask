@@ -83,10 +83,18 @@ Template.postContent.helpers({
             $('.email-content-wrapper').hide();
             return false;
         } else {
-            return Posts.findOne(postId);
+            var post = Posts.findOne(postId);
+
+            //if not anonymous
+            Meteor.subscribe('singleUser', post.owner);
+            var o = Meteor.users.findOne(post.owner);
+            post.ownerName = o.profile.name;
+            post.ownerSurname = o.profile.surname;
+
+            return post;
         }
     },
-    dateFromNow: function(template) {
+    dateFromNow: function() {
         var post = Posts.findOne(Router.current().params.query.p, {'created_at': true});
         if (post) {
             return moment(post.created_at).fromNow();
@@ -126,6 +134,13 @@ Template.postContent.events({
     }
 });
 
+Template.answer.helpers({
+    answerAuthor: function() {
+        var authorId = this.userId;
+        Meteor.subscribe('singleUser', authorId);
+        return Meteor.users.findOne(authorId);
+    }
+})
 
 function loadPage(postId) {
 
