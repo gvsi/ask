@@ -1,5 +1,3 @@
 Courses = new Mongo.Collection('courses');
 
-Meteor.methods({
-
-})
+Enrolments = new Mongo.Collection('enrolments');
