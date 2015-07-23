@@ -61,8 +61,7 @@ Template.postList.events({
 
 Template.postList.helpers({
     posts: function () {
-      console.log(Router.current().params.course_id);
-      return Posts.find({'course_id': Router.current().params.course_id});
+      return Posts.find({'course_id': Router.current().params.course_id}, {sort: {created_at: -1}});
     }
 });
 
@@ -75,7 +74,14 @@ Template.postThumbnail.helpers({
 
 Template.postContent.helpers({
     post: function() {
-        return Posts.findOne(Router.current().params.query.p);
+        var postId = Router.current().params.query.p;
+        if (!postId) {
+            $('.no-email').show();
+            $('.email-content-wrapper').hide();
+            return false;
+        } else {
+            return Posts.findOne(postId);
+        }
     },
     dateFromNow: function(template) {
         var post = Posts.findOne(Router.current().params.query.p, {'created_at': true});
@@ -119,6 +125,7 @@ Template.postContent.events({
 
 
 function loadPage(postId) {
+
     Meteor.subscribe('singlePost', postId);
 
 
@@ -128,8 +135,7 @@ function loadPage(postId) {
     var emailOpened = $('.email-opened');
 
     $('.no-email').hide();
-    $('.actions-dropdown').toggle();
-    $('.actions, .email-content-wrapper').show();
+    $('.email-content-wrapper').show();
 
     $('#summernote').summernote({
         height: 250,
