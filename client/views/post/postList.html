@@ -98,6 +98,23 @@
   <!-- END OPENED EMAIL -->
 </template>
 
+<template name="postThumbnail">
+  <li class="item padding-15" data-email-id="{{_id}}">
+    <!--<div class="thumbnail-wrapper d32 circular bordered b-complete">
+      <img width="40" height="40" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="/img/profiles/avatar2x.jpg">
+    </div> -->
+    <div class="checkbox  no-margin p-l-10">
+      <input type="checkbox" value="1" id="emailcheckbox-0-0">
+      <label for="emailcheckbox-0-0"></label>
+    </div>
+    <div class="inline m-l-15">
+      <p class="subject no-margin">{{title}}</p>
+      <p class="body no-margin">{{{text}}}</p>
+    </div>
+    <div class="datetime">{{dateFromNow}}</div>
+    <div class="clearfix"></div>
+  </li>
+</template>
 
 <template name="postContent">
   <div class="email-content-wrapper" style="display:none">
@@ -167,28 +184,10 @@
 
 </template>
 
-<template name="postThumbnail">
-  <li class="item padding-15" data-email-id="{{_id}}">
-    <!--<div class="thumbnail-wrapper d32 circular bordered b-complete">
-      <img width="40" height="40" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="/img/profiles/avatar2x.jpg">
-    </div> -->
-    <div class="checkbox  no-margin p-l-10">
-      <input type="checkbox" value="1" id="emailcheckbox-0-0">
-      <label for="emailcheckbox-0-0"></label>
-    </div>
-    <div class="inline m-l-15">
-      <p class="subject no-margin">{{title}}</p>
-      <p class="body no-margin">{{{text}}}</p>
-    </div>
-    <div class="datetime">{{dateFromNow}}</div>
-    <div class="clearfix"></div>
-  </li>
-</template>
-
 <template name="answer">
   <hr>
   <div class="answer">
-    <div class="left">
+    <div class="left bold">
       <div class="thumbnail-wrapper bordered circular" >
          <img width="40" height="40" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="/img/profiles/avatar2x.jpg">
       </div>
