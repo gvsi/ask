@@ -1,5 +1,5 @@
 Meteor.publish('posts', function(id) {
-	return Posts.find({course_id: id});
+	return Posts.find({course_id: id},{fields: {title: 1, text: 1, created_at: 1}},{sort: {created_at: -1}});
 });
 
 Meteor.publish('singlePost', function(id) {
@@ -17,4 +17,8 @@ Meteor.publish('coursesForStudent', function (user_id) {
 
 Meteor.publish('singleStudent', function(uun) {
 	return Students.find({'STU_CODE': uun.toUpperCase()});
+})
+
+Meteor.publish('answers', function (post_id) {
+	return Answers.find({'postId': post_id});
 })

@@ -53,7 +53,6 @@ Template.postList.events({
         Router.go('room', {course_id: Router.current().params.course_id}, {query: 'p='+postId});
         loadPage(postId);
         $('#summernote').code(""); //cleaning answer form
-
     }
 });
 
@@ -81,10 +80,8 @@ Template.postContent.helpers({
         }
     },
     answers: function() {
-        var id = Router.current().params.query.p;
-        Meteor.subscribe('answers', id);
         return Answers.find();
-    },
+    }
 });
 
 Template.postContent.events({
@@ -116,6 +113,9 @@ Template.postContent.events({
 
 
 function loadPage(postId) {
+    Meteor.subscribe('singlePost', postId);
+    Meteor.subscribe('answers', postId);
+
     var post = Posts.findOne(postId);
     var email = null;
 
