@@ -127,9 +127,19 @@
             opacity: .34;
             z-index: 101;
         }
+    
+        
+        .list-view-group-container{
+            ul{
+                    margin-top: 15px;
+            }
+        }
+            
+           
+
         .list-view-fake-header, .list-view-group-header{
             background: @color-master-lighter;
-            height: 30px;
+            height: 40px;
             color: fade(@color-master, 70%);
             font-family: 'Montserrat';
             text-transform: uppercase;
@@ -138,6 +148,18 @@
             padding-top: 6px;
             letter-spacing: 0.04em;
             width: 100%;
+
+            .btn{
+                position: fixed;
+                left: 253px;
+                top: 64px;
+                width:150px;
+            }
+
+            #date{
+                display: block;
+                margin-top: 8px;
+            }
         }
         
         .item {

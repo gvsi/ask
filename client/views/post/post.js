@@ -62,7 +62,10 @@ Template.postList.events({
 Template.postList.helpers({
     posts: function () {
       return Posts.find({'course_id': Router.current().params.course_id}, {sort: {created_at: -1}});
-    }
+    },
+    course_id: function () {
+        return Router.current().params.course_id;
+    } 
 });
 
 Template.postThumbnail.helpers({

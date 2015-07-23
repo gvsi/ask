@@ -39,7 +39,8 @@ Router.route('/:course_id/room/compose', function () {
 },{
  layoutTemplate:"composePostLayout" ,
   loadingTemplate: 'loading',
- waitOn: function() {
+  name: 'compose',
+  waitOn: function() {
     return [
       Meteor.subscribe('posts', this.params.course_id),
     ];
