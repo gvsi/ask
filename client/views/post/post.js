@@ -1,5 +1,3 @@
-var lastSub;
-
 Template.postList.rendered = function () {
 
     if ($(window).width() < 980) {
@@ -7,9 +5,6 @@ Template.postList.rendered = function () {
     } else {
         $('.email-list').removeAttr('id', 'slide-left');
     }
-
-    if(lastSub)
-        lastSub.stop();
 
     if (Router.current().params.query.p) {
         var postId = Router.current().params.query.p;
@@ -66,7 +61,8 @@ Template.postList.events({
 
 Template.postList.helpers({
     posts: function () {
-      return Posts.find({}, {sort: {created_at: -1}});
+      console.log(Router.current().params.course_id);
+      return Posts.find({'course_id': Router.current().params.course_id});
     }
 });
 
@@ -123,11 +119,7 @@ Template.postContent.events({
 
 
 function loadPage(postId) {
-    if(lastSub){
-        lastSub.stop();
-    }
-    
-    lastSub = Meteor.subscribe('singlePost', postId);
+    Meteor.subscribe('singlePost', postId);
 
 
     var post = Posts.findOne(postId);

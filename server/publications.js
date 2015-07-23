@@ -1,5 +1,5 @@
 Meteor.publish('posts', function(id) {
-	return Posts.find({course_id: id},{fields: {title: 1, text: 1, created_at: 1}},{sort: {created_at: -1}});
+	return Posts.find({course_id: id},{fields: {title: 1, text: 1, course_id: 1, created_at: 1}},{sort: {created_at: -1}});
 });
 
 Meteor.publish('singlePost', function(id) {
