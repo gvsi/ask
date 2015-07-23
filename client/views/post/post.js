@@ -6,6 +6,7 @@ Template.postList.rendered = function () {
         $('.email-list').removeAttr('id', 'slide-left');
     }
 
+
     if (Router.current().params.query.p) {
         var postId = Router.current().params.query.p;
         loadPage(postId);
@@ -44,6 +45,7 @@ Template.postList.rendered = function () {
             $('.email-sidebar').show();
 
         }
+
     });
 }
 
@@ -53,7 +55,6 @@ Template.postList.events({
         Router.go('room', {course_id: Router.current().params.course_id}, {query: 'p='+postId});
         loadPage(postId);
         $('#summernote').code(""); //cleaning answer form
-
     }
 });
 
