@@ -8,6 +8,7 @@ Template.sideBar.rendered = function (){
 
 Template.sideBar.helpers({
 	courses: function () {
+		Meteor.subscribe('coursesForStudent', Meteor.userId());
 		return Courses.find({});
 	}
 });
