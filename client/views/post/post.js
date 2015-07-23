@@ -6,6 +6,7 @@ Template.postList.rendered = function () {
         $('.email-list').removeAttr('id', 'slide-left');
     }
 
+
     if (Router.current().params.query.p) {
         var postId = Router.current().params.query.p;
         loadPage(postId);
@@ -44,6 +45,7 @@ Template.postList.rendered = function () {
             $('.email-sidebar').show();
 
         }
+
     });
 }
 
