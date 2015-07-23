@@ -79,7 +79,12 @@ Template.postContent.helpers({
         if (post) {
             return moment(post.created_at).fromNow();
         }
-    }
+    },
+    answers: function() {
+        var id = Router.current().params.query.p;
+        Meteor.subscribe('answers', id);
+        return Answers.find();
+    },
 });
 
 Template.postContent.events({
