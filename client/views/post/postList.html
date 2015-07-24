@@ -1,5 +1,4 @@
 <template name="postList">
-  <!-- START EMAILS LIST -->
   <div class="email-list b-r b-grey"> <a class="email-refresh" href="#"></a>
     <!-- BUUUUUTOOOOONNNN <a href="/email/compose" class="btn btn-complete btn-block btn-compose m-b-30">Compose</a> -->
     <div id="emailList">
@@ -7,98 +6,18 @@
       <!-- END EMAIL LIST SORTED BY DATE -->
       <div class="list-view-group-container">
         <div class="list-view-group-header">
-            <span id="date">Today April 23</span>
-            <a href="{{pathFor 'compose' course_id=course_id }}" ><button class="pull-right btn btn-sm btn-rounded ">New question</button> </a>
+          <span id="date">Today April 23</span>
+          <a href="{{pathFor 'compose' course_id=course_id }}" ><button class="pull-right btn btn-sm btn-rounded ">New question</button> </a>
         </div>
         <ul class="no-padding">
           {{#each posts}}
-            {{> postThumbnail}}
+          {{> postThumbnail}}
           {{/each}}
 
         </ul>
       </div>
     </div>
   </div>
-  <!-- END EMAILS LIST -->
-  <!-- START OPENED EMAIL -->
-  <div class="email-opened">
-    <div class="no-email">
-      <!-- STATS WIDGET
-      <div class="col-md-4 col-lg-6 col-xlg-3 m-b-10">
-                <div class="widget-16 panel no-border  no-margin widget-loader-circle">
-                  <div class="panel-heading">
-                    <div class="panel-title">Page Options
-                    </div>
-                    <div class="panel-controls">
-                      <ul>
-                        <li><a href="#" class="portlet-refresh text-black" data-toggle="refresh"><i class="portlet-icon portlet-icon-refresh"></i></a>
-                        </li>
-                      </ul>
-                    </div>
-                  </div>
-                  <div class="widget-16-header padding-20">
-                    <span class="icon-thumbnail bg-master-light pull-left text-master">ws</span>
-                    <div class="pull-left">
-                      <p class="hint-text all-caps font-montserrat  small no-margin overflow-ellipsis ">Pages name</p>
-                      <h5 class="no-margin overflow-ellipsis ">Webarch Sales Analysis</h5>
-                    </div>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="p-l-25 p-r-45 p-t-25 p-b-25">
-                    <div class="row">
-                      <div class="col-md-4 ">
-                        <p class="hint-text all-caps font-montserrat small no-margin ">Views</p>
-                        <p class="all-caps font-montserrat  no-margin text-success ">14,256</p>
-                      </div>
-                      <div class="col-md-4 text-center">
-                        <p class="hint-text all-caps font-montserrat small no-margin ">Today</p>
-                        <p class="all-caps font-montserrat  no-margin text-warning ">24</p>
-                      </div>
-                      <div class="col-md-4 text-right">
-                        <p class="hint-text all-caps font-montserrat small no-margin ">Week</p>
-                        <p class="all-caps font-montserrat  no-margin text-success ">56</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="relative no-overflow">
-                    <div class="widget-16-chart line-chart" data-line-color="success" data-points="true" data-point-color="white" data-stroke-width="2">
-                      <svg></svg>
-                    </div>
-                  </div>
-                  <div class="b-b b-t b-grey p-l-20 p-r-20 p-b-10 p-t-10">
-                    <p class="pull-left">Post is Public</p>
-                    <div class="pull-right">
-                      <input type="checkbox" data-init-plugin="switchery" />
-                    </div>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="b-b b-grey p-l-20 p-r-20 p-b-10 p-t-10">
-                    <p class="pull-left">Maintenance mode</p>
-                    <div class="pull-right">
-                      <input type="checkbox" data-init-plugin="switchery" checked="checked" />
-                    </div>
-                    <div class="clearfix"></div>
-                  </div>
-                  <div class="p-l-20 p-r-20 p-t-10 p-b-10 ">
-                    <p class="pull-left no-margin hint-text">Super secret options</p>
-                    <a href="#" class="pull-right"><i class="fa fa-arrow-circle-o-down text-success fs-16"></i></a>
-                    <div class="clearfix"></div>
-                  </div>
-                </div>
-      </div>
-      -->
-      
-      {{#if posts.count}}
-      <h2>Course stats go here</h2>
-      {{else}}
-      <h2>No posts here :(</h2>
-      {{/if}}
-    </div>
-
-    {{>postContent}}
-
-  </div>
-  <!-- END OPENED EMAIL -->
 </template>
 
 <template name="postThumbnail">
@@ -117,96 +36,4 @@
     <div class="datetime">{{dateFromNow}}</div>
     <div class="clearfix"></div>
   </li>
-</template>
-
-<template name="postContent">
-  <div class="email-content-wrapper" style="display:none">
-    <div class="actions-wrapper menuclipper bg-master-lightest">
-      <ul class="actions menuclipper-menu no-margin p-l-20 ">
-        <li class="visible-sm-inline-block visible-xs-inline-block">
-          <a href="#" class="email-list-toggle"><i class="fa fa-angle-left"></i> All Inboxes
-          </a>
-        </li>
-        
-        <li class="no-padding "><a href="#" class="text-muted">Upvotes: {{post.upvoters.length}}</a>
-        </li>
-        <li class="no-padding "><a href="#" class="text-muted">Views: 0</a>
-        </li>
-        <li class="no-padding "><a href="#" class="text-info">Reply</a>
-        </li>
-        <li class="no-padding "><a href="#" style="color:#344988">Edit</a>
-        </li>
-        <li class="no-padding "><a href="#" class="text-danger">Delete</a>
-        </li>
-        
-      </ul>
-      <div class="clearfix"></div>
-    </div>
-    <div class="email-content">
-        <div class="q-footer">
-        <div style="float:left">
-          <div class="thumbnail-wrapper bordered circular" >
-            <img width="40" height="40" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="/img/profiles/avatar2x.jpg">
-          </div>
-          <div class="sender inline m-l-10">
-            <p class="name no-margin bold">
-            {{post.ownerName}} {{post.ownerSurname}}
-            </p>
-            <p class="datetime no-margin">
-            {{dateFromNow}}
-            </p>
-          </div>
-         
-        </div>
-        <div class="buttons">
-          <button class="btn {{ button }} btn-lg btn-rounded upvote" ><i class="fa fa-thumbs-up"></i></button>
-          <button class="btn btn-default btn-lg btn-rounded">Follow</button>
-        </div>
-         <div class="clearfix"></div>
-      </div>
-      
-      <div class="email-content-header">
-        <h2><strong>{{post.title}}</strong></h2>
-      </div>
-      <div class="clearfix"></div>
-      <div class="email-content-body m-t-20">
-        {{{post.text}}}
-      </div>
-      
-      {{#each answers}}
-        {{ >answer}}    
-      {{/each}}
-      
-      <br><br>
-      <label class="error">{{errorMessage 'body'}}</label>
-      <div class="summernote-wrapper">
-        <div id="summernote"></div>
-      </div>
-      <button type="submit" id="sendAnswerBtn" class="btn btn-complete btn-cons m-l-10">Send</button>
-    </div>
-  </div>
-
-</template>
-
-<template name="answer">
-  <hr>
-  <div class="answer">
-    <div class="left bold">
-      <div class="thumbnail-wrapper bordered circular" >
-         <img width="40" height="40" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="/img/profiles/avatar2x.jpg">
-      </div>
-      <br>
-      {{answerAuthor.profile.name}}
-      <br>
-      {{answerAuthor.profile.surname}}
-    </div>
-    <div class="body">
-      {{{body}}}
-    </div>
-    <div class="vote">
-        <button class="btn btn-default btn-lg btn-rounded" style="margin-bottom: 5px;"><i class="fa fa-angle-up"></i></button>
-        <div>5</div>
-        <button class="btn btn-default btn-lg btn-rounded" style="margin-top: 5px;"><i class="fa fa-angle-down"></i></button>
-    </div>
-  </div>
 </template>

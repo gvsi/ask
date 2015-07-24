@@ -21,7 +21,7 @@ Router.route('/social', function () {
 });
 
 Router.route('/:course_id/room', function () {
-  this.render('postList');
+  this.render('postPage');
 },{
  layoutTemplate:"postLayout",
  name:"room",

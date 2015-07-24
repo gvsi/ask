@@ -1,0 +1,112 @@
+<template name="postPage">
+  <!-- START EMAILS LIST -->
+  {{>postList posts=posts course_id=course_id}}
+  <!-- END EMAILS LIST -->
+  <!-- START OPENED EMAIL -->
+  <div class="email-opened">
+    <div class="no-email">
+
+      {{#if posts.count}}
+      <h2>Course stats go here</h2>
+      {{else}}
+      <h2>No posts here :(</h2>
+      {{/if}}
+    </div>
+
+    {{>postContent}}
+
+  </div>
+  <!-- END OPENED EMAIL -->
+</template>
+
+<template name="postContent">
+  <div class="email-content-wrapper" style="display:none">
+    <div class="actions-wrapper menuclipper bg-master-lightest">
+      <ul class="actions menuclipper-menu no-margin p-l-20 ">
+        <li class="visible-sm-inline-block visible-xs-inline-block">
+          <a href="#" class="email-list-toggle"><i class="fa fa-angle-left"></i> All Inboxes
+          </a>
+        </li>
+        
+        <li class="no-padding "><a href="#" class="text-muted">Upvotes: {{post.upvoters.length}}</a>
+        </li>
+        <li class="no-padding "><a href="#" class="text-muted">Views: 0</a>
+        </li>
+        <li class="no-padding "><a href="#" class="text-info">Reply</a>
+        </li>
+        <li class="no-padding "><a href="#" style="color:#344988">Edit</a>
+        </li>
+        <li class="no-padding "><a href="#" class="text-danger">Delete</a>
+        </li>
+        
+      </ul>
+      <div class="clearfix"></div>
+    </div>
+    <div class="email-content">
+        <div class="q-footer">
+        <div style="float:left">
+          <div class="thumbnail-wrapper bordered circular" >
+            <img width="40" height="40" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="/img/profiles/avatar2x.jpg">
+          </div>
+          <div class="sender inline m-l-10">
+            <p class="name no-margin bold">
+            {{post.ownerName}} {{post.ownerSurname}}
+            </p>
+            <p class="datetime no-margin">
+            {{dateFromNow}}
+            </p>
+          </div>
+         
+        </div>
+        <div class="buttons">
+          <button class="btn {{ button }} btn-lg btn-rounded upvote" ><i class="fa fa-thumbs-up"></i></button>
+          <button class="btn btn-default btn-lg btn-rounded">Follow</button>
+        </div>
+         <div class="clearfix"></div>
+      </div>
+      
+      <div class="email-content-header">
+        <h2><strong>{{post.title}}</strong></h2>
+      </div>
+      <div class="clearfix"></div>
+      <div class="email-content-body m-t-20">
+        {{{post.text}}}
+      </div>
+      
+      {{#each answers}}
+        {{ >answer}}    
+      {{/each}}
+      
+      <br><br>
+      <label class="error">{{errorMessage 'body'}}</label>
+      <div class="summernote-wrapper">
+        <div id="summernote"></div>
+      </div>
+      <button type="submit" id="sendAnswerBtn" class="btn btn-complete btn-cons m-l-10">Send</button>
+    </div>
+  </div>
+
+</template>
+
+<template name="answer">
+  <hr>
+  <div class="answer">
+    <div class="left bold">
+      <div class="thumbnail-wrapper bordered circular" >
+         <img width="40" height="40" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="/img/profiles/avatar2x.jpg">
+      </div>
+      <br>
+      {{answerAuthor.profile.name}}
+      <br>
+      {{answerAuthor.profile.surname}}
+    </div>
+    <div class="body">
+      {{{body}}}
+    </div>
+    <div class="vote">
+        <button class="btn btn-default btn-lg btn-rounded" style="margin-bottom: 5px;"><i class="fa fa-angle-up"></i></button>
+        <div>5</div>
+        <button class="btn btn-default btn-lg btn-rounded" style="margin-top: 5px;"><i class="fa fa-angle-down"></i></button>
+    </div>
+  </div>
+</template>

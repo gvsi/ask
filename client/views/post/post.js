@@ -1,4 +1,4 @@
-Template.postList.rendered = function () {
+Template.postPage.rendered = function () {
 
     if ($(window).width() < 980) {
         $('.email-list').attr('id', 'slide-left');
@@ -57,9 +57,10 @@ Template.postList.events({
     }
 });
 
-Template.postList.helpers({
-    posts: function () {
-      return Posts.find({'course_id': Router.current().params.course_id}, {sort: {created_at: -1}});
+
+Template.postPage.helpers({
+  posts: function () {
+    return Posts.find({'course_id': Router.current().params.course_id}, {sort: {created_at: -1}});
   },
   course_id: function () {
     return Router.current().params.course_id;
@@ -210,6 +211,11 @@ function loadPage(postId) {
         },
         onblur: function(e) {
             $('body').removeClass('overlay-disabled');
+        },
+        onpaste: function(e) {
+            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+            e.preventDefault();
+            document.execCommand('insertText', false, bufferText);
         },
         toolbar: [
         ['misc', ['undo','redo','fullscreen']],

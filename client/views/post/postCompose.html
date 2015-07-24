@@ -1,52 +1,26 @@
 <template name="postCompose">
-  <div class="email-list b-r b-grey"> <a class="email-refresh" href="#"></a>
-    <!-- BUUUUUTOOOOONNNN <a href="/email/compose" class="btn btn-complete btn-block btn-compose m-b-30">Compose</a> -->
-    <div id="emailList">
-      <!-- START EMAIL LIST SORTED BY DATE -->
-      <!-- END EMAIL LIST SORTED BY DATE -->
-      <div class="list-view-group-container">
-        <div class="list-view-group-header">
-            <span id="date">Today April 23</span>
-        </div>
-        <ul class="no-padding">
-          {{#each posts}}
-            {{> postThumbnail}}
-          {{/each}}
-
-        </ul>
-      </div>
-    </div>
-  </div>
+  {{>postList posts=posts course_id=course_id}}
   <form id="form-project" role="form" autocomplete="off">
    <!-- START COMPOSE EMAIL -->
    <div class="email-composer container-fluid">
      <div class="row">
        <div class="col-sm-12 no-padding">
-         <div class="wysiwyg5-wrapper email-toolbar-wrapper">
-         </div>
-         
          <div class="form-group-attached">
            <div class="row clearfix">
              <div class="col-sm-6">
                <div class="form-group form-group-default">
-                 <label>TO:</label>
+                 <label>Tags</label>
                  <input name="to" data-role="tagsinput" class="form-control tagsinput" type="text" value="John Smith" />
-               </div>
-             </div>
-             <div class="col-sm-6">
-               <div class="form-group form-group-default">
-                 <label>CC:</label>
-                 <input type="text" class="form-control" name="cc" placeholder="Add Carbon Copy">
                </div>
              </div>
            </div>
            <div class="form-group form-group-default">
-             <label>Subject</label>
-             <input type="text" class="form-control" name="subject">
+             <label>Title</label>
+             <input type="text" class="form-control" name="postTitle" placeholder="What's your question?">
            </div>
          </div>
-         <div class="wysiwyg5-wrapper email-body-wrapper">
-           <textarea class="wysiwyg email-body" style="height:350px"></textarea>
+         <div class="summernote-wrapper">
+          <div id="summernote"></div>
          </div>
        </div>
      </div>
