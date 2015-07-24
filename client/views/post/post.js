@@ -62,10 +62,10 @@ Template.postList.events({
 Template.postList.helpers({
     posts: function () {
       return Posts.find({'course_id': Router.current().params.course_id}, {sort: {created_at: -1}});
-    },
-    course_id: function () {
-        return Router.current().params.course_id;
-    } 
+  },
+  course_id: function () {
+    return Router.current().params.course_id;
+  }
 });
 
 Template.postThumbnail.helpers({
@@ -106,33 +106,55 @@ Template.postContent.helpers({
         Meteor.subscribe('answers', id);
         return Answers.find();
     },
+    errorMessage: function(field) {
+        var e = Session.get('answerSubmitErrors');
+        if (e)
+         return Session.get('answerSubmitErrors')[field];
+        else
+         return false;
+    }
 });
 
 Template.postContent.events({
-    'click #sendCommentBtn': function(e) {
+    'click #sendAnswerBtn': function(e) {
         var body = $('#summernote').code();
         var answer = {
           body: body,
           postId: Router.current().params.query.p
-        };
-        
-        //console.log(answer);
-        
-        //TODO: Error handling
-        /*var errors = {};
-        if (! answer.body) {
-          errors.body = "Please write some content";
-          return Session.set('commentSubmitErrors', errors);
-        }*/
-        
-        Meteor.call('answerInsert', answer, function(error, commentId) {
-          if (error){
-            throwError(error.reason);
-          } else {
+      };
+
+      //removes all tags and whitespaces (&nbsp;) to make sure 
+      function strip_tags(input, allowed) {
+        allowed = (((allowed || '') + '')
+            .toLowerCase()
+            .match(/<[a-z][a-z0-9]*>/g) || [])
+        .join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
+        var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
+        commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+        return input.replace(commentsAndPhpTags, '')
+        .replace(tags, function($0, $1) {
+          return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+        }).replace(/&nbsp;/gi,'').replace(/\s+/g, ''); // removes spaces and &nbsp;
+      }
+
+      if (strip_tags(body) == "") {
+        var errors = {};
+        errors.body = "I know you're trying to be helpful, but an empty answer won't do much...";
+        $('#summernote').code("");
+        $('#summernote').summernote({focus: true});
+        return Session.set('answerSubmitErrors', errors);
+      } else {
+        Session.set('answerSubmitErrors', {});
+      }
+
+      Meteor.call('answerInsert', answer, function(error, answerId) {
+        if (error){
+            throw new Meteor.Error(error.reason);
+        } else {
             $('#summernote').code("");
-          }
-        });
-    }
+        }
+    });
+  }
 });
 
 Template.answer.helpers({
@@ -143,10 +165,10 @@ Template.answer.helpers({
     }
 })
 
+
 function loadPage(postId) {
-
+    Session.set('answerSubmitErrors', {});
     Meteor.subscribe('singlePost', postId);
-
 
     var post = Posts.findOne(postId);
     var email = null;
@@ -157,7 +179,7 @@ function loadPage(postId) {
     $('.email-content-wrapper').show();
 
     $('#summernote').summernote({
-        height: 250,
+        height: 150,
         onfocus: function(e) {
             $('body').addClass('overlay-disabled');
         },
@@ -165,12 +187,12 @@ function loadPage(postId) {
             $('body').removeClass('overlay-disabled');
         },
         toolbar: [
-            ['misc', ['undo','redo','fullscreen']],
-            ['style', ['bold', 'italic', 'underline']],
-            ['insert', ['picture', 'link']],
-            ['fontsize', ['fontsize']],
-            ['para', ['ul', 'ol', 'paragraph']]
-          ]
+        ['misc', ['undo','redo','fullscreen']],
+        ['style', ['bold', 'italic', 'underline']],
+        ['insert', ['picture', 'link']],
+        ['fontsize', ['fontsize']],
+        ['para', ['ul', 'ol', 'paragraph']]
+        ]
     });
 
     $(".email-content-wrapper").scrollTop(0);

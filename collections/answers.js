@@ -2,7 +2,10 @@ Answers = new Mongo.Collection('answers');
 
 Meteor.methods({
   answerInsert: function(answerAttributes) {
-    check(this.userId, String);
+
+
+    answerAttributes.body = UniHTML.purify(answerAttributes.body);
+
     check(answerAttributes, {
       postId: String,
       body: String
