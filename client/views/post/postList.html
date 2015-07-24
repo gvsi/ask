@@ -172,7 +172,25 @@
       <div class="email-content-body m-t-20">
         {{{post.text}}}
       </div>
+    
       
+
+     
+    <div class="modal fade slide-up disable-scroll" id="modalSlideUp" tabindex="-1" role="dialog" aria-hidden="false">
+      <div class="modal-dialog ">
+        <div class="modal-content-wrapper">
+          <div class="modal-content">
+            <div class="modal-body">
+                <textarea id="latex-source" style="width:80%;vertical-align:top;display:none;"></textarea>
+                <span class="mathquill-editor"></span>
+                <button type="submit" id="insertLatex" class="btn btn-complete btn-cons pull-right">Insert</button>
+            </div>
+
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+    </div>
       {{#each answers}}
         {{ >answer}}    
       {{/each}}

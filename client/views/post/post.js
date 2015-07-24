@@ -1,4 +1,51 @@
 Template.postList.rendered = function () {
+    mathquill();
+      var LatexImages = false;
+      $(function(){
+        function printTree(html)
+        {
+          html = html.match(/<[a-z]+|<\/[a-z]+>|./ig);
+          if(!html) return '';
+          var indent = '\n', tree = '';
+          while(html.length)
+          {
+            var token = html.shift();
+            if(token.charAt(0) === '<')
+            {
+              if(token.charAt(1) === '/')
+              {
+                indent = indent.slice(0,-2);
+                if(html[0] && html[0].slice(0,2) === '</')
+                  token += indent.slice(0,-2);
+              }
+              else
+              {
+                tree += indent;
+                indent += '  ';
+               }
+              token = token.toLowerCase();
+            }
+
+            tree += token;
+          }
+          return tree.slice(1);
+        }
+        var editingSource = false, latexSource = $('#latex-source'), htmlSource = $('#html-source'), codecogs = $('#codecogs'), latexMath = $('.mathquill-editor').bind('keydown keypress', function()
+        {
+          setTimeout(function() {
+            htmlSource.text(printTree(latexMath.mathquill('html')));
+            var latex = latexMath.mathquill('latex');
+            if(!editingSource)
+              latexSource.val(latex);
+            if(!LatexImages)
+              return;
+            latex = encodeURIComponent(latexSource.val());
+//            location.hash = '#'+latex; //extremely performance-crippling in Chrome for some reason
+            codecogs.attr('src','http://latex.codecogs.com/gif.latex?'+latex).parent().attr('href','http://latex.codecogs.com/gif.latex?'+latex);
+          });
+        }).keydown().focus();
+ 
+      });
 
     if ($(window).width() < 980) {
         $('.email-list').attr('id', 'slide-left');
@@ -217,7 +264,26 @@ function loadPage(postId) {
         ['insert', ['picture', 'link']],
         ['fontsize', ['fontsize']],
         ['para', ['ul', 'ol', 'paragraph']]
-        ]
+        ],
+        oninit: function() {
+            // Add "open" - "save" buttons
+            var noteBtn = '<button id="makeSnote" type="button" class="btn btn-default btn-sm btn-small" title="LaTeX Equation Editor" data-event="something" tabindex="-1"><img src="/img/equation.gif"></button>';            
+            var fileGroup = '<div class="note-file btn-group">' + noteBtn + '</div>';
+            $(fileGroup).appendTo($('.note-toolbar'));
+            // Button tooltips
+            $('#makeSnote').tooltip({container: 'body', placement: 'bottom'});
+            // Button events
+            $('#makeSnote').click(function(event) {
+                 $('#modalSlideUp').modal('show');
+                modalElem.children('.modal-dialog').addClass('modal-lg');
+            });
+
+             $('#insertLatex').click(function(event) {
+               
+                $('.note-editable').append($('#latex-source').val());
+                $('#modalSlideUp').modal('hide');
+            });
+         },
     });
 
     $(".email-content-wrapper").scrollTop(0);
@@ -231,4 +297,6 @@ function loadPage(postId) {
     $(this).addClass('active');
 
     $('#slide-left').addClass('slideLeft'); 
+
+
 }
