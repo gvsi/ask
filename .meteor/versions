@@ -45,6 +45,7 @@ mobile-status-bar@1.0.3
 momentjs:moment@2.10.3
 mongo@1.1.0
 mrt:bootstrap3-wysihtml5@0.3.3
+mrt:mathjax@0.6.3
 mrt:modernizr-meteor@2.6.2
 npm-bcrypt@0.7.8_2
 observe-sequence@1.0.6

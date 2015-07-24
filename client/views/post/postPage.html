@@ -73,6 +73,22 @@
         {{{post.text}}}
       </div>
       
+      <div class="modal fade slide-up disable-scroll" id="modalSlideUp" tabindex="-1" role="dialog" aria-hidden="false">
+        <div class="modal-dialog ">
+          <div class="modal-content-wrapper">
+            <div class="modal-content">
+              <div class="modal-body">
+                  <textarea id="latex-source" style="width:80%;vertical-align:top;display:none;"></textarea>
+                  <span class="mathquill-editor"></span>
+                  <button type="submit" id="insertLatex" class="btn btn-complete btn-cons pull-right">Insert</button>
+              </div>
+
+            </div>
+          </div>
+          <!-- /.modal-content -->
+        </div>
+      </div>  
+
       {{#each answers}}
         {{ >answer}}    
       {{/each}}
@@ -80,7 +96,10 @@
       <br><br>
       <label class="error">{{errorMessage 'body'}}</label>
       <div class="summernote-wrapper">
-        <div id="summernote"></div>
+        {{#mathjax}}
+        <p>$\lim a_n=\lim b_n=\lim c_n$</p>
+          <p><div id="summernote"></div></p>
+          {{/mathjax}}
       </div>
       <button type="submit" id="sendAnswerBtn" class="btn btn-complete btn-cons m-l-10">Send</button>
     </div>
@@ -101,7 +120,9 @@
       {{answerAuthor.profile.surname}}
     </div>
     <div class="body">
+    {{#mathjax}}
       {{{body}}}
+    {{/mathjax}}
     </div>
     <div class="vote">
         <button class="btn btn-default btn-lg btn-rounded" style="margin-bottom: 5px;"><i class="fa fa-angle-up"></i></button>
