@@ -34,9 +34,18 @@ Meteor.methods({
         };
     },
     upvote: function(post_id){
-      var user_id = Meteor.user()._id;
-      Posts.update({_id: post_id}, {$addToSet : {
-            "upvoters": user_id
+      var userId = Meteor.user()._id;
+      var voters = Posts.findOne(post_id).upvoters;
+
+      if(voters.indexOf(userId) != -1){
+          Posts.update({_id: post_id}, {$pull : {
+            "upvoters": userId
           }});
+      }else{
+          Posts.update({_id: post_id}, {$addToSet : {
+            "upvoters": userId
+          }});
+      }
+      
     }
 })
