@@ -628,35 +628,48 @@
         height: 100%;
 
         hr{
-            margin-top:40px; 
-            margin-bottom:40px
+            margin-top:20px; 
+            margin-bottom:20px
         }
         
         .answer{
             overflow: hidden;
-            .thumbnail-wrapper{
-                width: 37px; 
-                height: 37px; 
-                border-width: 0px;
-                float: none;
-                margin-bottom: 5px;
-                margin-top: 5px;
-            }
+            
 
             .body{
-                width: 73%;
-                float: left;
+                display: table;
             }
 
             .left{
-                text-align: center;
                 float: left;
-                width: 18%;
+                width: 100%;
                 padding: 0 10px 10px 10px;
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 overflow: hidden;
-                max-width: 130px;
+                #names{
+                  float: left;
+                  margin-top: 13px;
+                  margin-left: 14px;
+                }
+                #date{
+                  float: right;
+                  margin-top: 17px;
+                  color: #626262;
+                  font-family: arial;
+                  font-size: 12px;
+                }
+                .thumbnail-wrapper{
+                    float: left;
+                    width: 37px; 
+                    height: 37px; 
+                    border-width: 0px;
+                    margin-bottom: 5px;
+                    margin-top: 5px;
+                    margin-left: 4px;
+
+                }
+
             }
 
             .vote{
@@ -664,6 +677,7 @@
                 width:15%;
                 float: left;
                 max-width: 65px;
+                margin-right: 10px;
             }
             .btn-lg{
                 padding-right:17px;
@@ -909,17 +923,7 @@
     }
 }
 
-@media (max-width: 1400px){
-    .email-wrapper {
-        .email-opened { 
-            .answer{
-                .body{
-                    width: 67%;
-                }
-            }
-        }
-    }
-}
+
 
 /*** General tablets and phones ***/
 // TODO: 991 should be the breakpoint, where -sm ends

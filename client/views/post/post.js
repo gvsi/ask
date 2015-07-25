@@ -123,6 +123,8 @@ Template.postThumbnail.helpers({
 });
 
 
+
+
 Template.postContent.helpers({
     post: function() {
         var postId = Router.current().params.query.p;
@@ -277,7 +279,7 @@ function loadPage(postId) {
         oninit: function() {
             // Add "open" - "save" buttons
             $('#makeSnote').remove();
-            var noteBtn = '<button id="makeSnote" type="button" class="btn btn-default btn-sm btn-small" title="LaTeX Equation Editor" data-event="something" tabindex="-1">&#931;</button>';            
+            var noteBtn = '<button id="makeSnote" type="button" class="btn btn-default btn-sm btn-small" title="LaTeX Equation Editor" data-event="something" tabindex="-1"><span style="font-size:1.3em">&#931;</span></button>';            
             var fileGroup = '<div class="note-file btn-group">' + noteBtn + '</div>';
             $(fileGroup).appendTo($('.note-toolbar'));
             // Button tooltips

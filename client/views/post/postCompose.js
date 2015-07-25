@@ -83,8 +83,8 @@ Template.postCompose.events({
    'submit form': function(e) {
      e.preventDefault();
      var post = {
-       title: $(e.target).find('[name=subject]').val(),
-       text: $(e.target).find('textarea').val(),
+       title: $(e.target).find('[name=postTitle]').val(),
+       text:  $('#summernote').code(),
        course_id: Router.current().params.course_id,
        tags: ""
    };
