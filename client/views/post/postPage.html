@@ -72,22 +72,29 @@
       <div class="email-content-body m-t-20">
         {{{post.text}}}
       </div>
-      
-      <div class="modal fade slide-up disable-scroll" id="modalSlideUp" tabindex="-1" role="dialog" aria-hidden="false">
-        <div class="modal-dialog ">
-          <div class="modal-content-wrapper">
-            <div class="modal-content">
-              <div class="modal-body">
-                  <textarea id="latex-source" style="width:80%;vertical-align:top;display:none;"></textarea>
-                  <span class="mathquill-editor"></span>
-                  <button type="submit" id="insertLatex" class="btn btn-complete btn-cons pull-right">Insert</button>
-              </div>
 
-            </div>
+      <!-- Modal -->
+      <div class="modal fade slide-up disable-scroll" id="latexEditorModal" tabindex="-1" role="dialog" aria-labelledby="modalSlideUpLabel" aria-hidden="false">
+          <div class="modal-dialog ">
+              <div class="modal-content-wrapper">
+              <div class="modal-content">
+                  <div class="modal-header clearfix text-left">
+                      <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        <i class="pg-close fs-14"></i>
+                      </button>
+                      <h5><span class="semi-bold">LaTeX</span> equation Editor</h5>
+                  </div>
+                  <div class="modal-body">
+                      <textarea id="latex-source" style="width:80%;vertical-align:top;display:none;"></textarea>
+                      <span class="mathquill-editor"></span><br><br><br>
+                      <button type="submit" id="insertLatexBtn" class="btn btn-complete btn-cons pull-right">Insert</button>
+                  </div>
+              </div>
+              </div>
+              <!-- /.modal-content -->
           </div>
-          <!-- /.modal-content -->
-        </div>
-      </div>  
+      </div>
+      <!-- /.modal-dialog -->
 
       {{#each answers}}
         {{ >answer}}    
@@ -96,8 +103,7 @@
       <br><br>
       <label class="error">{{errorMessage 'body'}}</label>
       <div class="summernote-wrapper">
-        {{#mathjax}}
-        <p>$\lim a_n=\lim b_n=\lim c_n$</p>
+          {{#mathjax}}
           <p><div id="summernote"></div></p>
           {{/mathjax}}
       </div>
