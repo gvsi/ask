@@ -47,6 +47,7 @@ Template.postPage.rendered = function () {
  
       });
 
+
     if ($(window).width() < 980) {
         $('.email-list').attr('id', 'slide-left');
     } else {
@@ -107,6 +108,7 @@ Template.postList.events({
 
 Template.postPage.helpers({
   posts: function () {
+    console.log(this.MathJax);
     return Posts.find({'course_id': Router.current().params.course_id}, {sort: {created_at: -1}});
   },
   course_id: function () {
@@ -220,7 +222,7 @@ Template.postContent.events({
           var id = Router.current().params.query.p;
           Meteor.call('upvote', id, function(error, commentId) {
           if (error){
-            throwError(error.reason);
+            throw new Meteor.error(error.reason);
           } else {
              $('#' + id).addClass('btn-success').removeClass('btn-default');
           }
@@ -262,6 +264,7 @@ function loadPage(postId) {
         onpaste: function(e) {
             var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
             e.preventDefault();
+            console.log(document);
             document.execCommand('insertText', false, bufferText);
         },
         toolbar: [
@@ -273,7 +276,8 @@ function loadPage(postId) {
         ],
         oninit: function() {
             // Add "open" - "save" buttons
-            var noteBtn = '<button id="makeSnote" type="button" class="btn btn-default btn-sm btn-small" title="LaTeX Equation Editor" data-event="something" tabindex="-1"><img src="/img/equation.gif"></button>';            
+            $('#makeSnote').remove();
+            var noteBtn = '<button id="makeSnote" type="button" class="btn btn-default btn-sm btn-small" title="LaTeX Equation Editor" data-event="something" tabindex="-1">&#931;</button>';            
             var fileGroup = '<div class="note-file btn-group">' + noteBtn + '</div>';
             $(fileGroup).appendTo($('.note-toolbar'));
             // Button tooltips
@@ -281,16 +285,17 @@ function loadPage(postId) {
             // Button events
             $('#makeSnote').click(function(event) {
                  $('#modalSlideUp').modal('show');
-                modalElem.children('.modal-dialog').addClass('modal-lg');
+                //modalElem.children('.modal-dialog').addClass('modal-lg');
             });
 
              $('#insertLatex').click(function(event) {
-               
-                $('.note-editable').append($('#latex-source').val());
+                console.log($('#latex-source').val());
+                $('.note-editable').append("$"+$('#latex-source').val()+"$");
                 $('#modalSlideUp').modal('hide');
             });
          },
     });
+    
 
     var body = $('#summernote').code();
     $(".email-content-wrapper").scrollTop(0);
