@@ -101,14 +101,12 @@ Template.postList.events({
         var postId = $(e.currentTarget).attr('data-email-id');
         Router.go('room', {course_id: Router.current().params.course_id}, {query: 'p='+postId});
         loadPage(postId);
-        $('#summernote').code("<p><br></p>"); //cleaning answer form       
     }
 });
 
 
 Template.postPage.helpers({
   posts: function () {
-    console.log(this.MathJax);
     return Posts.find({'course_id': Router.current().params.course_id}, {sort: {created_at: -1}});
   },
   course_id: function () {
@@ -247,6 +245,7 @@ function loadPage(postId) {
 
     var workoutsSubcription = Meteor.subscribe('singlePost', postId);
 
+
     var post = Posts.findOne(postId);
     var email = null;
 
@@ -255,6 +254,7 @@ function loadPage(postId) {
     $('.no-email').hide();
     $('.email-content-wrapper').show();
 
+    $('#summernote').destroy();
     $('#summernote').summernote({
         height: 150,
         onfocus: function(e) {
@@ -264,9 +264,8 @@ function loadPage(postId) {
             $('body').removeClass('overlay-disabled');
         },
         onpaste: function(e) {
-            var bufferText = ((e.originalEvent || e).clipboardData || window.clipboardData).getData('Text');
+            var bufferText = (e.originalEvent.clipboardData).getData('Text');
             e.preventDefault();
-            console.log(document);
             document.execCommand('insertText', false, bufferText);
         },
         toolbar: [
@@ -278,25 +277,47 @@ function loadPage(postId) {
         ],
         oninit: function() {
             // Add "open" - "save" buttons
-            $('#makeSnote').remove();
-            var noteBtn = '<button id="makeSnote" type="button" class="btn btn-default btn-sm btn-small" title="LaTeX Equation Editor" data-event="something" tabindex="-1"><span style="font-size:1.3em">&#931;</span></button>';            
+            
+            $('#latexToolbarBtn').remove();
+            var noteBtn = '<button id="latexToolbarBtn" type="button" class="btn btn-default btn-sm btn-small" title="LaTeX Equation Editor" data-event="something" tabindex="-1"><span style="font-size:1.3em">&#931;</span></button>';            
+
             var fileGroup = '<div class="note-file btn-group">' + noteBtn + '</div>';
+            
+            var sel;
+            var cursorPos;
+            var oldContent;
+
             $(fileGroup).appendTo($('.note-toolbar'));
             // Button tooltips
-            $('#makeSnote').tooltip({container: 'body', placement: 'bottom'});
+            $('#latexToolbarBtn').tooltip({container: 'body', placement: 'bottom'});
             // Button events
-            $('#makeSnote').click(function(event) {
-                 $('#modalSlideUp').modal('show');
-                //modalElem.children('.modal-dialog').addClass('modal-lg');
+            $('#latexToolbarBtn').click(function(event) {
+                 sel = window.getSelection();
+                 if (sel.anchorNode) {
+                     cursorPos = sel.anchorOffset;
+                     oldContent = sel.anchorNode.nodeValue;
+                 }
+                 $('#latexEditorModal').modal('show');
             });
+             $('#insertLatexBtn').click(function(event) {
+                $('#latexEditorModal').modal('hide');
+                $('#summernote').summernote({focus:true});
 
-             $('#insertLatex').click(function(event) {
-                console.log($('#latex-source').val());
-                $('.note-editable').append("$"+$('#latex-source').val()+"$");
-                $('#modalSlideUp').modal('hide');
-            });
-         },
+                setTimeout(function(){
+                    var toInsert = "$"+$('#latex-source').val()+"$";
+                    //console.log(cursorPos);
+                    if (!oldContent) {
+                        $('#summernote').code("<p>"+toInsert+"</p>")
+                    } else {
+                        var newContent = oldContent.substring(0, cursorPos) + toInsert + oldContent.substring(cursorPos);
+                        sel.anchorNode.nodeValue = newContent;
+                    }
+                }, 500);
+
+             });
+        }
     });
+
     
 
     var body = $('#summernote').code();
