@@ -85,22 +85,23 @@ Template.postCompose.events({
      var post = {
        title: $(e.target).find('[name=postTitle]').val(),
        text:  $('#summernote').code(),
+       isAnonymous: $('#anonymous').is(':checked'),
        course_id: Router.current().params.course_id,
        tags: ""
    };
-   
+
    //var errors = validatePost(post);
    //if (errors.title || errors.url)
    // return Session.set('postSubmitErrors', errors);
-   
+
    Meteor.call('postInsert', post, function(error, result) {
      // display the error to the user and abort
      if (error)
          return throwError(error.reason);
-     
+
      // show this result but route anyway
-     
-     Router.go('room', {course_id: Router.current().params.course_id}, {query: "p="+result._id});  
+
+     Router.go('room', {course_id: Router.current().params.course_id}, {query: "p="+result._id});
  });
 },
 'click .item': function(e) {
