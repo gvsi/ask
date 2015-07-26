@@ -105,7 +105,7 @@ Template.postCompose.events({
  });
 },
 'click .item': function(e) {
-    var postId = $(e.currentTarget).attr('data-email-id');
+    var postId = $(e.currentTarget).attr('data-post-id');
     Router.go('room', {course_id: Router.current().params.course_id}, {query: 'p='+postId});
     loadPage(postId);
 }

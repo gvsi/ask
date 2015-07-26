@@ -101,7 +101,7 @@ Template.postList.events({
         $('.item').removeClass('active');
         //console.log(e.currentTarget);
         $(e.currentTarget).addClass('active');
-        var postId = $(e.currentTarget).attr('data-email-id');
+        var postId = $(e.currentTarget).attr('data-post-id');
         Router.go('room', {course_id: Router.current().params.course_id}, {query: 'p='+postId});
         loadPage(postId);
     }
@@ -155,7 +155,7 @@ Template.postContent.helpers({
     answers: function() {
         var id = Router.current().params.query.p;
         Meteor.subscribe('answers', id);
-        return Answers.find();
+        return Answers.find({},{sort:{created_at:1}});
     },
     errorMessage: function(field) {
         var e = Session.get('answerSubmitErrors');
@@ -187,39 +187,26 @@ Template.postContent.events({
         var answer = {
           body: body,
           postId: Router.current().params.query.p
-      };
+        };
 
-      //removes all tags and whitespaces (&nbsp;) to make sure
-      function strip_tags(input, allowed) {
-        allowed = (((allowed || '') + '')
-            .toLowerCase()
-            .match(/<[a-z][a-z0-9]*>/g) || [])
-        .join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
-        var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
-        commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
-        return input.replace(commentsAndPhpTags, '')
-        .replace(tags, function($0, $1) {
-          return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
-        }).replace(/&nbsp;/gi,'').replace(/\s+/g, ''); // removes spaces and &nbsp;
-      }
-
-      if (strip_tags(body) == "") {
-        var errors = {};
-        errors.body = "I know you're trying to be helpful, but an empty answer won't do much...";
-        $('#summernote').code("<p><br></p>");
-        $('#summernote').summernote({focus: true});
-        return Session.set('answerSubmitErrors', errors);
-      } else {
-        Session.set('answerSubmitErrors', {});
-      }
-
-      Meteor.call('answerInsert', answer, function(error, answerId) {
-        if (error){
-            throw new Meteor.Error(error.reason);
+        if (strip_tags(body) == "") {
+          var errors = {};
+          errors.answerBody = "I know you're trying to be helpful, but an empty answer won't do much...";
+          $('#summernote').code("<p><br></p>");
+          $('#summernote').summernote({focus: true});
+          return Session.set('answerSubmitErrors', errors);
         } else {
-            $('#summernote').code("<p><br></p>");
+          Session.set('answerSubmitErrors', {});
         }
-      });
+
+        Meteor.call('answerInsert', answer, function(error, answerId) {
+          if (error){
+              Session.set('answerSubmitErrors', {answerBody: error.reason});
+              throw new Meteor.Error(error.reason);
+          } else {
+              $('#summernote').code("<p><br></p>");
+          }
+        });
   },
   'click .upvote': function(e) {
           var id = Router.current().params.query.p;
@@ -238,12 +225,73 @@ Template.answer.helpers({
         var authorId = this.userId;
         Meteor.subscribe('singleUser', authorId);
         return Meteor.users.findOne(authorId);
+    },
+    dateFromNow: function() {
+        return moment(this.created_at).fromNow();
     }
+})
+
+Template.answer.events({
+  'click #addCommentBtn': function(e) {
+    $("#summernote-wrapper-"+this._id).toggle();
+    //$(e.currentTarget.parentElement).append("<div class=\"summernote-wrapper pull-right\" style=\"width:90%\"><p><div id=\"summernote-"+this._id+"\"></div></p></div>");
+    $('#summernote-'+this._id).destroy();
+    $('#summernote-'+this._id).summernote({
+        height: 90,
+        onfocus: function(e) {
+            $('body').addClass('overlay-disabled');
+        },
+        onblur: function(e) {
+            $('body').removeClass('overlay-disabled');
+        },
+        onpaste: function(e) {
+            var bufferText = (e.originalEvent.clipboardData).getData('Text');
+            e.preventDefault();
+            document.execCommand('insertText', false, bufferText);
+        },
+        toolbar: [
+        ['misc', ['undo','redo']],
+        ['style', ['bold', 'italic', 'underline']],
+        ['insert', ['link']],
+        ]
+    });
+  },
+  'click #sendCommentBtn': function (e) {
+    var answerId = $(e.currentTarget).attr('data-answer-id');
+
+    var body = $('#summernote-'+answerId).code();
+
+    var comment = {
+      body: body,
+      answerId: answerId
+    };
+
+    if (strip_tags(body) == "") {
+      $('#summernote-'+answerId).code("<p><br></p>");
+      $('#summernote-'+answerId).summernote({focus: true});
+      $('#summernote-wrapper-'+answerId+' .error').text("I'm sure this would be a very insightful comment... if it weren't empty.");
+      return false;
+    } else {
+      $('#summernote-wrapper-'+answerId+' .error').text("");
+    }
+
+    Meteor.call('commentInsert', comment, function(error, res) {
+      if (error){
+          $('#summernote-wrapper-'+answerId+' .error').text(error.reason);
+          throw new Meteor.Error(error.reason);
+      } else {
+          console.log(res);
+          //$('#summernote-'+answerId).code("<p><br></p>");
+      }
+    });
+  }
 })
 
 
 function loadPage(postId) {
     Session.set('answerSubmitErrors', {});
+    Session.set('commentSubmitErrors', {});
+
     Meteor.subscribe('singlePost', postId);
 
     var workoutsSubcription = Meteor.subscribe('singlePost', postId);
@@ -335,4 +383,18 @@ function loadPage(postId) {
     $('#slide-left').addClass('slideLeft');
 
 
+}
+
+//removes all tags and whitespaces (&nbsp;) to make sure
+function strip_tags(input, allowed) {
+  allowed = (((allowed || '') + '')
+      .toLowerCase()
+      .match(/<[a-z][a-z0-9]*>/g) || [])
+  .join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
+  var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
+  commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+  return input.replace(commentsAndPhpTags, '')
+  .replace(tags, function($0, $1) {
+    return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+  }).replace(/&nbsp;/gi,'').replace(/\s+/g, ''); // removes spaces and &nbsp;
 }
