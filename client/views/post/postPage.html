@@ -27,7 +27,7 @@
           <a href="#" class="email-list-toggle"><i class="fa fa-angle-left"></i> All Inboxes
           </a>
         </li>
-        
+
         <li class="no-padding "><a href="#" class="text-muted">Upvotes: {{post.upvoters.length}}</a>
         </li>
         <li class="no-padding "><a href="#" class="text-muted">Views: 0</a>
@@ -38,7 +38,7 @@
         </li>
         <li class="no-padding "><a href="#" class="text-danger">Delete</a>
         </li>
-        
+
       </ul>
       <div class="clearfix"></div>
     </div>
@@ -56,7 +56,7 @@
             {{dateFromNow}}
             </p>
           </div>
-         
+
         </div>
         <div class="buttons">
           <button class="btn {{ button }} btn-lg btn-rounded upvote" ><i class="fa fa-thumbs-up"></i></button>
@@ -64,7 +64,7 @@
         </div>
          <div class="clearfix"></div>
       </div>
-      
+
       <div class="email-content-header">
         <h2><strong>{{post.title}}</strong></h2>
       </div>
@@ -97,9 +97,9 @@
       <!-- /.modal-dialog -->
 
       {{#each answers}}
-        {{ >answer}}    
+        {{ >answer}}
       {{/each}}
-      
+
       <br><br>
       <label class="error">{{errorMessage 'body'}}</label>
       <div class="summernote-wrapper">
@@ -116,28 +116,45 @@
 <template name="answer">
   <hr>
   <div class="answer">
-    <div class="left">
+    <div class="postInfo">
       <div class="thumbnail-wrapper bordered circular" >
          <img width="40" height="40" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="/img/profiles/avatar2x.jpg">
       </div>
-      <div id="names" class="bold">
+      <div class="nameLabel bold">
       {{answerAuthor.profile.name}}
       {{answerAuthor.profile.surname}}
       </div>
-      <div id="date" class="datetime">
-        9 minutes ago    
+      <div class="datetime timeLabel">
+        9 minutes ago
       </div>
     </div>
-     <div class="vote">
-        <button class="btn btn-default btn-rounded" style="margin-bottom: 5px;"><i class="fa fa-angle-up"></i></button>
+     <div class="votingContainer">
+        <button class="btn btn-sm btn-rounded"><i class="fa fa-angle-up"></i></button>
         <div>5</div>
-        <button class="btn btn-default btn-rounded" style="margin-top: 5px;"><i class="fa fa-angle-down"></i></button>
+        <button class="btn btn-sm btn-rounded"><i class="fa fa-angle-down"></i></button>
     </div>
-    <div class="body">
+    <div class="answerBodyContainer">
     {{#mathjax}}
       {{{body}}}
     {{/mathjax}}
     </div>
-   
+  </div>
+  <div class="comments">
+    <hr>
+    <div class="thumbnail-wrapper circular">
+         <img width="10" height="10" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="/img/profiles/avatar2x.jpg">
+    </div>
+    <div class="commentBody">
+    {{{body}}}
+    </div>
+    <hr>
+    <div class="thumbnail-wrapper circular">
+         <img width="10" height="10" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="/img/profiles/avatar2x.jpg">
+    </div>
+    <div class="commentBody">
+    {{{body}}}
+    </div>
+
+    <button id="addCommentBtn" class="btn btn-default btn-xs m-t-10">Add a comment</button>
   </div>
 </template>

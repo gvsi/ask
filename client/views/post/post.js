@@ -44,7 +44,7 @@ Template.postPage.rendered = function () {
             codecogs.attr('src','http://latex.codecogs.com/gif.latex?'+latex).parent().attr('href','http://latex.codecogs.com/gif.latex?'+latex);
           });
         }).keydown().focus();
- 
+
       });
 
 
@@ -98,6 +98,9 @@ Template.postPage.rendered = function () {
 
 Template.postList.events({
     'click .item': function(e) {
+        $('.item').removeClass('active');
+        //console.log(e.currentTarget);
+        $(e.currentTarget).addClass('active');
         var postId = $(e.currentTarget).attr('data-email-id');
         Router.go('room', {course_id: Router.current().params.course_id}, {query: 'p='+postId});
         loadPage(postId);
@@ -186,7 +189,7 @@ Template.postContent.events({
           postId: Router.current().params.query.p
       };
 
-      //removes all tags and whitespaces (&nbsp;) to make sure 
+      //removes all tags and whitespaces (&nbsp;) to make sure
       function strip_tags(input, allowed) {
         allowed = (((allowed || '') + '')
             .toLowerCase()
@@ -277,12 +280,12 @@ function loadPage(postId) {
         ],
         oninit: function() {
             // Add "open" - "save" buttons
-            
+
             $('#latexToolbarBtn').remove();
-            var noteBtn = '<button id="latexToolbarBtn" type="button" class="btn btn-default btn-sm btn-small" title="LaTeX Equation Editor" data-event="something" tabindex="-1"><span style="font-size:1.3em">&#931;</span></button>';            
+            var noteBtn = '<button id="latexToolbarBtn" type="button" class="btn btn-default btn-sm btn-small" title="LaTeX Equation Editor" data-event="something" tabindex="-1"><span style="font-size:1.3em">&#931;</span></button>';
 
             var fileGroup = '<div class="note-file btn-group">' + noteBtn + '</div>';
-            
+
             var sel;
             var cursorPos;
             var oldContent;
@@ -307,6 +310,7 @@ function loadPage(postId) {
                     var toInsert = "$"+$('#latex-source').val()+"$";
                     //console.log(cursorPos);
                     if (!oldContent) {
+                        console.log("asd");
                         $('#summernote').code("<p>"+toInsert+"</p>")
                     } else {
                         var newContent = oldContent.substring(0, cursorPos) + toInsert + oldContent.substring(cursorPos);
@@ -318,20 +322,17 @@ function loadPage(postId) {
         }
     });
 
-    
+
 
     var body = $('#summernote').code();
     $(".email-content-wrapper").scrollTop(0);
 
-    // Initialize email action menu 
+    // Initialize email action menu
     $('.menuclipper').menuclipper({
         bufferWidth: 20
     });
 
-    $('.item').removeClass('active');
-    $(this).addClass('active');
-
-    $('#slide-left').addClass('slideLeft'); 
+    $('#slide-left').addClass('slideLeft');
 
 
 }
