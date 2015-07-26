@@ -46,7 +46,7 @@
         <div class="q-footer">
         <div style="float:left">
           <div class="thumbnail-wrapper bordered circular" >
-            <img width="40" height="40" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="/img/profiles/avatar2x.jpg">
+            <img width="40" height="40" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="{{identicon identiconHash}}">
           </div>
           <div class="sender inline m-l-10">
             <p class="name no-margin bold">
@@ -59,7 +59,7 @@
 
         </div>
         <div class="buttons">
-          <button class="btn {{ button }} btn-lg btn-rounded upvote" ><i class="fa fa-thumbs-up"></i></button>
+          <button class="btn {{ upvoteButton }} btn-lg btn-rounded upvote" ><i class="fa fa-thumbs-up"></i></button>
           <button class="btn btn-default btn-lg btn-rounded">Follow</button>
         </div>
          <div class="clearfix"></div>
@@ -118,7 +118,7 @@
   <div class="answer">
     <div class="postInfo">
       <div class="thumbnail-wrapper bordered circular" >
-         <img width="40" height="40" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="/img/profiles/avatar2x.jpg">
+         <img width="40" height="40" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="{{identicon identiconHash}}">
       </div>
       <div class="nameLabel bold">
       {{answerAuthor.profile.name}}

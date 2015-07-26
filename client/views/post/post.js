@@ -164,7 +164,7 @@ Template.postContent.helpers({
         else
          return false;
     },
-    button: function(){
+    upvoteButton: function(){
         var postId = Router.current().params.query.p;
         var post = Posts.findOne(postId);
         if (post) {
@@ -178,6 +178,11 @@ Template.postContent.helpers({
         } else {
             return false;
         }
+    },
+    identiconHash: function(){
+      var postId = Router.current().params.query.p;
+      var post = Posts.findOne(postId);
+      return Package.sha.SHA256(post._id + post.owner);
     }
 });
 
@@ -281,6 +286,9 @@ Template.answer.helpers({
                   return 'btn-danger';
               }
           }
+    },
+    identiconHash: function(){
+      return Package.sha.SHA256(this.postId + this.userId);
     }
 
 })
