@@ -2,16 +2,16 @@ Posts = new Mongo.Collection('posts');
 
 Meteor.methods({
     postInsert: function(postAttributes) {
-        check(postAttributes, {
+          check(postAttributes, {
           title: String,
           text: String,
           tags: String,
-          course_id: String
+          course_id: String,
+          isAnonymous: Boolean
         });
-        
-        
-        
-        
+
+
+
         var user = Meteor.user();
         var type = 1;
 
@@ -24,11 +24,11 @@ Meteor.methods({
           type: type,
           created_at: new Date(),
           updated_at: new Date(),
-          upvoters: [], 
+          upvoters: [],
         });
-        
+
         var postId = Posts.insert(post);
-        
+
         return {
           _id: postId
         };
@@ -46,6 +46,6 @@ Meteor.methods({
             "upvoters": userId
           }});
       }
-      
+
     }
 })
