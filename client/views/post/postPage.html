@@ -46,7 +46,7 @@
       <div class="q-footer">
         <div style="float:left">
           <div class="thumbnail-wrapper bordered circular" >
-            <img width="40" height="40" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="{{identicon identiconHash}}">
+            <img width="40" height="40" alt="" src="{{identicon identiconHash}}">
           </div>
           <div class="sender inline m-l-10">
             <p class="name no-margin bold">
@@ -124,11 +124,11 @@
     <div class="answer">
       <div class="postInfo">
         <div class="thumbnail-wrapper bordered circular" >
-          <img width="40" height="40" alt="" data-src-retina="{{identicon identiconHash}}" data-src="{{identicon identiconHash}}" src="{{identicon identiconHash}}">
+          <img width="40" height="40" alt="" src="{{identicon identiconHash}}">
         </div>
         <div class="nameLabel bold">
-          {{answerAuthor.profile.name}}
-          {{answerAuthor.profile.surname}}
+          {{theAuthor.profile.name}}
+          {{theAuthor.profile.surname}}
         </div>
         <div class="datetime timeLabel">
           {{dateFromNow}}
@@ -147,8 +147,8 @@
       <div class="comments">
         {{#each comments}}
           <hr>
-          <div class="thumbnail-wrapper circular">
-               <img width="10" height="10" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="/img/profiles/avatar2x.jpg">
+          <div class="thumbnail-wrapper circular" data-toggle="tooltip" data-placement="left" data-html="true" title="{{theAuthor.profile.name}} <br> {{theAuthor.profile.surname}} <br> ({{dateFromNow}})">
+            <img width="40" height="40" alt="" src="{{identicon identiconHash}}">
           </div>
           <div class="commentBody">
           {{{this.body}}}

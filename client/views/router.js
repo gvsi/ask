@@ -1,6 +1,6 @@
 Router.configure({
-    loadingTemplate: 'loading', 
-/*    waitOn: function() { 
+    loadingTemplate: 'loading',
+/*    waitOn: function() {
         return [
           //Meteor.subscribe('courses', Meteor.userId()),
           //Meteor.subscribe("singleStudent", Meteor.user().username.toUpperCase())
@@ -11,7 +11,7 @@ Router.configure({
 Router.route('/', function () {
   this.render('blankPage');
 },{
- layoutTemplate:"dashboardLayout" 
+ layoutTemplate:"dashboardLayout"
 });
 
 Router.route('/social', function () {
@@ -28,10 +28,10 @@ Router.route('/:course_id/room', function () {
  loadingTemplate: 'loading',
  waitOn: function() {
     $(".toggle-email-sidebar").remove();
-    $(".header-inner").prepend("<a href=\"#\" class=\"toggle-email-sidebar\">Room <span class=\"text-info\">(12)</span> <span class=\"caret\"></span></a>");
+    //$(".header-inner").prepend("<a href=\"#\" class=\"toggle-email-sidebar\">Room <span class=\"text-info\">(12)</span> <span class=\"caret\"></span></a>");
     return [
       Meteor.subscribe('posts', this.params.course_id),
-    ];   
+    ];
   }
 });
 
@@ -53,7 +53,7 @@ Router.route('/:course_id/room/compose', function () {
 Router.route('/calendar', function () {
   this.render('calendarApp');
 },{
- layoutTemplate:"calendarLayout" 
+ layoutTemplate:"calendarLayout"
 });
 
 //UI ELEMENTS
@@ -61,95 +61,95 @@ Router.route('/calendar', function () {
 Router.route('/ui/color', function () {
   this.render('uiColor');
 },{
- layoutTemplate:"defaultLayout" 
+ layoutTemplate:"defaultLayout"
 });
 
 //2. TYPO PAGE
 Router.route('/ui/typo', function () {
   this.render('uiTypo');
 },{
- layoutTemplate:"defaultLayout" 
+ layoutTemplate:"defaultLayout"
 });
 
 //3. Icons PAGE
 Router.route('/ui/icons', function () {
   this.render('uiIcons');
 },{
- layoutTemplate:"defaultLayout" 
+ layoutTemplate:"defaultLayout"
 });
 
 //4. Buttons PAGE
 Router.route('/ui/buttons', function () {
   this.render('uiButtons');
 },{
- layoutTemplate:"defaultLayout" 
+ layoutTemplate:"defaultLayout"
 });
 
 //5. Notifications PAGE
 Router.route('/ui/notifications', function () {
   this.render('uiNotifications');
 },{
- layoutTemplate:"defaultLayout" 
+ layoutTemplate:"defaultLayout"
 });
 
 //6. Modals PAGE
 Router.route('/ui/modals', function () {
   this.render('uiModals');
 },{
- layoutTemplate:"defaultLayout" 
+ layoutTemplate:"defaultLayout"
 });
 
 //7. Progress PAGE
 Router.route('/ui/progress', function () {
   this.render('uiProgress');
 },{
- layoutTemplate:"defaultLayout" 
+ layoutTemplate:"defaultLayout"
 });
 
 //8. Progress PAGE
 Router.route('/ui/tabs_accordian', function () {
   this.render('uiTabs');
 },{
- layoutTemplate:"defaultLayout" 
+ layoutTemplate:"defaultLayout"
 });
 
 //9. Progress PAGE
 Router.route('/ui/sliders', function () {
   this.render('uiSliders');
 },{
- layoutTemplate:"defaultLayout" 
+ layoutTemplate:"defaultLayout"
 });
 
 //10. Tree-view PAGE
 Router.route('/ui/tree-view', function () {
   this.render('uiTreeView');
 },{
- layoutTemplate:"defaultLayout" 
+ layoutTemplate:"defaultLayout"
 });
 
 //11. Tree-view PAGE
 Router.route('/ui/nestables', function () {
   this.render('uiNestables');
 },{
- layoutTemplate:"defaultLayout" 
+ layoutTemplate:"defaultLayout"
 });
 
 Router.route('/forms/elements', function () {
   this.render('formElments');
 },{
- layoutTemplate:"defaultLayout" 
+ layoutTemplate:"defaultLayout"
 });
 
 Router.route('/forms/layouts', function () {
   this.render('formLayouts');
 },{
- layoutTemplate:"defaultLayout" 
+ layoutTemplate:"defaultLayout"
 });
 
 Router.route('/forms/wizard', function () {
   this.render('formWizard');
 },{
- layoutTemplate:"defaultLayout" 
+ layoutTemplate:"defaultLayout"
 });
 
 Router.route('/login', function() {
@@ -164,5 +164,5 @@ Router.route('/logout', function () {
       Router.go('/login');
     });
 },{
- layoutTemplate:"defaultLayout" 
+ layoutTemplate:"defaultLayout"
 });
