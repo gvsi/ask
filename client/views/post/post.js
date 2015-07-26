@@ -164,7 +164,7 @@ Template.postContent.helpers({
         else
          return false;
     },
-    button: function(){
+    upvoteButton: function(){
         var postId = Router.current().params.query.p;
         var post = Posts.findOne(postId);
         if (post) {
@@ -178,6 +178,11 @@ Template.postContent.helpers({
         } else {
             return false;
         }
+    },
+    identiconHash: function(){
+      var postId = Router.current().params.query.p;
+      var post = Posts.findOne(postId);
+      return Package.sha.SHA256(post._id + post.owner);
     }
 });
 
@@ -210,12 +215,30 @@ Template.postContent.events({
   },
   'click .upvote': function(e) {
           var id = Router.current().params.query.p;
-          Meteor.call('upvote', id, function(error, commentId) {
+          Meteor.call('upvote', id, function(error) {
           if (error){
             throw new Meteor.error(error.reason);
           } else {
-             $('#' + id).addClass('btn-success').removeClass('btn-default');
+             //$('#' + id).addClass('btn-success').removeClass('btn-default');
           }
+        });
+   }
+});
+
+
+Template.answer.events({
+  'click .votingContainer button': function(e) {
+        var answerId = $(e.currentTarget).parent().data('answer-id');
+        var isUpvote =  $(e.currentTarget).attr('id') == 'upvoteAnswer';
+
+        var voteAttributes = {
+          answerId: answerId,
+          isUpvote: isUpvote
+        };
+
+        Meteor.call('answerVote', voteAttributes, function(error, result) {
+            // $('#' + id).addClass('btn-success').removeClass('btn-default');
+          //  $(e.currentTarget).parent().find('#answerVoteCount').text(result);
         });
    }
 });
@@ -228,8 +251,36 @@ Template.answer.helpers({
     },
     dateFromNow: function() {
         return moment(this.created_at).fromNow();
+    },
+    voteCount: function(){
+        return this.upvoters.length - this.downvoters.length;
+    },
+    upvote: function(){
+          var answerId = this._id;
+          var answer = Answers.findOne(answerId);
+          if (answer) {
+              var voters = answer.upvoters;
+              var userId = Meteor.user()._id;
+              if(voters && voters.indexOf(userId) != -1){
+                  return 'btn-success';
+              }
+          }
+    },
+    downvote: function(){
+          var answerId = this._id;
+          var answer = Answers.findOne(answerId);
+          if (answer) {
+              var voters = answer.downvoters;
+              var userId = Meteor.user()._id;
+              if(voters && voters.indexOf(userId) != -1){
+                  return 'btn-danger';
+              }
+          }
+    },
+    identiconHash: function(){
+      return Package.sha.SHA256(this.postId + this.userId);
     }
-})
+});
 
 Template.answer.events({
   'click #addCommentBtn': function(e) {
@@ -358,7 +409,6 @@ function loadPage(postId) {
                     var toInsert = "$"+$('#latex-source').val()+"$";
                     //console.log(cursorPos);
                     if (!oldContent) {
-                        console.log("asd");
                         $('#summernote').code("<p>"+toInsert+"</p>")
                     } else {
                         var newContent = oldContent.substring(0, cursorPos) + toInsert + oldContent.substring(cursorPos);
