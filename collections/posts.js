@@ -27,6 +27,10 @@ Meteor.methods({
 
         var postId = Posts.insert(post);
 
+        // set identiconHash
+        var identiconHash = postAttributes.isAnonymous ? postId + postAttributes.owner : postAttributes.owner;
+        Posts.update({_id: postId}, {$set: {ownerIdenticon: Package.sha.SHA256(identiconHash)}})
+
         return {
           _id: postId
         };

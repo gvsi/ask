@@ -16,8 +16,12 @@ Meteor.methods({
     if (!post)
       throw new Meteor.Error('invalid-answer', 'You must answer on a post');
 
+    // set identiconHash
+    var identiconHash = answerAttributes.isAnonymous ? answerAttributes.postId + user._id : user._id;
+
     answer = _.extend(answerAttributes, {
       userId: user._id,
+      ownerIdenticon: Package.sha.SHA256(identiconHash),
       //author: user.username,
       upvoters: [],
       downvoters: [],
@@ -48,8 +52,12 @@ Meteor.methods({
     if (!answer)
       throw new Meteor.Error('invalid-comment', 'You must comment on an answer');
 
+    // set identiconHash
+    var identiconHash = commentAttributes.isAnonymous ? answer.postId + user._id : user._id;
+
     comment = _.extend(commentAttributes, {
       userId: user._id,
+      ownerIdenticon: Package.sha.SHA256(identiconHash),
       //author: user.username,
       created_at: new Date(),
       updated_at: new Date(),

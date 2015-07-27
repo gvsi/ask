@@ -1,3 +1,5 @@
+
+
 Template.postPage.rendered = function () {
   mathquill();
   var LatexImages = false;
@@ -132,8 +134,6 @@ Template.postThumbnail.helpers({
 });
 
 
-
-
 Template.postContent.helpers({
   post: function() {
     var postId = Router.current().params.query.p;
@@ -190,20 +190,6 @@ Template.postContent.helpers({
     } else {
       return false;
     }
-  },
-  identiconHash: function(){
-    var postId = Router.current().params.query.p;
-    var post = Posts.findOne(postId);
-    if (post) {
-      if (post.owner) {
-        var hash = post.isAnonymous ? post._id + post.owner : post.owner;
-        return Package.sha.SHA256(hash);
-      } else {
-        return "";
-      }
-    } else {
-      return "";
-    }
   }
 });
 
@@ -247,24 +233,6 @@ Template.postContent.events({
   }
 });
 
-
-Template.answer.events({
-  'click .votingContainer button': function(e) {
-    var answerId = $(e.currentTarget).parent().data('answer-id');
-    var isUpvote =  $(e.currentTarget).attr('id') == 'upvoteAnswer';
-
-    var voteAttributes = {
-      answerId: answerId,
-      isUpvote: isUpvote
-    };
-
-    Meteor.call('answerVote', voteAttributes, function(error, result) {
-      // $('#' + id).addClass('btn-success').removeClass('btn-default');
-      //  $(e.currentTarget).parent().find('#answerVoteCount').text(result);
-    });
-  }
-});
-
 Template.answer.helpers({
   theAuthor: function() {
     //works for both answer and comment
@@ -299,11 +267,6 @@ Template.answer.helpers({
         return 'btn-danger';
       }
     }
-  },
-  identiconHash: function(){
-    // works for both answer and comment
-    var hash = this.isAnonymous ? Router.current().params.query.p + this.userId : this.userId;
-    return Package.sha.SHA256(hash);
   }
 });
 
@@ -357,24 +320,31 @@ Template.answer.events({
         throw new Meteor.Error(error.reason);
       } else {
         $('#summernote-'+answerId).code("<p><br></p>");
+        $("#summernote-wrapper-"+answerId).hide(700);
         $('[data-toggle="tooltip"]').tooltip();
       }
+    });
+  },
+  'click .votingContainer button': function(e) {
+    var answerId = $(e.currentTarget).parent().data('answer-id');
+    var isUpvote =  $(e.currentTarget).attr('id') == 'upvoteAnswer';
+
+    var voteAttributes = {
+      answerId: answerId,
+      isUpvote: isUpvote
+    };
+
+    Meteor.call('answerVote', voteAttributes, function(error, result) {
+      // $('#' + id).addClass('btn-success').removeClass('btn-default');
+      //  $(e.currentTarget).parent().find('#answerVoteCount').text(result);
     });
   }
 })
 
-Template.answer.rendered = function(){
-  //console.log('call')
-  //$('[data-toggle="tooltip"]').tooltip();
-}
 function loadPage(postId) {
   Session.set('answerSubmitErrors', {});
-  Session.set('commentSubmitErrors', {});
 
   Meteor.subscribe('singlePost', postId);
-
-  var workoutsSubcription = Meteor.subscribe('singlePost', postId);
-
 
   var post = Posts.findOne(postId);
   var email = null;

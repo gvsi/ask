@@ -46,7 +46,7 @@
       <div class="q-footer">
         <div style="float:left">
           <div class="thumbnail-wrapper bordered circular" >
-            <img width="40" height="40" alt="" src="{{identicon identiconHash}}">
+            <img width="40" height="40" alt="" src="{{identicon post.ownerIdenticon}}">
           </div>
           <div class="sender inline m-l-10">
             <p class="name no-margin bold">
@@ -113,7 +113,7 @@
     <div class="answer">
       <div class="postInfo">
         <div class="thumbnail-wrapper bordered circular" >
-          <img width="40" height="40" alt="" src="{{identicon identiconHash}}">
+          <img width="40" height="40" alt="" src="{{identicon ownerIdenticon}}">
         </div>
         <div class="nameLabel bold">
           {{#if isAnonymous}}
@@ -141,7 +141,7 @@
         {{#each comments}}
           <hr>
           <div class="thumbnail-wrapper circular" data-toggle="tooltip" data-placement="left" data-html="true" title="{{#if isAnonymous}} Anonymous {{else}} {{theAuthor.profile.name}} <br> {{theAuthor.profile.surname}} {{/if}} <br> ({{dateFromNow}})">
-            <img width="40" height="40" alt="" src="{{identicon identiconHash}}">
+            <img width="40" height="40" alt="" src="{{identicon this.ownerIdenticon}}">
           </div>
           <div class="commentBody">
           {{#mathjax}}

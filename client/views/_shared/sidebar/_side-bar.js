@@ -8,8 +8,8 @@ Template.sideBar.rendered = function (){
 
 Template.sideBar.helpers({
 	courses: function () {
-		Meteor.subscribe('coursesForStudent', Meteor.userId());
-		return Courses.find({});
+		Meteor.subscribe('coursesForStudent', Meteor.userId(), {reactive:false});
+		return Courses.find().fetch();
 	},
 	courseInitials: function () {
 		return this.MOD_CODE.substring(0,2);
