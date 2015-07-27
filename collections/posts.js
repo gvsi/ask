@@ -10,8 +10,6 @@ Meteor.methods({
           isAnonymous: Boolean
         });
 
-
-
         var user = Meteor.user();
         var type = 1;
 

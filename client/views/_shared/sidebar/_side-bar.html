@@ -1,5 +1,5 @@
 <template name="sideBar">
-    <!-- BEGIN SIDEBAR --> 
+    <!-- BEGIN SIDEBAR -->
     <div class="page-sidebar" data-pages="sidebar">
       <div id="appMenu" class="sidebar-overlay-slide from-top">
       </div>
@@ -53,7 +53,7 @@
               {{#each courses}}
               <li class="">
                 <a href="{{pathFor 'room' course_id=this._id._str }}">{{MOD_NAME}}</a>
-                <span class="icon-thumbnail">{{MOD_CODE}}</span>
+                <span class="icon-thumbnail">{{courseInitials}}</span>
               </li>
               {{/each}}
             </ul>

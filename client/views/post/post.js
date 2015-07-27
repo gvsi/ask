@@ -109,7 +109,6 @@ Template.postList.events({
   }
 });
 
-
 Template.postPage.helpers({
   posts: function () {
     return Posts.find({'course_id': Router.current().params.course_id}, {sort: {created_at: -1}});
@@ -122,6 +121,13 @@ Template.postPage.helpers({
 Template.postThumbnail.helpers({
   dateFromNow: function() {
     return moment(this.created_at).fromNow();
+  },
+  textWithoutTags: function() {
+    var dummyNode = document.createElement('div'),
+    resultText = '';
+    dummyNode.innerHTML = this.text;
+    resultText = dummyNode.innerText || dummyNode.textContent
+    return resultText;
   }
 });
 
@@ -189,7 +195,12 @@ Template.postContent.helpers({
     var postId = Router.current().params.query.p;
     var post = Posts.findOne(postId);
     if (post) {
-      return Package.sha.SHA256(post._id + post.owner);
+      if (post.owner) {
+        var hash = post.isAnonymous ? post.owner : post._id + post.owner;
+        return Package.sha.SHA256(hash);
+      } else {
+        return "";
+      }
     } else {
       return "";
     }
