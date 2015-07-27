@@ -212,7 +212,8 @@ Template.postContent.events({
     var body = $('#summernote').code();
     var answer = {
       body: body,
-      postId: Router.current().params.query.p
+      postId: Router.current().params.query.p,
+      isAnonymous: $('#isAnswerAnonymous').is(':checked')
     };
 
     if (strip_tags(body) == "") {
@@ -337,7 +338,8 @@ Template.answer.events({
 
     var comment = {
       body: body,
-      answerId: answerId
+      answerId: answerId,
+      isAnonymous:  $('#isCommentAnon-'+ answerId).is(':checked')
     };
 
     if (strip_tags(body) == "") {
