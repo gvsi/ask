@@ -1,5 +1,3 @@
-
-
 Template.postPage.rendered = function () {
   mathquill();
   var LatexImages = false;
@@ -97,8 +95,27 @@ Template.postPage.rendered = function () {
 
   });
 
-  $('[data-toggle="tooltip"]').tooltip()
+  $('[data-toggle="tooltip"]').tooltip();
+
+  var elems = Array.prototype.slice.call(document.querySelectorAll('.switchery'));
+  // Success color: #10CFBD
+  elems.forEach(function(html) {
+    var switchery = new Switchery(html, {color: '#10CFBD'});
+  });
+
+  $('.custom-tag-input').tagsinput({
+
+  });
 }
+
+Template.postPage.helpers({
+  posts: function () {
+    return Posts.find({'course_id': Router.current().params.course_id}, {sort: {created_at: -1}});
+  },
+  course_id: function () {
+    return Router.current().params.course_id;
+  }
+});
 
 Template.postList.events({
   'click .item': function(e) {
@@ -108,15 +125,6 @@ Template.postList.events({
     var postId = $(e.currentTarget).attr('data-post-id');
     Router.go('room', {course_id: Router.current().params.course_id}, {query: 'p='+postId});
     loadPage(postId);
-  }
-});
-
-Template.postPage.helpers({
-  posts: function () {
-    return Posts.find({'course_id': Router.current().params.course_id}, {sort: {created_at: -1}});
-  },
-  course_id: function () {
-    return Router.current().params.course_id;
   }
 });
 
@@ -132,7 +140,6 @@ Template.postThumbnail.helpers({
     return resultText;
   }
 });
-
 
 Template.postContent.helpers({
   post: function() {

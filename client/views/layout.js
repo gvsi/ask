@@ -8,3 +8,9 @@ Template.defaultLayout.rendered = function (){
         $progress.circularProgress($progress.data())
     })
 }
+
+Template.postLayout.helpers({
+	courseId: function(){
+		return Router.current().params.course_id;
+	}
+});
