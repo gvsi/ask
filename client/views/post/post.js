@@ -96,6 +96,17 @@ Template.postPage.rendered = function () {
   });
 
   $('[data-toggle="tooltip"]').tooltip()
+
+  var elems = Array.prototype.slice.call(document.querySelectorAll('.switchery'));
+  // Success color: #10CFBD
+  elems.forEach(function(html) {
+    var switchery = new Switchery(html, {color: '#10CFBD'});
+  });
+
+  $('.custom-tag-input').tagsinput({
+
+  });
+  
 }
 
 Template.postList.events({
@@ -130,9 +141,6 @@ Template.postThumbnail.helpers({
     return resultText;
   }
 });
-
-
-
 
 Template.postContent.helpers({
   post: function() {

@@ -101,7 +101,7 @@
                         {{>yield}}
                         <!-- START COMPOSE BUTTON FOR TABS -->
                         <div class="compose-wrapper visible-xs">
-                          <a class="compose-email text-info pull-right m-r-10 m-t-10" href="{{pathFor 'room/compose'}}"><i class="fa fa-pencil-square-o"></i></a>
+                          <a class="compose-email text-info pull-right m-r-10 m-t-10" href="{{pathFor 'compose' course_id=course_id }}"><i class="fa fa-pencil-square-o"></i></a>
                         </div>
                         <!-- END COMPOSE BUTTON -->
                     </div>
@@ -129,9 +129,9 @@
                         <!-- {{>emailSidebar}} -->
                         {{>yield}}
                         <!-- START COMPOSE BUTTON FOR TABS -->
-                        <div class="compose-wrapper visible-xs">
+                        <!-- <div class="compose-wrapper visible-xs">
                           <a class="compose-email text-info pull-right m-r-10 m-t-10" href="{{pathFor 'room/compose'}}"><i class="fa fa-pencil-square-o"></i></a>
-                        </div>
+                        </div> -->
                         <!-- END COMPOSE BUTTON -->
                     </div>
                 </div>
