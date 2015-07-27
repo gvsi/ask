@@ -6,7 +6,8 @@ Meteor.methods({
 
     check(answerAttributes, {
       postId: String,
-      body: String
+      body: String,
+      isAnonymous: Boolean
     });
 
     var user = Meteor.user();
@@ -23,7 +24,6 @@ Meteor.methods({
       created_at: new Date(),
       updated_at: new Date(),
       comments: [],
-      isAnonymous: false //TODO
     });
 
     // create the answer, save the id
@@ -38,7 +38,8 @@ Meteor.methods({
 
     check(commentAttributes, {
       answerId: String,
-      body: String
+      body: String,
+      isAnonymous: Boolean
     });
 
     var user = Meteor.user();
@@ -52,7 +53,6 @@ Meteor.methods({
       //author: user.username,
       created_at: new Date(),
       updated_at: new Date(),
-      isAnonymous: false //TODO
     });
 
     // create the answer, save the id
