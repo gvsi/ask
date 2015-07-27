@@ -1,6 +1,6 @@
 <template name="postCompose">
   {{>postList posts=posts course_id=course_id}}
-  <form id="form-project" role="form" autocomplete="off">
+  <form id="form-compose" role="form" autocomplete="off">
    <!-- START COMPOSE EMAIL -->
    <div class="email-composer container-fluid">
      <div class="row">
@@ -43,8 +43,9 @@
 
            </div>
          </div>
+         {{>latexModal}}
          <div class="summernote-wrapper">
-          <div id="summernote"></div>
+          <div id="summernote-compose"></div>
          </div>
        </div>
      </div>

@@ -196,7 +196,7 @@ Template.postContent.helpers({
     var post = Posts.findOne(postId);
     if (post) {
       if (post.owner) {
-        var hash = post.isAnonymous ? post.owner : post._id + post.owner;
+        var hash = post.isAnonymous ? post._id + post.owner : post.owner;
         return Package.sha.SHA256(hash);
       } else {
         return "";
@@ -302,8 +302,8 @@ Template.answer.helpers({
   },
   identiconHash: function(){
     // works for both answer and comment
-    var postId = Router.current().params.query.p;
-    return Package.sha.SHA256(postId + this.userId);
+    var hash = this.isAnonymous ? Router.current().params.query.p + this.userId : this.userId;
+    return Package.sha.SHA256(hash);
   }
 });
 

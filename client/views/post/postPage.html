@@ -74,31 +74,12 @@
       </div>
       <div class="clearfix"></div>
       <div class="email-content-body m-t-20">
+        {{#mathjax}}
         {{{post.text}}}
+        {{/mathjax}}
       </div>
 
-      <!-- Modal -->
-      <div class="modal fade slide-up disable-scroll" id="latexEditorModal" tabindex="-1" role="dialog" aria-labelledby="modalSlideUpLabel" aria-hidden="false">
-        <div class="modal-dialog ">
-          <div class="modal-content-wrapper">
-            <div class="modal-content">
-              <div class="modal-header clearfix text-left">
-                  <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                  <i class="pg-close fs-14"></i>
-                </button>
-                <h5><span class="semi-bold">LaTeX</span> equation Editor</h5>
-              </div>
-              <div class="modal-body">
-                <textarea id="latex-source" style="width:80%;vertical-align:top;display:none;"></textarea>
-                <span class="mathquill-editor"></span><br><br><br>
-                <button type="submit" id="insertLatexBtn" class="btn btn-complete btn-cons pull-right">Insert</button>
-              </div>
-            </div>
-          </div>
-          <!-- /.modal-content -->
-        </div>
-      </div>
-      <!-- /.modal-dialog -->
+      {{>latexModal}}
 
       {{#each answers}}
         {{ >answer }}
@@ -159,11 +140,13 @@
       <div class="comments">
         {{#each comments}}
           <hr>
-          <div class="thumbnail-wrapper circular" data-toggle="tooltip" data-placement="left" data-html="true" title="{{theAuthor.profile.name}} <br> {{theAuthor.profile.surname}} <br> ({{dateFromNow}})">
+          <div class="thumbnail-wrapper circular" data-toggle="tooltip" data-placement="left" data-html="true" title="{{#if isAnonymous}} Anonymous {{else}} {{theAuthor.profile.name}} <br> {{theAuthor.profile.surname}} {{/if}} <br> ({{dateFromNow}})">
             <img width="40" height="40" alt="" src="{{identicon identiconHash}}">
           </div>
           <div class="commentBody">
+          {{#mathjax}}
           {{{this.body}}}
+          {{/mathjax}}
           </div>
         {{/each}}
         <button id="addCommentBtn" class="btn btn-default btn-xs m-t-10 pull-right">Add a comment</button>
@@ -179,4 +162,29 @@
       </div>
 
     </div>
+  </template>
+
+  <template name="latexModal">
+    <!-- Modal -->
+    <div class="modal fade slide-up disable-scroll" id="latexEditorModal" tabindex="-1" role="dialog" aria-labelledby="modalSlideUpLabel" aria-hidden="false">
+      <div class="modal-dialog ">
+        <div class="modal-content-wrapper">
+          <div class="modal-content">
+            <div class="modal-header clearfix text-left">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                <i class="pg-close fs-14"></i>
+              </button>
+              <h5><span class="semi-bold">LaTeX</span> equation Editor</h5>
+            </div>
+            <div class="modal-body">
+              <textarea id="latex-source" style="width:80%;vertical-align:top;display:none;"></textarea>
+              <span class="mathquill-editor"></span><br><br><br>
+              <button type="submit" id="insertLatexBtn" class="btn btn-complete btn-cons pull-right">Insert</button>
+            </div>
+          </div>
+        </div>
+        <!-- /.modal-content -->
+      </div>
+    </div>
+    <!-- /.modal-dialog -->
   </template>
