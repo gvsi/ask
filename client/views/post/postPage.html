@@ -50,7 +50,11 @@
           </div>
           <div class="sender inline m-l-10">
             <p class="name no-margin bold">
-              {{post.ownerName}} {{post.ownerSurname}}
+              {{#if post.isAnonymous}}
+                Anonymous
+              {{else}}
+                {{post.ownerName}} {{post.ownerSurname}}
+              {{/if}}
             </p>
             <p class="datetime no-margin">
               {{dateFromNow}}
@@ -131,8 +135,12 @@
           <img width="40" height="40" alt="" src="{{identicon identiconHash}}">
         </div>
         <div class="nameLabel bold">
-          {{theAuthor.profile.name}}
-          {{theAuthor.profile.surname}}
+          {{#if isAnonymous}}
+            Anonymous
+          {{else}}
+            {{theAuthor.profile.name}}
+            {{theAuthor.profile.surname}}
+          {{/if}}
         </div>
         <div class="datetime timeLabel">
           {{dateFromNow}}
