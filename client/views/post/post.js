@@ -100,8 +100,35 @@ Template.postPage.rendered = function () {
     var switchery = new Switchery(html, {color: '#10CFBD'});
   });
 
-  $('.custom-tag-input').tagsinput({
+  $('.custom-tag-input').tagsinput({});
 
+  var tags = Courses.findOne(new Mongo.ObjectID(Router.current().params.course_id)).tags;
+
+    if(tags){
+      tags.forEach(function(tag) {
+        $('.custom-tag-input').tagsinput('add', tag);
+      });
+    }
+
+    $('.custom-tag-input').on('itemAdded', function(event) {
+      var tagAttributes = {
+        courseId: Router.current().params.course_id,
+        isAdd: 1,
+        tag: event.item
+      };
+
+      Meteor.call('addOrRemoveTag', tagAttributes, function(error, result) {});
+    });
+
+    $('.custom-tag-input').on('itemRemoved', function(event) {
+      var tagAttributes = {
+        courseId: Router.current().params.course_id,
+        isAdd: 0,
+        tag: event.item
+      };
+
+      Meteor.call('addOrRemoveTag', tagAttributes, function(error, result) {});
+    });
   });
 
   $("#postList").ioslist();
@@ -195,6 +222,16 @@ Template.postContent.helpers({
     } else {
       return false;
     }
+  },
+  tags: function(){
+    var postId = Router.current().params.query.p;
+    var post = Posts.findOne(postId);
+    if (post) {
+      return post.tags;
+    }else{
+      return false;
+    }
+
   }
 });
 

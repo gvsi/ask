@@ -30,7 +30,7 @@
             </div>
             <div class="form-group form-group-default m-t-20">
               <label>Tags</label>
-              <input class="tagsinput custom-tag-input" type="text" value="week 1, exam, logistics" />
+              <input class="tagsinput custom-tag-input" type="text"  />
             </div>
           </div>
         </div><div class="scroll-element scroll-x scroll-scrolly_visible"><div class="scroll-element_outer">    <div class="scroll-element_size"></div>    <div class="scroll-element_track"></div>    <div class="scroll-bar" style="width: 89px;"></div></div></div><div class="scroll-element scroll-y scroll-scrolly_visible"><div class="scroll-element_outer">    <div class="scroll-element_size"></div>    <div class="scroll-element_track"></div>    <div class="scroll-bar" style="height: 296px; top: 139.594260876512px;"></div></div></div></div>
@@ -70,6 +70,12 @@
         </li>
         <li class="no-padding "><a href="#" class="text-danger">Delete</a>
         </li>
+        {{#each tags}}
+        <li class="no-padding ">
+            <button class="btn btn-tag  btn-tag-light m-r-5">{{this}}</button>
+        </li>
+        {{/each}}
+
 
       </ul>
       <div class="clearfix"></div>

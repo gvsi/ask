@@ -38,7 +38,7 @@ Meteor.methods({
     upvote: function(post_id){
       var userId = Meteor.user()._id;
       var voters = Posts.findOne(post_id).upvoters;
-      
+
       if(voters.indexOf(userId) != -1){
           Posts.update({_id: post_id}, {$pull : {
             "upvoters": userId
@@ -49,5 +49,16 @@ Meteor.methods({
           }});
       }
 
+    },
+    addOrRemoveTag: function(tagAttributes){
+      if(tagAttributes.isAdd){
+        Courses.update({_id: new Mongo.ObjectID(tagAttributes.courseId)}, {$addToSet: {
+          "tags": tagAttributes.tag
+        }});
+      }else{
+        Courses.update({_id: new Mongo.ObjectID(tagAttributes.courseId)}, {$pull: {
+          "tags": tagAttributes.tag
+        }});
+      }
     }
 })
