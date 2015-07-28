@@ -217,8 +217,9 @@ Template.postList.helpers({
     ];
 
     var lastPost = Posts.findOne({},{sort:{created_at:1}, limit:1})
-    if (lastPost) {
-      var startOfLastWeek = moment().startOf('isoweek').subtract(1, 'weeks');
+    var startOfLastWeek = moment().startOf('isoweek').subtract(1, 'weeks');
+
+    if (lastPost && lastPost.created_at < startOfLastWeek) {
       var lastDate = lastPost.created_at;
       var st = moment(lastDate).startOf('isoweek');
       var en = moment(lastDate).endOf('isoweek');
