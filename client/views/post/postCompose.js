@@ -45,6 +45,14 @@ Template.postCompose.rendered = function(){
       });
     }).keydown().focus();
 
+    var tags = Courses.findOne(new Mongo.ObjectID(Router.current().params.course_id)).tags;
+
+      if(tags){
+        tags.forEach(function(tag) {
+          $('#postTags').append('<label class="btn btn-complete"><input type="checkbox" checked="">'+ tag +'</label>');
+        });
+      }
+
   });
 
   $('#summernote-compose').summernote({
