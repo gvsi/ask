@@ -137,12 +137,18 @@ Template.postCompose.events({
   'submit #form-compose': function(e) {
     console.log('hi');
     e.preventDefault();
+    var tags=[];
+
+    $("#postTags>.active").each(function() {
+       tags.push($( this ).text().trim());
+    });
+
     var post = {
       title: $(e.target).find('[name=postTitle]').val(),
       text:  $('#summernote-compose').code(),
       isAnonymous: $('#anonymous').is(':checked'),
       course_id: Router.current().params.course_id,
-      tags: ""
+      tags: tags
     };
 
     //var errors = validatePost(post);
