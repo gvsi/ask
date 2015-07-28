@@ -152,6 +152,36 @@ Template.postList.events({
   }
 });
 
+Template.postList.helpers({
+  dateGroups: function() {
+    var groups = [
+      {
+        title:'today',
+        start: moment().startOf('day'),
+        end: moment().endOf('day')}
+      {
+        title:'yesterday',
+        start: moment().startOf('day').subtract(1, 'days'),
+        end: moment().endOf('day').subtract(1, 'days')}
+      {
+        title:'earlier this week',
+        start: moment().startOf('isoweek'),
+        end: moment().endOf('day').subtract(2, 'days')
+      },
+      {
+        title:'last week',
+        start: moment().startOf('isoweek').subtract(1, 'weeks'),
+        end: moment().format('dddd') != 'Monday'? moment().endOf('isoweek').subtract(1, 'weeks') : moment().endOf('isoweek').subtract(8, 'days')
+      }
+    ];
+    return groups;
+  },
+  posts: function () {
+    console.log('called');
+    return Posts.find({'course_id': Router.current().params.course_id, created_at: {$gte: this.start.toDate(), $lt: this.end.toDate()}}, {sort: {created_at: -1}});
+  }
+})
+
 Template.postThumbnail.helpers({
   dateFromNow: function() {
     return moment(this.created_at).fromNow();

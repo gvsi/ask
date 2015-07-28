@@ -4,29 +4,22 @@
       <!-- START POST LIST SORTED BY DATE -->
       <!-- END POST LIST SORTED BY DATE -->
       <!-- <a href="{{pathFor 'compose' course_id=course_id }}" ><button class="pull-right btn btn-sm btn-rounded ">New question</button> </a> -->
-      <div class="list-view-group-container">
-        <div class="list-view-group-header">
-          <span id="date">Today April 23</span>
 
+      {{#each dateGroups}}
+        {{#if posts.count}}
+        <div class="list-view-group-container">
+          <div class="list-view-group-header">
+            <span id="date">{{title}}</span>
+
+          </div>
+          <ul class="no-padding">
+              {{#each posts}}
+              {{> postThumbnail}}
+              {{/each}}
+          </ul>
         </div>
-        <ul class="no-padding">
-          {{#each posts}}
-          {{> postThumbnail}}
-          {{/each}}
-
-        </ul>
-      </div>
-      <div class="list-view-group-container">
-        <div class="list-view-group-header">
-          <span id="date">Hello</span>
-        </div>
-        <ul class="no-padding">
-          {{#each posts}}
-          {{> postThumbnail}}
-          {{/each}}
-
-        </ul>
-      </div>
+        {{/if}}
+      {{/each}}
     </div>
   </div>
 </template>
