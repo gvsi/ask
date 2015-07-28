@@ -129,7 +129,6 @@ Template.postPage.rendered = function () {
 
       Meteor.call('addOrRemoveTag', tagAttributes, function(error, result) {});
     });
-  });
 
   $("#postList").ioslist();
 }
