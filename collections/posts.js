@@ -5,7 +5,7 @@ Meteor.methods({
           check(postAttributes, {
           title: String,
           text: String,
-          tags: String,
+          tags: Array,
           course_id: String,
           isAnonymous: Boolean
         });
