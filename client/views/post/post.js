@@ -197,11 +197,13 @@ Template.postList.helpers({
       {
         title:'today',
         start: moment().startOf('day'),
-        end: moment().endOf('day')}
+        end: moment().endOf('day')
+      },
       {
         title:'yesterday',
         start: moment().startOf('day').subtract(1, 'days'),
-        end: moment().endOf('day').subtract(1, 'days')}
+        end: moment().endOf('day').subtract(1, 'days')
+      },
       {
         title:'earlier this week',
         start: moment().startOf('isoweek'),
@@ -213,6 +215,25 @@ Template.postList.helpers({
         end: moment().format('dddd') != 'Monday'? moment().endOf('isoweek').subtract(1, 'weeks') : moment().endOf('isoweek').subtract(8, 'days')
       }
     ];
+
+    var lastPost = Posts.findOne({},{sort:{created_at:1}, limit:1})
+    if (lastPost) {
+      var startOfLastWeek = moment().startOf('isoweek').subtract(1, 'weeks');
+      var lastDate = lastPost.created_at;
+      var st = moment(lastDate).startOf('isoweek');
+      var en = moment(lastDate).endOf('isoweek');
+
+      while(en <= startOfLastWeek) {
+
+        groups.push({
+          title: "week " + st.format("DD/MM") + " - " + en.format("DD/MM"),
+          start: moment(st),
+          end: moment(en)
+        })
+        st.add(1, 'weeks');
+        en.add(1, 'weeks');
+      }
+    }
     return groups;
   },
   posts: function () {
