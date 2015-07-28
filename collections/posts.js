@@ -38,7 +38,7 @@ Meteor.methods({
     upvote: function(post_id){
       var userId = Meteor.user()._id;
       var voters = Posts.findOne(post_id).upvoters;
-
+      
       if(voters.indexOf(userId) != -1){
           Posts.update({_id: post_id}, {$pull : {
             "upvoters": userId

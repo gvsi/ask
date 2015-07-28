@@ -14,7 +14,7 @@
     .hidden-xlg {
         display: none !important;
     }
-    
+
 
     .quickview-wrapper .tab-content #quickview-notes > .inner{
         width:570px;
@@ -209,7 +209,7 @@
 }
 /*** Medium Size Screen ***/
 @media only screen and (max-width: 1400px) {
-    
+
     .page-sidebar .page-sidebar-inner .sidebar-slide {
         .sidebar-menu{
             bottom:50px;
@@ -235,7 +235,7 @@
                 .page-content-wrapper {
                     .content{
                         padding-left:@layout-sidepanel-pin-width;
-                    } 
+                    }
                     .footer{
                         left: @layout-sidepanel-pin-width;
                     }
@@ -257,7 +257,7 @@
                 }
                 .menu-items .icon-thumbnail {
                     transform: translate3d(-14px, 0, 0);
-                    -webkit-transform: -webkit-translate3d(-14px, 0, 0);   
+                    -webkit-transform: -webkit-translate3d(-14px, 0, 0);
                 }
             }
         }
@@ -334,7 +334,7 @@
 @media (max-width: 991px) {
 
     .page-container{
-        padding-left: 0; 
+        padding-left: 0;
     }
 
     body{
@@ -358,7 +358,7 @@
                 position: absolute;
                 left: 23px;
             }
-            .mark-email{
+            .mark-post{
                 left: 45px;
                 position: absolute;
                 top: 23px;
@@ -374,14 +374,14 @@
         }
         .notification-list, .search-link{
             display: none;
-        } 
+        }
 
         & > .pull-left,  & > .pull-right{
             position: relative;
         }
          & > .pull-right{
             .sm-action-bar{
-                right: 0;   
+                right: 0;
             }
          }
     }
@@ -422,7 +422,7 @@
     }
 
     .icon-thumbnail{
-        margin-right: 24px;   
+        margin-right: 24px;
     }
      .page-sidebar {
         display: none;
@@ -449,12 +449,12 @@
      }
 
      .breadcrumb{
-        padding-left:15px; 
-        padding-right:15px; 
+        padding-left:15px;
+        padding-right:15px;
      }
      .copyright{
-        padding-left:15px; 
-        padding-right:15px;  
+        padding-left:15px;
+        padding-right:15px;
      }
 
     // Pages Notification customizations
@@ -531,7 +531,7 @@
 // because they stack up)
 @media (min-width:1200px){
     .row-same-height{
-      overflow: hidden; 
+      overflow: hidden;
       & > [class*="col-lg"]{
         margin-bottom: -99999px;
         padding-bottom: 99999px;
@@ -541,7 +541,7 @@
 
 @media (min-width:992px){
     .row-same-height{
-      overflow: hidden; 
+      overflow: hidden;
       & > [class*="col-md"]{
         margin-bottom: -99999px;
         padding-bottom: 99999px;
@@ -551,7 +551,7 @@
 
 @media (min-width:768px){
     .row-same-height{
-      overflow: hidden; 
+      overflow: hidden;
       & > [class*="col-sm"]{
         margin-bottom: -99999px;
         padding-bottom: 99999px;
@@ -561,7 +561,7 @@
 
     /* Portrait view of all tablet devices */
 @media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait) {
-    
+
     .page-sidebar .sidebar-menu .menu-items > li{
         & > a{
             padding-left: 27px;
@@ -582,12 +582,12 @@
 }
 
 @media (max-width: 767px) {
-    
+
     .header{
         height: @layout-mobile-header-height;
         .notification-list, .search-link{
             display: none;
-        } 
+        }
         .header-inner{
             height: @layout-mobile-header-height;
         }
@@ -606,7 +606,7 @@
         padding-right: 0;
 
      }
-   
+
      .page-container .page-content-wrapper .content {
         padding-top: @layout-mobile-header-height;
         padding-bottom: 100px;
@@ -634,7 +634,7 @@
 .generate-paddings-options-sm(10);
 
 .generate-paddings-options-sm(@n, @i: 0) when (@i =< @n) {
-  @step : @i*5; 
+  @step : @i*5;
   .sm-p-t-@{step} {
     padding-top: (@step*1px) !important;
   }
@@ -656,7 +656,7 @@
 .generate-margin-options-sm(10);
 
 .generate-margin-options-sm(@n, @i: 1) when (@i =< @n) {
-  @step : @i*5; 
+  @step : @i*5;
   .sm-m-t-@{step} {
     margin-top: (@step*1px) !important;
   }
@@ -691,7 +691,7 @@
   }
   .sm-pull-left{
   float: left !important;
-  } 
+  }
   .sm-pull-reset{
     float: none !important;
   }
@@ -721,14 +721,14 @@
             .header-inner{
                 height: @layout-mobile-header-height;
                 text-align: center;
-                .toggle-email-sidebar{
+                .toggle-post-sidebar{
                     font-size: 16px;
                     top: 12px;
                 }
                 .toggle-sidebar{
                     left: 14px;
                 }
-                .mark-email{
+                .mark-post{
                     left: 35px;
                     top: 14px;
                 }
@@ -740,7 +740,7 @@
             .notification-list, .search-link{
                 display:none;
             }
-            
+
 
             .dropdown-submenu{
                 top:12px;
@@ -805,7 +805,7 @@
         }
         .editor-icon {
             background-image: url("@{base-img-url}/editor_tray_2x.png");
-            background-size: 480px 40px; 
+            background-size: 480px 40px;
         }
       .alert .close {
         background: url("@{base-img-url}/icons/noti-cross-2x.png") no-repeat scroll 0 0 transparent;

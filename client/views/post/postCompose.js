@@ -111,17 +111,17 @@ Template.postCompose.rendered = function(){
   });
 
   if ($(window).width() < 1024) {
-    $('.email-list').hide();
+    $('.post-list').hide();
   }else{
-    $('.email-list').show();
+    $('.post-list').show();
   }
 
 
   $(window).resize(function() {
     if ($(window).width() < 1024) {
-      $('.email-list').hide();
+      $('.post-list').hide();
     }else{
-      $('.email-list').show();
+      $('.post-list').show();
     }
   });
 }

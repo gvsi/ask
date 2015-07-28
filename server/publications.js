@@ -5,9 +5,11 @@ Meteor.publish('posts', function(id) {
 });
 
 Meteor.publish('singlePost', function(id) {
- 	var anon = Posts.findOne({_id: id}).isAnonymous ? 0 : 1;
-
-	return Posts.find({_id: id},{fields: {owner: anon}});
+	if (Posts.findOne({_id: id}).isAnonymous) {
+		return Posts.find({_id: id},{fields: {owner: 0}});
+	} else {
+		return Posts.find({_id: id});
+	}
 });
 
 Meteor.publish('coursesForStudent', function (user_id) {
@@ -15,7 +17,6 @@ Meteor.publish('coursesForStudent', function (user_id) {
 	if (!courses) {
 		throw new Meteor.Error("Student does not exist in database");
 	}
-
 	return Courses.find({'_id': {$in: courses}, 'AYR_CODE': '2014/5', $or: [{'PSL_CODE':'SEM2'}, {'PSL_CODE':'YR'}]});
 });
 

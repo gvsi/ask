@@ -1,10 +1,10 @@
 <template name="postPage">
-  <!-- START EMAILS LIST -->
+  <!-- START POSTS LIST -->
   {{>postList posts=posts course_id=course_id}}
-  <!-- END EMAILS LIST -->
-  <!-- START OPENED EMAIL -->
-  <div class="email-opened">
-    <div class="no-email">
+  <!-- END POSTS LIST -->
+  <!-- START OPENED POST -->
+  <div class="post-opened">
+    <div class="no-post">
 
       <div class="quickview-wrapper builder hidden-sm hidden-xs" id="builder">
       <div class="p-l-30 p-t-40 p-r-30 ">
@@ -47,16 +47,16 @@
     {{>postContent}}
 
   </div>
-  <!-- END OPENED EMAIL -->
+  <!-- END OPENED POST -->
 </template>
 
 <template name="postContent">
 
-  <div class="email-content-wrapper" style="display:none">
+  <div class="post-content-wrapper" style="display:none">
     <div class="actions-wrapper menuclipper bg-master-lightest">
       <ul class="actions menuclipper-menu no-margin p-l-20 ">
         <li class="visible-sm-inline-block visible-xs-inline-block">
-          <a href="#" class="email-list-toggle"><i class="fa fa-angle-left"></i> All Inboxes
+          <a href="#" class="post-list-toggle"><i class="fa fa-angle-left"></i> All Inboxes
           </a>
         </li>
 
@@ -74,7 +74,7 @@
       </ul>
       <div class="clearfix"></div>
     </div>
-    <div class="email-content">
+    <div class="post-content">
       <div class="q-footer">
         <div style="float:left">
           <div class="thumbnail-wrapper bordered circular" >
@@ -101,11 +101,11 @@
         <div class="clearfix"></div>
       </div>
 
-      <div class="email-content-header">
+      <div class="post-content-header">
         <h2><strong>{{post.title}}</strong></h2>
       </div>
       <div class="clearfix"></div>
-      <div class="email-content-body m-t-20">
+      <div class="post-content-body m-t-20">
         {{#mathjax}}
         {{{post.text}}}
         {{/mathjax}}

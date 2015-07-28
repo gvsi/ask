@@ -49,9 +49,9 @@ Template.postPage.rendered = function () {
 
 
   if ($(window).width() < 980) {
-    $('.email-list').attr('id', 'slide-left');
+    $('.post-list').attr('id', 'slide-left');
   } else {
-    $('.email-list').removeAttr('id', 'slide-left');
+    $('.post-list').removeAttr('id', 'slide-left');
   }
 
   if (Router.current().params.query.p) {
@@ -59,37 +59,37 @@ Template.postPage.rendered = function () {
     loadPage(postId);
   }
 
-  $('#mark-email').click(function() {
+  $('#mark-post').click(function() {
     $('.item .checkbox').toggle();
   });
 
-  // Toggle email sidebar on mobile view
-  $('.toggle-email-sidebar').click(function(e) {
+  // Toggle post sidebar on mobile view
+  $('.toggle-post-sidebar').click(function(e) {
     e.stopPropagation();
-    $('.email-sidebar').toggle();
+    $('.post-sidebar').toggle();
   });
 
-  $('.email-list-toggle').click(function() {
-    $('.email-list').toggleClass('slideLeft');
+  $('.post-list-toggle').click(function() {
+    $('.post-list').toggleClass('slideLeft');
   });
 
-  $('.email-sidebar').click(function(e) {
+  $('.post-sidebar').click(function(e) {
     e.stopPropagation();
   })
 
   $(window).resize(function() {
     if ($(window).width() < 980) {
-      $('.email-list').attr('id', 'slide-left');
+      $('.post-list').attr('id', 'slide-left');
     }else{
-      $('.email-list').removeAttr('id', 'slide-left');
+      $('.post-list').removeAttr('id', 'slide-left');
     }
 
     if ($(window).width() <= 1024) {
-      $('.email-sidebar').hide();
+      $('.post-sidebar').hide();
 
     } else {
-      $('.email-list').length && $('.email-list').removeClass('slideLeft');
-      $('.email-sidebar').show();
+      $('.post-list').length && $('.post-list').removeClass('slideLeft');
+      $('.post-sidebar').show();
 
     }
 
@@ -145,8 +145,8 @@ Template.postContent.helpers({
   post: function() {
     var postId = Router.current().params.query.p;
     if (!postId) {
-      $('.no-email').show();
-      $('.email-content-wrapper').hide();
+      $('.no-post').show();
+      $('.post-content-wrapper').hide();
       return false;
     } else {
       var post = Posts.findOne(postId);
@@ -230,6 +230,7 @@ Template.postContent.events({
   },
   'click .upvote': function(e) {
     var id = Router.current().params.query.p;
+    console.log(id);
     Meteor.call('upvote', id, function(error) {
       if (error){
         throw new Meteor.error(error.reason);
@@ -354,12 +355,12 @@ function loadPage(postId) {
   Meteor.subscribe('singlePost', postId);
 
   var post = Posts.findOne(postId);
-  var email = null;
+  var post = null;
 
-  var emailOpened = $('.email-opened');
+  var postOpened = $('.post-opened');
 
-  $('.no-email').hide();
-  $('.email-content-wrapper').show();
+  $('.no-post').hide();
+  $('.post-content-wrapper').show();
 
   $('#summernote').destroy();
   $('#summernote').summernote({
@@ -425,9 +426,9 @@ function loadPage(postId) {
     }
   });
 
-  $(".email-content-wrapper").scrollTop(0);
+  $(".post-content-wrapper").scrollTop(0);
 
-  // Initialize email action menu
+  // Initialize post action menu
   $('.menuclipper').menuclipper({
     bufferWidth: 20
   });

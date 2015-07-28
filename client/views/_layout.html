@@ -84,7 +84,7 @@
     </body>
 </template>
 
-<!-- EMAIL LAYOUT -->
+<!-- POST LAYOUT -->
 <template name="postLayout">
     <body class="fixed-header">
         {{ >sideBar }}
@@ -95,13 +95,13 @@
             <div class="page-content-wrapper full-height">
                 <!-- START PAGE CONTENT -->
                 <div class="content full-height">
-                    <div class="email-wrapper">
-                        <!-- START EMAIL SIDEBAR MENU-->
-                        <!-- {{>emailSidebar}} -->
+                    <div class="post-wrapper">
+                        <!-- START POST SIDEBAR MENU-->
+                        <!-- {{>postSidebar}} -->
                         {{>yield}}
                         <!-- START COMPOSE BUTTON FOR TABS -->
                         <div class="compose-wrapper visible-xs">
-                          <a class="compose-email text-info pull-right m-r-10 m-t-10" href="{{pathFor 'compose' course_id=course_id }}"><i class="fa fa-pencil-square-o"></i></a>
+                          <a class="compose-post text-info pull-right m-r-10 m-t-10" href="{{pathFor 'compose' course_id=course_id }}"><i class="fa fa-pencil-square-o"></i></a>
                         </div>
                         <!-- END COMPOSE BUTTON -->
                     </div>
@@ -124,13 +124,13 @@
             <div class="page-content-wrapper full-height">
                 <!-- START PAGE CONTENT -->
                 <div class="content full-height">
-                    <div class="email-wrapper">
-                        <!-- START EMAIL SIDEBAR MENU-->
-                        <!-- {{>emailSidebar}} -->
+                    <div class="post-wrapper">
+                        <!-- START POST SIDEBAR MENU-->
+                        <!-- {{>postSidebar}} -->
                         {{>yield}}
                         <!-- START COMPOSE BUTTON FOR TABS -->
                         <!-- <div class="compose-wrapper visible-xs">
-                          <a class="compose-email text-info pull-right m-r-10 m-t-10" href="{{pathFor 'room/compose'}}"><i class="fa fa-pencil-square-o"></i></a>
+                          <a class="compose-post text-info pull-right m-r-10 m-t-10" href="{{pathFor 'room/compose'}}"><i class="fa fa-pencil-square-o"></i></a>
                         </div> -->
                         <!-- END COMPOSE BUTTON -->
                     </div>
