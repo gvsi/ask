@@ -1,12 +1,24 @@
 <template name="postList">
   <div class="post-list b-r b-grey"> <a class="post-refresh" href="#"></a>
     <div id="postList">
-      <!-- START EMAIL LIST SORTED BY DATE -->
-      <!-- END EMAIL LIST SORTED BY DATE -->
+      <!-- START POST LIST SORTED BY DATE -->
+      <!-- END POST LIST SORTED BY DATE -->
+      <!-- <a href="{{pathFor 'compose' course_id=course_id }}" ><button class="pull-right btn btn-sm btn-rounded ">New question</button> </a> -->
       <div class="list-view-group-container">
         <div class="list-view-group-header">
           <span id="date">Today April 23</span>
-          <a href="{{pathFor 'compose' course_id=course_id }}" ><button class="pull-right btn btn-sm btn-rounded ">New question</button> </a>
+
+        </div>
+        <ul class="no-padding">
+          {{#each posts}}
+          {{> postThumbnail}}
+          {{/each}}
+
+        </ul>
+      </div>
+      <div class="list-view-group-container">
+        <div class="list-view-group-header">
+          <span id="date">Hello</span>
         </div>
         <ul class="no-padding">
           {{#each posts}}
@@ -34,8 +46,8 @@
     </div>
     <div class="datetime">{{dateFromNow}}</div>
     <div class="badge-wraper">
-      <div class="badge-icon answered" data-toggle="tooltip" data-placement="top" data-html="true" title="Answered question"> A </div>
-      <div class="badge-icon answeredInstructor" data-toggle="tooltip" data-placement="top" data-html="true" title="Answered by Instructor"> AI </div>
+      <div class="badge-icon answered" data-toggle="tooltip" data-placement="left" data-html="true" title="Student Answer"> A </div>
+      <div class="badge-icon answeredInstructor" data-toggle="tooltip" data-placement="left" data-html="true" title="Instructor Answer"> AI </div>
     </div>
     <div class="clearfix"></div>
   </li>

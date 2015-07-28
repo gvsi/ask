@@ -135,7 +135,6 @@ Template.postCompose.helpers({
 
 Template.postCompose.events({
   'submit #form-compose': function(e) {
-    console.log('hi');
     e.preventDefault();
     var tags=[];
 

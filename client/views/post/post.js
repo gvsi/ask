@@ -1,51 +1,48 @@
 Template.postPage.rendered = function () {
   mathquill();
   var LatexImages = false;
-  $(function(){
-    function printTree(html)
+  function printTree(html)
+  {
+    html = html.match(/<[a-z]+|<\/[a-z]+>|./ig);
+    if(!html) return '';
+    var indent = '\n', tree = '';
+    while(html.length)
     {
-      html = html.match(/<[a-z]+|<\/[a-z]+>|./ig);
-      if(!html) return '';
-      var indent = '\n', tree = '';
-      while(html.length)
+      var token = html.shift();
+      if(token.charAt(0) === '<')
       {
-        var token = html.shift();
-        if(token.charAt(0) === '<')
+        if(token.charAt(1) === '/')
         {
-          if(token.charAt(1) === '/')
-          {
-            indent = indent.slice(0,-2);
-            if(html[0] && html[0].slice(0,2) === '</')
-            token += indent.slice(0,-2);
-          }
-          else
-          {
-            tree += indent;
-            indent += '  ';
-          }
-          token = token.toLowerCase();
+          indent = indent.slice(0,-2);
+          if(html[0] && html[0].slice(0,2) === '</')
+          token += indent.slice(0,-2);
         }
-
-        tree += token;
+        else
+        {
+          tree += indent;
+          indent += '  ';
+        }
+        token = token.toLowerCase();
       }
-      return tree.slice(1);
-    }
-    var editingSource = false, latexSource = $('#latex-source'), htmlSource = $('#html-source'), codecogs = $('#codecogs'), latexMath = $('.mathquill-editor').bind('keydown keypress', function()
-    {
-      setTimeout(function() {
-        htmlSource.text(printTree(latexMath.mathquill('html')));
-        var latex = latexMath.mathquill('latex');
-        if(!editingSource)
-        latexSource.val(latex);
-        if(!LatexImages)
-        return;
-        latex = encodeURIComponent(latexSource.val());
-        //            location.hash = '#'+latex; //extremely performance-crippling in Chrome for some reason
-        codecogs.attr('src','http://latex.codecogs.com/gif.latex?'+latex).parent().attr('href','http://latex.codecogs.com/gif.latex?'+latex);
-      });
-    }).keydown().focus();
 
-  });
+      tree += token;
+    }
+    return tree.slice(1);
+  }
+  var editingSource = false, latexSource = $('#latex-source'), htmlSource = $('#html-source'), codecogs = $('#codecogs'), latexMath = $('.mathquill-editor').bind('keydown keypress', function()
+  {
+    setTimeout(function() {
+      htmlSource.text(printTree(latexMath.mathquill('html')));
+      var latex = latexMath.mathquill('latex');
+      if(!editingSource)
+      latexSource.val(latex);
+      if(!LatexImages)
+      return;
+      latex = encodeURIComponent(latexSource.val());
+      //            location.hash = '#'+latex; //extremely performance-crippling in Chrome for some reason
+      codecogs.attr('src','http://latex.codecogs.com/gif.latex?'+latex).parent().attr('href','http://latex.codecogs.com/gif.latex?'+latex);
+    });
+  }).keydown().focus();
 
 
   if ($(window).width() < 980) {
@@ -106,6 +103,8 @@ Template.postPage.rendered = function () {
   $('.custom-tag-input').tagsinput({
 
   });
+
+  $("#postList").ioslist();
 }
 
 Template.postPage.helpers({
@@ -120,7 +119,6 @@ Template.postPage.helpers({
 Template.postList.events({
   'click .item': function(e) {
     $('.item').removeClass('active');
-    //console.log(e.currentTarget);
     $(e.currentTarget).addClass('active');
     var postId = $(e.currentTarget).attr('data-post-id');
     Router.go('room', {course_id: Router.current().params.course_id}, {query: 'p='+postId});
@@ -230,7 +228,6 @@ Template.postContent.events({
   },
   'click .upvote': function(e) {
     var id = Router.current().params.query.p;
-    console.log(id);
     Meteor.call('upvote', id, function(error) {
       if (error){
         throw new Meteor.error(error.reason);
@@ -413,7 +410,6 @@ function loadPage(postId) {
 
         setTimeout(function(){
           var toInsert = "$"+$('#latex-source').val()+"$";
-          //console.log(cursorPos);
           if (!oldContent) {
             $('#summernote').code("<p>"+toInsert+"</p>")
           } else {
@@ -440,7 +436,7 @@ function loadPage(postId) {
   }, 1000);
 }
 
-//removes all tags and whitespaces (&nbsp;) to make sure
+//removes all tags and whitespaces (&nbsp;)
 function strip_tags(input, allowed) {
   allowed = (((allowed || '') + '')
   .toLowerCase()
