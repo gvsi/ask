@@ -100,6 +100,39 @@ Template.postPage.rendered = function () {
     var switchery = new Switchery(html, {color: '#10CFBD'});
   });
 
+  var changeCheckbox = document.querySelector('.defaultTags');
+  if(changeCheckbox.checked){
+    $(tagsForCourse).hide();
+  }
+
+  changeCheckbox.onchange = function() {
+    if(changeCheckbox.checked){
+      $(tagsForCourse).hide();
+      var tagAttributes = {
+        courseId: Router.current().params.course_id,
+        isDefault: 1,
+      };
+
+      Meteor.call('setOrRemoveDefaultTags', tagAttributes, function(error, result) {});
+    }else{
+      var tagAttributes = {
+        courseId: Router.current().params.course_id,
+        isDefault: 0,
+      };
+
+      Meteor.call('setOrRemoveDefaultTags', tagAttributes, function(error, result) {});
+      var tags = Courses.findOne(new Mongo.ObjectID(Router.current().params.course_id)).tags;
+
+      if(tags){
+        $('.custom-tag-input').tagsinput('removeAll');
+        tags.forEach(function(tag) {
+          $('.custom-tag-input').tagsinput('add', tag);
+        });
+      }
+      $(tagsForCourse).show();
+    }
+  };
+
   $('.custom-tag-input').tagsinput({});
 
   var tags = Courses.findOne(new Mongo.ObjectID(Router.current().params.course_id)).tags;
@@ -139,6 +172,12 @@ Template.postPage.helpers({
   },
   course_id: function () {
     return Router.current().params.course_id;
+  },
+  defaultTagsChecked: function(){
+    var currentCourse = Courses.findOne(new Mongo.ObjectID(Router.current().params.course_id));
+    if(currentCourse.isDefault){
+      return "checked"
+    }
   }
 });
 
@@ -230,7 +269,6 @@ Template.postContent.helpers({
     }else{
       return false;
     }
-
   }
 });
 
