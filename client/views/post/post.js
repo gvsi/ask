@@ -62,10 +62,13 @@ Template.postPage.helpers({
   },
   course_id: function () {
     return Router.current().params.course_id;
-  },
+  }
+});
+
+Template.courseSettingsModal.helpers({
   defaultTagsChecked: function(){
     var currentCourse = Courses.findOne(Router.current().params.course_id);
-    if (currentCourse && currentCourse.isDefault) {
+    if (currentCourse && currentCourse.areTagsDefault) {
       return "checked";
     }
   }
