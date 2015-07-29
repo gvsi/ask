@@ -1,5 +1,13 @@
 <template name="postList">
-  <div class="post-list b-r b-grey"> <a class="post-refresh" href="#"></a>
+  <div class="post-list b-r b-grey">
+    {{#if course_id}}
+      <a href="{{pathFor 'compose' course_id=course_id }}" >
+        <button id="newQuestion" class="btn btn-sm btn-rounded">New question</button>
+      </a>
+      <a class="post-refresh" data-toggle="quickview" data-toggle-element="#builder" href="#">
+        <i class="fa fa-cog"></i>
+      </a>
+    {{/if}}
     <div id="postList">
       <!-- START POST LIST SORTED BY DATE -->
       <!-- END POST LIST SORTED BY DATE -->
