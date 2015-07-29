@@ -106,7 +106,7 @@ Template.postPage.rendered = function () {
 
   $('.custom-tag-input').tagsinput({});
 
-  var tags = Courses.findOne(new Mongo.ObjectID(Router.current().params.course_id)).tags;
+  var tags = Courses.findOne(Router.current().params.course_id).tags;
   if(tags){
     tags.forEach(function(tag) {
       $('.custom-tag-input').tagsinput('add', tag);
@@ -124,8 +124,8 @@ Template.postPage.helpers({
     return Router.current().params.course_id;
   },
   defaultTagsChecked: function(){
-    var currentCourse = Courses.findOne(new Mongo.ObjectID(Router.current().params.course_id));
-    if(currentCourse.isDefault){
+    var currentCourse = Courses.findOne(Router.current().params.course_id);
+    if(currentCourse.areTagsDefault){
       return "checked"
     }
   }
@@ -137,18 +137,18 @@ Template.postPage.events({
       $("#tagsForCourse").hide();
       var tagAttributes = {
         courseId: Router.current().params.course_id,
-        isDefault: 1,
+        areTagsDefault: 1,
       };
 
       Meteor.call('setOrRemoveDefaultTags', tagAttributes, function(error, result) {});
     }else{
       var tagAttributes = {
         courseId: Router.current().params.course_id,
-        isDefault: 0,
+        areTagsDefault: 0,
       };
 
       Meteor.call('setOrRemoveDefaultTags', tagAttributes, function(error, result) {});
-      var tags = Courses.findOne(new Mongo.ObjectID(Router.current().params.course_id)).tags;
+      var tags = Courses.findOne(Router.current().params.course_id).tags;
 
       if(tags){
         $('.custom-tag-input').tagsinput('removeAll');

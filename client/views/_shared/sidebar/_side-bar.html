@@ -52,7 +52,7 @@
             <ul class="sub-menu" style="display:block;">
               {{#each courses}}
               <li class="">
-                <a href="{{pathFor 'room' course_id=this._id._str }}">{{MOD_NAME}}</a>
+                <a href="{{pathFor 'room' course_id=this._id }}">{{name}}</a>
                 <span class="icon-thumbnail">{{courseInitials}}</span>
               </li>
               {{/each}}

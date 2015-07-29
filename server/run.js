@@ -15,13 +15,43 @@ Meteor.methods({
 			}});
 		}
 
+		var coursesCsv = CoursesCsv.find().fetch();
+		for (i in coursesCsv){
+
+			if(Courses.find({courseCode: coursesCsv[i].MOD_CODE, year: coursesCsv[i].AYR_CODE, semester: coursesCsv[i].PSL_CODE}).count()){
+				Courses.update(
+					{courseCode: coursesCsv[i].MOD_CODE, year: coursesCsv[i].AYR_CODE, semester: coursesCsv[i].PSL_CODE},
+					{$set: {
+						"courseCode": coursesCsv[i].MOD_CODE,
+						"name": coursesCsv[i].MOD_NAME,
+						"year": coursesCsv[i].AYR_CODE,
+						"semester": coursesCsv[i].PSL_CODE,
+						},
+					 $addToSet: {"instructors": coursesCsv[i].MUA_EXTU }
+					}
+				);
+			}else{
+				Courses.insert(
+					 {
+						"courseCode": coursesCsv[i].MOD_CODE,
+						"name": coursesCsv[i].MOD_NAME,
+						"year": coursesCsv[i].AYR_CODE,
+						"semester": coursesCsv[i].PSL_CODE,
+						"areTagsDefault": 1,
+						"tags": ['w1', 'w2', 'w3', 'w4', 'w5','w6', 'w7','w8','w9','w10','w11','logistics','project','exam','other' ],
+					  "instructors": [coursesCsv[i].MUA_EXTU]
+					 }
+					);
+			}
+		}
+
 		var enrolments = Enrolments.find().fetch();
 		for (i in enrolments) {
 			// find if there's a student with that UUN
 			if (Meteor.users.findOne({username: enrolments[i].STU_CODE.toLowerCase()})) {
 
 				// find if there's a course from the enrolment
-				var course = Courses.findOne({MOD_CODE: enrolments[i].MOD_CODE, AYR_CODE: enrolments[i].AYR_CODE, PSL_CODE: enrolments[i].PSL_CODE});
+				var course = Courses.findOne({courseCode: enrolments[i].MOD_CODE, year: enrolments[i].AYR_CODE, semester: enrolments[i].PSL_CODE});
 				if (course) {
 					Meteor.users.update({username : enrolments[i].STU_CODE.toLowerCase()}, {$addToSet : {
 						"profile.courses": course._id
@@ -36,7 +66,7 @@ Meteor.methods({
 
 		return true;
 	}
-})
+});
 
 
 /*Meteor.call('runCode', function (err, response) {

@@ -49,34 +49,5 @@ Meteor.methods({
           }});
       }
 
-    },
-    addOrRemoveTag: function(tagAttributes){
-
-      if(!Courses.findOne(new Mongo.ObjectID(tagAttributes.courseId)).isDefault){
-        if(tagAttributes.isAdd){
-          Courses.update({_id: new Mongo.ObjectID(tagAttributes.courseId)}, {$addToSet: {
-            "tags": tagAttributes.tag
-          }});
-        }else{
-          Courses.update({_id: new Mongo.ObjectID(tagAttributes.courseId)}, {$pull: {
-            "tags": tagAttributes.tag
-          }});
-        }
-     }
-   },
-   setOrRemoveDefaultTags: function(tagAttributes){
-     Courses.update({_id: new Mongo.ObjectID(tagAttributes.courseId)}, {$set: {
-      "isDefault": tagAttributes.isDefault
-     }});
-
-    if(tagAttributes.isDefault){
-      Courses.update({_id: new Mongo.ObjectID(tagAttributes.courseId)}, {$set: {
-        "tags": ['w1', 'w2', 'w3', 'w4', 'w5','w6', 'w7','w8','w9','w10','w11','logistics','project','exam','other' ]
-      }});
-    }else{
-      Courses.update({_id: new Mongo.ObjectID(tagAttributes.courseId)}, {$set: {
-        "tags": []
-      }});
     }
-   }
 })
