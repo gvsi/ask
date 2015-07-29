@@ -12,6 +12,6 @@ Template.sideBar.helpers({
 		return Courses.find().fetch();
 	},
 	courseInitials: function () {
-		return this.MOD_CODE.substring(0,2);
+		return this.courseCode.substring(0,2);
 	}
 });

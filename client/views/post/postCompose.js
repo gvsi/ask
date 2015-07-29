@@ -45,7 +45,7 @@ Template.postCompose.rendered = function(){
       });
     }).keydown().focus();
 
-    var tags = Courses.findOne(new Mongo.ObjectID(Router.current().params.course_id)).tags;
+    var tags = Courses.findOne(Router.current().params.course_id).tags;
 
       if(tags){
         tags.forEach(function(tag) {

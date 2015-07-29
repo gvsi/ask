@@ -17,7 +17,7 @@ Meteor.publish('coursesForStudent', function (user_id) {
 	if (!courses) {
 		throw new Meteor.Error("Student does not exist in database");
 	}
-	return Courses.find({'_id': {$in: courses}, 'AYR_CODE': '2014/5', $or: [{'PSL_CODE':'SEM2'}, {'PSL_CODE':'YR'}]});
+	return Courses.find({'_id': {$in: courses}, 'year': '2014/5', $or: [{'semester':'SEM2'}, {'semester':'YR'}]});
 });
 
 Meteor.publish('singleUser', function(id) {
