@@ -5,21 +5,25 @@
       <!-- END POST LIST SORTED BY DATE -->
       <!-- <a href="{{pathFor 'compose' course_id=course_id }}" ><button class="pull-right btn btn-sm btn-rounded ">New question</button> </a> -->
 
-      {{#each dateGroups}}
-        {{#if posts.count}}
-        <div class="list-view-group-container">
-          <div class="list-view-group-header">
-            <span id="date">{{title}}</span>
+      {{#if areTherePosts}}
+        {{#each dateGroups}}
+          {{#if postsByDate.count}}
+          <div class="list-view-group-container">
+            <div class="list-view-group-header">
+              <span id="date">{{title}}</span>
 
+            </div>
+            <ul class="no-padding">
+                {{#each postsByDate}}
+                {{> postThumbnail}}
+                {{/each}}
+            </ul>
           </div>
-          <ul class="no-padding">
-              {{#each posts}}
-              {{> postThumbnail}}
-              {{/each}}
-          </ul>
-        </div>
-        {{/if}}
-      {{/each}}
+          {{/if}}
+        {{/each}}
+      {{else}}
+        <div id="no-post-error" style="margin-top: 50px; text-align:center"><h4>Nothing going on here</h4></div>
+      {{/if}}
     </div>
   </div>
 </template>

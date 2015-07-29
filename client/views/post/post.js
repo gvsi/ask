@@ -1,49 +1,11 @@
 Template.postPage.rendered = function () {
-  mathquill();
-  var LatexImages = false;
-  function printTree(html)
-  {
-    html = html.match(/<[a-z]+|<\/[a-z]+>|./ig);
-    if(!html) return '';
-    var indent = '\n', tree = '';
-    while(html.length)
-    {
-      var token = html.shift();
-      if(token.charAt(0) === '<')
-      {
-        if(token.charAt(1) === '/')
-        {
-          indent = indent.slice(0,-2);
-          if(html[0] && html[0].slice(0,2) === '</')
-          token += indent.slice(0,-2);
-        }
-        else
-        {
-          tree += indent;
-          indent += '  ';
-        }
-        token = token.toLowerCase();
-      }
-
-      tree += token;
-    }
-    return tree.slice(1);
+  //builds the list only if there are posts
+  if (!$("#no-post-error").length) {
+    console.log('hello');
+    $("#postList").ioslist();
   }
-  var editingSource = false, latexSource = $('#latex-source'), htmlSource = $('#html-source'), codecogs = $('#codecogs'), latexMath = $('.mathquill-editor').bind('keydown keypress', function()
-  {
-    setTimeout(function() {
-      htmlSource.text(printTree(latexMath.mathquill('html')));
-      var latex = latexMath.mathquill('latex');
-      if(!editingSource)
-      latexSource.val(latex);
-      if(!LatexImages)
-      return;
-      latex = encodeURIComponent(latexSource.val());
-      //            location.hash = '#'+latex; //extremely performance-crippling in Chrome for some reason
-      codecogs.attr('src','http://latex.codecogs.com/gif.latex?'+latex).parent().attr('href','http://latex.codecogs.com/gif.latex?'+latex);
-    });
-  }).keydown().focus();
 
+  loadMathQuill();
 
   if ($(window).width() < 980) {
     $('.post-list').attr('id', 'slide-left');
@@ -56,38 +18,15 @@ Template.postPage.rendered = function () {
     loadPage(postId);
   }
 
-  $('#mark-post').click(function() {
-    $('.item .checkbox').toggle();
-  });
-
-  // Toggle post sidebar on mobile view
-  $('.toggle-post-sidebar').click(function(e) {
-    e.stopPropagation();
-    $('.post-sidebar').toggle();
-  });
-
-  $('.post-list-toggle').click(function() {
-    $('.post-list').toggleClass('slideLeft');
-  });
-
-  $('.post-sidebar').click(function(e) {
-    e.stopPropagation();
-  })
-
   $(window).resize(function() {
     if ($(window).width() < 980) {
       $('.post-list').attr('id', 'slide-left');
-    }else{
+    } else {
       $('.post-list').removeAttr('id', 'slide-left');
     }
 
-    if ($(window).width() <= 1024) {
-      $('.post-sidebar').hide();
-
-    } else {
+    if ($(window).width() > 1024) {
       $('.post-list').length && $('.post-list').removeClass('slideLeft');
-      $('.post-sidebar').show();
-
     }
 
   });
@@ -106,14 +45,15 @@ Template.postPage.rendered = function () {
 
   $('.custom-tag-input').tagsinput({});
 
-  var tags = Courses.findOne(new Mongo.ObjectID(Router.current().params.course_id)).tags;
-  if(tags){
-    tags.forEach(function(tag) {
-      $('.custom-tag-input').tagsinput('add', tag);
-    });
+  var course = Courses.findOne(new Mongo.ObjectID(Router.current().params.course_id));
+  if (course) {
+    var tags = Courses.findOne(new Mongo.ObjectID(Router.current().params.course_id)).tags;
+      if (tags) {
+        tags.forEach(function(tag) {
+          $('.custom-tag-input').tagsinput('add', tag);
+        });
+      }
   }
-
-  $("#postList").ioslist();
 }
 
 Template.postPage.helpers({
@@ -125,8 +65,8 @@ Template.postPage.helpers({
   },
   defaultTagsChecked: function(){
     var currentCourse = Courses.findOne(new Mongo.ObjectID(Router.current().params.course_id));
-    if(currentCourse.isDefault){
-      return "checked"
+    if (currentCourse && currentCourse.isDefault) {
+      return "checked";
     }
   }
 });
@@ -186,6 +126,9 @@ Template.postList.events({
     var postId = $(e.currentTarget).attr('data-post-id');
     Router.go('room', {course_id: Router.current().params.course_id}, {query: 'p='+postId});
     loadPage(postId);
+  },
+  "click .post-list-toggle": function(event) {
+    $('.post-list').toggleClass('slideLeft');
   }
 });
 
@@ -235,8 +178,10 @@ Template.postList.helpers({
     }
     return groups;
   },
-  posts: function () {
-    console.log('called');
+  areTherePosts: function() {
+    return Posts.find({'course_id': Router.current().params.course_id}).count() > 0;
+  },
+  postsByDate: function () {
     return Posts.find({'course_id': Router.current().params.course_id, created_at: {$gte: this.start.toDate(), $lt: this.end.toDate()}}, {sort: {created_at: -1}});
   }
 })
@@ -301,10 +246,10 @@ Template.postContent.helpers({
     var post = Posts.findOne(postId);
     if (post) {
       var voters = post.upvoters;
-      var userId = Meteor.user()._id;
-      if(voters && voters.indexOf(userId) != -1){
+      var user = Meteor.user();
+      if (voters && user && voters.indexOf(user._id) != -1) {
         return 'btn-success';
-      }else{
+      } else {
         return 'btn-default';
       }
     } else {
@@ -572,4 +517,51 @@ function strip_tags(input, allowed) {
   .replace(tags, function($0, $1) {
     return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
   }).replace(/&nbsp;/gi,'').replace(/\s+/g, ''); // removes spaces and &nbsp;
+}
+
+function loadMathQuill() {
+  mathquill();
+  var LatexImages = false;
+  function printTree(html)
+  {
+    html = html.match(/<[a-z]+|<\/[a-z]+>|./ig);
+    if(!html) return '';
+    var indent = '\n', tree = '';
+    while(html.length)
+    {
+      var token = html.shift();
+      if(token.charAt(0) === '<')
+      {
+        if(token.charAt(1) === '/')
+        {
+          indent = indent.slice(0,-2);
+          if(html[0] && html[0].slice(0,2) === '</')
+          token += indent.slice(0,-2);
+        }
+        else
+        {
+          tree += indent;
+          indent += '  ';
+        }
+        token = token.toLowerCase();
+      }
+
+      tree += token;
+    }
+    return tree.slice(1);
+  }
+  var editingSource = false, latexSource = $('#latex-source'), htmlSource = $('#html-source'), codecogs = $('#codecogs'), latexMath = $('.mathquill-editor').bind('keydown keypress', function()
+  {
+    setTimeout(function() {
+      htmlSource.text(printTree(latexMath.mathquill('html')));
+      var latex = latexMath.mathquill('latex');
+      if(!editingSource)
+      latexSource.val(latex);
+      if(!LatexImages)
+      return;
+      latex = encodeURIComponent(latexSource.val());
+      //            location.hash = '#'+latex; //extremely performance-crippling in Chrome for some reason
+      codecogs.attr('src','http://latex.codecogs.com/gif.latex?'+latex).parent().attr('href','http://latex.codecogs.com/gif.latex?'+latex);
+    });
+  }).keydown().focus();
 }
