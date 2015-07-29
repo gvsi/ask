@@ -47,11 +47,12 @@ Template.postPage.rendered = function () {
 
   var course = Courses.findOne(Router.current().params.course_id);
   if (course) {
-  var tags = course.tags;
-  if(tags){
-    tags.forEach(function(tag) {
-      $('.custom-tag-input').tagsinput('add', tag);
-    });
+    var tags = course.tags;
+    if(tags){
+      tags.forEach(function(tag) {
+        $('.custom-tag-input').tagsinput('add', tag);
+      });
+    }
   }
 }
 
