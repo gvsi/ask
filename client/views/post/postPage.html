@@ -4,14 +4,14 @@
   <!-- END POSTS LIST -->
   <!-- START OPENED POST -->
   <div class="post-opened">
-    {{>courseSettingsModal}}
+    {{>courseSettingsModal course_id=course_id}}
     <div class="no-post">
       {{#if posts.count}}
       <h2>Course stats go here</h2>
       {{else}}
       <h2>No posts here :(</h2>
       {{/if}}
-      <button class="btn btn-lg btn-rounded" data-toggle="quickview" data-toggle-element="#builder">Course Settings</button>
+      <button class="btn btn-green btn-lg" data-target="#modalSlideLeft" data-toggle="modal">Course Settings</button>
     </div>
 
     {{>postContent}}
@@ -182,7 +182,7 @@
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
               <i class="pg-close fs-14"></i>
             </button>
-            <h5><span class="semi-bold">LaTeX</span> equation Editor</h5>
+            <h5><span class="semi-bold">LaTeX</span> Equation Editor</h5>
           </div>
           <div class="modal-body">
             <textarea id="latex-source" style="width:80%;vertical-align:top;display:none;"></textarea>
@@ -198,38 +198,84 @@
 </template>
 
 <template name="courseSettingsModal">
-  <div class="quickview-wrapper builder hidden-sm hidden-xs" id="builder">
-    <div class="p-l-30 p-t-40 p-r-30 ">
-      <a class="builder-close quickview-toggle pg-close" data-toggle="quickview" data-toggle-element="#builder" href="#"></a>
-      <div class="scroll-wrapper scrollable full-height" style="position: relative;"><div class="scrollable full-height scroll-content scroll-scrolly_visible" style="margin-bottom: 0px; margin-right: 0px; height: 508px;">
-        <div class="p-l-10 p-r-50">
-          <h4 class="semi-bold">
-            Course Settings
-          </h4>
-          <!-- <p class=" hint-text no-margin">
-          Color makes it different
-          </p>-->
-          <p class="small hint-text m-b-20">
-            Control and customize this course.
-          </p>
-          <div style="width: 100%;height: 33px;margin-top:30px">
-            <span style="font-size: 19px;margin-top: 4px;" class="pull-left"> Lecture mode </span>
-            <span class="pull-right"><input type="checkbox" class="switchery" /></span>
-            <br>
-            <p class="small hint-text">
+  {{#with course}}
+
+  <div class="modal fade slide-right" id="modalSlideLeft" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md" style="width: 420px">
+      <div class="modal-content-wrapper">
+        <div class="modal-content table-block" style="height:100%;overflow:auto;">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="pg-close fs-14"></i></button>
+          <div class="modal-body">
+            <div class="p-l-10 p-r-10">
+              <h2 class="semi-bold">
+                Course Settings
+              </h2>
+              <!-- <p class=" hint-text no-margin">
+              Color makes it different
+            </p>-->
+            <p class="small hint-text m-b-20">
               Control and customize this course.
             </p>
-          </div>
-          <div style="width: 100%;height: 33px;margin-top:50px">
-            <span style="font-size: 19px;margin-top: 4px;" class="pull-left"> Use default tags </span>
-            <span class="pull-right"><input type="checkbox" class="switchery" id="defaultTags" {{defaultTagsChecked}} /></span>
-          </div>
-          <div class="form-group form-group-default m-t-20" id="tagsForCourse">
-            <label>Tags</label>
-            <input class="tagsinput custom-tag-input" type="text"  />
+            <div class="m-t-20" style="width: 100%;">
+              <span style="font-size: 19px;margin-top: 4px;" class="pull-left"> Lecture mode </span>
+              <span class="pull-right"><input type="checkbox" class="switchery" /></span>
+              <br>
+              <p class="small hint-text m-t-10">
+                When lecture mode is activated, students will be redirected to a special interface where they can ask question during lectures. Instructors will have their own interface to keep track of the questions that students have and manage them as they want during the lecture.
+              </p>
+            </div>
+            <div class="m-t-20" style="width: 100%;">
+              <span style="font-size: 19px;margin-top: 4px;" class="pull-left"> Use default tags </span>
+              <span class="pull-right"><input type="checkbox" class="switchery" id="defaultTags" {{defaultTagsChecked}} /></span>
+              <br>
+              <p class="small hint-text m-t-10">
+                Questions students ask on the platform can be tagged. Tags make searching, filtering and answering easier for students and instructor.
+                (Leave custom tags field blank if you want to disable tags for this course)
+              </p>
+            </div>
+            {{#if areTagsDefault}}
+            <div class="form-group form-group-default m-t-20" id="defaultTagsForCourse">
+              <label>Default tags</label>
+              <div class="bootstrap-tagsinput">
+                <span class="tag label label-info">wk1</span>
+                <span class="tag label label-info">wk2</span>
+                <span class="tag label label-info">wk3</span>
+                <span class="tag label label-info">wk4</span>
+                <span class="tag label label-info">wk5</span>
+                <span class="tag label label-info">wk6</span>
+                <span class="tag label label-info">wk7</span>
+                <span class="tag label label-info">wk8</span>
+                <span class="tag label label-info">wk9</span>
+                <span class="tag label label-info">wk10</span>
+                <span class="tag label label-info">wk11</span>
+                <span class="tag label label-info">logistics</span>
+                <span class="tag label label-info">project</span>
+                <span class="tag label label-info">exam</span>
+                <span class="tag label label-info">other</span>
+              </div>
+            </div>
+            {{else}}
+            {{loadCustomTags}}
+            {{/if}}
+
+            <div class="form-group form-group-default m-t-20" id="customTagsForCourse" hidden>
+              <label>Custom Tags</label>
+              <input class="tagsinput custom-tag-input" type="text" />
+            </div>
+
+            <div class="m-t-20" style="width: 100%;">
+              <span style="font-size: 19px;margin-top: 4px;" class="pull-left"> Instructors </span>
+              <br>
+              <p class="small hint-text m-t-10">
+                Here you can add the teaching staff and course organisers for the course.
+              </p>
+            </div>
           </div>
         </div>
-      </div><div class="scroll-element scroll-x scroll-scrolly_visible"><div class="scroll-element_outer">    <div class="scroll-element_size"></div>    <div class="scroll-element_track"></div>    <div class="scroll-bar" style="width: 89px;"></div></div></div><div class="scroll-element scroll-y scroll-scrolly_visible"><div class="scroll-element_outer">    <div class="scroll-element_size"></div>    <div class="scroll-element_track"></div>    <div class="scroll-bar" style="height: 296px; top: 139.594260876512px;"></div></div></div></div>
+      </div>
     </div>
   </div>
+</div>
+
+{{/with}}
 </template>
