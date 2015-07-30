@@ -171,9 +171,6 @@ Template.postList.events({
     var postId = $(e.currentTarget).attr('data-post-id');
     Router.go('room', {course_id: Router.current().params.course_id}, {query: 'p='+postId});
     loadPage(postId);
-  },
-  "click .post-list-toggle": function(event) {
-    $('.post-list').toggleClass('slideLeft');
   }
 });
 
@@ -271,7 +268,6 @@ Template.postContent.helpers({
   currentUserIsOwner: function() {
     var postId = Router.current().params.query.p;
     var post = Posts.findOne(postId);
-    var owner;
     if (post)
       if(post.isAnonymous) {
         return post.ownerIdenticon == Package.sha.SHA256(post._id + Meteor.user()._id)
@@ -280,9 +276,14 @@ Template.postContent.helpers({
       }
   },
   dateFromNow: function() {
-    var post = Posts.findOne(Router.current().params.query.p, {'created_at': true});
+    var post = Posts.findOne(Router.current().params.query.p);
     if (post) {
-      return moment(post.created_at).fromNow();
+      if (post.updated_at && post.created_at.getTime() == post.updated_at.getTime()) {
+        // the post has never been edited
+        return "posted " + moment(post.created_at).fromNow();
+      } else {
+        return "updated " + moment(post.updated_at).fromNow();
+      }
     }
   },
   answers: function() {
@@ -385,6 +386,9 @@ Template.postContent.events({
         //$('#' + id).addClass('btn-success').removeClass('btn-default');
       }
     });
+  },
+  "click .post-list-toggle": function(event) {
+    $('.post-list').toggleClass('slideLeft');
   }
 });
 
