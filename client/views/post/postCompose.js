@@ -201,12 +201,6 @@ Template.postCompose.events({
       });
     }
 
-    console.log(type);
-    console.log(post);
-    //var errors = validatePost(post);
-    //if (errors.title || errors.url)
-    // return Session.set('postSubmitErrors', errors);
-
     Meteor.call(type, post, function(error, result) {
       // display the error to the user and abort
       if (error)

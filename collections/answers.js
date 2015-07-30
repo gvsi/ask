@@ -51,6 +51,49 @@ Meteor.methods({
 
     return answer._id;
   },
+  answerUpdate: function(answerAttributes) {
+    answerAttributes.body = UniHTML.purify(answerAttributes.body);
+
+    check(answerAttributes, {
+      answerId: String,
+      postId: String,
+      body: String,
+      isAnonymous: Boolean
+    });
+
+    var answer = Answers.findOne({_id: answerAttributes.answerId});
+    //check existance of post to update
+    if (answer) {
+      // set identiconHash
+      var identiconHash = answerAttributes.isAnonymous ? answerAttributes.postId + answer.userId : answer.userId;
+      var now = new Date();
+      Answers.update(
+        {_id: answerAttributes.postId},
+        {
+          $set: {
+            body: answerAttributes.body,
+            isAnonymous: answerAttributes.isAnonymous,
+            ownerIdenticon: Package.sha.SHA256(identiconHash),
+            updated_at: now
+          },
+          // adds to revision history
+          $addToSet: {
+            revisionHistory: {
+              revisionDate: now,
+              body: answerAttributes.body,
+              isAnonymous: answerAttributes.isAnonymous,
+            }
+          }
+        }
+      )
+    } else {
+      throw new Meteor.Error('invalid-answer', 'The answer you\'re trying to edit does not exist');
+    }
+
+    // TODO: now create a notification, informing the user that there's been a answer
+
+    return answerAttributes.answerId;
+  },
   commentInsert: function(commentAttributes) {
     commentAttributes.body = UniHTML.purify(commentAttributes.body);
 

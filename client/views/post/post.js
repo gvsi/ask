@@ -269,11 +269,11 @@ Template.postContent.helpers({
     var postId = Router.current().params.query.p;
     var post = Posts.findOne(postId);
     if (post)
-      if(post.isAnonymous) {
-        return post.ownerIdenticon == Package.sha.SHA256(post._id + Meteor.user()._id)
-      } else {
-        return post.owner == Meteor.user()._id;
-      }
+    if(post.isAnonymous) {
+      return post.ownerIdenticon == Package.sha.SHA256(post._id + Meteor.user()._id)
+    } else {
+      return post.owner == Meteor.user()._id;
+    }
   },
   dateFromNow: function() {
     var post = Posts.findOne(Router.current().params.query.p);
@@ -393,6 +393,13 @@ Template.postContent.events({
 });
 
 Template.answer.helpers({
+  currentUserIsOwner: function() {
+    if(this.isAnonymous) {
+      return this.ownerIdenticon == Package.sha.SHA256(this.postId + Meteor.user()._id)
+    } else {
+      return this.userId == Meteor.user()._id;
+    }
+  },
   theAuthor: function() {
     //works for both answer and comment
     var authorId = this.userId;
@@ -497,6 +504,48 @@ Template.answer.events({
       // $('#' + id).addClass('btn-success').removeClass('btn-default');
       //  $(e.currentTarget).parent().find('#answerVoteCount').text(result);
     });
+  },
+  'click .editAnswerBtn': function(e) {
+
+    $(".editAnswerBtn[data-answer-id="+this._id+"]").hide();
+    $("#editAnswerBtn").hide();
+    $("#body-"+this._id).hide();
+    $("#summernote-edit-"+this._id).parent().parent().show();
+    //$("#summernote-edit-"+this._id).destroy();
+
+    initialiseSummernote("#summernote-edit-"+this._id);
+  },
+  'click .updateAnswerBtn': function(e) {
+
+    $sn = $('#summernote-edit-' + this._id);
+    var body = $sn.code();
+    var answer = {
+      answerId: this._id,
+      body: body,
+      postId: this._id,
+      isAnonymous: $('#isAnswerAnonymous-edit-'+this._id).is(':checked')
+    };
+
+    if (strip_tags(body) == "") {
+      var errors = {};
+      $sn.code("<p><br></p>");
+      $sn.summernote({focus: true});
+      $(".summernote-wrapper[data-answer-id="+this._id+"] .error").text("I know you're trying to be helpful, but an empty answer won't do much...");
+      return false;
+    } else {
+      $(".summernote-wrapper[data-answer-id="+this._id+"] .error").text("");
+    }
+
+    Meteor.call('answerUpdate', answer, function(error, answerId) {
+      if (error){
+          $(".summernote-wrapper[data-answer-id="+this._id+"] .error").text(error.reason);
+        throw new Meteor.Error(error.reason);
+      } else {
+        $("#body-"+answerId).show();
+        $("#summernote-edit-"+answerId).parent().parent().hide();
+        $(".editAnswerBtn[data-answer-id="+answerId+"]").show();
+      }
+    });
   }
 });
 
@@ -515,7 +564,25 @@ function loadPage(postId) {
   $('.post-content-wrapper').show();
 
   $('#summernote').destroy();
-  $('#summernote').summernote({
+
+  initialiseSummernote("#summernote");
+
+  $(".post-content-wrapper").scrollTop(0);
+
+  // Initialize post action menu
+  $('.menuclipper').menuclipper({
+    bufferWidth: 20
+  });
+
+  $('#slide-left').addClass('slideLeft');
+
+  setTimeout(function(){
+    $('[data-toggle="tooltip"]').tooltip();
+  }, 1000);
+}
+
+function initialiseSummernote(selector) {
+  $(selector).summernote({
     height: 150,
     onfocus: function(e) {
       $('body').addClass('overlay-disabled');
@@ -547,7 +614,7 @@ function loadPage(postId) {
       var cursorPos;
       var oldContent;
 
-      $(fileGroup).appendTo($('.note-toolbar'));
+      $(fileGroup).appendTo($(selector).parent().find(".note-toolbar"));
       // Button tooltips
       $('#latexToolbarBtn').tooltip({container: 'body', placement: 'bottom'});
       // Button events
@@ -561,12 +628,12 @@ function loadPage(postId) {
       });
       $('#insertLatexBtn').click(function(event) {
         $('#latexEditorModal').modal('hide');
-        $('#summernote').summernote({focus:true});
+        $(selector).summernote({focus:true});
 
         setTimeout(function(){
           var toInsert = "$"+$('#latex-source').val()+"$";
           if (!oldContent) {
-            $('#summernote').code("<p>"+toInsert+"</p>")
+            $(selector).code("<p>"+toInsert+"</p>")
           } else {
             var newContent = oldContent.substring(0, cursorPos) + toInsert + oldContent.substring(cursorPos);
             sel.anchorNode.nodeValue = newContent;
@@ -576,21 +643,7 @@ function loadPage(postId) {
       });
     }
   });
-
-  $(".post-content-wrapper").scrollTop(0);
-
-  // Initialize post action menu
-  $('.menuclipper').menuclipper({
-    bufferWidth: 20
-  });
-
-  $('#slide-left').addClass('slideLeft');
-
-  setTimeout(function(){
-    $('[data-toggle="tooltip"]').tooltip();
-  }, 1000);
 }
-
 //removes all tags and whitespaces (&nbsp;)
 function strip_tags(input, allowed) {
   allowed = (((allowed || '') + '')

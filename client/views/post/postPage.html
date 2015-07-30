@@ -41,7 +41,8 @@
         </li>
 
         {{#if currentUserIsOwner}}
-        <li class="no-padding "><a href="{{pathFor 'editPost' course_id=post.course_id post_id=post._id}}" style="color:#447DF7">Edit</a>
+        <li class="no-padding ">
+          <a href="{{pathFor 'editPost' course_id=post.course_id post_id=post._id}}" style="color:#447DF7">Edit</a>
         </li>
         <li class="no-padding "><a href="#" class="text-danger">Delete</a>
         </li>
@@ -141,6 +142,7 @@
         {{/if}}
       </div>
       <div class="datetime timeLabel">
+        {{#if currentUserIsOwner}}<button data-answer-id="{{_id}}" class="editAnswerBtn btn btn-default btn-xs">Edit answer</button>{{/if}}
         {{dateFromNow}}
       </div>
     </div>
@@ -150,9 +152,24 @@
       <button class="btn btn-sm btn-rounded {{downvote}}"  id="downvoteAnswer"><i class="fa fa-angle-down"></i></button>
     </div>
     <div class="answerBodyContainer">
-      {{#mathjax}}
-      {{{body}}}
-      {{/mathjax}}
+      <div id="body-{{_id}}">
+        {{#mathjax}}
+        {{{body}}}
+        {{/mathjax}}
+      </div>
+      {{#if currentUserIsOwner}}
+      <div class="summernote-wrapper" data-answer-id="{{_id}}" hidden>
+        <label class="error"></label>
+        <p><div id="summernote-edit-{{_id}}">
+        {{{body}}}
+        </div></p>
+        <div class="checkbox inline m-l-20">
+          <input type="checkbox" value="1" id="isAnswerAnonymous-edit-{{_id}}">
+          <label for="isAnswerAnonymous-edit-{{_id}}" class="hint-text hidden-xs">Post as anonymous</label>
+        </div>
+        <button type="submit" data-answer-id="{{_id}}" class="updateAnswerBtn btn btn-complete btn-cons m-l-10">Update</button>
+      </div>
+      {{/if}}
     </div>
     <div class="comments">
       {{#each comments}}
