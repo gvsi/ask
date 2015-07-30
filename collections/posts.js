@@ -36,6 +36,50 @@ Meteor.methods({
           _id: postId
         };
     },
+    postUpdate: function(postAttributes) {
+        check(postAttributes, {
+          postId: String,
+          title: String,
+          text: String,
+          tags: Array,
+          course_id: String,
+          isAnonymous: Boolean
+        });
+
+        var user = Meteor.user();
+        var type = 1;
+
+        //if(user is instructor) -- 3
+        //else if(poll) -- 2
+        //else -- 1
+
+        //TODO: CHECK USER PERMISSION TO DO THIS
+
+        //check existance of post to update
+        if (Posts.find({_id: postAttributes.postId}, {_id: 1}).count() > 0) {
+          // set identiconHash
+          var identiconHash = postAttributes.isAnonymous ? postAttributes.postId + Posts.findOne(postAttributes.postId).owner : Posts.findOne(postAttributes.postId).owner;
+
+          Posts.update(
+            {_id: postAttributes.postId},
+            {
+              $set: {
+                title: postAttributes.title,
+                text: postAttributes.text,
+                isAnonymous: postAttributes.isAnonymous,
+                tags: postAttributes.tags,
+                ownerIdenticon: Package.sha.SHA256(identiconHash),
+                updated_at: new Date()
+              }
+            }
+          )
+        }
+
+        return {
+          _id: postAttributes.postId
+        };
+
+    },
     upvote: function(post_id){
       var userId = Meteor.user()._id;
       var voters = Posts.findOne(post_id).upvoters;

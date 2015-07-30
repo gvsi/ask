@@ -45,13 +45,13 @@ Template.postCompose.rendered = function(){
       });
     }).keydown().focus();
 
-    var tags = Courses.findOne(Router.current().params.course_id).tags;
-
-      if(tags){
-        tags.forEach(function(tag) {
-          $('#postTags').append('<label class="btn btn-complete"><input type="checkbox" checked="">'+ tag +'</label>');
-        });
-      }
+    // var tags = Courses.findOne(Router.current().params.course_id).tags;
+    //
+    //   if(tags){
+    //     tags.forEach(function(tag) {
+    //       $('#postTags').append('<label class="btn btn-complete"><input type="checkbox" checked="">'+ tag +'</label>');
+    //     });
+    //   }
 
   });
 
@@ -137,13 +137,50 @@ Template.postCompose.rendered = function(){
 Template.postCompose.helpers({
   posts: function () {
     return Posts.find({'course_id': Router.current().params.course_id}, {sort: {created_at: -1}});
+  },
+  course: function() {
+    return Courses.findOne(Router.current().params.course_id);
+  },
+  isEditingPost: function() {
+    var postId = Router.current().params.query.p;
+    return postId != "" && Posts.findOne(postId);
+  },
+  isTagActive: function() {
+    var postId = Router.current().params.query.p;
+    Meteor.subscribe('singlePost', postId)
+    var tags = Posts.findOne(postId).tags;
+    if (tags && tags.indexOf(this.valueOf()) > -1) {
+      return "active";
+    } else {
+      return "";
+    }
+  },
+  editingPost: function() {
+    var post = Posts.findOne(Router.current().params.query.p);
+    if (post) {
+      return post;
+    } else {
+      return false;
+    }
+  },
+  isAnonymousChecked: function() {
+    var postId = Router.current().params.query.p;
+    var post = Posts.findOne(postId);
+
+    if (post && post.isAnonymous) {
+      return "checked"
+    } else {
+      return "";
+    }
   }
 });
 
 
 Template.postCompose.events({
-  'submit #form-compose': function(e) {
+  'click #composeSubmitBtn': function(e) {
     e.preventDefault();
+    var type = $(e.currentTarget).attr('data-type-form');
+
     var tags=[];
 
     $("#postTags>.active").each(function() {
@@ -151,30 +188,35 @@ Template.postCompose.events({
     });
 
     var post = {
-      title: $(e.target).find('[name=postTitle]').val(),
+      title: $("#postTitleInput").val(),
       text:  $('#summernote-compose').code(),
       isAnonymous: $('#anonymous').is(':checked'),
       course_id: Router.current().params.course_id,
       tags: tags
     };
 
+    if (type == "postUpdate") {
+      var post = _.extend(post, {
+        postId: Router.current().params.query.p
+      });
+    }
+
+    console.log(type);
+    console.log(post);
     //var errors = validatePost(post);
     //if (errors.title || errors.url)
     // return Session.set('postSubmitErrors', errors);
 
-    Meteor.call('postInsert', post, function(error, result) {
+    Meteor.call(type, post, function(error, result) {
       // display the error to the user and abort
       if (error)
-      return throwError(error.reason);
-
+        throw new Meteor.Error(error.reason);
       // show this result but route anyway
-
       Router.go('room', {course_id: Router.current().params.course_id}, {query: "p="+result._id});
     });
   },
   'click .item': function(e) {
     var postId = $(e.currentTarget).attr('data-post-id');
     Router.go('room', {course_id: Router.current().params.course_id}, {query: 'p='+postId});
-    loadPage(postId);
   }
 });

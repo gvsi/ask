@@ -57,6 +57,10 @@ Template.postPage.helpers({
   },
   course_id: function () {
     return Router.current().params.course_id;
+  },
+  queryPathFor: function () {
+    console.log("q="+this.post._id);
+    return "q="+this.post._id;
   }
 });
 
