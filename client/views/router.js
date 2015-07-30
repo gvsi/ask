@@ -49,6 +49,19 @@ Router.route('/:course_id/room/compose', function () {
   }
 });
 
+Router.route('/:course_id/room/compose?p=:post_id', function () {
+  this.render('postCompose');
+},{
+ layoutTemplate:"composePostLayout" ,
+  loadingTemplate: 'loading',
+  name: 'editPost',
+  waitOn: function() {
+    return [
+      Meteor.subscribe('posts', this.params.course_id),
+    ];
+  }
+});
+
 
 Router.route('/calendar', function () {
   this.render('calendarApp');

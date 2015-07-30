@@ -11,7 +11,9 @@
                <div class="form-group form-group-default" style="padding-top:4px;">
                  <span id="tag"> Choose Tags </span>
                  <div class="btn-group" id="postTags" data-toggle="buttons">
-                    <!-- Tags are appended here -->
+                   {{#each course.tags}}
+                   <label class="btn btn-complete {{#if isEditingPost}}{{isTagActive}}{{/if}}"><input type="checkbox">{{this}}</label>
+                   {{/each}}
                  </div>
                </div>
              </div>
@@ -20,7 +22,7 @@
              <div class="col-sm-12">
               <div class="form-group form-group-default">
                 <label>Title</label>
-                <input type="text" class="form-control" name="postTitle" placeholder="What's your question?">
+                <input type="text" class="form-control" name="postTitle" id="postTitleInput" placeholder="What's your question?" value="{{#if isEditingPost}}{{editingPost.title}}{{/if}}">
               </div>
             </div>
 
@@ -28,7 +30,7 @@
          </div>
          {{>latexModal}}
          <div class="summernote-wrapper">
-          <div id="summernote-compose"></div>
+          <div id="summernote-compose">{{#if isEditingPost}}{{{editingPost.text}}}{{/if}}</div>
          </div>
        </div>
      </div>
@@ -36,10 +38,10 @@
        <div class="col-sm-11 m-t-5">
 
          <div class="checkbox inline m-l-20">
-           <input type="checkbox" value="1" id="anonymous">
+           <input type="checkbox" value="1" id="anonymous" {{isAnonymousChecked}}>
            <label for="anonymous" class="hint-text hidden-xs">Post as anonymous</label>
          </div>
-         <button type="submit" class="btn btn-complete btn-cons m-l-10">Send</button>
+         <button type="submit" id="composeSubmitBtn" data-type-form="{{#if isEditingPost}}postUpdate{{else}}postInsert{{/if}}" class="btn btn-complete btn-cons m-l-10">{{#if isEditingPost}}Update{{else}}Send{{/if}}</button>
        </div>
      </div>
    </div>

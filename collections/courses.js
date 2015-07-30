@@ -26,7 +26,7 @@ Meteor.methods({
 
   if(tagAttributes.areTagsDefault){
     Courses.update({_id: tagAttributes.courseId}, {$set: {
-      "tags": ['wk1', 'wk2', 'wk3', 'wk4', 'wk5','wk6', 'wk7','wk8','wk9','wk10','wk11','logistics','project','exam','other' ]
+      "tags": ['wk1', 'wk2', 'wk3', 'wk4', 'wk5','wk6', 'wk7','wk8','wk9','wk10','wk11','logistics','exam','other' ]
     }});
   }else{
     Courses.update({_id: tagAttributes.courseId}, {$set: {
