@@ -132,6 +132,13 @@ Meteor.methods({
             "followers": userId
           }});
       }
+    },
+    currentUserIsOwner: function(post_id) {
+      var post = Posts.findOne(post_id);
+      if (post)
+        return post.owner == Meteor.user()._id;
+      else
+        return false;
 
     }
 })
