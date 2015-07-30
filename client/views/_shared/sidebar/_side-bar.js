@@ -1,4 +1,4 @@
-var sub;
+var observingNotificationChanges;
 
 Template.sideBar.rendered = function (){
 	//Initialize Pages Side Bar
@@ -7,18 +7,13 @@ Template.sideBar.rendered = function (){
 		 $sidebar.sidebar($sidebar.data())
 	})
 
-
-	if(sub)
-		sub.stop();
-
-	console.log("subscribtion to notifications");
 	var notificationsLoaded = false;
-	 sub = Meteor.subscribe("notifications", Meteor.userId(), function () {
-		 // at this point all new users sent down are legitimately new ones
+	Meteor.subscribe("notifications", Meteor.userId(), function () {
 		 notificationsLoaded = true;
 	});
 
-		Notifications.find().observeChanges({
+	if(!observingNotificationChanges){
+		observingNotificationChanges = Notifications.find().observeChanges({
 			added: function(id, notification){
 				if(notification.userId == Meteor.userId() && notificationsLoaded){
 					 $('body').pgNotification({
@@ -33,12 +28,11 @@ Template.sideBar.rendered = function (){
 				}
 			}
 		});
-
+	}
 };
 
 Template.sideBar.helpers({
 	courses: function () {
-			console.log("subscribtion to courses");
 		Meteor.subscribe('coursesForStudent', Meteor.userId(), {reactive:false});
 		return Courses.find().fetch();
 	},
