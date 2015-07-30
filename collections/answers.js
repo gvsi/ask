@@ -31,15 +31,17 @@ Meteor.methods({
     });
 
     post.followers.forEach(function(followerId) {
-      var notificationAttributes = {
-        title: 'New answer',
-        text: post.title,
-        type: 'info',
-        userId: followerId,
-        link: '/'+ post.course_id + '/room?p=' + post._id
-      }
+      if(followerId != Meteor.userId()){
+        var notificationAttributes = {
+          title: 'New answer added to:',
+          text: post.title,
+          type: 'info',
+          userId: followerId,
+          link: '/'+ post.course_id + '/room?p=' + post._id
+        }
 
-      Meteor.call("addNotification", notificationAttributes);
+        Meteor.call("addNotification", notificationAttributes);
+     }
     });
 
     // create the answer, save the id

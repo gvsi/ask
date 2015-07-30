@@ -1,27 +1,5 @@
 Template.postPage.rendered = function () {
   //builds the list only if there are posts
-  Notifications.find().observeChanges({
-    added: function(id, notification){
-      if(!notification.seen){
-          $('body').pgNotification({
-                          style: 'circle',
-                          title: notification.title,
-                          message: notification.text,
-                          type: notification.type,
-          }).show();
-
-          Meteor.call("seeNotification", id , function(error, result){
-            if(error){
-              console.log("error", error);
-            }
-            if(result){
-
-            }
-          });
-      }
-  }
-  });
-
 
   if (!$("#no-post-error").length) {
     $("#postList").ioslist();
@@ -71,7 +49,6 @@ Template.postPage.rendered = function () {
     $('#customTagsForCourse').show();
   }
 }
-
 
 
 Template.postPage.helpers({
