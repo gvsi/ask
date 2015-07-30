@@ -1,5 +1,27 @@
 Template.postPage.rendered = function () {
   //builds the list only if there are posts
+  Notifications.find().observeChanges({
+    added: function(id, notification){
+      if(!notification.seen){
+          $('body').pgNotification({
+                          style: 'circle',
+                          title: notification.title,
+                          message: notification.text,
+                          type: notification.type,
+          }).show();
+
+          Meteor.call("seeNotification", id , function(error, result){
+            if(error){
+              console.log("error", error);
+            }
+            if(result){
+
+            }
+          });
+      }
+  }
+  });
+
 
   if (!$("#no-post-error").length) {
     $("#postList").ioslist();
@@ -58,6 +80,7 @@ Template.postPage.rendered = function () {
     $('#customTagsForCourse').show();
   }
 }
+
 
 
 Template.postPage.helpers({
@@ -268,6 +291,18 @@ Template.postContent.helpers({
         return false;
       }
     }
+  },
+  currentUserIsOwner: function() {
+    var postId = Router.current().params.query.p;
+    var post = Posts.findOne(postId);
+    console.log(post);
+    var owner;
+    if (post)
+      if(post.isAnonymous) {
+        return post.ownerIdenticon == Package.sha.SHA256(post._id + Meteor.user()._id)
+      } else {
+        return post.owner == Meteor.user()._id;
+      }
   },
   dateFromNow: function() {
     var post = Posts.findOne(Router.current().params.query.p, {'created_at': true});

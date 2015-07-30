@@ -39,10 +39,14 @@
         </li>
         <li class="no-padding "><a href="#" class="text-info">Reply</a>
         </li>
+
+        {{#if currentUserIsOwner}}
         <li class="no-padding "><a href="{{pathFor 'editPost' course_id=post.course_id post_id=post._id}}" style="color:#447DF7">Edit</a>
         </li>
         <li class="no-padding "><a href="#" class="text-danger">Delete</a>
         </li>
+        {{/if}}
+
         {{#each tags}}
         <li class="no-padding ">
           <button class="btn btn-tag  btn-tag-light m-r-5">{{this}}</button>
@@ -73,10 +77,12 @@
           </div>
 
         </div>
+        {{#unless currentUserIsOwner}}
         <div class="buttons">
           <button class="btn {{ upvoteButton }} btn-lg btn-rounded upvote" ><i class="fa fa-thumbs-up"></i></button>
           <button class="btn {{ followButton }} btn-lg btn-rounded" id="followQuestion" >Follow</button>
         </div>
+        {{/unless}}
         <div class="clearfix"></div>
       </div>
 
