@@ -1,27 +1,5 @@
 Template.postPage.rendered = function () {
   //builds the list only if there are posts
-  Notifications.find().observeChanges({
-    added: function(id, notification){
-      if(!notification.seen){
-          $('body').pgNotification({
-                          style: 'circle',
-                          title: notification.title,
-                          message: notification.text,
-                          type: notification.type,
-          }).show();
-
-          Meteor.call("seeNotification", id , function(error, result){
-            if(error){
-              console.log("error", error);
-            }
-            if(result){
-
-            }
-          });
-      }
-  }
-  });
-
 
   if (!$("#no-post-error").length) {
     $("#postList").ioslist();
@@ -97,10 +75,8 @@ Template.postPage.helpers({
   isUserInstructor: function(){
     var currentCourse = Courses.findOne(Router.current().params.course_id);
     if(currentCourse && currentCourse.instructors.indexOf(Meteor.user().username.toLowerCase()) != -1){
-      console.log("in");
       return true;
     }else{
-      console.log("out");
       return false;
     }
   }
@@ -295,7 +271,6 @@ Template.postContent.helpers({
   currentUserIsOwner: function() {
     var postId = Router.current().params.query.p;
     var post = Posts.findOne(postId);
-    console.log(post);
     var owner;
     if (post)
       if(post.isAnonymous) {
