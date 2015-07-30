@@ -5,7 +5,7 @@
       <a href="{{pathFor 'compose' course_id=course_id }}" >
         <button id="newQuestion" class="btn btn-sm btn-rounded">New question</button>
       </a>
-      {{#if isUserInstructor=true}}
+      {{#if isUserInstructor}}
       <a class="post-refresh" data-target="#modalSlideLeft" data-toggle="modal">
         <i class="fa fa-cog"></i>
       </a>
