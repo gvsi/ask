@@ -10,18 +10,7 @@ Meteor.methods({
       link: String
     });
 
-    var notification = _.extend(notificationAttributes, {
-      seen: 0
-    });
 
-    Notifications.insert(notification);
-  },
-  seeNotification:function(notificationId){
-    check(notificationId, String);
-
-    Notifications.update({_id: notificationId}, {$set:{
-        seen: 1
-    }});
-
+    Notifications.insert(notificationAttributes);
   }
 });
