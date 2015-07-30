@@ -62,6 +62,15 @@ Template.postPage.rendered = function () {
   });
 
   $('.custom-tag-input').tagsinput({});
+  $('#instructorsInput').tagsinput({});
+  var instructors = Courses.findOne(Router.current().params.course_id).instructors;
+
+  instructors.forEach(function(instructor){
+    if(instructor != Meteor.user().username.toLowerCase()){
+      $('#instructorsInput').tagsinput('add', instructor);
+    }
+  })
+
   var cts = Session.get('customTags');
   if (cts) {
     cts.forEach(function(tag) {
@@ -84,6 +93,16 @@ Template.postPage.helpers({
   queryPathFor: function () {
     console.log("q="+this.post._id);
     return "q="+this.post._id;
+  },
+  isUserInstructor: function(){
+    var currentCourse = Courses.findOne(Router.current().params.course_id);
+    if(currentCourse && currentCourse.instructors.indexOf(Meteor.user().username.toLowerCase()) != -1){
+      console.log("in");
+      return true;
+    }else{
+      console.log("out");
+      return false;
+    }
   }
 });
 
@@ -148,6 +167,24 @@ Template.courseSettingsModal.events({
     };
 
     Meteor.call('addOrRemoveTag', tagAttributes, function(error, result) {});
+  },
+  "itemAdded #instructorsInput": function(event){
+    var instructorAttributes = {
+      courseId: Router.current().params.course_id,
+      isAdd: 1,
+      instructor: event.item
+    };
+
+    Meteor.call('addOrRemoveInstructor', instructorAttributes);
+  },
+  "itemRemoved #instructorsInput": function(event){
+    var instructorAttributes = {
+      courseId: Router.current().params.course_id,
+      isAdd: 0,
+      instructor: event.item
+    };
+
+    Meteor.call('addOrRemoveInstructor', instructorAttributes);
   }
 });
 

@@ -24,7 +24,7 @@ Meteor.methods({
           created_at: now,
           updated_at: now,
           upvoters: [],
-          followers: [],
+          followers: [user._id],
         });
 
         var postId = Posts.insert(post);
