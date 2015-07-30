@@ -12,6 +12,7 @@ Meteor.methods({
 
         var user = Meteor.user();
         var type = 1;
+        var now = new Date();
 
         //if(user is instructor) -- 3
         //else if(poll) -- 2
@@ -20,8 +21,8 @@ Meteor.methods({
         var post = _.extend(postAttributes, {
           owner: user._id,
           type: type,
-          created_at: new Date(),
-          updated_at: new Date(),
+          created_at: now,
+          updated_at: now,
           upvoters: [],
           followers: [],
         });
@@ -31,6 +32,19 @@ Meteor.methods({
         // set identiconHash
         var identiconHash = postAttributes.isAnonymous ? postId + postAttributes.owner : postAttributes.owner;
         Posts.update({_id: postId}, {$set: {ownerIdenticon: Package.sha.SHA256(identiconHash)}})
+
+        // save in revisionHistory
+        Posts.update({_id: postId}, {
+          $addToSet: {
+            revisionHistory: {
+              revisionDate: now,
+              title: postAttributes.title,
+              text: postAttributes.text,
+              isAnonymous: postAttributes.isAnonymous,
+              tags: postAttributes.tags
+            }
+          }
+        });
 
         return {
           _id: postId
@@ -59,7 +73,7 @@ Meteor.methods({
         if (Posts.find({_id: postAttributes.postId}, {_id: 1}).count() > 0) {
           // set identiconHash
           var identiconHash = postAttributes.isAnonymous ? postAttributes.postId + Posts.findOne(postAttributes.postId).owner : Posts.findOne(postAttributes.postId).owner;
-
+          var now = new Date();
           Posts.update(
             {_id: postAttributes.postId},
             {
@@ -69,7 +83,17 @@ Meteor.methods({
                 isAnonymous: postAttributes.isAnonymous,
                 tags: postAttributes.tags,
                 ownerIdenticon: Package.sha.SHA256(identiconHash),
-                updated_at: new Date()
+                updated_at: now
+              },
+              // adds to revision history
+              $addToSet: {
+                revisionHistory: {
+                  revisionDate: now,
+                  title: postAttributes.title,
+                  text: postAttributes.text,
+                  isAnonymous: postAttributes.isAnonymous,
+                  tags: postAttributes.tags
+                }
               }
             }
           )

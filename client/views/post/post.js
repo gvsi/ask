@@ -255,6 +255,18 @@ Template.postContent.helpers({
       }
     }
   },
+  currentUserIsOwner: function() {
+    var postId = Router.current().params.query.p;
+    var post = Posts.findOne(postId);
+    console.log(post);
+    var owner;
+    if (post)
+      owner = post.owner;
+
+    console.log(owner);
+    console.log(Meteor.user()._id);
+    return post.owner == Meteor.user()._id;
+  },
   dateFromNow: function() {
     var post = Posts.findOne(Router.current().params.query.p, {'created_at': true});
     if (post) {
