@@ -1,5 +1,28 @@
 Template.postPage.rendered = function () {
   //builds the list only if there are posts
+  Notifications.find().observeChanges({
+    added: function(id, notification){
+      if(!notification.seen){
+          $('body').pgNotification({
+                          style: 'circle',
+                          title: notification.title,
+                          message: notification.text,
+                          type: notification.type,
+          }).show();
+
+          Meteor.call("seeNotification", id , function(error, result){
+            if(error){
+              console.log("error", error);
+            }
+            if(result){
+
+            }
+          });
+      }
+  }
+  });
+
+
   if (!$("#no-post-error").length) {
     $("#postList").ioslist();
   }
@@ -48,6 +71,8 @@ Template.postPage.rendered = function () {
     $('#customTagsForCourse').show();
   }
 }
+
+
 
 Template.postPage.helpers({
   posts: function () {
@@ -263,6 +288,21 @@ Template.postContent.helpers({
       return false;
     }
   },
+  followButton: function(){
+    var postId = Router.current().params.query.p;
+    var post = Posts.findOne(postId);
+    if (post) {
+      var followers = post.followers;
+      var user = Meteor.user();
+      if (followers && user && followers.indexOf(user._id) != -1) {
+        return 'btn-warning';
+      } else {
+        return 'btn-default';
+      }
+    } else {
+      return false;
+    }
+  },
   tags: function(){
     var postId = Router.current().params.query.p;
     var post = Posts.findOne(postId);
@@ -305,6 +345,16 @@ Template.postContent.events({
   'click .upvote': function(e) {
     var id = Router.current().params.query.p;
     Meteor.call('upvote', id, function(error) {
+      if (error){
+        throw new Meteor.error(error.reason);
+      } else {
+        //$('#' + id).addClass('btn-success').removeClass('btn-default');
+      }
+    });
+  },
+  'click #followQuestion': function(e){
+    var id = Router.current().params.query.p;
+    Meteor.call('followQuestion', id, function(error) {
       if (error){
         throw new Meteor.error(error.reason);
       } else {
@@ -420,7 +470,8 @@ Template.answer.events({
       //  $(e.currentTarget).parent().find('#answerVoteCount').text(result);
     });
   }
-})
+});
+
 
 function loadPage(postId) {
   Session.set('answerSubmitErrors', {});

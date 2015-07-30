@@ -23,6 +23,7 @@ Meteor.methods({
           created_at: new Date(),
           updated_at: new Date(),
           upvoters: [],
+          followers: [],
         });
 
         var postId = Posts.insert(post);
@@ -83,13 +84,28 @@ Meteor.methods({
       var userId = Meteor.user()._id;
       var voters = Posts.findOne(post_id).upvoters;
 
-      if(voters.indexOf(userId) != -1){
+      if(voters.indexOf(userId) != -1){ // If the user has already upvoted
           Posts.update({_id: post_id}, {$pull : {
             "upvoters": userId
           }});
       }else{
           Posts.update({_id: post_id}, {$addToSet : {
             "upvoters": userId
+          }});
+      }
+
+    },
+    followQuestion: function(post_id){
+      var userId = Meteor.user()._id;
+      var followers = Posts.findOne(post_id).followers;
+
+      if(followers.indexOf(userId) != -1){ // If the user is already a follower
+          Posts.update({_id: post_id}, {$pull : {
+            "followers": userId
+          }});
+      }else{
+          Posts.update({_id: post_id}, {$addToSet : {
+            "followers": userId
           }});
       }
 
