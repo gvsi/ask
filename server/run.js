@@ -27,7 +27,7 @@ Meteor.methods({
 						"year": coursesCsv[i].AYR_CODE,
 						"semester": coursesCsv[i].PSL_CODE,
 						},
-					 $addToSet: {"instructors": coursesCsv[i].MUA_EXTU }
+					 $addToSet: {"instructors": coursesCsv[i].MUA_EXTU.toLowerCase() }
 					}
 				);
 			}else{

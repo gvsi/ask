@@ -1,12 +1,15 @@
 <template name="postList">
   <div class="post-list b-r b-grey">
     {{#if course_id}}
+
       <a href="{{pathFor 'compose' course_id=course_id }}" >
         <button id="newQuestion" class="btn btn-sm btn-rounded">New question</button>
       </a>
+      {{#if isUserInstructor=true}}
       <a class="post-refresh" data-target="#modalSlideLeft" data-toggle="modal">
         <i class="fa fa-cog"></i>
       </a>
+      {{/if}}
     {{/if}}
     <div id="postList">
       <!-- START POST LIST SORTED BY DATE -->

@@ -19,6 +19,19 @@ Meteor.methods({
       }
    }
  },
+ addOrRemoveInstructor: function(instructorAttributes){
+   if(instructorAttributes.instructor.toLowerCase() != Meteor.user().username.toLowerCase()){
+     if(instructorAttributes.isAdd){
+       Courses.update({_id: instructorAttributes.courseId}, {$addToSet: {
+         "instructors": instructorAttributes.instructor.toLowerCase()
+       }});
+     }else{
+       Courses.update({_id: instructorAttributes.courseId}, {$pull: {
+         "instructors": instructorAttributes.instructor.toLowerCase()
+       }});
+     }
+   }
+},
  setOrRemoveDefaultTags: function(tagAttributes){
    Courses.update({_id: tagAttributes.courseId}, {$set: {
     "areTagsDefault": tagAttributes.areTagsDefault
