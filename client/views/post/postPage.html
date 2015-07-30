@@ -12,8 +12,8 @@
       <h2>No posts here :(</h2>
       {{/if}}
 
-      {{#if isUserInstructor=true}}
-      <button class="btn btn-green btn-lg" data-target="#modalSlideLeft" data-toggle="modal">Course Settings</button>
+      {{#if isUserInstructor}}
+         <button class="btn btn-green btn-lg" data-target="#modalSlideLeft" data-toggle="modal">Course Settings</button>
       {{/if}}
     </div>
 
@@ -225,7 +225,7 @@
 
 <template name="courseSettingsModal">
   {{#with course}}
-  {{#if isUserInstructor=true}}
+  {{#if isUserInstructor}}
   <div class="modal fade slide-right" id="modalSlideLeft" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md" style="width: 420px">
       <div class="modal-content-wrapper">

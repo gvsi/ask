@@ -91,6 +91,14 @@ Template.courseSettingsModal.helpers({
   },
   loadCustomTags: function() {
     Session.set('customTags', this.tags);
+  },
+  isUserInstructor: function(){
+    var currentCourse = Courses.findOne(Router.current().params.course_id);
+    if(currentCourse && currentCourse.instructors.indexOf(Meteor.user().username.toLowerCase()) != -1){
+      return true;
+    }else{
+      return false;
+    }
   }
 });
 
@@ -225,6 +233,14 @@ Template.postList.helpers({
   },
   postsByDate: function () {
     return Posts.find({'course_id': Router.current().params.course_id, created_at: {$gte: this.start.toDate(), $lt: this.end.toDate()}}, {sort: {created_at: -1}});
+  },
+  isUserInstructor: function(){
+    var currentCourse = Courses.findOne(Router.current().params.course_id);
+    if(currentCourse && currentCourse.instructors.indexOf(Meteor.user().username.toLowerCase()) != -1){
+      return true;
+    }else{
+      return false;
+    }
   }
 })
 
