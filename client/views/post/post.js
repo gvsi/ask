@@ -562,6 +562,11 @@ Template.answer.events({
         $(".editAnswerBtn[data-answer-id="+answerId+"]").show();
       }
     });
+  },
+  'click .cancelUpdateBtn': function(e) {
+    $("#body-"+this._id).show();
+    $("#summernote-edit-"+this._id).parent().parent().hide();
+    $(".editAnswerBtn[data-answer-id="+this._id+"]").show();
   }
 });
 
@@ -612,7 +617,7 @@ function initialiseSummernote(selector) {
       document.execCommand('insertText', false, bufferText);
     },
     toolbar: [
-      ['misc', ['undo','redo','fullscreen']],
+      ['misc', ['hello', 'undo','redo','fullscreen']],
       ['style', ['bold', 'italic', 'underline']],
       ['insert', ['picture', 'link']],
       ['fontsize', ['fontsize']],
@@ -620,9 +625,9 @@ function initialiseSummernote(selector) {
     ],
     oninit: function() {
       // Add "open" - "save" buttons
+      $(selector).parent().find('.note-file .latexToolbarBtn').remove()
 
-      $('#latexToolbarBtn').remove();
-      var noteBtn = '<button id="latexToolbarBtn" type="button" class="btn btn-default btn-sm btn-small" title="LaTeX Equation Editor" data-event="something" tabindex="-1"><span style="font-size:1.3em">&#931;</span></button>';
+      var noteBtn = '<button type="button" class="btn btn-default btn-sm btn-small latexToolbarBtn" title="LaTeX Equation Editor" data-event="something" tabindex="-1"><span style="font-size:1.3em">&#931;</span></button>';
 
       var fileGroup = '<div class="note-file btn-group">' + noteBtn + '</div>';
 
@@ -632,9 +637,10 @@ function initialiseSummernote(selector) {
 
       $(fileGroup).appendTo($(selector).parent().find(".note-toolbar"));
       // Button tooltips
-      $('#latexToolbarBtn').tooltip({container: 'body', placement: 'bottom'});
+      $('.latexToolbarBtn').tooltip({container: 'body', placement: 'bottom'});
       // Button events
-      $('#latexToolbarBtn').click(function(event) {
+      $('.latexToolbarBtn').click(function(event) {
+        $('#insertLatexBtn').attr('data-current-selector', "#" + $(event.currentTarget.parentNode.parentNode.parentNode.previousSibling).attr('id'));
         sel = window.getSelection();
         if (sel.anchorNode) {
           cursorPos = sel.anchorOffset;
@@ -644,18 +650,25 @@ function initialiseSummernote(selector) {
       });
       $('#insertLatexBtn').click(function(event) {
         $('#latexEditorModal').modal('hide');
-        $(selector).summernote({focus:true});
 
-        setTimeout(function(){
-          var toInsert = "$"+$('#latex-source').val()+"$";
-          if (!oldContent) {
-            $(selector).code("<p>"+toInsert+"</p>")
-          } else {
-            var newContent = oldContent.substring(0, cursorPos) + toInsert + oldContent.substring(cursorPos);
-            sel.anchorNode.nodeValue = newContent;
-          }
-        }, 500);
+        if (selector == $('#insertLatexBtn').attr("data-current-selector")) {
+          console.log('true' + selector);
+          console.log(oldContent);
+          console.log(cursorPos);
+          $(selector).summernote({focus:true});
 
+          setTimeout(function(){
+            var toInsert = "$"+$('#latex-source').val()+"$";
+            if (!oldContent) {
+              $(selector).code("<p>"+toInsert+"</p>")
+            } else {
+              var newContent = oldContent.substring(0, cursorPos) + toInsert + oldContent.substring(cursorPos);
+              sel.anchorNode.nodeValue = newContent;
+            }
+          }, 500);
+        } else {
+          console.log('false' + selector);
+        }
       });
     }
   });
