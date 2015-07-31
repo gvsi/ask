@@ -305,7 +305,7 @@ Template.postContent.helpers({
   answers: function() {
     var id = Router.current().params.query.p;
     Meteor.subscribe('answers', id);
-    return Answers.find({},{sort:{created_at:1}});
+    return Answers.find({},{sort: {voteCount: -1}});
   },
   errorMessage: function(field) {
     var e = Session.get('answerSubmitErrors');
@@ -424,9 +424,6 @@ Template.answer.helpers({
   },
   dateFromNow: function() {
     return moment(this.created_at).fromNow();
-  },
-  voteCount: function(){
-    return this.upvoters.length - this.downvoters.length;
   },
   upvote: function(){
     var answerId = this._id;
