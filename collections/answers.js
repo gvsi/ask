@@ -28,6 +28,7 @@ Meteor.methods({
       created_at: new Date(),
       updated_at: new Date(),
       comments: [],
+      voteCount: 0
     });
 
     post.followers.forEach(function(followerId) {
@@ -148,39 +149,47 @@ Meteor.methods({
 
       if(upVoters.indexOf(userId) != -1){ //It was already upvoted by the user
           if(voteAttributes.isUpvote){
-            Answers.update({_id: voteAttributes.answerId}, {$pull : {
-              "upvoters": userId
-            }});
+            Answers.update({_id: voteAttributes.answerId},{
+              $inc: {voteCount: -1},
+              $pull : {"upvoters": userId}
+            });
           }else{
-            Answers.update({_id: voteAttributes.answerId}, {$pull : {
-              "upvoters": userId
-            }});
-            Answers.update({_id: voteAttributes.answerId}, {$addToSet : {
-              "downvoters": userId
-            }});
+            Answers.update({_id: voteAttributes.answerId},{
+              $inc: {voteCount: -1},
+              $pull : {"upvoters": userId}
+            });
+            Answers.update({_id: voteAttributes.answerId},{
+              $inc: {voteCount: -1},
+              $addToSet : {"downvoters": userId}
+            });
           }
       }else if (downVoters.indexOf(userId) != -1) { //It was already downvoted by the user
           if(voteAttributes.isUpvote){
-            Answers.update({_id: voteAttributes.answerId}, {$pull : {
-              "downvoters": userId
-            }});
-            Answers.update({_id: voteAttributes.answerId}, {$addToSet : {
-              "upvoters": userId
-            }});
+            Answers.update({_id: voteAttributes.answerId},{
+              $inc: {voteCount: 1},
+              $pull : {"downvoters": userId }
+            });
+            Answers.update({_id: voteAttributes.answerId},{
+              $inc: {voteCount: 1},
+              $addToSet : {"upvoters": userId}
+            });
           }else{
-            Answers.update({_id: voteAttributes.answerId}, {$pull : {
-              "downvoters": userId
-            }});
+            Answers.update({_id: voteAttributes.answerId},{
+              $inc: {voteCount: 1},
+              $pull : {"downvoters": userId }
+            });
           }
       }else{
           if(voteAttributes.isUpvote){
-            Answers.update({_id: voteAttributes.answerId}, {$addToSet : {
-              "upvoters": userId
-            }});
+            Answers.update({_id: voteAttributes.answerId},{
+              $inc: {voteCount: 1},
+              $addToSet : {"upvoters": userId}
+            });
           }else{
-            Answers.update({_id: voteAttributes.answerId}, {$addToSet : {
-              "downvoters": userId
-            }});
+            Answers.update({_id: voteAttributes.answerId},{
+              $inc: {voteCount: -1},
+              $addToSet : {"downvoters": userId}
+            });
           }
       }
 
