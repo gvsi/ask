@@ -4,7 +4,9 @@
   <!-- END POSTS LIST -->
   <!-- START OPENED POST -->
   <div class="post-opened">
-    {{>courseSettingsModal course_id=course_id}}
+    {{#if isUserInstructor}}
+      {{>courseSettingsModal course_id=course_id}}
+    {{/if}}
     <div class="no-post">
       {{#if posts.count}}
       <h2>Course stats go here</h2>
@@ -128,7 +130,7 @@
 
 <template name="answer">
   <hr>
-  <div class="answer">
+  <div class="answer" id="{{_id}}">
     <div class="postInfo">
       <div class="thumbnail-wrapper bordered circular" >
         <img width="40" height="40" alt="" src="{{identicon ownerIdenticon}}">
@@ -147,9 +149,9 @@
       </div>
     </div>
     <div class="votingContainer" data-answer-id="{{this._id}}">
-      <button class="btn btn-sm btn-rounded {{upvote}}" id="upvoteAnswer"><i class="fa fa-angle-up"></i></button>
+      <button class="btn btn-sm btn-rounded {{upvote}}" id="upvoteAnswer" {{disabledVoteForOwner}}><i class="fa fa-angle-up"></i></button>
       <div id="answerVoteCount">{{voteCount }}</div>
-      <button class="btn btn-sm btn-rounded {{downvote}}"  id="downvoteAnswer"><i class="fa fa-angle-down"></i></button>
+      <button class="btn btn-sm btn-rounded {{downvote}}"  id="downvoteAnswer" {{disabledVoteForOwner}}><i class="fa fa-angle-down"></i></button>
     </div>
     <div class="answerBodyContainer">
       <div id="body-{{_id}}">
@@ -157,20 +159,18 @@
         {{{body}}}
         {{/mathjax}}
       </div>
-      {{#if currentUserIsOwner}}
       <div class="summernote-wrapper" data-answer-id="{{_id}}" hidden>
         <label class="error"></label>
         <p><div id="summernote-edit-{{_id}}">
         {{{body}}}
         </div></p>
         <div class="checkbox inline m-l-20">
-          <input type="checkbox" value="1" id="isAnswerAnonymous-edit-{{_id}}">
+          <input type="checkbox" value="1" id="isAnswerAnonymous-edit-{{_id}}" {{isAnonymousChecked}}>
           <label for="isAnswerAnonymous-edit-{{_id}}" class="hint-text hidden-xs">Post as anonymous</label>
         </div>
         <button type="submit" data-answer-id="{{_id}}" class="updateAnswerBtn btn btn-complete btn-cons m-l-10">Update</button>
         <button type="submit" data-answer-id="{{_id}}" class="cancelUpdateBtn btn btn-default btn-cons m-l-10">Cancel</button>
       </div>
-      {{/if}}
     </div>
     <div class="comments">
       {{#each comments}}
@@ -226,7 +226,6 @@
 
 <template name="courseSettingsModal">
   {{#with course}}
-  {{#if isUserInstructor}}
   <div class="modal fade slide-right" id="modalSlideLeft" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-md" style="width: 420px">
       <div class="modal-content-wrapper">
@@ -308,6 +307,5 @@
     </div>
   </div>
 </div>
-{{/if}}
 {{/with}}
 </template>

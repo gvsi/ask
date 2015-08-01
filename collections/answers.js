@@ -72,7 +72,7 @@ Meteor.methods({
       var identiconHash = answerAttributes.isAnonymous ? answerAttributes.postId + answer.userId : answer.userId;
       var now = new Date();
       Answers.update(
-        {_id: answerAttributes.postId},
+        {_id: answerAttributes.answerId},
         {
           $set: {
             body: answerAttributes.body,

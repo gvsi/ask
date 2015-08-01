@@ -24,10 +24,6 @@ Meteor.publish('singleUser', function(id) {
  	return Meteor.users.find({_id: id},{fields: {'profile.name': 1, 'profile.surname': 1}});
 });
 
-Meteor.publish('singleStudent', function(uun) {
-	return Students.find({'STU_CODE': uun.toUpperCase()});
-});
-
 Meteor.publish('answers', function (post_id) {
 	return Answers.find({'postId': post_id});
 });
