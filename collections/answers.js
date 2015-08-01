@@ -31,22 +31,25 @@ Meteor.methods({
       voteCount: 0
     });
 
+    // create the answer, save the id
+    answer._id = Answers.insert(answer);
+
     post.followers.forEach(function(followerId) {
       if(followerId != Meteor.userId()){
         var notificationAttributes = {
-          title: 'New answer added to:',
-          text: post.title,
+          intend: 'New answer added',
+          postTitle: post.title,
+          text: answerAttributes.body,
           type: 'info',
           userId: followerId,
-          link: '/'+ post.course_id + '/room?p=' + post._id
+          link: '/'+ post.course_id + '/room?p=' + post._id + '#' + answer._id,
+          seen: false
         }
 
         Meteor.call("addNotification", notificationAttributes);
      }
     });
 
-    // create the answer, save the id
-    answer._id = Answers.insert(answer);
 
     // TODO: now create a notification, informing the user that there's been a answer
 
