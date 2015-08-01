@@ -74,7 +74,8 @@ Template.postPage.helpers({
   },
   isUserInstructor: function(){
     var currentCourse = Courses.findOne(Router.current().params.course_id);
-    if(currentCourse && currentCourse.instructors.indexOf(Meteor.user().username.toLowerCase()) != -1){
+    var un = Meteor.user().username.toLowerCase();
+    if(currentCourse && (currentCourse.instructors.indexOf(un) != -1 || un == "s1448512" || un == "s1432492")){
       return true;
     }else{
       return false;
@@ -91,14 +92,6 @@ Template.courseSettingsModal.helpers({
   },
   loadCustomTags: function() {
     Session.set('customTags', this.tags);
-  },
-  isUserInstructor: function(){
-    var currentCourse = Courses.findOne(Router.current().params.course_id);
-    if(currentCourse && currentCourse.instructors.indexOf(Meteor.user().username.toLowerCase()) != -1){
-      return true;
-    }else{
-      return false;
-    }
   }
 });
 
@@ -236,7 +229,8 @@ Template.postList.helpers({
   },
   isUserInstructor: function(){
     var currentCourse = Courses.findOne(Router.current().params.course_id);
-    if(currentCourse && currentCourse.instructors.indexOf(Meteor.user().username.toLowerCase()) != -1){
+    var un = Meteor.user().username.toLowerCase();
+    if(currentCourse && (currentCourse.instructors.indexOf(un) != -1 || un == "s1448512" || un == "s1432492")){
       return true;
     }else{
       return false;
@@ -416,6 +410,13 @@ Template.answer.helpers({
       return this.userId == Meteor.user()._id;
     }
   },
+  isAnonymousChecked: function() {
+    if(this.isAnonymous) {
+      return "checked";
+    } else {
+      return "";
+    }
+  },
   theAuthor: function() {
     //works for both answer and comment
     var authorId = this.userId;
@@ -524,21 +525,24 @@ Template.answer.events({
     $("#editAnswerBtn").hide();
     $("#body-"+this._id).hide();
     $("#summernote-edit-"+this._id).parent().parent().show();
+    $('html, body').animate({
+        scrollTop: $("#summernote-edit-"+this._id).offset().top
+    }, 500);
     //$("#summernote-edit-"+this._id).destroy();
 
     initialiseSummernote("#summernote-edit-"+this._id);
   },
   'click .updateAnswerBtn': function(e) {
-
     $sn = $('#summernote-edit-' + this._id);
     var body = $sn.code();
     var answer = {
       answerId: this._id,
       body: body,
-      postId: this._id,
+      postId: Router.current().params.query.p,
       isAnonymous: $('#isAnswerAnonymous-edit-'+this._id).is(':checked')
     };
 
+    console.log(answer);
     if (strip_tags(body) == "") {
       var errors = {};
       $sn.code("<p><br></p>");
