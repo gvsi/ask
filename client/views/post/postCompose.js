@@ -61,7 +61,6 @@ Template.postCompose.rendered = function(){
       ['misc', ['undo','redo','fullscreen']],
       ['style', ['bold', 'italic', 'underline']],
       ['insert', ['picture', 'link']],
-      ['fontsize', ['fontsize']],
       ['para', ['ul', 'ol', 'paragraph']]
     ],
     onfocus: function(e) {

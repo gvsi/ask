@@ -410,6 +410,20 @@ Template.answer.helpers({
       return this.userId == Meteor.user()._id;
     }
   },
+  disabledVoteForOwner: function() {
+    var currentUserIsOwner;
+    if(this.isAnonymous) {
+      currentUserIsOwner = this.ownerIdenticon == Package.sha.SHA256(this.postId + Meteor.user()._id)
+    } else {
+      currentUserIsOwner = this.userId == Meteor.user()._id;
+    }
+
+    if (currentUserIsOwner) {
+      return "disabled";
+    } else {
+      return "";
+    }
+  },
   isAnonymousChecked: function() {
     if(this.isAnonymous) {
       return "checked";
@@ -621,7 +635,6 @@ function initialiseSummernote(selector) {
       ['misc', ['hello', 'undo','redo','fullscreen']],
       ['style', ['bold', 'italic', 'underline']],
       ['insert', ['picture', 'link']],
-      ['fontsize', ['fontsize']],
       ['para', ['ul', 'ol', 'paragraph']]
     ],
     oninit: function() {
