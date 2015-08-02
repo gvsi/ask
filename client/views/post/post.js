@@ -59,7 +59,15 @@ Template.postPage.rendered = function () {
   }
 }
 
-
+Template.postPage.events({
+  //disable search when latex modal
+  "shown.bs.modal #courseSettingsModal": function() {
+      $('body').addClass('overlay-disabled');
+  },
+  "hidden.bs.modal #courseSettingsModal": function() {
+      $('body').removeClass('overlay-disabled');
+  }
+})
 
 Template.postPage.helpers({
   posts: function () {
@@ -399,6 +407,13 @@ Template.postContent.events({
   },
   "click .post-list-toggle": function(event) {
     $('.post-list').toggleClass('slideLeft');
+  },
+  //disable search when latex modal
+  "shown.bs.modal #latexEditorModal": function() {
+      $('body').addClass('overlay-disabled');
+  },
+  "hidden.bs.modal #latexEditorModal": function() {
+    $('body').removeClass('overlay-disabled');
   }
 });
 
