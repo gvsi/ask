@@ -62,6 +62,13 @@ Router.route('/:course_id/room/compose?p=:post_id', function () {
   }
 });
 
+Router.route('/notifications', function () {
+  this.render('notifications');
+},{
+  layoutTemplate:"defaultLayout",
+  loadingTemplate: 'loading',
+  name: 'notifications'
+});
 
 Router.route('/calendar', function () {
   this.render('calendarApp');
