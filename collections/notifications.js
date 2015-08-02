@@ -12,6 +12,9 @@ Meteor.methods({
       seen: Boolean
     });
 
+    var notification = _.extend(notificationAttributes, {
+      createdAt: new Date(),
+    });
 
     Notifications.insert(notificationAttributes);
   },

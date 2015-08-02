@@ -37,7 +37,7 @@ Meteor.methods({
     post.followers.forEach(function(followerId) {
       if(followerId != Meteor.userId()){
         var notificationAttributes = {
-          intend: 'New answer added',
+          intend: 'New answer added to: ',
           postTitle: post.title,
           text: answerAttributes.body,
           type: 'info',
