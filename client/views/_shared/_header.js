@@ -28,12 +28,33 @@ Template.header.helpers({
 		}else{
 			return "unread";
 		}
+	},
+	areThereUnseenNotifications: function(){
+		var notifications = Notifications.find({seen: false});
+		if(notifications && notifications.count() > 0){
+			return true;
+		}else{
+			return false;
+		}
 	}
 });
 
 Template.header.events({
 	"click .notification-list .dropdown-menu": function(event, template){
 		event.stopPropagation();
+	},
+	"click #notification-center": function(event, template){
+		var notifications = Notifications.find({seen: false}).fetch();
+			notifications.forEach(function (notification) {
+					 Meteor.call("seeNotification", notification._id , function(error, result){ 
+					 	if(error){
+					 		console.log("error", error);
+					 	}
+					 	if(result){
+
+					 	}
+					 });
+			 });
 	},
 	"click #toggle-more-details": function(event, template){
 		var p = $(event.currentTarget).closest('.heading');
