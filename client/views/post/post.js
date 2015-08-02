@@ -62,10 +62,10 @@ Template.postPage.rendered = function () {
 Template.postPage.events({
   //disable search when latex modal
   "shown.bs.modal #courseSettingsModal": function() {
-      $('body').addClass('overlay-disabled');
+    $('body').addClass('overlay-disabled');
   },
   "hidden.bs.modal #courseSettingsModal": function() {
-      $('body').removeClass('overlay-disabled');
+    $('body').removeClass('overlay-disabled');
   }
 })
 
@@ -179,6 +179,7 @@ Template.postList.events({
     $(e.currentTarget).addClass('active');
     var postId = $(e.currentTarget).attr('data-post-id');
     Router.go('room', {course_id: Router.current().params.course_id}, {query: 'p='+postId});
+    Session.set("postId", postId);
     loadPage(postId);
   }
 });
@@ -272,6 +273,7 @@ Template.postContent.helpers({
       if (post) {
         //if not anonymous
         Meteor.subscribe('singleUser', post.owner);
+        Session.set("postId", postId);
         var o = Meteor.users.findOne(post.owner);
         if (o) {
           post.ownerName = o.profile.name;
@@ -305,186 +307,343 @@ Template.postContent.helpers({
     }
   },
   answers: function() {
-    var id = Router.current().params.query.p;
-    Meteor.subscribe('answers', id);
-    return Answers.find({},{sort: {voteCount: -1}});
+    // var id = Router.current().params.query.p;
+    // Meteor.subscribe('answers', id);
+    // return Answers.find({},{sort: {voteCount: -1}});
   },
-  errorMessage: function(field) {
-    var e = Session.get('answerSubmitErrors');
-    if (e)
-    return Session.get('answerSubmitErrors')[field];
-    else
-    return false;
-  },
-  upvoteButton: function(){
-    var postId = Router.current().params.query.p;
-    var post = Posts.findOne(postId);
-    if (post) {
-      var voters = post.upvoters;
-      var user = Meteor.user();
-      if (voters && user && voters.indexOf(user._id) != -1) {
-        return 'btn-success';
+  items: function(){
+    //console.log(tempAnswers.find({}, {sort: {rank: 1}}).fetch());
+    // return the items from the sorted collection, based on the forced rank
+    return tempAnswers.find({}, {
+      sort: {rank: 1}});
+    },
+    errorMessage: function(field) {
+      var e = Session.get('answerSubmitErrors');
+      if (e)
+      return Session.get('answerSubmitErrors')[field];
+      else
+      return false;
+    },
+    upvoteButton: function(){
+      var postId = Router.current().params.query.p;
+      var post = Posts.findOne(postId);
+      if (post) {
+        var voters = post.upvoters;
+        var user = Meteor.user();
+        if (voters && user && voters.indexOf(user._id) != -1) {
+          return 'btn-success';
+        } else {
+          return 'btn-default';
+        }
       } else {
-        return 'btn-default';
+        return false;
       }
-    } else {
-      return false;
-    }
-  },
-  followButton: function(){
-    var postId = Router.current().params.query.p;
-    var post = Posts.findOne(postId);
-    if (post) {
-      var followers = post.followers;
-      var user = Meteor.user();
-      if (followers && user && followers.indexOf(user._id) != -1) {
-        return 'btn-warning';
+    },
+    followButton: function(){
+      var postId = Router.current().params.query.p;
+      var post = Posts.findOne(postId);
+      if (post) {
+        var followers = post.followers;
+        var user = Meteor.user();
+        if (followers && user && followers.indexOf(user._id) != -1) {
+          return 'btn-warning';
+        } else {
+          return 'btn-default';
+        }
       } else {
-        return 'btn-default';
+        return false;
       }
-    } else {
-      return false;
+    },
+    tags: function(){
+      var postId = Router.current().params.query.p;
+      var post = Posts.findOne(postId);
+      if (post) {
+        return post.tags;
+      }else{
+        return false;
+      }
     }
-  },
-  tags: function(){
-    var postId = Router.current().params.query.p;
-    var post = Posts.findOne(postId);
-    if (post) {
-      return post.tags;
-    }else{
-      return false;
-    }
-  }
-});
+  });
 
-Template.postContent.events({
-  'click #sendAnswerBtn': function(e) {
-    var body = $('#summernote').code();
-    var answer = {
-      body: body,
-      postId: Router.current().params.query.p,
-      isAnonymous: $('#isAnswerAnonymous').is(':checked')
-    };
+  Template.postContent.events({
+    'click #sendAnswerBtn': function(e) {
+      var body = $('#summernote').code();
+      var answer = {
+        body: body,
+        postId: Router.current().params.query.p,
+        isAnonymous: $('#isAnswerAnonymous').is(':checked')
+      };
 
-    if (strip_tags(body) == "") {
-      var errors = {};
-      errors.answerBody = "I know you're trying to be helpful, but an empty answer won't do much...";
-      $('#summernote').code("<p><br></p>");
-      $('#summernote').summernote({focus: true});
-      return Session.set('answerSubmitErrors', errors);
-    } else {
-      Session.set('answerSubmitErrors', {});
-    }
-
-    Meteor.call('answerInsert', answer, function(error, answerId) {
-      if (error){
-        Session.set('answerSubmitErrors', {answerBody: error.reason});
-        throw new Meteor.Error(error.reason);
-      } else {
+      if (strip_tags(body) == "") {
+        var errors = {};
+        errors.answerBody = "I know you're trying to be helpful, but an empty answer won't do much...";
         $('#summernote').code("<p><br></p>");
-      }
-    });
-  },
-  'click .upvote': function(e) {
-    var id = Router.current().params.query.p;
-    Meteor.call('upvote', id, function(error) {
-      if (error){
-        throw new Meteor.error(error.reason);
+        $('#summernote').summernote({focus: true});
+        return Session.set('answerSubmitErrors', errors);
       } else {
-        //$('#' + id).addClass('btn-success').removeClass('btn-default');
+        Session.set('answerSubmitErrors', {});
       }
-    });
-  },
-  'click #followQuestion': function(e){
-    var id = Router.current().params.query.p;
-    Meteor.call('followQuestion', id, function(error) {
-      if (error){
-        throw new Meteor.error(error.reason);
-      } else {
-        //$('#' + id).addClass('btn-success').removeClass('btn-default');
-      }
-    });
-  },
-  "click .post-list-toggle": function(event) {
-    $('.post-list').toggleClass('slideLeft');
-  },
-  //disable search when latex modal
-  "shown.bs.modal #latexEditorModal": function() {
+
+      Meteor.call('answerInsert', answer, function(error, answerId) {
+        if (error){
+          Session.set('answerSubmitErrors', {answerBody: error.reason});
+          throw new Meteor.Error(error.reason);
+        } else {
+          console.log('hey');
+          $('#summernote').code("<p><br></p>");
+        }
+      });
+    },
+    'click .upvote': function(e) {
+      var id = Router.current().params.query.p;
+      Meteor.call('upvote', id, function(error) {
+        if (error){
+          throw new Meteor.error(error.reason);
+        } else {
+          //$('#' + id).addClass('btn-success').removeClass('btn-default');
+        }
+      });
+    },
+    'click #followQuestion': function(e){
+      var id = Router.current().params.query.p;
+      Meteor.call('followQuestion', id, function(error) {
+        if (error){
+          throw new Meteor.error(error.reason);
+        } else {
+          //$('#' + id).addClass('btn-success').removeClass('btn-default');
+        }
+      });
+    },
+    "click .post-list-toggle": function(event) {
+      $('.post-list').toggleClass('slideLeft');
+    },
+    //disable search when latex modal
+    "shown.bs.modal #latexEditorModal": function() {
       $('body').addClass('overlay-disabled');
-  },
-  "hidden.bs.modal #latexEditorModal": function() {
-    $('body').removeClass('overlay-disabled');
-  }
-});
+    },
+    "hidden.bs.modal #latexEditorModal": function() {
+      $('body').removeClass('overlay-disabled');
+    }
+  });
 
-Template.answer.helpers({
-  currentUserIsOwner: function() {
-    if(this.isAnonymous) {
-      return this.ownerIdenticon == Package.sha.SHA256(this.postId + Meteor.user()._id)
-    } else {
-      return this.userId == Meteor.user()._id;
-    }
-  },
-  disabledVoteForOwner: function() {
-    var currentUserIsOwner;
-    if(this.isAnonymous) {
-      currentUserIsOwner = this.ownerIdenticon == Package.sha.SHA256(this.postId + Meteor.user()._id)
-    } else {
-      currentUserIsOwner = this.userId == Meteor.user()._id;
-    }
+  Template.answer.helpers({
+    currentUserIsOwner: function() {
+      if(this.isAnonymous) {
+        return this.ownerIdenticon == Package.sha.SHA256(this.postId + Meteor.user()._id)
+      } else {
+        return this.userId == Meteor.user()._id;
+      }
+    },
+    disabledVoteForOwner: function() {
+      var currentUserIsOwner;
+      if(this.isAnonymous) {
+        currentUserIsOwner = this.ownerIdenticon == Package.sha.SHA256(this.postId + Meteor.user()._id)
+      } else {
+        currentUserIsOwner = this.userId == Meteor.user()._id;
+      }
 
-    if (currentUserIsOwner) {
-      return "disabled";
-    } else {
-      return "";
-    }
-  },
-  isAnonymousChecked: function() {
-    if(this.isAnonymous) {
-      return "checked";
-    } else {
-      return "";
-    }
-  },
-  theAuthor: function() {
-    //works for both answer and comment
-    var authorId = this.userId;
-    Meteor.subscribe('singleUser', authorId);
-    return Meteor.users.findOne(authorId);
-  },
-  dateFromNow: function() {
-    return moment(this.created_at).fromNow();
-  },
-  upvote: function(){
-    var answerId = this._id;
-    var answer = Answers.findOne(answerId);
-    if (answer) {
-      var voters = answer.upvoters;
-      var userId = Meteor.user()._id;
-      if(voters && voters.indexOf(userId) != -1){
-        return 'btn-success';
+      if (currentUserIsOwner) {
+        return "disabled";
+      } else {
+        return "";
+      }
+    },
+    isAnonymousChecked: function() {
+      if(this.isAnonymous) {
+        return "checked";
+      } else {
+        return "";
+      }
+    },
+    theAuthor: function() {
+      //works for both answer and comment
+      var authorId = this.userId;
+      Meteor.subscribe('singleUser', authorId);
+      return Meteor.users.findOne(authorId);
+    },
+    dateFromNow: function() {
+      return moment(this.created_at).fromNow();
+    },
+    upvote: function(){
+      var answerId = this._id;
+      var answer = Answers.findOne(answerId);
+      if (answer) {
+        var voters = answer.upvoters;
+        var userId = Meteor.user()._id;
+        if(voters && voters.indexOf(userId) != -1){
+          return 'btn-success';
+        }
+      }
+    },
+    downvote: function(){
+      var answerId = this._id;
+      var answer = Answers.findOne(answerId);
+      if (answer) {
+        var voters = answer.downvoters;
+        var userId = Meteor.user()._id;
+        if(voters && voters.indexOf(userId) != -1){
+          return 'btn-danger';
+        }
       }
     }
-  },
-  downvote: function(){
-    var answerId = this._id;
-    var answer = Answers.findOne(answerId);
-    if (answer) {
-      var voters = answer.downvoters;
-      var userId = Meteor.user()._id;
-      if(voters && voters.indexOf(userId) != -1){
-        return 'btn-danger';
-      }
-    }
-  }
-});
+  });
 
-Template.answer.events({
-  'click #addCommentBtn': function(e) {
-    $("#summernote-wrapper-"+this._id).toggle();
-    $('#summernote-'+this._id).destroy();
-    $('#summernote-'+this._id).summernote({
-      height: 90,
+  Template.answer.events({
+    'click #addCommentBtn': function(e) {
+      $("#summernote-wrapper-"+this._id).toggle();
+      $('#summernote-'+this._id).destroy();
+      $('#summernote-'+this._id).summernote({
+        height: 90,
+        onfocus: function(e) {
+          $('body').addClass('overlay-disabled');
+        },
+        onblur: function(e) {
+          $('body').removeClass('overlay-disabled');
+        },
+        onpaste: function(e) {
+          var bufferText = (e.originalEvent.clipboardData).getData('Text');
+          e.preventDefault();
+          document.execCommand('insertText', false, bufferText);
+        },
+        toolbar: [
+          ['misc', ['undo','redo']],
+          ['style', ['bold', 'italic', 'underline']],
+          ['insert', ['link']],
+        ]
+      });
+    },
+    'click #sendCommentBtn': function (e) {
+      var answerId = $(e.currentTarget).attr('data-answer-id');
+
+      var body = $('#summernote-'+answerId).code();
+
+      var comment = {
+        body: body,
+        answerId: answerId,
+        isAnonymous:  $('#isCommentAnon-'+ answerId).is(':checked')
+      };
+
+      if (strip_tags(body) == "") {
+        $('#summernote-'+answerId).code("<p><br></p>");
+        $('#summernote-'+answerId).summernote({focus: true});
+        $('#summernote-wrapper-'+answerId+' .error').text("I'm sure this would be a very insightful comment... if it weren't empty.");
+        return false;
+      } else {
+        $('#summernote-wrapper-'+answerId+' .error').text("");
+      }
+
+      Meteor.call('commentInsert', comment, function(error) {
+        if (error){
+          $('#summernote-wrapper-'+answerId+' .error').text(error.reason);
+          throw new Meteor.Error(error.reason);
+        } else {
+          $('#summernote-'+answerId).code("<p><br></p>");
+          $("#summernote-wrapper-"+answerId).hide(700);
+          $('[data-toggle="tooltip"]').tooltip();
+        }
+      });
+    },
+    'click .votingContainer button': function(e) {
+      var answerId = $(e.currentTarget).parent().data('answer-id');
+      var isUpvote =  $(e.currentTarget).attr('id') == 'upvoteAnswer';
+
+      var voteAttributes = {
+        answerId: answerId,
+        isUpvote: isUpvote
+      };
+
+      Meteor.call('answerVote', voteAttributes, function(error, result) {
+        // $('#' + id).addClass('btn-success').removeClass('btn-default');
+        //  $(e.currentTarget).parent().find('#answerVoteCount').text(result);
+      });
+    },
+    'click .editAnswerBtn': function(e) {
+
+      $(".editAnswerBtn[data-answer-id="+this._id+"]").hide();
+      $("#editAnswerBtn").hide();
+      $("#body-"+this._id).hide();
+      $("#summernote-edit-"+this._id).parent().parent().show();
+      $('html, body').animate({
+        scrollTop: $("#summernote-edit-"+this._id).offset().top
+      }, 500);
+      //$("#summernote-edit-"+this._id).destroy();
+
+      initialiseSummernote("#summernote-edit-"+this._id);
+    },
+    'click .updateAnswerBtn': function(e) {
+      $sn = $('#summernote-edit-' + this._id);
+      var body = $sn.code();
+      var answer = {
+        answerId: this._id,
+        body: body,
+        postId: Router.current().params.query.p,
+        isAnonymous: $('#isAnswerAnonymous-edit-'+this._id).is(':checked')
+      };
+
+      console.log(answer);
+      if (strip_tags(body) == "") {
+        var errors = {};
+        $sn.code("<p><br></p>");
+        $sn.summernote({focus: true});
+        $(".summernote-wrapper[data-answer-id="+this._id+"] .error").text("I know you're trying to be helpful, but an empty answer won't do much...");
+        return false;
+      } else {
+        $(".summernote-wrapper[data-answer-id="+this._id+"] .error").text("");
+      }
+
+      Meteor.call('answerUpdate', answer, function(error, answerId) {
+        if (error){
+          $(".summernote-wrapper[data-answer-id="+this._id+"] .error").text(error.reason);
+          throw new Meteor.Error(error.reason);
+        } else {
+          $("#body-"+answerId).show();
+          $("#summernote-edit-"+answerId).parent().parent().hide();
+          $(".editAnswerBtn[data-answer-id="+answerId+"]").show();
+        }
+      });
+    },
+    'click .cancelUpdateBtn': function(e) {
+      $("#body-"+this._id).show();
+      $("#summernote-edit-"+this._id).parent().parent().hide();
+      $(".editAnswerBtn[data-answer-id="+this._id+"]").show();
+    }
+  });
+
+
+  function loadPage(postId) {
+    Session.set('answerSubmitErrors', {});
+
+    Meteor.subscribe('singlePost', postId);
+
+    var post = Posts.findOne(postId);
+    var post = null;
+
+    var postOpened = $('.post-opened');
+
+    $('.no-post').hide();
+    $('.post-content-wrapper').show();
+
+    $('#summernote').destroy();
+
+    initialiseSummernote("#summernote");
+
+    $(".post-content-wrapper").scrollTop(0);
+
+    // Initialize post action menu
+    $('.menuclipper').menuclipper({
+      bufferWidth: 20
+    });
+
+    $('#slide-left').addClass('slideLeft');
+
+    setTimeout(function(){
+      $('[data-toggle="tooltip"]').tooltip();
+    }, 1000);
+  }
+
+  function initialiseSummernote(selector) {
+    $(selector).summernote({
+      height: 150,
       onfocus: function(e) {
         $('body').addClass('overlay-disabled');
       },
@@ -497,268 +656,162 @@ Template.answer.events({
         document.execCommand('insertText', false, bufferText);
       },
       toolbar: [
-        ['misc', ['undo','redo']],
+        ['misc', ['hello', 'undo','redo','fullscreen']],
         ['style', ['bold', 'italic', 'underline']],
-        ['insert', ['link']],
-      ]
-    });
-  },
-  'click #sendCommentBtn': function (e) {
-    var answerId = $(e.currentTarget).attr('data-answer-id');
+        ['insert', ['picture', 'link']],
+        ['para', ['ul', 'ol', 'paragraph']]
+      ],
+      oninit: function() {
+        // Add "open" - "save" buttons
+        $(selector).parent().find('.note-file .latexToolbarBtn').remove()
 
-    var body = $('#summernote-'+answerId).code();
+        var noteBtn = '<button type="button" class="btn btn-default btn-sm btn-small latexToolbarBtn" title="LaTeX Equation Editor" data-event="something" tabindex="-1"><span style="font-size:1.3em">&#931;</span></button>';
 
-    var comment = {
-      body: body,
-      answerId: answerId,
-      isAnonymous:  $('#isCommentAnon-'+ answerId).is(':checked')
-    };
+        var fileGroup = '<div class="note-file btn-group">' + noteBtn + '</div>';
 
-    if (strip_tags(body) == "") {
-      $('#summernote-'+answerId).code("<p><br></p>");
-      $('#summernote-'+answerId).summernote({focus: true});
-      $('#summernote-wrapper-'+answerId+' .error').text("I'm sure this would be a very insightful comment... if it weren't empty.");
-      return false;
-    } else {
-      $('#summernote-wrapper-'+answerId+' .error').text("");
-    }
+        var sel;
+        var cursorPos;
+        var oldContent;
 
-    Meteor.call('commentInsert', comment, function(error) {
-      if (error){
-        $('#summernote-wrapper-'+answerId+' .error').text(error.reason);
-        throw new Meteor.Error(error.reason);
-      } else {
-        $('#summernote-'+answerId).code("<p><br></p>");
-        $("#summernote-wrapper-"+answerId).hide(700);
-        $('[data-toggle="tooltip"]').tooltip();
+        $(fileGroup).appendTo($(selector).parent().find(".note-toolbar"));
+        // Button tooltips
+        $('.latexToolbarBtn').tooltip({container: 'body', placement: 'bottom'});
+        // Button events
+        $('.latexToolbarBtn').click(function(event) {
+          $('#insertLatexBtn').attr('data-current-selector', "#" + $(event.currentTarget.parentNode.parentNode.parentNode.previousSibling).attr('id'));
+          sel = window.getSelection();
+          if (sel.anchorNode) {
+            cursorPos = sel.anchorOffset;
+            oldContent = sel.anchorNode.nodeValue;
+          }
+          $('#latexEditorModal').modal('show');
+        });
+        $('#insertLatexBtn').click(function(event) {
+          $('#latexEditorModal').modal('hide');
+
+          if (selector == $('#insertLatexBtn').attr("data-current-selector")) {
+            console.log('true' + selector);
+            console.log(oldContent);
+            console.log(cursorPos);
+            $(selector).summernote({focus:true});
+
+            setTimeout(function(){
+              var toInsert = "$"+$('#latex-source').val()+"$";
+              if (!oldContent) {
+                $(selector).code("<p>"+toInsert+"</p>")
+              } else {
+                var newContent = oldContent.substring(0, cursorPos) + toInsert + oldContent.substring(cursorPos);
+                sel.anchorNode.nodeValue = newContent;
+              }
+            }, 500);
+          } else {
+            console.log('false' + selector);
+          }
+        });
       }
     });
-  },
-  'click .votingContainer button': function(e) {
-    var answerId = $(e.currentTarget).parent().data('answer-id');
-    var isUpvote =  $(e.currentTarget).attr('id') == 'upvoteAnswer';
-
-    var voteAttributes = {
-      answerId: answerId,
-      isUpvote: isUpvote
-    };
-
-    Meteor.call('answerVote', voteAttributes, function(error, result) {
-      // $('#' + id).addClass('btn-success').removeClass('btn-default');
-      //  $(e.currentTarget).parent().find('#answerVoteCount').text(result);
-    });
-  },
-  'click .editAnswerBtn': function(e) {
-
-    $(".editAnswerBtn[data-answer-id="+this._id+"]").hide();
-    $("#editAnswerBtn").hide();
-    $("#body-"+this._id).hide();
-    $("#summernote-edit-"+this._id).parent().parent().show();
-    $('html, body').animate({
-        scrollTop: $("#summernote-edit-"+this._id).offset().top
-    }, 500);
-    //$("#summernote-edit-"+this._id).destroy();
-
-    initialiseSummernote("#summernote-edit-"+this._id);
-  },
-  'click .updateAnswerBtn': function(e) {
-    $sn = $('#summernote-edit-' + this._id);
-    var body = $sn.code();
-    var answer = {
-      answerId: this._id,
-      body: body,
-      postId: Router.current().params.query.p,
-      isAnonymous: $('#isAnswerAnonymous-edit-'+this._id).is(':checked')
-    };
-
-    console.log(answer);
-    if (strip_tags(body) == "") {
-      var errors = {};
-      $sn.code("<p><br></p>");
-      $sn.summernote({focus: true});
-      $(".summernote-wrapper[data-answer-id="+this._id+"] .error").text("I know you're trying to be helpful, but an empty answer won't do much...");
-      return false;
-    } else {
-      $(".summernote-wrapper[data-answer-id="+this._id+"] .error").text("");
-    }
-
-    Meteor.call('answerUpdate', answer, function(error, answerId) {
-      if (error){
-          $(".summernote-wrapper[data-answer-id="+this._id+"] .error").text(error.reason);
-        throw new Meteor.Error(error.reason);
-      } else {
-        $("#body-"+answerId).show();
-        $("#summernote-edit-"+answerId).parent().parent().hide();
-        $(".editAnswerBtn[data-answer-id="+answerId+"]").show();
-      }
-    });
-  },
-  'click .cancelUpdateBtn': function(e) {
-    $("#body-"+this._id).show();
-    $("#summernote-edit-"+this._id).parent().parent().hide();
-    $(".editAnswerBtn[data-answer-id="+this._id+"]").show();
   }
-});
+  //removes all tags and whitespaces (&nbsp;)
+  function strip_tags(input, allowed) {
+    allowed = (((allowed || '') + '')
+    .toLowerCase()
+    .match(/<[a-z][a-z0-9]*>/g) || [])
+    .join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
+    var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
+    commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+    return input.replace(commentsAndPhpTags, '')
+    .replace(tags, function($0, $1) {
+      return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+    }).replace(/&nbsp;/gi,'').replace(/\s+/g, ''); // removes spaces and &nbsp;
+  }
 
-
-function loadPage(postId) {
-  Session.set('answerSubmitErrors', {});
-
-  Meteor.subscribe('singlePost', postId);
-
-  var post = Posts.findOne(postId);
-  var post = null;
-
-  var postOpened = $('.post-opened');
-
-  $('.no-post').hide();
-  $('.post-content-wrapper').show();
-
-  $('#summernote').destroy();
-
-  initialiseSummernote("#summernote");
-
-  $(".post-content-wrapper").scrollTop(0);
-
-  // Initialize post action menu
-  $('.menuclipper').menuclipper({
-    bufferWidth: 20
-  });
-
-  $('#slide-left').addClass('slideLeft');
-
-  setTimeout(function(){
-    $('[data-toggle="tooltip"]').tooltip();
-  }, 1000);
-}
-
-function initialiseSummernote(selector) {
-  $(selector).summernote({
-    height: 150,
-    onfocus: function(e) {
-      $('body').addClass('overlay-disabled');
-    },
-    onblur: function(e) {
-      $('body').removeClass('overlay-disabled');
-    },
-    onpaste: function(e) {
-      var bufferText = (e.originalEvent.clipboardData).getData('Text');
-      e.preventDefault();
-      document.execCommand('insertText', false, bufferText);
-    },
-    toolbar: [
-      ['misc', ['hello', 'undo','redo','fullscreen']],
-      ['style', ['bold', 'italic', 'underline']],
-      ['insert', ['picture', 'link']],
-      ['para', ['ul', 'ol', 'paragraph']]
-    ],
-    oninit: function() {
-      // Add "open" - "save" buttons
-      $(selector).parent().find('.note-file .latexToolbarBtn').remove()
-
-      var noteBtn = '<button type="button" class="btn btn-default btn-sm btn-small latexToolbarBtn" title="LaTeX Equation Editor" data-event="something" tabindex="-1"><span style="font-size:1.3em">&#931;</span></button>';
-
-      var fileGroup = '<div class="note-file btn-group">' + noteBtn + '</div>';
-
-      var sel;
-      var cursorPos;
-      var oldContent;
-
-      $(fileGroup).appendTo($(selector).parent().find(".note-toolbar"));
-      // Button tooltips
-      $('.latexToolbarBtn').tooltip({container: 'body', placement: 'bottom'});
-      // Button events
-      $('.latexToolbarBtn').click(function(event) {
-        $('#insertLatexBtn').attr('data-current-selector', "#" + $(event.currentTarget.parentNode.parentNode.parentNode.previousSibling).attr('id'));
-        sel = window.getSelection();
-        if (sel.anchorNode) {
-          cursorPos = sel.anchorOffset;
-          oldContent = sel.anchorNode.nodeValue;
-        }
-        $('#latexEditorModal').modal('show');
-      });
-      $('#insertLatexBtn').click(function(event) {
-        $('#latexEditorModal').modal('hide');
-
-        if (selector == $('#insertLatexBtn').attr("data-current-selector")) {
-          console.log('true' + selector);
-          console.log(oldContent);
-          console.log(cursorPos);
-          $(selector).summernote({focus:true});
-
-          setTimeout(function(){
-            var toInsert = "$"+$('#latex-source').val()+"$";
-            if (!oldContent) {
-              $(selector).code("<p>"+toInsert+"</p>")
-            } else {
-              var newContent = oldContent.substring(0, cursorPos) + toInsert + oldContent.substring(cursorPos);
-              sel.anchorNode.nodeValue = newContent;
-            }
-          }, 500);
-        } else {
-          console.log('false' + selector);
-        }
-      });
-    }
-  });
-}
-//removes all tags and whitespaces (&nbsp;)
-function strip_tags(input, allowed) {
-  allowed = (((allowed || '') + '')
-  .toLowerCase()
-  .match(/<[a-z][a-z0-9]*>/g) || [])
-  .join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
-  var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
-  commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
-  return input.replace(commentsAndPhpTags, '')
-  .replace(tags, function($0, $1) {
-    return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
-  }).replace(/&nbsp;/gi,'').replace(/\s+/g, ''); // removes spaces and &nbsp;
-}
-
-function loadMathQuill() {
-  mathquill();
-  var LatexImages = false;
-  function printTree(html)
-  {
-    html = html.match(/<[a-z]+|<\/[a-z]+>|./ig);
-    if(!html) return '';
-    var indent = '\n', tree = '';
-    while(html.length)
+  function loadMathQuill() {
+    mathquill();
+    var LatexImages = false;
+    function printTree(html)
     {
-      var token = html.shift();
-      if(token.charAt(0) === '<')
+      html = html.match(/<[a-z]+|<\/[a-z]+>|./ig);
+      if(!html) return '';
+      var indent = '\n', tree = '';
+      while(html.length)
       {
-        if(token.charAt(1) === '/')
+        var token = html.shift();
+        if(token.charAt(0) === '<')
         {
-          indent = indent.slice(0,-2);
-          if(html[0] && html[0].slice(0,2) === '</')
-          token += indent.slice(0,-2);
+          if(token.charAt(1) === '/')
+          {
+            indent = indent.slice(0,-2);
+            if(html[0] && html[0].slice(0,2) === '</')
+            token += indent.slice(0,-2);
+          }
+          else
+          {
+            tree += indent;
+            indent += '  ';
+          }
+          token = token.toLowerCase();
         }
-        else
-        {
-          tree += indent;
-          indent += '  ';
-        }
-        token = token.toLowerCase();
-      }
 
-      tree += token;
+        tree += token;
+      }
+      return tree.slice(1);
     }
-    return tree.slice(1);
+    var editingSource = false, latexSource = $('#latex-source'), htmlSource = $('#html-source'), codecogs = $('#codecogs'), latexMath = $('.mathquill-editor').bind('keydown keypress', function()
+    {
+      setTimeout(function() {
+        htmlSource.text(printTree(latexMath.mathquill('html')));
+        var latex = latexMath.mathquill('latex');
+        if(!editingSource)
+        latexSource.val(latex);
+        if(!LatexImages)
+        return;
+        latex = encodeURIComponent(latexSource.val());
+        //            location.hash = '#'+latex; //extremely performance-crippling in Chrome for some reason
+        codecogs.attr('src','http://latex.codecogs.com/gif.latex?'+latex).parent().attr('href','http://latex.codecogs.com/gif.latex?'+latex);
+      });
+    }).keydown().focus();
   }
-  var editingSource = false, latexSource = $('#latex-source'), htmlSource = $('#html-source'), codecogs = $('#codecogs'), latexMath = $('.mathquill-editor').bind('keydown keypress', function()
-  {
-    setTimeout(function() {
-      htmlSource.text(printTree(latexMath.mathquill('html')));
-      var latex = latexMath.mathquill('latex');
-      if(!editingSource)
-      latexSource.val(latex);
-      if(!LatexImages)
-      return;
-      latex = encodeURIComponent(latexSource.val());
-      //            location.hash = '#'+latex; //extremely performance-crippling in Chrome for some reason
-      codecogs.attr('src','http://latex.codecogs.com/gif.latex?'+latex).parent().attr('href','http://latex.codecogs.com/gif.latex?'+latex);
-    });
-  }).keydown().focus();
-}
+
+  // Special collection for holding the temporarily sorted results
+  tempAnswers = new Meteor.Collection(null);
+
+  // rebuild the sorted results collection, on each page
+  Deps.autorun(function(){
+    var postId = Session.get("postId");
+    if (postId) {
+      console.log(postId);
+      Meteor.subscribe('answers', postId);
+
+      tempAnswers.remove({});
+
+      // observe is automatically torn down when computation is invalidated
+      // add each of the items with an enforced rank
+
+        var currentRank = 0;
+        var initial = true;
+        Answers.find({}, {sort: {voteCount: -1, created_at: 1}}).observe({
+          addedAt: function(document, atIndex){
+            console.log('added');
+            if(initial){
+              console.log('initial');
+              document.rank = atIndex;
+              currentRank = Math.max(currentRank, atIndex + 1);
+              tempAnswers.insert(document)
+            } else {
+              console.log('else');
+              document.rank = currentRank++;
+              tempAnswers.insert(document);
+            }
+          },
+          removed: function(document){
+            tempAnswers.remove(document._id);
+          },
+          changed: function(document){
+            var id = document._id;
+            delete document._id;
+            tempAnswers.update(id, {$set: document}); // keeps rank field
+          }
+        });
+        initial = false;
+      }
+  });

@@ -25,7 +25,7 @@ Meteor.publish('singleUser', function(id) {
 });
 
 Meteor.publish('answers', function (post_id) {
-	return Answers.find({'postId': post_id});
+	return Answers.find({'postId': post_id},{sort: {voteCount: -1}});
 });
 
 Meteor.publish("notifications", function(userId){
