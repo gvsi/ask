@@ -18,13 +18,22 @@ Template.sideBar.rendered = function (){
 				if(notification.userId == Meteor.userId() && notificationsLoaded){
 					 $('body').pgNotification({
 														style: 'circle',
-														title: notification.title,
-														message: notification.text,
+														title: notification.intend,
+														message: notification.postTitle,
 														type: notification.type,
 														onShown: function(){
 															$( ".alert:last" ).wrap( "<a href="+ notification.link +"></a>" );
 														}
 						}).show();
+
+						Meteor.call("seeNotification", id, function(error, result){
+							if(error){
+								console.log("error", error);
+							}
+							if(result){
+
+							}
+						});
 				}
 			}
 		});
