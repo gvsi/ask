@@ -773,7 +773,7 @@ Template.postContent.helpers({
   }
 
   // Special collection for holding the temporarily sorted results
-  tempAnswers = new Meteor.Collection(null);
+  var tempAnswers = new Meteor.Collection(null);
 
   // rebuild the sorted results collection, on each page
   Deps.autorun(function(){
@@ -789,9 +789,9 @@ Template.postContent.helpers({
 
         var currentRank = 0;
         var initial = true;
-        Answers.find({}, {sort: {voteCount: -1, created_at: 1}}).observe({
+        Answers.find({}, {sort: {isInstructor: -1, voteCount: -1, created_at: 1}}).observe({
           addedAt: function(document, atIndex){
-            console.log('added');
+            console.log(document.body);
             if(initial){
               console.log('initial');
               document.rank = atIndex;

@@ -141,6 +141,9 @@
         {{else}}
         {{theAuthor.profile.name}}
         {{theAuthor.profile.surname}}
+        {{#if isInstructor}}
+         (Instructor)
+        {{/if}}
         {{/if}}
       </div>
       <div class="datetime timeLabel">

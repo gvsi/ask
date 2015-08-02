@@ -31,6 +31,17 @@ Meteor.methods({
       voteCount: 0
     });
 
+    var course = Courses.findOne(post.course_id);
+    if (!course)
+      throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
+
+    var un = user.username.toLowerCase();
+    if(course.instructors.indexOf(un) != -1){
+      answer = _.extend(answerAttributes, {
+        isInstructor: true
+      });
+    }
+
     // create the answer, save the id
     answer._id = Answers.insert(answer);
 
