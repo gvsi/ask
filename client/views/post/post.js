@@ -305,64 +305,59 @@ Template.postContent.helpers({
       }
     }
   },
-  answers: function() {
-    // var id = Router.current().params.query.p;
-    // Meteor.subscribe('answers', id);
-    // return Answers.find({},{sort: {voteCount: -1}});
-  },
-  items: function(){
-    //console.log(tempAnswers.find({}, {sort: {rank: 1}}).fetch());
-    // return the items from the sorted collection, based on the forced rank
+  answers: function(){
+    // non-reactive answer fetching
+    // return the answers from the sorted collection, based on the forced rank
     return tempAnswers.find({}, {
       sort: {rank: 1}});
-    },
-    errorMessage: function(field) {
-      var e = Session.get('answerSubmitErrors');
-      if (e)
-      return Session.get('answerSubmitErrors')[field];
-      else
+  },
+  errorMessage: function(field) {
+    var e = Session.get('answerSubmitErrors');
+    if (e)
+    return Session.get('answerSubmitErrors')[field];
+    else
+    return false;
+  },
+  upvoteButton: function(){
+    var postId = Router.current().params.query.p;
+    var post = Posts.findOne(postId);
+    if (post) {
+      var voters = post.upvoters;
+      var user = Meteor.user();
+      if (voters && user && voters.indexOf(user._id) != -1) {
+        return 'btn-success';
+      } else {
+        return 'btn-default';
+      }
+    } else {
       return false;
-    },
-    upvoteButton: function(){
-      var postId = Router.current().params.query.p;
-      var post = Posts.findOne(postId);
-      if (post) {
-        var voters = post.upvoters;
-        var user = Meteor.user();
-        if (voters && user && voters.indexOf(user._id) != -1) {
-          return 'btn-success';
-        } else {
-          return 'btn-default';
-        }
-      } else {
-        return false;
-      }
-    },
-    followButton: function(){
-      var postId = Router.current().params.query.p;
-      var post = Posts.findOne(postId);
-      if (post) {
-        var followers = post.followers;
-        var user = Meteor.user();
-        if (followers && user && followers.indexOf(user._id) != -1) {
-          return 'btn-warning';
-        } else {
-          return 'btn-default';
-        }
-      } else {
-        return false;
-      }
-    },
-    tags: function(){
-      var postId = Router.current().params.query.p;
-      var post = Posts.findOne(postId);
-      if (post) {
-        return post.tags;
-      }else{
-        return false;
-      }
     }
-  });
+  },
+  followButton: function(){
+    var postId = Router.current().params.query.p;
+    var post = Posts.findOne(postId);
+    if (post) {
+      var followers = post.followers;
+      var user = Meteor.user();
+      if (followers && user && followers.indexOf(user._id) != -1) {
+        return 'btn-warning';
+      } else {
+        return 'btn-default';
+      }
+    } else {
+      return false;
+    }
+  },
+  tags: function(){
+    var postId = Router.current().params.query.p;
+    var post = Posts.findOne(postId);
+    if (post) {
+      return post.tags;
+    }else{
+      return false;
+    }
+  }
+});
 
   Template.postContent.events({
     'click #sendAnswerBtn': function(e) {
@@ -772,7 +767,7 @@ Template.postContent.helpers({
   }
 
   // Special collection for holding the temporarily sorted answers
-  var tempAnswers = new Meteor.Collection(null);
+  tempAnswers = new Meteor.Collection(null);
 
   // rebuild the sorted results collection, on each page
   Deps.autorun(function(){
@@ -782,7 +777,6 @@ Template.postContent.helpers({
       Meteor.subscribe('answers', postId, {
         onReady: function() {
           tempAnswers.remove({});
-
           // observe is automatically torn down when computation is invalidated
           // add each of the items with an enforced rank
 
@@ -793,16 +787,16 @@ Template.postContent.helpers({
               if(initial){
                 document.rank = atIndex;
                 currentRank = Math.max(currentRank, atIndex + 1);
-                //console.log("added initial - rank: " + document.rank + " currentRank: " + currentRank + " voteCount: " + document.voteCount);
+                //console.log("added initial - id: " + document._id + " rank: " + document.rank + " currentRank: " + currentRank + " voteCount: " + document.voteCount);
                 tempAnswers.insert(document)
               } else {
                 document.rank = currentRank++;
-                //console.log("added next - rank: " + document.rank + " currentRank: " + currentRank + " voteCount: " + document.voteCount);
-                tempAnswers.insert(document);
+                if (!tempAnswers.findOne(document._id))
+                  tempAnswers.insert(document);
               }
             },
             removed: function(document){
-              //console.log('removed');
+              //console.log('removed id: ' + document._id);
               tempAnswers.remove(document._id);
             },
             changed: function(document){

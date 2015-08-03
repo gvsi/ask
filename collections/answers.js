@@ -38,7 +38,7 @@ Meteor.methods({
     var un = user.username.toLowerCase();
     if(course.instructors.indexOf(un) != -1){
       answer = _.extend(answerAttributes, {
-        isInstructor: true
+        isInstructorPost: true
       });
     }
 

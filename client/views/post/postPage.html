@@ -5,9 +5,10 @@
   <!-- START OPENED POST -->
   <div class="post-opened">
     {{#if isUserInstructor}}
-      {{>courseSettingsModal course_id=course_id}}
+       {{>courseSettingsModal course_id=course_id}}
     {{/if}}
     <div class="no-post">
+
       {{#if posts.count}}
       <h2>Course stats go here</h2>
       {{else}}
@@ -67,11 +68,18 @@
             <img width="40" height="40" alt="" src="{{identicon post.ownerIdenticon}}">
           </div>
           <div class="sender inline m-l-10">
-            <p class="name no-margin bold">
+            <p class="name no-margin">
               {{#if post.isAnonymous}}
-              Anonymous
+                Anonymous
               {{else}}
-              {{post.ownerName}} {{post.ownerSurname}}
+                {{#if post.isInstructorPost}}
+                  <span class="bold">{{post.ownerName}} {{post.ownerSurname}}</span><span class="small hint-text"> - instructor</span>
+                {{else}}
+                  <span class="bold">
+                  {{post.ownerName}}
+                  {{post.ownerSurname}}
+                  </span>
+                {{/if}}
               {{/if}}
             </p>
             <p class="datetime no-margin">
@@ -101,7 +109,7 @@
 
       {{>latexModal}}
 
-      {{#each items}}
+      {{#each answers}}
       {{ >answer }}
       {{/each}}
 
@@ -135,15 +143,18 @@
       <div class="thumbnail-wrapper bordered circular" >
         <img width="40" height="40" alt="" src="{{identicon ownerIdenticon}}">
       </div>
-      <div class="nameLabel bold">
-        {{#if isAnonymous}}
-        Anonymous
-        {{else}}
-        {{theAuthor.profile.name}}
-        {{theAuthor.profile.surname}}
+      <div class="nameLabel">
         {{#if isInstructor}}
-         (Instructor)
-        {{/if}}
+          <span class="bold">{{theAuthor.profile.name}} {{theAuthor.profile.surname}}</span><span class="small hint-text"> - instructor</span>
+        {{else}}
+          {{#if isAnonymous}}
+          Anonymous
+          {{else}}
+          <span class="bold">
+          {{theAuthor.profile.name}}
+          {{theAuthor.profile.surname}}
+          </span>
+          {{/if}}
         {{/if}}
       </div>
       <div class="datetime timeLabel">

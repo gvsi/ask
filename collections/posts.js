@@ -18,6 +18,10 @@ Meteor.methods({
         //else if(poll) -- 2
         //else -- 1
 
+        var course = Courses.findOne(postAttributes.course_id);
+        if (!course)
+          throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
+
         var post = _.extend(postAttributes, {
           owner: user._id,
           type: type,
@@ -26,6 +30,13 @@ Meteor.methods({
           upvoters: [],
           followers: [user._id],
         });
+
+        var un = user.username.toLowerCase();
+        if(course.instructors.indexOf(un) != -1){
+          post = _.extend(postAttributes, {
+            isInstructorPost: true
+          });
+        }
 
         var postId = Posts.insert(post);
 
