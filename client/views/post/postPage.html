@@ -88,12 +88,18 @@
           </div>
 
         </div>
-        {{#unless currentUserIsOwner}}
+        {{#if currentUserIsOwner}}
         <div class="buttons">
-          <button class="btn {{ upvoteButton }} btn-lg btn-rounded upvote" ><i class="fa fa-thumbs-up"></i></button>
-          <button class="btn {{ followButton }} btn-lg btn-rounded" id="followQuestion" >Follow</button>
+          <a href="{{pathFor 'editPost' course_id=post.course_id post_id=post._id}}"> <button class="btn btn-lg btn-rounded edit"><i class="fa fa-pencil"></i></button> </a>
+          <button class="btn btn-lg btn-rounded upvote delete"><i class="fa fa-trash-o"></i></button>
+          <button class="btn {{ upvoteButton }} btn-lg btn-rounded upvote" disabled><i class="fa fa-thumbs-up"></i><span class="m-l-10">{{post.upvoters.length}}</span></button>
         </div>
-        {{/unless}}
+        {{else}}
+          <div class="buttons">
+            <button class="btn {{ upvoteButton }} btn-lg btn-rounded upvote" ><i class="fa fa-thumbs-up"></i><span class="m-l-10">{{post.upvoters.length}}</span></button>
+            <button class="btn {{ followButton }} btn-lg btn-rounded" id="followQuestion" >Follow</button>
+          </div>
+        {{/if}}
         <div class="clearfix"></div>
       </div>
 
