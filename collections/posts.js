@@ -117,16 +117,19 @@ Meteor.methods({
     },
     upvote: function(post_id){
       var userId = Meteor.user()._id;
-      var voters = Posts.findOne(post_id).upvoters;
+      var post = Posts.findOne(post_id);
+      var voters = post.upvoters;
 
-      if(voters.indexOf(userId) != -1){ // If the user has already upvoted
-          Posts.update({_id: post_id}, {$pull : {
-            "upvoters": userId
-          }});
-      }else{
-          Posts.update({_id: post_id}, {$addToSet : {
-            "upvoters": userId
-          }});
+      if(userId != post.owner){
+        if(voters.indexOf(userId) != -1){ // If the user has already upvoted
+            Posts.update({_id: post_id}, {$pull : {
+              "upvoters": userId
+            }});
+        }else{
+            Posts.update({_id: post_id}, {$addToSet : {
+              "upvoters": userId
+            }});
+        }
       }
 
     },
