@@ -48,9 +48,9 @@
                         <div class="notification-item unread {{isSeen}} clearfix">
                           <!-- START Notification Item-->
                           <div class="heading">
-                            <a href="#" class="text-complete">
+                            <a class="text-complete">
                               <i class="fa fa-comment fs-16 m-r-10"></i>
-                              <span class="bold">{{intend}} </span>
+                              <a href="{{link}}" class="text-complete"> <span class="bold">{{intend}} </span></a>
                               <div class="pull-right time-date">
                                 <div id="toggle-more-details" class="thumbnail-wrapper d16 circular inline m-t-15 m-r-10 toggle-more-details">
                                   <div>
@@ -59,9 +59,9 @@
                                 </div>
                                 <span class="time">{{dateFromNow}}</span>
                               </div>
-                              <div class="fs-12 m-l-10 notificationTitle">
+                              <a href="{{link}}" class="text-complete"> <div class="fs-12 m-l-10 notificationTitle">
                                 {{postTitle}}
-                              </div>
+                              </div></a>
                             </a>
 
                             <div class="more-details" style="display: none;">

@@ -1,6 +1,48 @@
 <template name="notifications">
-  <div style="width:80%;background-color:green;height:200px;margin-right:auto;margin-left:auto;">
+          <div class="jumbotron container-fluid container-fixed-lg sm-p-l-5">
 
-  </div>
 
-</template>
+            <div class="timeline-container top-circle">
+              <section class="timeline">
+
+                {{#each notifications}}
+                <div class="timeline-block">
+                  <div class="timeline-point success">
+                    <i class="pg-comment"></i>
+                  </div>
+                  <!-- timeline-point -->
+                  <div class="timeline-content">
+                  <div class="card share full-width">
+                      <!-- <div class="circle" data-toggle="tooltip" title="Label" data-container="body">
+                      </div> -->
+                        <a href="{{link}}">
+                          <div class="card-header clearfix">
+                            <!-- <div class="user-pic">
+                              <img alt="Profile Image" width="33" height="33" data-src-retina="assets/img/profiles/8x.jpg" data-src="assets/img/profiles/8.jpg" src="assets/img/profiles/8x.jpg">
+                            </div> -->
+                            <h5>{{intend}}</h5>
+                            <h6>
+                                 <span style="font-size: 14px;margin-top:3px" class="location semi-bold">{{postTitle}}</span>
+                            </h6>
+                          </div>
+                       </a>
+                      <div class="card-description">
+                        <p>{{textWithoutTags}}</p>
+                      </div>
+                    </div>
+
+                    <div class="event-date">
+                      <small class="fs-12 hint-text">{{dateFromNow}}</small>
+                    </div>
+                  </div>
+
+                  <!-- timeline-content -->
+                </div>
+                {{/each}}
+              </section>
+              <!-- timeline -->
+            </div>
+            <!-- -->
+          </div>
+          <!-- END CONTAINER FLUID -->
+  </template>
