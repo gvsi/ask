@@ -640,6 +640,7 @@ Template.postContent.helpers({
   }
 
   function initialiseSummernote(selector) {
+    $(selector).destroy();
     $(selector).summernote({
       height: 150,
       onfocus: function(e) {
@@ -776,7 +777,7 @@ Template.postContent.helpers({
   // rebuild the sorted results collection, on each page
   Deps.autorun(function(){
     var postId = Session.get("postId");
-    console.log(postId);
+    //console.log(postId);
     if (postId) {
       Meteor.subscribe('answers', postId, {
         onReady: function() {
