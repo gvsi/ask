@@ -11,10 +11,18 @@ Meteor.methods({
     });
 
     var user = Meteor.user();
-    var post = Posts.findOne(answerAttributes.postId);
 
+    if (!user)
+      throw new Meteor.Error('invalid-user', 'You must be logged in to post an answer');
+
+    var post = Posts.findOne(answerAttributes.postId);
     if (!post)
       throw new Meteor.Error('invalid-answer', 'You must answer on a post');
+
+    var course = Courses.findOne(post.course_id);
+    if (!course)
+      throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
+
 
     // set identiconHash
     var identiconHash = answerAttributes.isAnonymous ? answerAttributes.postId + user._id : user._id;
@@ -31,15 +39,25 @@ Meteor.methods({
       voteCount: 0
     });
 
-    var course = Courses.findOne(post.course_id);
-    if (!course)
-      throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
 
     var un = user.username.toLowerCase();
+
+    // checks if it's an instructor answer
     if(course.instructors.indexOf(un) != -1){
+      //marks answer as instructor answer
       answer = _.extend(answerAttributes, {
-        isInstructorPost: true
+        isInstructor: true
       });
+
+      //updates the post to be instructor-answered if not set already
+      if (!post.hasInstructorAnswer) {
+        Posts.update({_id: answerAttributes.postId}, {$set: {'badges.hasInstructorAnswer': true}});
+      }
+    } else {
+      //updates the post to be student-answered if not set already
+      if (!post.hasStudentAnswer) {
+        Posts.update({_id: answerAttributes.postId}, {$set: {'badges.hasStudentAnswer': true}});
+      }
     }
 
     // create the answer, save the id
