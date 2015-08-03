@@ -15,6 +15,7 @@ Template.postPage.rendered = function () {
 
   if (Router.current().params.query.p) {
     var postId = Router.current().params.query.p;
+    Session.set("postId", postId);
     loadPage(postId);
   }
 
@@ -129,7 +130,6 @@ Template.courseSettingsModal.events({
           $('.custom-tag-input').tagsinput('add', ct);
         });
       }
-      //Session.set('customTags', $(".custom-tag-input").tagsinput('items'));
       $('#customTagsForCourse').show();
       $(".bootstrap-tagsinput input").focus();
     }
@@ -273,7 +273,6 @@ Template.postContent.helpers({
       if (post) {
         //if not anonymous
         Meteor.subscribe('singleUser', post.owner);
-        Session.set("postId", postId);
         var o = Meteor.users.findOne(post.owner);
         if (o) {
           post.ownerName = o.profile.name;
@@ -771,7 +770,7 @@ Template.postContent.helpers({
     }).keydown().focus();
   }
 
-  // Special collection for holding the temporarily sorted results
+  // Special collection for holding the temporarily sorted answers
   var tempAnswers = new Meteor.Collection(null);
 
   // rebuild the sorted results collection, on each page
@@ -793,26 +792,26 @@ Template.postContent.helpers({
               if(initial){
                 document.rank = atIndex;
                 currentRank = Math.max(currentRank, atIndex + 1);
-                console.log("added initial - rank: " + document.rank + " currentRank: " + currentRank + " voteCount: " + document.voteCount);
+                //console.log("added initial - rank: " + document.rank + " currentRank: " + currentRank + " voteCount: " + document.voteCount);
                 tempAnswers.insert(document)
               } else {
                 document.rank = currentRank++;
-                console.log("added next - rank: " + document.rank + " currentRank: " + currentRank + " voteCount: " + document.voteCount);
+                //console.log("added next - rank: " + document.rank + " currentRank: " + currentRank + " voteCount: " + document.voteCount);
                 tempAnswers.insert(document);
               }
             },
             removed: function(document){
-              console.log('removed');
+              //console.log('removed');
               tempAnswers.remove(document._id);
             },
             changed: function(document){
-              console.log('changed');
+              //console.log('changed');
               var id = document._id;
               delete document._id;
               tempAnswers.update(id, {$set: document}); // keeps rank field
             }
           });
-          console.log("initial set to false");
+          //console.log("initial set to false");
           initial = false;
         }
       });
