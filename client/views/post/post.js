@@ -389,7 +389,6 @@ Template.postContent.helpers({
           Session.set('answerSubmitErrors', {answerBody: error.reason});
           throw new Meteor.Error(error.reason);
         } else {
-          console.log('hey');
           $('#summernote').code("<p><br></p>");
         }
       });
@@ -778,40 +777,44 @@ Template.postContent.helpers({
   // rebuild the sorted results collection, on each page
   Deps.autorun(function(){
     var postId = Session.get("postId");
+    console.log(postId);
     if (postId) {
-      console.log(postId);
-      Meteor.subscribe('answers', postId);
+      Meteor.subscribe('answers', postId, {
+        onReady: function() {
+          tempAnswers.remove({});
 
-      tempAnswers.remove({});
+          // observe is automatically torn down when computation is invalidated
+          // add each of the items with an enforced rank
 
-      // observe is automatically torn down when computation is invalidated
-      // add each of the items with an enforced rank
-
-        var currentRank = 0;
-        var initial = true;
-        Answers.find({}, {sort: {isInstructor: -1, voteCount: -1, created_at: 1}}).observe({
-          addedAt: function(document, atIndex){
-            console.log(document.body);
-            if(initial){
-              console.log('initial');
-              document.rank = atIndex;
-              currentRank = Math.max(currentRank, atIndex + 1);
-              tempAnswers.insert(document)
-            } else {
-              console.log('else');
-              document.rank = currentRank++;
-              tempAnswers.insert(document);
+          var currentRank = 0;
+          var initial = true;
+          Answers.find({}, {sort: {isInstructor: -1, voteCount: -1, created_at: 1}}).observe({
+            addedAt: function(document, atIndex){
+              if(initial){
+                document.rank = atIndex;
+                currentRank = Math.max(currentRank, atIndex + 1);
+                console.log("added initial - rank: " + document.rank + " currentRank: " + currentRank + " voteCount: " + document.voteCount);
+                tempAnswers.insert(document)
+              } else {
+                document.rank = currentRank++;
+                console.log("added next - rank: " + document.rank + " currentRank: " + currentRank + " voteCount: " + document.voteCount);
+                tempAnswers.insert(document);
+              }
+            },
+            removed: function(document){
+              console.log('removed');
+              tempAnswers.remove(document._id);
+            },
+            changed: function(document){
+              console.log('changed');
+              var id = document._id;
+              delete document._id;
+              tempAnswers.update(id, {$set: document}); // keeps rank field
             }
-          },
-          removed: function(document){
-            tempAnswers.remove(document._id);
-          },
-          changed: function(document){
-            var id = document._id;
-            delete document._id;
-            tempAnswers.update(id, {$set: document}); // keeps rank field
-          }
-        });
-        initial = false;
-      }
+          });
+          console.log("initial set to false");
+          initial = false;
+        }
+      });
+    }
   });

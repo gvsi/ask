@@ -139,6 +139,5 @@ Meteor.methods({
         return post.owner == Meteor.user()._id;
       else
         return false;
-
     }
-})
+});
