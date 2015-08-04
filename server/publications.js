@@ -1,14 +1,14 @@
 Meteor.publish('posts', function(id) {
-	var posts = Posts.find({course_id: id},{fields: {title: 1, text: 1, course_id: 1, created_at: 1, isAnonymous: 1, ownerIdenticon: 1, badges: 1}},{sort: {created_at: -1}});
+	var posts = Posts.find({course_id: id, isDeleted: { $ne: true}},{fields: {title: 1, text: 1, course_id: 1, created_at: 1, isAnonymous: 1, ownerIdenticon: 1, badges: 1}},{sort: {created_at: -1}});
 	//posts.forEach(function(v){ delete v.isAnonymous });
 	return posts;
 });
 
 Meteor.publish('singlePost', function(id) {
 	if (Posts.findOne({_id: id}).isAnonymous) {
-		return Posts.find({_id: id},{fields: {owner: 0}});
+		return Posts.find({_id: id, isDeleted: { $ne: true}},{fields: {owner: 0}});
 	} else {
-		return Posts.find({_id: id});
+		return Posts.find({_id: id, isDeleted: { $ne: true}});
 	}
 });
 
