@@ -29,14 +29,14 @@
 <template name="postContent">
 
   <div class="post-content-wrapper" style="display:none">
-    <div class="actions-wrapper menuclipper bg-master-lightest">
-      <ul class="actions menuclipper-menu no-margin p-l-20 ">
-        <li class="visible-sm-inline-block visible-xs-inline-block">
+    <div class="actions-wrapper menuclipper bg-master-lightest" id="postTopbar">
+      <ul class="actions menuclipper-menu no-margin p-l-20" >
+        <li>
           <a href="#" class="post-list-toggle"><i class="fa fa-angle-left"></i> All Inboxes
           </a>
         </li>
 
-        <li class="no-padding "><a href="#" class="text-muted">Upvotes: {{post.upvoters.length}}</a>
+        <!-- <li class="no-padding "><a href="#" class="text-muted">Upvotes: {{post.upvoters.length}}</a>
         </li>
         <li class="no-padding "><a href="#" class="text-muted">Views: 0</a>
         </li>
@@ -51,11 +51,12 @@
         </li>
         {{/if}}
 
+
         {{#each tags}}
         <li class="no-padding ">
           <button class="btn btn-tag  btn-tag-light m-r-5">{{this}}</button>
         </li>
-        {{/each}}
+        {{/each}}-->
 
 
       </ul>
@@ -103,17 +104,25 @@
         <div class="clearfix"></div>
       </div>
 
+
       <div class="post-content-header">
         <h2><strong>{{post.title}}</strong></h2>
       </div>
       <div class="clearfix"></div>
-      <div class="post-content-body m-t-20">
+      <div class="post-content-body m-t-10">
         {{#mathjax}}
         {{{post.text}}}
         {{/mathjax}}
       </div>
 
+      <div class="q-footer" style="margin: 20px 0 -5px 0px;">
+       {{#each tags}}
+         <button class="btn btn-tag  btn-tag-light m-r-5">{{this}}</button>
+       {{/each}}
+     </div>
+
       {{>latexModal}}
+
 
       {{#each answers}}
       {{ >answer }}

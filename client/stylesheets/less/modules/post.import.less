@@ -266,6 +266,10 @@
         overflow: auto;
         height: 100%;
 
+        #postTopbar{
+                display:none;
+        }
+
         hr{
             margin-top:20px;
             margin-bottom:20px
@@ -462,7 +466,7 @@
     			margin:0 auto;
     			width: 80%;
     			display: block;
-                padding-top: 62px;
+                padding-top: 22px;
                 padding-bottom: 70px;
                 padding-left: 20px;
             padding-right: 20px;
@@ -618,6 +622,25 @@
 @media (max-width: 1024px){
     .post-wrapper .post-composer{
         margin-left: 0;
+    }
+}
+
+@media (max-width: 457px){
+  .post-content{
+    .buttons{
+      float: left!important;
+      margin-top: 20px;
+    }
+  }
+
+}
+
+@media (max-width: 980px){
+    .post-content{
+            padding-top: 50px!important;
+    }
+    #postTopbar{
+            display: block!important;
     }
 }
 
