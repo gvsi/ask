@@ -1,147 +1,69 @@
 <template name="overlaySearch">
-   <!-- START OVERLAY -->
-    <div class="overlay" style="display: none" data-pages="search">
-      <!-- BEGIN Overlay Content !-->
-      <div class="overlay-content has-results m-t-20">
-        <!-- BEGIN Overlay Header !-->
-        <div class="container-fluid">
-          <!-- BEGIN Overlay Logo !-->
-          <img class="overlay-brand" src="
-/img/ask_logo.png" alt="logo" data-src="
-/img/ask_logo.png" data-src-retina="
-/img/ask_logo_2x.png" height="40">
-          <!-- END Overlay Logo !-->
-          <!-- BEGIN Overlay Close !-->
-          <a href="#" class="close-icon-light overlay-close text-black fs-16">
-            <i class="pg-close"></i>
-          </a>
-          <!-- END Overlay Close !-->
-        </div>
-        <!-- END Overlay Header !-->
-        <div class="container-fluid">
-          <!-- BEGIN Overlay Controls !-->
-          <input id="overlay-search" class="no-border overlay-search bg-transparent" placeholder="Search..." autocomplete="off" spellcheck="false">
-          <br>
-          <div class="inline-block">
-            <div class="checkbox right">
-              <input id="checkboxn" type="checkbox" value="1" checked="checked">
-              <label for="checkboxn"><i class="fa fa-search"></i> Search all courses</label>
-            </div>
-          </div>
-          <div class="inline-block m-l-10">
-            <p class="fs-13">Press enter to search</p>
-          </div>
-          <!-- END Overlay Controls !-->
-        </div>
-        <!-- BEGIN Overlay Search Results, This part is for demo purpose, you can add anything you like !-->
-        <div class="container-fluid">
-          <span>
-                <strong>suggestions :</strong>
-            </span>
-          <span id="overlay-suggestions"></span>
-          <br>
-          <div class="search-results m-t-40">
-            <p class="bold">Search results for all courses and people:</p>
-            <div class="row">
-              <div class="col-md-6">
-                <!-- BEGIN Search Result Item !-->
-                <div class="">
-                  <!-- BEGIN Search Result Item Thumbnail !-->
-                  <div class="thumbnail-wrapper d48 circular bg-success text-white inline m-t-10">
-                    <div>OOP</div>
-                  </div>
-                  <!-- END Search Result Item Thumbnail !-->
-                  <div class="p-l-10 inline p-t-5">
-                    <h5 class="m-b-5"><span class="semi-bold result-name">questions</span></h5>
-                    <p class="hint-text">in Object-Oriented Programming</p>
-                  </div>
-                </div>
-                <!-- END Search Result Item !-->
-                <!-- BEGIN Search Result Item !-->
-                <div class="">
-                  <!-- BEGIN Search Result Item Thumbnail !-->
-                  <div class="thumbnail-wrapper d48 circular bg-danger text-white inline m-t-10">
-                    <div>DA</div>
-                  </div>
-                  <!-- END Search Result Item Thumbnail !-->
-                  <div class="p-l-10 inline p-t-5">
-                    <h5 class="m-b-5"><span class="semi-bold result-name">questions</span></h5>
-                    <p class="hint-text">in Data &amp; Analysis</p>
-                  </div>
-                </div>
-                <!-- END Search Result Item !-->
-                <!-- BEGIN Search Result Item !-->
-                <div class="">
-                  <!-- BEGIN Search Result Item Thumbnail !-->
-                  <div class="thumbnail-wrapper d48 circular bg-info text-white inline m-t-10">
-                    <div>FS
-                    </div>
-                  </div>
-                  <!-- END Search Result Item Thumbnail !-->
-                  <div class="p-l-10 inline p-t-5">
-                    <h5 class="m-b-5"><span class="semi-bold result-name">questions</span></h5>
-                    <p class="hint-text">in Foundation of Spanish</p>
-                  </div>
-                </div>
-                <!-- END Search Result Item !-->
-              </div>
-              <div class="col-md-6">
-                <!-- BEGIN Search Result Item !-->
-                <div class="">
-                  <!-- BEGIN Search Result Item Thumbnail !-->
-                  <div class="thumbnail-wrapper d48 circular bg-info text-white inline m-t-10">
-                    <div>
-                      <img width="50" height="50" src="
-img/profiles/martin_avatar.jpg" data-src="
-img/profiles/martin_avatar.jpg" data-src-retina="
-img/profiles/martin_avatar2x.jpg" alt="">
-                    </div>
-                  </div>
-                  <!-- END Search Result Item Thumbnail !-->
-                  <div class="p-l-10 inline p-t-5">
-                    <h5 class="m-b-5"><span class="semi-bold result-name">Martin Georgiev</span></h5>
-                    <p class="hint-text">Taking Object-Oriented Programming</p>
-                  </div>
-                </div>
-                <!-- END Search Result Item !-->
-                <!-- BEGIN Search Result Item !-->
-                <div class="">
-                  <!-- BEGIN Search Result Item Thumbnail !-->
-                  <div class="thumbnail-wrapper d48 circular bg-complete text-white inline m-t-10">
-                    <div>
-                      <img width="50" height="50" src="
-img/profiles/sofia_avatar.jpg" data-src="
-img/profiles/sofia_avatar.jpg" data-src-retina="
-img/profiles/sofia_avatar2x.jpg" alt="">
-                    </div>
-                  </div>
-                  <!-- END Search Result Item Thumbnail !-->
-                  <div class="p-l-10 inline p-t-5">
-                    <h5 class="m-b-5"><span class="semi-bold result-name">Prof. Sofia Vergara</span></h5>
-                    <p class="hint-text">Teaching Foundation of Spanish</p>
-                  </div>
-                </div>
-                <!-- END Search Result Item !-->
-                <!-- BEGIN Search Result Item !-->
-                <div class="">
-                  <!-- BEGIN Search Result Item Thumbnail !-->
-                  <div class="thumbnail-wrapper d48 circular text-white bg-warning inline m-t-10">
-                    <div><i class="fa fa-bell-o large-text "></i></div>
-                  </div>
-                  <!-- END Search Result Item Thumbnail !-->
-                  <div class="p-l-10 inline p-t-5">
-                    <h5 class="m-b-5">Coursework 4 due in 15 hours!<span class="semi-bold result-name"></span></h5>
-                    <p class="hint-text">Foundation of Spanish</p>
-                  </div>
-                </div>
-                <!-- END Search Result Item !-->
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- END Overlay Search Results !-->
+  <!-- START OVERLAY -->
+  <div class="overlay" style="display: none" data-pages="search">
+    <!-- BEGIN Overlay Content !-->
+    <div class="overlay-content has-results m-t-20">
+      <!-- BEGIN Overlay Header !-->
+      <div class="container-fluid">
+        <!-- BEGIN Overlay Logo !-->
+        <img class="overlay-brand" src="
+        /img/ask_logo.png" alt="logo" data-src="
+        /img/ask_logo.png" data-src-retina="
+        /img/ask_logo_2x.png" height="40">
+        <!-- END Overlay Logo !-->
+        <!-- BEGIN Overlay Close !-->
+        <a href="#" class="close-icon-light overlay-close text-black fs-16">
+          <i class="pg-close"></i>
+        </a>
+        <!-- END Overlay Close !-->
       </div>
-      <!-- END Overlay Content !-->
+      <!-- END Overlay Header !-->
+      <div class="container-fluid">
+        <!-- BEGIN Overlay Controls !-->
+        {{> esInput id="overlay-search" class="no-border overlay-search bg-transparent" index="players" placeholder="mySearch..." }}
+        <br>
+        <div class="inline-block">
+          <div class="checkbox right">
+            <input id="checkboxn" type="checkbox" value="1" checked="checked">
+            <label for="checkboxn"><i class="fa fa-search"></i> Search all courses</label>
+          </div>
+        </div>
+        <div class="inline-block m-l-10">
+          <p class="fs-13">Press enter to search</p>
+        </div>
+        <!-- END Overlay Controls !-->
+      </div>
+      <!-- BEGIN Overlay Search Results, This part is for demo purpose, you can add anything you like !-->
+      <div class="container-fluid">
+        <span>
+          <strong>suggestions :</strong>
+        </span>
+        <span id="overlay-suggestions"></span>
+        <br>
+        <div class="search-results m-t-40">
+          <p class="bold">Search results for all courses and people:</p>
+          {{#ifEsIsSearching index="players" id="overlay-search" logic="OR" }}
+              <div>Searching...</div>
+          {{/ifEsIsSearching}}
+          <div class="row">
+            <ul>
+              {{#esEach index="players" id="overlay-search"}}
+              <li><strong>{{title}}</strong> {{{text}}}</li>
+              {{/esEach}}
+            </ul>
+
+            {{> esLoadMoreButton index="players" id="overlay-search"}}
+
+            {{#ifEsHasNoResults index="players" id="overlay-search"}}
+            <div class="no-results">No results found!</div>
+            {{/ifEsHasNoResults}}
+
+          </div>
+        </div>
+      </div>
+      <!-- END Overlay Search Results !-->
     </div>
-    <!-- END OVERLAY -->
+    <!-- END Overlay Content !-->
+  </div>
+  <!-- END OVERLAY -->
 </template>

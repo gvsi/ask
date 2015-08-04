@@ -155,3 +155,27 @@ Meteor.methods({
         return false;
     }
 });
+
+EasySearch.createSearchIndex('players', {
+  'collection': Posts, // instanceof Meteor.Collection
+  'field': ['title','text'], // array of fields to be searchable
+  'limit': 10,
+  'use' : 'mongo-db',
+  //'convertNumbers': true,
+  'props': {
+    'sortBy': 'created_at'
+  },
+  'sort': function() {
+    // default by highest score
+    return { 'created_at': -1 };
+  },
+  'query': function(searchString, opts) {
+    console.log("searchString: " + searchString);
+    // Default query that will be used for the mongo-db selector
+    var query = EasySearch.getSearcher(this.use).defaultQuery(this, searchString);
+
+    console.log(opts);
+
+    return query;
+  }
+});
