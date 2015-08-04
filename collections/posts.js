@@ -122,11 +122,15 @@ Meteor.methods({
 
       if(userId != post.owner){
         if(voters.indexOf(userId) != -1){ // If the user has already upvoted
-            Posts.update({_id: post_id}, {$pull : {
+            Posts.update({_id: post_id}, {
+            $inc: {upvotes: -1},
+            $pull : {
               "upvoters": userId
             }});
         }else{
-            Posts.update({_id: post_id}, {$addToSet : {
+            Posts.update({_id: post_id}, {
+              $inc: {upvotes: +1},
+              $addToSet : {
               "upvoters": userId
             }});
         }
@@ -156,25 +160,39 @@ Meteor.methods({
     }
 });
 
-EasySearch.createSearchIndex('players', {
+EasySearch.createSearchIndex('defaultSearch', {
   'collection': Posts, // instanceof Meteor.Collection
   'field': ['title','text'], // array of fields to be searchable
-  'limit': 10,
+  'limit': 25,
   'use' : 'mongo-db',
-  //'convertNumbers': true,
-  'props': {
-    'sortBy': 'created_at'
-  },
   'sort': function() {
-    // default by highest score
-    return { 'created_at': -1 };
+    return { 'upvotes': -1, 'date_created': -1 };
   },
   'query': function(searchString, opts) {
     console.log("searchString: " + searchString);
-    // Default query that will be used for the mongo-db selector
+
     var query = EasySearch.getSearcher(this.use).defaultQuery(this, searchString);
 
-    console.log(opts);
+    return query;
+  }
+});
+
+EasySearch.createSearchIndex('courseSearch', {
+  'collection': Posts, // instanceof Meteor.Collection
+  'field': ['title','text'], // array of fields to be searchable
+  'limit': 25,
+  'use' : 'minimongo',
+  'sort': function() {
+    return { 'upvotes': -1, 'created_at': -1 };
+  },
+  'query': function(searchString, opts) {
+    console.log("searchString: " + searchString);
+
+    var query = EasySearch.getSearcher(this.use).defaultQuery(this, searchString);
+
+    if (this.props.course_id) {
+      query.course_id = this.props.course_id;
+    }
 
     return query;
   }

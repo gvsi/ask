@@ -20,7 +20,7 @@
       <!-- END Overlay Header !-->
       <div class="container-fluid">
         <!-- BEGIN Overlay Controls !-->
-        {{> esInput id="overlay-search" class="no-border overlay-search bg-transparent" index="players" placeholder="mySearch..." }}
+        {{> esInput id="overlay-search" class="no-border overlay-search bg-transparent" index=searchType placeholder="Search..."}}
         <br>
         <div class="inline-block">
           <div class="checkbox right">
@@ -42,19 +42,19 @@
         <br>
         <div class="search-results m-t-40">
           <p class="bold">Search results for all courses and people:</p>
-          {{#ifEsIsSearching index="players" id="overlay-search" logic="OR" }}
+          {{#ifEsIsSearching index=searchType id="overlay-search" logic="OR" }}
               <div>Searching...</div>
           {{/ifEsIsSearching}}
           <div class="row">
             <ul>
-              {{#esEach index="players" id="overlay-search"}}
+              {{#esEach index=searchType id="overlay-search"}}
               <li><strong>{{title}}</strong> {{{text}}}</li>
               {{/esEach}}
             </ul>
 
-            {{> esLoadMoreButton index="players" id="overlay-search"}}
+            {{> esLoadMoreButton index=searchType id="overlay-search"}}
 
-            {{#ifEsHasNoResults index="players" id="overlay-search"}}
+            {{#ifEsHasNoResults index=searchType id="overlay-search"}}
             <div class="no-results">No results found!</div>
             {{/ifEsHasNoResults}}
 

@@ -9,23 +9,19 @@ Template.overlaySearch.rendered = function (){
     },
     onKeyEnter: function(searchString) {
       if (Router.current().params.course_id) {
-        
-        console.log("course: " + Router.current().params.course_id);
+        EasySearch.changeProperty('courseSearch', 'course_id', Router.current().params.course_id);
       }
-      console.log("Live search for: " + searchString);
-      // var searchField = $('#overlay-search');
-      // var searchResults = $('.search-results');
-      // clearTimeout($.data(this, 'timer'));
-      // searchResults.fadeOut("fast");
-      // var wait = setTimeout(function() {
-      //   searchResults.find('.result-name').each(function() {
-      //     if (searchField.val().length != 0) {
-      //       $(this).html(searchField.val());
-      //       searchResults.fadeIn("fast");
-      //     }
-      //   });
-      // }, 500);
-      // $(this).data('timer', wait);
+      //console.log("Live search for: " + searchString);
     }
   });
 };
+
+Template.overlaySearch.helpers({
+  searchType: function(){
+    if (Router.current().params.course_id) {
+      return 'courseSearch';
+    } else {
+      return 'defaultSearch';
+    }
+  }
+});
