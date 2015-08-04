@@ -84,10 +84,12 @@ Template.postPage.helpers({
   isUserInstructor: function(){
     var currentCourse = Courses.findOne(Router.current().params.course_id);
     var un = Meteor.user().username.toLowerCase();
-    if(currentCourse && (currentCourse.instructors.indexOf(un) != -1 || un == "s1448512" || un == "s1432492")){
-      return true;
-    }else{
-      return false;
+    if(currentCourse){
+      if(currentCourse.instructors.indexOf(un) != -1 || un == "s1448512" || un == "s1432492"){
+        return true;
+      }else{
+        return false;
+      }
     }
   }
 });
@@ -416,6 +418,19 @@ Template.postContent.helpers({
     },
     "hidden.bs.modal #latexEditorModal": function() {
       $('body').removeClass('overlay-disabled');
+    },
+    "click #deletePost": function(){
+      var id = Router.current().params.query.p;
+      Meteor.call("postDelete", id, function(error, result){
+        if(error){
+          console.log("error", error);
+        }
+        if(result){
+
+        }
+      });
+
+      Router.go('room', {course_id: Router.current().params.course_id});
     }
   });
 

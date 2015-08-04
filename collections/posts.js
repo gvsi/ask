@@ -157,6 +157,16 @@ Meteor.methods({
         return post.owner == Meteor.user()._id;
       else
         return false;
+    },
+    postDelete: function(post_id){
+      var userId = Meteor.user()._id;
+      var post = Posts.findOne(post_id);
+
+      if(userId == post.owner){
+        Posts.update({_id: post_id}, {$set : {
+          "isDeleted": true
+        }});
+      }
     }
 });
 
