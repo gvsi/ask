@@ -41,5 +41,11 @@ Template.resultCard.helpers({
   },
   dateFromNow: function() {
     return moment(this.created_at).fromNow();
+  },
+  formattedText: function() {
+    function updateHaystack(input, needle) {
+      return input.replace(new RegExp('(^|\\s)(' + needle + ')(\\s|$)','ig'), '$1<b>$2</b>$3');
+    }
+    return updateHaystack(this.text, $("#overlay-search").val());
   }
 });
