@@ -16,18 +16,18 @@
       <div class="sidebar-menu">
         <ul class="menu-items">
           <li class="m-t-30 ">
-            <a href="/" class="detailed">
+            <a href="{{pathFor 'home'}}" class="detailed">
               <span class="title">Dashboard</span>
               <span class="details">12 updates</span>
             </a>
-            <span class="icon-thumbnail bg-success"><i class="fa fa-envelope-o"></i></span>
+            <span class="icon-thumbnail"><i class="pg pg-home"></i></span>
           </li>
           <li class="">
-            <a href="#" class="detailed">
-              <span class="title">Messages</span>
-              <span class="details">3 new messages</span>
+            <a href="{{pathFor 'notifications'}}" class="detailed">
+              <span class="title">Notifications</span>
+              <span class="details">3 new notifications</span>
             </a>
-            <span class="icon-thumbnail "><i class="fa fa-home"></i></span>
+            <span class="icon-thumbnail "><i class="fa fa-globe"></i></span>
           </li>
           <!--<<li class="">
             <a href="#" class="detailed">
@@ -60,10 +60,9 @@
           <li class="">
              <a href="" style="pointer: cursor;">
                <span class="title">Past Courses</span>
-               <span class="arrow
-              "></span>
+               <span class="arrow"></span>
              </a>
-             <span class="icon-thumbnail"><i class="fa fa-laptop"></i></span>
+             <span class="icon-thumbnail"><i class="fa fa-graduation-cap"></i></span>
              <ul class="sub-menu">
                {{#each pastCourses}}
                <li>
