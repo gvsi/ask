@@ -199,6 +199,9 @@
       <button class="btn btn-sm btn-rounded {{upvote}}" id="upvoteAnswer" {{disabledVoteForOwner}}><i class="fa fa-angle-up"></i></button>
       <div id="answerVoteCount">{{voteCount }}</div>
       <button class="btn btn-sm btn-rounded {{downvote}}"  id="downvoteAnswer" {{disabledVoteForOwner}}><i class="fa fa-angle-down"></i></button>
+      {{#if isInstructorUpvoted}}
+        <div class="check text-success"><i class="fa fa-check-circle" data-toggle="tooltip" data-placement="left" data-html="true" title="An instructor<br>upvoted<br>this answer"></i></div>
+      {{/if}}
     </div>
     <div class="answerBodyContainer">
       <div id="body-{{_id}}">
