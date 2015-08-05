@@ -11,6 +11,7 @@ Router.configure({
 Router.route('/', function () {
   this.render('blankPage');
 },{
+ name: "home",
  layoutTemplate:"dashboardLayout"
 });
 

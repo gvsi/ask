@@ -102,9 +102,7 @@ Template.sideBar.helpers({
 				for (var i = 1; i <= 5; i++) {
 					year = (moment(date).year()-offset-i) + "/" + (moment(date).year()%10+1-offset-i);
 					courses = Courses.find({'year': year});
-				//	console.log(year);
 						if(courses.count()){
-					//	console.log("inside");
 							coursesArray = [];
 
 							courses.forEach(function(course){
@@ -136,17 +134,16 @@ Template.sideBar.helpers({
 		var year;
 
 		if(moment(date).month() < 8){
-			year = (moment(date).year()-2) + "/" + (moment(date).year()%10-1);
-		}else{
-			year = (moment(date).year()-1) + "/" + ((moment(date).year()%10));
-		}
-
-		var courses = Courses.find({'year': year});
-
-		if(courses && courses.count()){
 			return true;
 		}else{
-			return false;
+			year = (moment(date).year()-1) + "/" + ((moment(date).year()%10));
+			var courses = Courses.find({'year': year});
+
+			if(courses && courses.count()){
+				return true;
+			}else{
+				return false;
+			}
 		}
 
 	},
