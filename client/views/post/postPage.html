@@ -10,11 +10,17 @@
     <div class="no-post">
 
       {{#if posts.count}}
-      <h2>Course stats go here</h2>
+      <h1><i class="fa fa-warning"></i></h1>
+      <h2><strong>Under construction</strong></h2>
+      <h3>Course stats go here</h3>
+      <h4>Hold on tight – we are still building the course stats page</h4>
       {{else}}
-      <h2>No posts here :(</h2>
+      <h1><i class="fa fa-warning"></i></h1>
+      <h2><strong>Under construction</strong></h2>
+      <h3>No posts error page goes here</h3>
+      <h4>Hold on tight – we are still building the page</h4>
       {{/if}}
-
+      <br><br><br>
       {{#if isUserInstructor}}
          <button class="btn btn-green btn-lg" data-target="#courseSettingsModal" data-toggle="modal">Course Settings</button>
       {{/if}}

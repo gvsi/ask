@@ -1,4 +1,6 @@
 Template.postCompose.rendered = function(){
+  $("#postList").ioslist();
+  
   mathquill();
   var LatexImages = false;
   $(function(){
