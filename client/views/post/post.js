@@ -133,7 +133,7 @@ Template.courseSettingsModal.events({
         });
       }
       $('#customTagsForCourse').show();
-      $(".bootstrap-tagsinput input").focus();
+      $("#customTagsForCourse>.bootstrap-tagsinput input").focus();
     }
 
   },
