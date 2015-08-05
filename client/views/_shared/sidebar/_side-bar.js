@@ -1,11 +1,44 @@
-var observingNotificationChanges;
-
 Meteor.startup(function(){
-	console.log("i am subscribing we");
-	Meteor.subscribe('coursesForStudent', Meteor.userId(), {reactive:false,
-	onReady: function(){
-		 Session.set('coursesLoaded', true);
-	}});
+	if(Meteor.user()){
+		Meteor.subscribe('coursesForStudent', Meteor.userId(), {reactive:false,
+		onReady: function(){
+			 Session.set('coursesLoaded', true);
+		}});
+
+		Meteor.subscribe("notifications", Meteor.userId(), {
+			onReady: function() {
+				var initial = true;
+						Notifications.find().observeChanges({
+							added: function(id, notification){
+								if(notification.userId == Meteor.userId()){
+									if (!initial) {
+										$('body').pgNotification({
+											style: 'circle',
+											title: notification.intend,
+											message: notification.postTitle,
+											type: notification.type,
+											thumbnail: '<div class="timeline-point success" style="margin-left: 12px;margin-top: -2px;"><i class="pg-comment"></i></div>',
+											onShown: function(){
+												$( ".alert:last" ).wrap( "<a href="+ notification.link +"></a>" );
+											}
+										}).show();
+
+										Meteor.call("seeNotification", id, function(error, result){
+											if(error){
+												console.log("error", error);
+											}
+											if(result){
+
+											}
+										});
+									}
+								}
+							}
+						});
+				initial = false;
+			}
+		});
+	}
 });
 
 Template.sideBar.rendered = function (){
@@ -17,41 +50,7 @@ Template.sideBar.rendered = function (){
 
 
 
-	Meteor.subscribe("notifications", Meteor.userId(), {
-		onReady: function() {
-			var initial = true;
-			if(!observingNotificationChanges){
-					Notifications.find().observeChanges({
-						added: function(id, notification){
-							if(notification.userId == Meteor.userId()){
-								if (!initial) {
-									$('body').pgNotification({
-										style: 'circle',
-										title: notification.intend,
-										message: notification.postTitle,
-										type: notification.type,
-										thumbnail: '<div class="timeline-point success" style="margin-left: 12px;margin-top: -2px;"><i class="pg-comment"></i></div>',
-										onShown: function(){
-											$( ".alert:last" ).wrap( "<a href="+ notification.link +"></a>" );
-										}
-									}).show();
 
-									Meteor.call("seeNotification", id, function(error, result){
-										if(error){
-											console.log("error", error);
-										}
-										if(result){
-
-										}
-									});
-								}
-							}
-						}
-					});
-			}
-			initial = false;
-		}
-	});
 };
 
 Template.sideBar.helpers({
