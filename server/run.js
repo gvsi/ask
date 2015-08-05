@@ -40,7 +40,7 @@ Meteor.methods({
 						"semester": coursesCsv[i].PSL_CODE,
 						"areTagsDefault": 1,
 						"tags": ['wk1', 'wk2', 'wk3', 'wk4', 'wk5','wk6', 'wk7','wk8','wk9','wk10','wk11','logistics','exam','other' ],
-						"instructors": [coursesCsv[i].MUA_EXTU]
+						"instructors": [coursesCsv[i].MUA_EXTU.toLowerCase()]
 					}
 				);
 			}
