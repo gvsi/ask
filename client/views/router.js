@@ -182,6 +182,7 @@ Router.route('/login', function() {
 Router.route('/logout', function () {
   Meteor.logout(function() {
       // Redirect to login
+      Session.set("areNotificationsObserved", true);
       Router.go('/login');
     });
 },{
