@@ -181,6 +181,16 @@ Meteor.methods({
     if (!answer)
       throw new Meteor.Error('invalid-answer', 'You must answer on a post');
 
+    var post = Posts.findOne(answer.postId);
+    var course;
+
+    if(post){
+        course = Courses.findOne(post.course_id);
+        if(!course)
+            throw new Meteor.Error('invalid-course', 'The post must belong to a course');
+    }else{
+        throw new Meteor.Error('invalid-post', 'The answer must belong to a post');
+    }
 
       var upVoters = answer.upvoters;
       var downVoters = answer.downvoters;
@@ -201,6 +211,15 @@ Meteor.methods({
               $addToSet : {"downvoters": userId}
             });
           }
+
+          if(course.instructors.indexOf(Meteor.user().username) != -1){
+            Answers.update({_id: voteAttributes.answerId},{
+              $set: {
+                  isInstructorUpvoted: false
+              }
+            });
+          }
+
       }else if (downVoters.indexOf(userId) != -1) { //It was already downvoted by the user
           if(voteAttributes.isUpvote){
             Answers.update({_id: voteAttributes.answerId},{
@@ -211,6 +230,15 @@ Meteor.methods({
               $inc: {voteCount: 1},
               $addToSet : {"upvoters": userId}
             });
+
+            if(course.instructors.indexOf(Meteor.user().username) != -1){
+              Answers.update({_id: voteAttributes.answerId},{
+                $set: {
+                    isInstructorUpvoted: true
+                }
+              });
+            }
+
           }else{
             Answers.update({_id: voteAttributes.answerId},{
               $inc: {voteCount: 1},
@@ -223,6 +251,15 @@ Meteor.methods({
               $inc: {voteCount: 1},
               $addToSet : {"upvoters": userId}
             });
+
+            if(course.instructors.indexOf(Meteor.user().username) != -1){
+              Answers.update({_id: voteAttributes.answerId},{
+                $set: {
+                    isInstructorUpvoted: true
+                }
+              });
+            }
+
           }else{
             Answers.update({_id: voteAttributes.answerId},{
               $inc: {voteCount: -1},
