@@ -71,7 +71,7 @@
           <div class="sender inline m-l-10">
             <p class="name no-margin">
               {{#if post.isAnonymous}}
-                Anonymous
+                <span class="bold">Anonymous</span>
               {{else}}
                 {{#if post.isInstructorPost}}
                   <span class="bold">{{post.ownerName}} {{post.ownerSurname}}</span><span class="small hint-text"> - instructor</span>

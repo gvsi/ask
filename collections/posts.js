@@ -27,6 +27,8 @@ Meteor.methods({
           type: type,
           created_at: now,
           updated_at: now,
+          answersCount: 0,
+          upvotesCount: 0,
           upvoters: [],
           followers: [user._id],
         });
@@ -123,13 +125,13 @@ Meteor.methods({
       if(userId != post.owner){
         if(voters.indexOf(userId) != -1){ // If the user has already upvoted
             Posts.update({_id: post_id}, {
-            $inc: {upvotes: -1},
+            $inc: {upvotesCount: -1},
             $pull : {
               "upvoters": userId
             }});
         }else{
             Posts.update({_id: post_id}, {
-              $inc: {upvotes: +1},
+              $inc: {upvotesCount: +1},
               $addToSet : {
               "upvoters": userId
             }});
@@ -173,10 +175,10 @@ Meteor.methods({
 EasySearch.createSearchIndex('defaultSearch', {
   'collection': Posts, // instanceof Meteor.Collection
   'field': ['title','text'], // array of fields to be searchable
-  'limit': 25,
+  'limit': 15,
   'use' : 'mongo-db',
   'sort': function() {
-    return { 'upvotes': -1, 'date_created': -1 };
+    return { 'upvotesCount': -1, 'date_created': -1 };
   },
   'query': function(searchString, opts) {
     console.log("searchString: " + searchString);
@@ -190,10 +192,10 @@ EasySearch.createSearchIndex('defaultSearch', {
 EasySearch.createSearchIndex('courseSearch', {
   'collection': Posts, // instanceof Meteor.Collection
   'field': ['title','text'], // array of fields to be searchable
-  'limit': 25,
+  'limit': 15,
   'use' : 'minimongo',
   'sort': function() {
-    return { 'upvotes': -1, 'created_at': -1 };
+    return { 'upvotesCount': -1, 'created_at': -1 };
   },
   'query': function(searchString, opts) {
     console.log("searchString: " + searchString);

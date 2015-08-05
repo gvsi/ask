@@ -123,7 +123,7 @@
 .progress-info.progress-striped .bar, .progress-striped .bar-info {
     background-color: @color-info;
 }
-/* Circular Progress : indeterminate 
+/* Circular Progress : indeterminate
 ------------------------------------
 */
 .progress-circle-indeterminate{
@@ -156,7 +156,35 @@
         background-image: url('@{base-img-url}/progress/progress-circle-complete.svg');
     }
 }
-/* Circular Progress 
+
+.progress-circle-indeterminate-base{
+    background: url('@{base-img-url}/progress/progress-circle-master.svg') no-repeat top left;
+    width: 75px;
+    height: 75px;
+    background-size: 100% auto;
+    position: relative;
+    //margin: 0 auto;
+    &.progress-circle-warning{
+        background-image: url('@{base-img-url}/progress/progress-circle-warning.svg');
+    }
+    &.progress-circle-danger{
+        background-image: url('@{base-img-url}/progress/progress-circle-danger.svg');
+    }
+    &.progress-circle-info{
+        background-image: url('@{base-img-url}/progress/progress-circle-info.svg');
+    }
+    &.progress-circle-primary{
+        background-image: url('@{base-img-url}/progress/progress-circle-primary.svg');
+    }
+    &.progress-circle-success{
+        background-image: url('@{base-img-url}/progress/progress-circle-success.svg');
+    }
+    &.progress-circle-complete{
+        background-image: url('@{base-img-url}/progress/progress-circle-complete.svg');
+    }
+}
+
+/* Circular Progress
 ------------------------------------
 */
 .progress-circle {

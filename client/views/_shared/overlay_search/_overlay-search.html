@@ -24,7 +24,7 @@
         <br>
         <div class="inline-block">
           <div class="checkbox right">
-            <input id="checkboxn" type="checkbox" value="1" checked="checked">
+            <input id="checkboxn" type="checkbox" value="1">
             <label for="checkboxn"><i class="fa fa-search"></i> Search all courses</label>
           </div>
         </div>
@@ -41,21 +41,19 @@
         <span id="overlay-suggestions"></span>
         <br>
         <div class="search-results m-t-40">
-          <p class="bold">Search results for all courses and people:</p>
           {{#ifEsIsSearching index=searchType id="overlay-search" logic="OR" }}
-              <div>Searching...</div>
+          <div class="progress-circle-indeterminate-base m-l-30 m-t-30"></div>
           {{/ifEsIsSearching}}
           <div class="row">
-            <ul>
-              {{#esEach index=searchType id="overlay-search"}}
-              <li><strong>{{title}}</strong> {{{text}}}</li>
-              {{/esEach}}
-            </ul>
+            {{#esEach index=searchType id="overlay-search"}}
+            <!-- {<li><strong>{{title}}</strong> {{{text}}}</li>-->
+            {{>resultCard}}
+            {{/esEach}}
 
-            {{> esLoadMoreButton index=searchType id="overlay-search"}}
+            {{> esLoadMoreButton index=searchType id="overlay-search" class="btn btn-complete m-t-10 m-b-40"}}
 
             {{#ifEsHasNoResults index=searchType id="overlay-search"}}
-            <div class="no-results">No results found!</div>
+            <div class="no-results"><h3 class="bold m-l-30" style="color: #3B4752">No results found!</h3></div>
             {{/ifEsHasNoResults}}
 
           </div>
@@ -66,4 +64,35 @@
     <!-- END Overlay Content !-->
   </div>
   <!-- END OVERLAY -->
+</template>
+
+<template name="resultCard">
+  <div class="row">
+  <div class="card share share-self col-lg-6 col-md-6" data-social="item">
+    <div class="card-header clearfix">
+      <h5>{{title}}</h5>
+      <h6>Shared a photo
+        <span class="location semi-bold"><i class="fa fa-map-marker"></i> NYC, New York</span>
+      </h6>
+    </div>
+    <div class="card-description">
+      {{{text}}}
+    </div>
+    <div class="card-footer clearfix">
+      <div class="pull-left" style="width: 300px">
+      <div class="user-pic">
+            <img alt="Profile Image" width="33" height="33" src="{{identicon ownerIdenticon}}">
+        </div>
+        <h5>{{ownerName}}{{#if isInstructorPost}}<span class="small hint-text"> - instructor</span>{{/if}}</h5>
+        <h6>posted
+           <span class="location semi-bold">{{dateFromNow}}</span>
+        </h6>
+      </div>
+      <div class="pull-right hint-text">
+        <i class="fa fa-thumbs-up"></i> {{upvotesCount}} &nbsp; &nbsp; <i class="fa fa-comment"></i> {{answersCount}}
+      </div>
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</div>
 </template>

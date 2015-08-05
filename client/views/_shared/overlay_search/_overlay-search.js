@@ -25,3 +25,21 @@ Template.overlaySearch.helpers({
     }
   }
 });
+
+Template.resultCard.helpers({
+  ownerName: function() {
+    if (!this.isAnonymous) {
+      console.log('hi');
+      Meteor.subscribe('singleUser', this.owner);
+      var o = Meteor.users.findOne(this.owner);
+      if (o) {
+        return o.profile.name + " " + o.profile.surname;
+      }
+    } else {
+      return "Anonymous";
+    }
+  },
+  dateFromNow: function() {
+    return moment(this.created_at).fromNow();
+  }
+});
