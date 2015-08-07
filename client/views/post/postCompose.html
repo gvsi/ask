@@ -40,7 +40,7 @@
          {{#unless isUserInstructor}}
          <div class="checkbox inline m-l-20">
            <input type="checkbox" value="1" id="anonymous" {{isAnonymousChecked}}>
-           <label for="anonymous" class="hint-text hidden-xs">Post as anonymous</label>
+           <label for="anonymous" class="hint-text">Post as anonymous</label>
          </div>
          {{/unless}}
          <button type="submit" id="composeSubmitBtn" data-type-form="{{#if isEditingPost}}postUpdate{{else}}postInsert{{/if}}" class="btn btn-complete btn-cons m-l-10">{{#if isEditingPost}}Update{{else}}Send{{/if}}</button>

@@ -163,12 +163,12 @@
           <div class="summernote-wrapper">
             <p><div id="summernote"></div></p>
           </div>
+          {{#unless isUserInstructor}}
           <div class="checkbox inline m-l-20">
             <input type="checkbox" value="1" id="isAnswerAnonymous">
-            {{#unless isUserInstructor}}
-            <label for="isAnswerAnonymous" class="hint-text hidden-xs">Post as anonymous</label>
-            {{/unless}}
+            <label for="isAnswerAnonymous" class="hint-text">Post as anonymous</label>
           </div>
+          {{/unless}}
           <button type="submit" id="sendAnswerBtn" class="btn btn-complete btn-cons m-l-10">Send</button>
         </div>
       </div>
@@ -225,7 +225,7 @@
         {{#unless isUserInstructor}}
         <div class="checkbox inline m-l-20">
           <input type="checkbox" value="1" id="isAnswerAnonymous-edit-{{_id}}" {{isAnonymousChecked}}>
-          <label for="isAnswerAnonymous-edit-{{_id}}" class="hint-text hidden-xs">Post as anonymous</label>
+          <label for="isAnswerAnonymous-edit-{{_id}}" class="hint-text">Post as anonymous</label>
         </div>
         {{/unless}}
         <button type="submit" data-answer-id="{{_id}}" class="updateAnswerBtn btn btn-complete btn-cons m-l-10">Update</button>
@@ -251,7 +251,7 @@
         {{#unless isUserInstructor}}
         <div class="checkbox inline m-l-20">
           <input type="checkbox" value="1" id="isCommentAnon-{{_id}}">
-          <label for="isCommentAnon-{{_id}}" class="hint-text hidden-xs">Post as anonymous</label>
+          <label for="isCommentAnon-{{_id}}" class="hint-text">Post as anonymous</label>
         </div>
         {{/unless}}
         <button type="submit" id="sendCommentBtn" data-answer-id="{{_id}}" class="btn btn-complete btn-sm m-l-10">Comment</button>
