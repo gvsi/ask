@@ -21,7 +21,7 @@ Router.route('/social', function () {
  layoutTemplate:"socialLayout",
 });
 
-Router.route('/:course_id/room', function () {
+Router.route('/room/:course_id', function () {
   this.render('postPage');
 },{
  layoutTemplate:"postLayout",
@@ -37,7 +37,7 @@ Router.route('/:course_id/room', function () {
 });
 
 
-Router.route('/:course_id/room/compose', function () {
+Router.route('room/:course_id/compose', function () {
   this.render('postCompose');
 },{
  layoutTemplate:"composePostLayout" ,
@@ -50,7 +50,7 @@ Router.route('/:course_id/room/compose', function () {
   }
 });
 
-Router.route('/:course_id/room/compose?p=:post_id', function () {
+Router.route('room/:course_id/compose?p=:post_id', function () {
   this.render('postCompose');
 },{
  layoutTemplate:"composePostLayout" ,
