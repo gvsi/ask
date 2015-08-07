@@ -77,7 +77,7 @@ Meteor.methods({
           text: answerAttributes.body,
           type: 'info',
           userId: followerId,
-          link: '/'+ post.course_id + '/room?p=' + post._id + '#' + answer._id,
+          link: '/room/'+ post.course_id + '?p=' + post._id + '#' + answer._id,
           seen: false
         }
 

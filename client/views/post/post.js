@@ -70,6 +70,17 @@ Template.postPage.events({
   }
 })
 
+Template.registerHelper("isUserInstructor", function(){
+  console.log("isUserInstructor");
+  var currentCourse = Courses.findOne(Router.current().params.course_id);
+  var un = Meteor.user().username.toLowerCase();
+  if(currentCourse && (currentCourse.instructors.indexOf(un)!=-1)){
+    return true;
+  }else{
+    return false;
+  }
+});
+
 Template.postPage.helpers({
   posts: function () {
     return Posts.find({'course_id': Router.current().params.course_id}, {sort: {created_at: -1}});
@@ -80,17 +91,6 @@ Template.postPage.helpers({
   queryPathFor: function () {
     console.log("q="+this.post._id);
     return "q="+this.post._id;
-  },
-  isUserInstructor: function(){
-    var currentCourse = Courses.findOne(Router.current().params.course_id);
-    var un = Meteor.user().username.toLowerCase();
-    if(currentCourse){
-      if(currentCourse.instructors.indexOf(un) != -1 || un == "s1448512" || un == "s1432492"){
-        return true;
-      }else{
-        return false;
-      }
-    }
   }
 });
 
@@ -237,15 +237,6 @@ Template.postList.helpers({
   },
   postsByDate: function () {
     return Posts.find({'course_id': Router.current().params.course_id, created_at: {$gte: this.start.toDate(), $lt: this.end.toDate()}}, {sort: {created_at: -1}});
-  },
-  isUserInstructor: function(){
-    var currentCourse = Courses.findOne(Router.current().params.course_id);
-    var un = Meteor.user().username.toLowerCase();
-    if(currentCourse && (currentCourse.instructors.indexOf(un) != -1 || un == "s1448512" || un == "s1432492")){
-      return true;
-    }else{
-      return false;
-    }
   }
 })
 
