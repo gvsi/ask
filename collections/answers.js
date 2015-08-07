@@ -270,5 +270,15 @@ Meteor.methods({
 
       var newAnswer = Answers.findOne(voteAttributes.answerId);
       return newAnswer.upvoters.length - newAnswer.downvoters.length;
+  },
+  answerDelete: function(answerId){
+      var userId = Meteor.user()._id;
+      var answer = Answers.findOne(answerId);
+
+      if(userId == answer.userId){
+        Answers.update({_id: answer._id}, {$set : {
+          "isDeleted": true
+        }});
+      }
   }
 });

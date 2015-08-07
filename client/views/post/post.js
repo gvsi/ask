@@ -419,6 +419,22 @@ Template.postContent.helpers({
     "hidden.bs.modal #latexEditorModal": function() {
       $('body').removeClass('overlay-disabled');
     },
+    "click #openDeleteAnswerModal": function(event){
+      Session.set("deleteAnswerId", $(event.currentTarget).data("id"));
+    },
+    "click #deleteAnswer": function(){
+      var id = Session.get("deleteAnswerId");
+      Meteor.call("answerDelete", id, function(error, result){
+        if(error){
+          console.log("error", error);
+        }
+        if(result){
+
+        }
+      });
+
+      $("#modalDeleteAnswer").modal('hide');
+    },
     "click #deletePost": function(){
       var id = Router.current().params.query.p;
       Meteor.call("postDelete", id, function(error, result){
