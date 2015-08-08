@@ -1,5 +1,5 @@
 Meteor.publish('posts', function(id) {
-	var posts = Posts.find({course_id: id, isDeleted: { $ne: true}},{fields: {revisionHistory: 0, followers: 0, tags: 0, type: 0, updated_at: 0, upvoters: 0}},{sort: {created_at: -1}});
+	var posts = Posts.find({course_id: id, isDeleted: { $ne: true}},{fields: {revisionHistory: 0, followers: 0, tags: 0, type: 0, updated_at: 0, upvoters: 0, isDeleted: 0}},{sort: {created_at: -1}});
 	//posts.forEach(function(v){ delete v.isAnonymous });
 	return posts;
 });

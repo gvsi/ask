@@ -11,7 +11,7 @@ Template.overlaySearch.rendered = function (){
       if (Router.current().params.course_id) {
         EasySearch.changeProperty('courseSearch', 'course_id', Router.current().params.course_id);
       }
-      //console.log("Live search for: " + searchString);
+      console.log("Live search for: " + searchString);
     }
   });
 };
@@ -19,10 +19,36 @@ Template.overlaySearch.rendered = function (){
 Template.overlaySearch.helpers({
   searchType: function(){
     if (Router.current().params.course_id) {
-      return 'courseSearch';
+      var s = Session.get('searchType');
+      if (s) {
+        return s;
+      } else {
+        return 'courseSearch';
+      }
     } else {
       return 'defaultSearch';
     }
+  }
+});
+
+Template.overlaySearch.events({
+  "click #defaultSearchCkbx": function(event){
+     var q = $('#overlay-search').val()
+     if ($(event.currentTarget).is(':checked')) {
+       Session.set('searchType', 'defaultSearch');
+     } else {
+       Session.set('searchType', 'courseSearch');
+     }
+     setTimeout(function() {
+       $('#overlay-search').val(q);
+       $('#overlay-search').focus();
+       $('#overlay-search').keyup();
+     }, 0);
+  },
+  "click .card a": function() {
+    $(".overlay").hide();
+    $(".no-post").hide();
+    $('.post-content-wrapper').show();
   }
 });
 
@@ -31,8 +57,6 @@ Template.resultCard.helpers({
     if (!this.isAnonymous) {
       Meteor.subscribe('singleUser', this.owner);
       var o = Meteor.users.findOne(this.owner);
-      console.log(this.owner);
-      console.log(o);
       if (o) {
         return o.profile.name + " " + o.profile.surname;
       }
@@ -48,7 +72,6 @@ Template.resultCard.helpers({
     var queryString = $("#overlay-search").val();
     var rgxp = new RegExp("("+ queryString +")", "ig");
     var res = string.replace(rgxp, '<b>$1</b>');
-    console.log(res);
     return res;
   },
   formattedText: function() {
@@ -63,7 +86,6 @@ Template.resultCard.helpers({
       results.push( ($1?""+$1:"") +"<b>"+ $2 +"</b>"+ ($3?$3+"…":"") );
     });
 
-    console.log( results.join("\n") );
     return results.join("<br>");
   }
 });

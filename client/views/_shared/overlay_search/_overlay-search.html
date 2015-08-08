@@ -20,12 +20,17 @@
       <!-- END Overlay Header !-->
       <div class="container-fluid">
         <!-- BEGIN Overlay Controls !-->
-        {{> esInput id="overlay-search" class="no-border overlay-search bg-transparent" index=searchType placeholder="Search..."}}
+        {{#if equals searchType 'courseSearch'}}
+        {{> esInput id="overlay-search" class="no-border overlay-search bg-transparent" index="courseSearch" placeholder="Search..."}}
+        {{else}}
+        {{> esInput id="overlay-search" class="no-border overlay-search bg-transparent" index="defaultSearch" placeholder="Search..."}}
+        {{/if}}
+
         <br>
         <div class="inline-block">
           <div class="checkbox right">
-            <input id="checkboxn" type="checkbox" value="1">
-            <label for="checkboxn"><i class="fa fa-search"></i> Search all courses</label>
+            <input id="defaultSearchCkbx" type="checkbox" value="1">
+            <label for="defaultSearchCkbx"><i class="fa fa-search"></i> Search all courses</label>
           </div>
         </div>
         <div class="inline-block m-l-10">
@@ -35,11 +40,6 @@
       </div>
       <!-- BEGIN Overlay Search Results, This part is for demo purpose, you can add anything you like !-->
       <div class="container-fluid">
-        <span>
-          <strong>suggestions :</strong>
-        </span>
-        <span id="overlay-suggestions"></span>
-        <br>
         <div class="search-results m-t-40">
           {{#ifEsIsSearching index=searchType id="overlay-search" logic="OR" }}
           <div class="progress-circle-indeterminate-base m-l-30 m-t-30"></div>
@@ -69,7 +69,7 @@
 <template name="resultCard">
   <div class="row">
   <div class="card share share-self col-lg-6 col-md-6" data-social="item">
-    <a href="{{pathFor 'showPost' course_id=course_id post_id=_id}}" onclick="$('.overlay').hide()">
+    <a href="{{pathFor 'showPost' course_id=course_id post_id=_id}}">
     <div class="card-header clearfix">
       <h5>{{{formattedTitle}}}</h5>
       <!-- <h6>Shared a photo

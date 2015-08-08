@@ -37,7 +37,8 @@ Meteor.methods({
           answersCount: 0,
           upvotesCount: 0,
           upvoters: [],
-          followers: [user._id],
+          isDeleted: false,
+          followers: [user._id]
         });
 
         var un = user.username.toLowerCase();
@@ -200,6 +201,7 @@ EasySearch.createSearchIndex('defaultSearch', {
     console.log("searchString: " + searchString);
 
     var query = EasySearch.getSearcher(this.use).defaultQuery(this, searchString);
+    query.isDeleted = false;
 
     return query;
   }

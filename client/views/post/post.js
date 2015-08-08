@@ -80,6 +80,10 @@ Template.registerHelper("isUserInstructor", function(){
   }
 });
 
+Template.registerHelper('equals', function (a, b) {
+  return a === b;
+});
+
 Template.postPage.helpers({
   posts: function () {
     return Posts.find({'course_id': Router.current().params.course_id}, {sort: {created_at: -1}});
