@@ -1,4 +1,11 @@
-Posts = new Mongo.Collection('posts');
+Posts = new Mongo.Collection('posts', {
+    transform: function(doc) {
+        if (doc.isAnonymous) {
+            delete doc.owner;
+        }
+        return doc;
+    }
+});
 
 Meteor.methods({
     postInsert: function(postAttributes) {
@@ -163,11 +170,20 @@ Meteor.methods({
     postDelete: function(post_id){
       var userId = Meteor.user()._id;
       var post = Posts.findOne(post_id);
+      var hasPermission;
+      if (post)
+      if(post.isAnonymous) {
+        hasPermission = post.ownerIdenticon == Package.sha.SHA256(post._id + userId)
+      } else {
+        hasPermission = post.owner == userId;
+      }
 
-      if(userId == post.owner){
+      if(hasPermission){
         Posts.update({_id: post_id}, {$set : {
           "isDeleted": true
         }});
+      } else {
+        throw new Meteor.Error('invalid-delete-permission', 'You don\'t have permission to delete this post!');
       }
     }
 });

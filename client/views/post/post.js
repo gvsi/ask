@@ -71,7 +71,6 @@ Template.postPage.events({
 })
 
 Template.registerHelper("isUserInstructor", function(){
-  console.log("isUserInstructor");
   var currentCourse = Courses.findOne(Router.current().params.course_id);
   var un = Meteor.user().username.toLowerCase();
   if(currentCourse && (currentCourse.instructors.indexOf(un)!=-1)){
@@ -804,7 +803,7 @@ Template.postContent.helpers({
 
           var currentRank = 0;
           var initial = true;
-          Answers.find({}, {sort: {isInstructor: -1, voteCount: -1, created_at: 1}}).observe({
+          Answers.find({}, {sort: {isInstructor: -1, isInstructorUpvoted: -1, voteCount: -1, created_at: 1}}).observe({
             addedAt: function(document, atIndex){
               if(initial){
                 document.rank = atIndex;

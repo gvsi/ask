@@ -50,18 +50,23 @@ Router.route('room/:course_id/compose', function () {
   }
 });
 
-Router.route('room/:course_id/compose?p=:post_id', function () {
-  this.render('postCompose');
-},{
- layoutTemplate:"composePostLayout" ,
-  loadingTemplate: 'loading',
-  name: 'editPost',
-  waitOn: function() {
-    return [
-      Meteor.subscribe('posts', this.params.course_id),
-    ];
-  }
-});
+//Router.route('room/:course_id/compose?p=:post_id', {name: 'editPost'});
+Router.route('room/:course_id??p=:post_id', {name: 'showPost'});
+
+Router.route('room/:course_id/compose?p=:post_id', {name: 'editPost'});
+
+// Router.route('room/:course_id/compose?p=:post_id', function () {
+//   this.render('postCompose');
+// },{
+//  layoutTemplate:"composePostLayout" ,
+//   loadingTemplate: 'loading',
+//   name: 'editPost',
+//   waitOn: function() {
+//     return [
+//       Meteor.subscribe('posts', this.params.course_id),
+//     ];
+//   }
+// });
 
 Router.route('/notifications', function () {
   this.render('notifications');

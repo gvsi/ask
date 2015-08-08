@@ -1,4 +1,16 @@
-Answers = new Mongo.Collection('answers');
+Answers = new Mongo.Collection('answers', {
+  transform: function(doc) {
+    if (doc.isAnonymous) {
+      delete doc.userId;
+    }
+    doc.comments.forEach(function(comment){
+      if (comment.isAnonymous) {
+        delete comment.userId;
+      }
+    });
+    return doc;
+  }
+});
 
 Meteor.methods({
   answerInsert: function(answerAttributes) {
@@ -13,15 +25,15 @@ Meteor.methods({
     var user = Meteor.user();
 
     if (!user)
-      throw new Meteor.Error('invalid-user', 'You must be logged in to post an answer');
+    throw new Meteor.Error('invalid-user', 'You must be logged in to post an answer');
 
     var post = Posts.findOne(answerAttributes.postId);
     if (!post)
-      throw new Meteor.Error('invalid-answer', 'You must answer on a post');
+    throw new Meteor.Error('invalid-answer', 'You must answer on a post');
 
     var course = Courses.findOne(post.course_id);
     if (!course)
-      throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
+    throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
 
 
     // set identiconHash
@@ -82,7 +94,7 @@ Meteor.methods({
         }
 
         Meteor.call("addNotification", notificationAttributes);
-     }
+      }
     });
 
 
@@ -146,7 +158,7 @@ Meteor.methods({
     var answer = Answers.findOne(commentAttributes.answerId);
 
     if (!answer)
-      throw new Meteor.Error('invalid-comment', 'You must comment on an answer');
+    throw new Meteor.Error('invalid-comment', 'You must comment on an answer');
 
     // set identiconHash
     var identiconHash = commentAttributes.isAnonymous ? answer.postId + user._id : user._id;
@@ -179,106 +191,125 @@ Meteor.methods({
     var answer = Answers.findOne(voteAttributes.answerId);
 
     if (!answer)
-      throw new Meteor.Error('invalid-answer', 'You must answer on a post');
+    throw new Meteor.Error('invalid-answer', 'You must answer on a post');
 
     var post = Posts.findOne(answer.postId);
     var course;
 
     if(post){
-        course = Courses.findOne(post.course_id);
-        if(!course)
-            throw new Meteor.Error('invalid-course', 'The post must belong to a course');
+      course = Courses.findOne(post.course_id);
+      if(!course)
+      throw new Meteor.Error('invalid-course', 'The post must belong to a course');
     }else{
-        throw new Meteor.Error('invalid-post', 'The answer must belong to a post');
+      throw new Meteor.Error('invalid-post', 'The answer must belong to a post');
     }
 
-      var upVoters = answer.upvoters;
-      var downVoters = answer.downvoters;
+    var upVoters = answer.upvoters;
+    var downVoters = answer.downvoters;
 
-      if(upVoters.indexOf(userId) != -1){ //It was already upvoted by the user
-          if(voteAttributes.isUpvote){
-            Answers.update({_id: voteAttributes.answerId},{
-              $inc: {voteCount: -1},
-              $pull : {"upvoters": userId}
-            });
-          }else{
-            Answers.update({_id: voteAttributes.answerId},{
-              $inc: {voteCount: -1},
-              $pull : {"upvoters": userId}
-            });
-            Answers.update({_id: voteAttributes.answerId},{
-              $inc: {voteCount: -1},
-              $addToSet : {"downvoters": userId}
-            });
-          }
-
-          if(course.instructors.indexOf(Meteor.user().username) != -1){
-            Answers.update({_id: voteAttributes.answerId},{
-              $set: {
-                  isInstructorUpvoted: false
-              }
-            });
-          }
-
-      }else if (downVoters.indexOf(userId) != -1) { //It was already downvoted by the user
-          if(voteAttributes.isUpvote){
-            Answers.update({_id: voteAttributes.answerId},{
-              $inc: {voteCount: 1},
-              $pull : {"downvoters": userId }
-            });
-            Answers.update({_id: voteAttributes.answerId},{
-              $inc: {voteCount: 1},
-              $addToSet : {"upvoters": userId}
-            });
-
-            if(course.instructors.indexOf(Meteor.user().username) != -1){
-              Answers.update({_id: voteAttributes.answerId},{
-                $set: {
-                    isInstructorUpvoted: true
-                }
-              });
-            }
-
-          }else{
-            Answers.update({_id: voteAttributes.answerId},{
-              $inc: {voteCount: 1},
-              $pull : {"downvoters": userId }
-            });
-          }
+    if(upVoters.indexOf(userId) != -1){ //It was already upvoted by the user
+      if(voteAttributes.isUpvote){
+        Answers.update({_id: voteAttributes.answerId},{
+          $inc: {voteCount: -1},
+          $pull : {"upvoters": userId}
+        });
       }else{
-          if(voteAttributes.isUpvote){
-            Answers.update({_id: voteAttributes.answerId},{
-              $inc: {voteCount: 1},
-              $addToSet : {"upvoters": userId}
-            });
-
-            if(course.instructors.indexOf(Meteor.user().username) != -1){
-              Answers.update({_id: voteAttributes.answerId},{
-                $set: {
-                    isInstructorUpvoted: true
-                }
-              });
-            }
-
-          }else{
-            Answers.update({_id: voteAttributes.answerId},{
-              $inc: {voteCount: -1},
-              $addToSet : {"downvoters": userId}
-            });
-          }
+        Answers.update({_id: voteAttributes.answerId},{
+          $inc: {voteCount: -1},
+          $pull : {"upvoters": userId}
+        });
+        Answers.update({_id: voteAttributes.answerId},{
+          $inc: {voteCount: -1},
+          $addToSet : {"downvoters": userId}
+        });
       }
 
-      var newAnswer = Answers.findOne(voteAttributes.answerId);
-      return newAnswer.upvoters.length - newAnswer.downvoters.length;
+      if(course.instructors.indexOf(Meteor.user().username) != -1){
+        Answers.update({_id: voteAttributes.answerId},{
+          $set: {
+            isInstructorUpvoted: false
+          }
+        });
+      }
+
+    }else if (downVoters.indexOf(userId) != -1) { //It was already downvoted by the user
+      if(voteAttributes.isUpvote){
+        Answers.update({_id: voteAttributes.answerId},{
+          $inc: {voteCount: 1},
+          $pull : {"downvoters": userId }
+        });
+        Answers.update({_id: voteAttributes.answerId},{
+          $inc: {voteCount: 1},
+          $addToSet : {"upvoters": userId}
+        });
+
+        if(course.instructors.indexOf(Meteor.user().username) != -1){
+          Answers.update({_id: voteAttributes.answerId},{
+            $set: {
+              isInstructorUpvoted: true
+            }
+          });
+        }
+
+      }else{
+        Answers.update({_id: voteAttributes.answerId},{
+          $inc: {voteCount: 1},
+          $pull : {"downvoters": userId }
+        });
+      }
+    }else{
+      if(voteAttributes.isUpvote){
+        Answers.update({_id: voteAttributes.answerId},{
+          $inc: {voteCount: 1},
+          $addToSet : {"upvoters": userId}
+        });
+
+        if(course.instructors.indexOf(Meteor.user().username) != -1){
+          Answers.update({_id: voteAttributes.answerId},{
+            $set: {
+              isInstructorUpvoted: true
+            }
+          });
+        }
+
+      }else{
+        Answers.update({_id: voteAttributes.answerId},{
+          $inc: {voteCount: -1},
+          $addToSet : {"downvoters": userId}
+        });
+      }
+    }
+
+    var newAnswer = Answers.findOne(voteAttributes.answerId);
+    return newAnswer.upvoters.length - newAnswer.downvoters.length;
   },
   answerDelete: function(answerId){
-      var userId = Meteor.user()._id;
-      var answer = Answers.findOne(answerId);
+    var userId = Meteor.user()._id;
+    var answer = Answers.findOne(answerId);
 
-      if(userId == answer.userId){
-        Answers.update({_id: answer._id}, {$set : {
-          "isDeleted": true
-        }});
+    var hasPermission;
+
+    if (answer) {
+      if(answer.isAnonymous) {
+        var post = Posts.findOne(answer.postId);
+        if (post) {
+          hasPermission = answer.ownerIdenticon == Package.sha.SHA256(post._id + userId)
+        } else {
+          throw new Meteor.Error('invalid-post', 'The answer you\'re trying to delete must belong to a post');
+        }
+      } else {
+        hasPermission = answer.userId == userId;
       }
+    } else {
+      throw new Meteor.Error('invalid-answer', 'The answer you\'re trying to delete does not exist');
+    }
+
+    if(hasPermission){
+      Answers.update({_id: answerId}, {$set : {
+        "isDeleted": true
+      }});
+    } else {
+      throw new Meteor.Error('invalid-delete-permission', 'You don\'t have permission to delete this answer!');
+    }
   }
 });

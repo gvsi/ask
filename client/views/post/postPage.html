@@ -151,9 +151,11 @@
       </div>
       <div class="clearfix"></div>
       <div class="post-content-body m-t-10">
+        {{#autolink}}
         {{#mathjax}}
         {{{post.text}}}
         {{/mathjax}}
+        {{/autolink}}
       </div>
 
       <div class="q-footer" style="margin: 15px 0 -5px 0px;">
@@ -205,14 +207,14 @@
         {{#if isInstructor}}
           <span class="bold">{{theAuthor.profile.name}} {{theAuthor.profile.surname}}</span><span class="small hint-text"> - instructor</span>
         {{else}}
-          {{#if isAnonymous}}
-          Anonymous
-          {{else}}
           <span class="bold">
-          {{theAuthor.profile.name}}
-          {{theAuthor.profile.surname}}
-          </span>
+          {{#if isAnonymous}}
+            Anonymous
+          {{else}}
+            {{theAuthor.profile.name}}
+            {{theAuthor.profile.surname}}
           {{/if}}
+          </span>
         {{/if}}
       </div>
       <div class="datetime timeLabel">
@@ -233,9 +235,11 @@
     </div>
     <div class="answerBodyContainer">
       <div id="body-{{_id}}">
+        {{#autolink}}
         {{#mathjax}}
         {{{body}}}
         {{/mathjax}}
+        {{/autolink}}
       </div>
       <div class="summernote-wrapper" data-answer-id="{{_id}}" hidden>
         <label class="error"></label>
@@ -259,9 +263,11 @@
         <img width="40" height="40" alt="" src="{{identicon this.ownerIdenticon}}">
       </div>
       <div class="commentBody">
+        {{#autolink}}
         {{#mathjax}}
         {{{this.body}}}
         {{/mathjax}}
+        {{/autolink}}
       </div>
       {{/each}}
       <button id="addCommentBtn" class="btn btn-default btn-xs m-t-10 pull-right">Add a comment</button>
