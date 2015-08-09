@@ -21,6 +21,7 @@
       <div class="container-fluid">
         <!-- BEGIN Overlay Controls !-->
         {{#if equals searchType 'courseSearch'}}
+        <div class="m-t-20"><h5>Searching in <span class="bold">{{courseName}}</span>:</h5></div>
         {{> esInput id="overlay-search" class="no-border overlay-search bg-transparent" index="courseSearch" placeholder="Search..."}}
         {{else}}
         {{> esInput id="overlay-search" class="no-border overlay-search bg-transparent" index="defaultSearch" placeholder="Search..."}}
@@ -29,7 +30,11 @@
         <br>
         <div class="inline-block">
           <div class="checkbox right">
+            {{#if equals searchType 'courseSearch'}}
             <input id="defaultSearchCkbx" type="checkbox" value="1">
+            {{else}}
+            <input id="defaultSearchCkbx" type="checkbox" value="1" checked="checked">
+            {{/if}}
             <label for="defaultSearchCkbx"><i class="fa fa-search"></i> Search all courses</label>
           </div>
         </div>

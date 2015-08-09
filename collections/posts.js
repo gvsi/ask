@@ -198,7 +198,6 @@ EasySearch.createSearchIndex('defaultSearch', {
     return { 'upvotesCount': -1, 'date_created': -1 };
   },
   'query': function(searchString, opts) {
-    console.log("searchString: " + searchString);
 
     var query = EasySearch.getSearcher(this.use).defaultQuery(this, searchString);
     query.isDeleted = false;
@@ -216,7 +215,6 @@ EasySearch.createSearchIndex('courseSearch', {
     return { 'upvotesCount': -1, 'created_at': -1 };
   },
   'query': function(searchString, opts) {
-    console.log("searchString: " + searchString);
 
     var query = EasySearch.getSearcher(this.use).defaultQuery(this, searchString);
 

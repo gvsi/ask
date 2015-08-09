@@ -3,16 +3,7 @@ Template.overlaySearch.rendered = function (){
     searchField: '#overlay-search',
     closeButton: '.overlay-close',
     suggestions: '#overlay-suggestions',
-    brand: '.brand',
-    onSearchSubmit: function(searchString) {
-      console.log("Search for: " + searchString);
-    },
-    onKeyEnter: function(searchString) {
-      if (Router.current().params.course_id) {
-        EasySearch.changeProperty('courseSearch', 'course_id', Router.current().params.course_id);
-      }
-      console.log("Live search for: " + searchString);
-    }
+    brand: '.brand'
   });
 };
 
@@ -27,6 +18,15 @@ Template.overlaySearch.helpers({
       }
     } else {
       return 'defaultSearch';
+    }
+  },
+  courseName: function(){
+    var course_id = Router.current().params.course_id;
+    if (course_id) {
+      var course = Courses.findOne(course_id);
+      if (course) {
+        return course.name;
+      }
     }
   }
 });

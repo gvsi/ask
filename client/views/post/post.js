@@ -5,6 +5,9 @@ Template.postPage.rendered = function () {
     $("#postList").ioslist();
   }
 
+  EasySearch.changeProperty('courseSearch', 'course_id', Router.current().params.course_id);
+  console.log('changed');
+  
   loadMathQuill();
 
   if ($(window).width() < 980) {

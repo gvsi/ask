@@ -64,7 +64,6 @@ Meteor.methods({
       //updates the post to be instructor-answered if not set already
       if (!post.badges || (post.badges && !post.badges.hasInstructorAnswer)) {
         Posts.update({_id: answerAttributes.postId}, {
-          $inc: {answersCount: 1},
           $set: {'badges.hasInstructorAnswer': true}
         });
       }
@@ -72,11 +71,14 @@ Meteor.methods({
       //updates the post to be student-answered if not set already
       if (!post.badges || (post.badges && !post.badges.hasStudentAnswer)) {
         Posts.update({_id: answerAttributes.postId}, {
-          $inc: {answersCount: 1},
           $set: {'badges.hasStudentAnswer': true}
         });
       }
     }
+
+    Posts.update({_id: answerAttributes.postId}, {
+      $inc: {answersCount: 1}
+    });
 
     // create the answer, save the id
     answer._id = Answers.insert(answer);
