@@ -1,7 +1,7 @@
 Posts = new Mongo.Collection('posts', {
     transform: function(doc) {
         if (doc.isAnonymous) {
-            delete doc.owner;
+            delete doc.userId;
         }
         return doc;
     }
@@ -13,7 +13,7 @@ Meteor.methods({
           title: String,
           text: String,
           tags: Array,
-          course_id: String,
+          courseId: String,
           isAnonymous: Boolean
         });
 
@@ -25,15 +25,15 @@ Meteor.methods({
         //else if(poll) -- 2
         //else -- 1
 
-        var course = Courses.findOne(postAttributes.course_id);
+        var course = Courses.findOne(postAttributes.courseId);
         if (!course)
           throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
 
         var post = _.extend(postAttributes, {
-          owner: user._id,
+          userId: user._id,
           type: type,
-          created_at: now,
-          updated_at: now,
+          createdAt: now,
+          updatedAt: now,
           answersCount: 0,
           upvotesCount: 0,
           upvoters: [],
@@ -51,8 +51,8 @@ Meteor.methods({
         var postId = Posts.insert(post);
 
         // set identiconHash
-        var identiconHash = postAttributes.isAnonymous ? postId + postAttributes.owner : postAttributes.owner;
-        Posts.update({_id: postId}, {$set: {ownerIdenticon: Package.sha.SHA256(identiconHash)}})
+        var identiconHash = postAttributes.isAnonymous ? postId + postAttributes.userId : postAttributes.userId;
+        Posts.update({_id: postId}, {$set: {userIdenticon: Package.sha.SHA256(identiconHash)}})
 
         // save in revisionHistory
         Posts.update({_id: postId}, {
@@ -77,7 +77,7 @@ Meteor.methods({
           title: String,
           text: String,
           tags: Array,
-          course_id: String,
+          courseId: String,
           isAnonymous: Boolean
         });
 
@@ -93,7 +93,7 @@ Meteor.methods({
         //check existance of post to update
         if (Posts.find({_id: postAttributes.postId}, {_id: 1}).count() > 0) {
           // set identiconHash
-          var identiconHash = postAttributes.isAnonymous ? postAttributes.postId + Posts.findOne(postAttributes.postId).owner : Posts.findOne(postAttributes.postId).owner;
+          var identiconHash = postAttributes.isAnonymous ? postAttributes.postId + Posts.findOne(postAttributes.postId).userId : Posts.findOne(postAttributes.postId).userId;
           var now = new Date();
           Posts.update(
             {_id: postAttributes.postId},
@@ -103,8 +103,8 @@ Meteor.methods({
                 text: postAttributes.text,
                 isAnonymous: postAttributes.isAnonymous,
                 tags: postAttributes.tags,
-                ownerIdenticon: Package.sha.SHA256(identiconHash),
-                updated_at: now
+                userIdenticon: Package.sha.SHA256(identiconHash),
+                updatedAt: now
               },
               // adds to revision history
               $addToSet: {
@@ -125,20 +125,20 @@ Meteor.methods({
         };
 
     },
-    upvote: function(post_id){
+    upvote: function(postId){
       var userId = Meteor.user()._id;
-      var post = Posts.findOne(post_id);
+      var post = Posts.findOne(postId);
       var voters = post.upvoters;
 
-      if(userId != post.owner){
+      if(userId != post.userId){
         if(voters.indexOf(userId) != -1){ // If the user has already upvoted
-            Posts.update({_id: post_id}, {
+            Posts.update({_id: postId}, {
             $inc: {upvotesCount: -1},
             $pull : {
               "upvoters": userId
             }});
         }else{
-            Posts.update({_id: post_id}, {
+            Posts.update({_id: postId}, {
               $inc: {upvotesCount: +1},
               $addToSet : {
               "upvoters": userId
@@ -147,40 +147,40 @@ Meteor.methods({
       }
 
     },
-    followQuestion: function(post_id){
+    followQuestion: function(postId){
       var userId = Meteor.user()._id;
-      var followers = Posts.findOne(post_id).followers;
+      var followers = Posts.findOne(postId).followers;
 
       if(followers.indexOf(userId) != -1){ // If the user is already a follower
-          Posts.update({_id: post_id}, {$pull : {
+          Posts.update({_id: postId}, {$pull : {
             "followers": userId
           }});
       }else{
-          Posts.update({_id: post_id}, {$addToSet : {
+          Posts.update({_id: postId}, {$addToSet : {
             "followers": userId
           }});
       }
     },
-    currentUserIsOwner: function(post_id) {
-      var post = Posts.findOne(post_id);
+    currentUserIsOwner: function(postId) {
+      var post = Posts.findOne(postId);
       if (post)
-        return post.owner == Meteor.user()._id;
+        return post.userId == Meteor.user()._id;
       else
         return false;
     },
-    postDelete: function(post_id){
+    postDelete: function(postId){
       var userId = Meteor.user()._id;
-      var post = Posts.findOne(post_id);
+      var post = Posts.findOne(postId);
       var hasPermission;
       if (post)
       if(post.isAnonymous) {
-        hasPermission = post.ownerIdenticon == Package.sha.SHA256(post._id + userId)
+        hasPermission = post.userIdenticon == Package.sha.SHA256(post._id + userId)
       } else {
-        hasPermission = post.owner == userId;
+        hasPermission = post.userId == userId;
       }
 
       if(hasPermission){
-        Posts.update({_id: post_id}, {$set : {
+        Posts.update({_id: postId}, {$set : {
           "isDeleted": true
         }});
       } else {
@@ -212,14 +212,14 @@ EasySearch.createSearchIndex('courseSearch', {
   'limit': 15,
   'use' : 'minimongo',
   'sort': function() {
-    return { 'upvotesCount': -1, 'created_at': -1 };
+    return { 'upvotesCount': -1, 'createdAt': -1 };
   },
   'query': function(searchString, opts) {
 
     var query = EasySearch.getSearcher(this.use).defaultQuery(this, searchString);
 
-    if (this.props.course_id) {
-      query.course_id = this.props.course_id;
+    if (this.props.courseId) {
+      query.courseId = this.props.courseId;
     }
 
     return query;

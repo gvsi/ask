@@ -1,11 +1,11 @@
 <template name="postPage">
   <!-- START POSTS LIST -->
-  {{>postList course_id=course_id}}
+  {{>postList courseId=courseId}}
   <!-- END POSTS LIST -->
   <!-- START OPENED POST -->
   <div class="post-opened">
     {{#if isUserInstructor}}
-       {{>courseSettingsModal course_id=course_id}}
+       {{>courseSettingsModal courseId=courseId}}
     {{/if}}
     <div class="no-post">
 
@@ -58,30 +58,6 @@
           <a href="#" class="post-list-toggle"><i class="fa fa-angle-left"></i> All Questions
           </a>
         </li>
-
-        <!-- <li class="no-padding "><a href="#" class="text-muted">Upvotes: {{post.upvoters.length}}</a>
-        </li>
-        <li class="no-padding "><a href="#" class="text-muted">Views: 0</a>
-        </li>
-        <li class="no-padding "><a href="#" class="text-info">Reply</a>
-        </li>
-
-        {{#if currentUserIsOwner}}
-        <li class="no-padding ">
-          <a href="{{pathFor 'editPost' course_id=post.course_id post_id=post._id}}" style="color:#447DF7">Edit</a>
-        </li>
-        <li class="no-padding "><a href="#" class="text-danger">Delete</a>
-        </li>
-        {{/if}}
-
-
-        {{#each tags}}
-        <li class="no-padding ">
-          <button class="btn btn-tag  btn-tag-light m-r-5">{{this}}</button>
-        </li>
-        {{/each}}-->
-
-
       </ul>
       <div class="clearfix"></div>
     </div>
@@ -89,7 +65,7 @@
       <div class="q-footer">
         <div style="float:left">
           <div class="thumbnail-wrapper bordered circular" >
-            <img width="40" height="40" alt="" src="{{identicon post.ownerIdenticon}}">
+            <img width="40" height="40" alt="" src="{{identicon post.userIdenticon}}">
           </div>
           <div class="sender inline m-l-10">
             <p class="name no-margin">
@@ -114,7 +90,7 @@
         </div>
         {{#if currentUserIsOwner}}
         <div class="buttons">
-          <a href="{{pathFor 'editPost' course_id=post.course_id post_id=post._id}}"> <button class="btn btn-lg btn-rounded edit"><i class="fa fa-pencil"></i></button> </a>
+          <a href="{{pathFor 'editPost' courseId=post.courseId postId=post._id}}"> <button class="btn btn-lg btn-rounded edit"><i class="fa fa-pencil"></i></button> </a>
           <button class="btn btn-lg btn-rounded upvote delete" data-target="#modalDeletePost" data-toggle="modal" ><i class="fa fa-trash-o"></i></button>
           <button class="btn {{ upvoteButton }} btn-lg btn-rounded upvote" disabled><i class="fa fa-thumbs-up"></i><span class="m-l-10">{{post.upvoters.length}}</span></button>
         </div>
@@ -201,7 +177,7 @@
   <div class="answer" id="{{_id}}">
     <div class="postInfo">
       <div class="thumbnail-wrapper bordered circular" >
-        <img width="40" height="40" alt="" src="{{identicon ownerIdenticon}}">
+        <img width="40" height="40" alt="" src="{{identicon userIdenticon}}">
       </div>
       <div class="nameLabel">
         {{#if isInstructor}}
@@ -260,7 +236,7 @@
       {{#each comments}}
       <hr>
       <div class="thumbnail-wrapper circular" data-toggle="tooltip" data-placement="left" data-html="true" title="{{#if isAnonymous}} Anonymous {{else}} {{theAuthor.profile.name}} <br> {{theAuthor.profile.surname}} {{/if}} <br> ({{dateFromNow}})">
-        <img width="40" height="40" alt="" src="{{identicon this.ownerIdenticon}}">
+        <img width="40" height="40" alt="" src="{{identicon this.userIdenticon}}">
       </div>
       <div class="commentBody">
         {{#mathjax}}

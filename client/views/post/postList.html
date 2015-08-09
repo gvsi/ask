@@ -1,8 +1,8 @@
 <template name="postList">
   <div class="post-list b-r b-grey">
-    {{#if course_id}}
+    {{#if courseId}}
 
-      <a href="{{pathFor 'compose' course_id=course_id }}" >
+      <a href="{{pathFor 'compose' courseId=courseId }}" >
         <button id="newQuestion" class="btn btn-sm btn-rounded">New question</button>
       </a>
       {{#if isUserInstructor}}
@@ -14,7 +14,6 @@
     <div id="postList">
       <!-- START POST LIST SORTED BY DATE -->
       <!-- END POST LIST SORTED BY DATE -->
-      <!-- <a href="{{pathFor 'compose' course_id=course_id }}" ><button class="pull-right btn btn-sm btn-rounded ">New question</button> </a> -->
 
       {{#if areTherePosts}}
         {{#each dateGroups}}

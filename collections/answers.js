@@ -31,7 +31,7 @@ Meteor.methods({
     if (!post)
     throw new Meteor.Error('invalid-answer', 'You must answer on a post');
 
-    var course = Courses.findOne(post.course_id);
+    var course = Courses.findOne(post.courseId);
     if (!course)
     throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
 
@@ -41,12 +41,12 @@ Meteor.methods({
 
     answer = _.extend(answerAttributes, {
       userId: user._id,
-      ownerIdenticon: Package.sha.SHA256(identiconHash),
+      userIdenticon: Package.sha.SHA256(identiconHash),
       //author: user.username,
       upvoters: [],
       downvoters: [],
-      created_at: new Date(),
-      updated_at: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
       comments: [],
       voteCount: 0
     });
@@ -91,7 +91,7 @@ Meteor.methods({
           text: answerAttributes.body,
           type: 'info',
           userId: followerId,
-          link: '/room/'+ post.course_id + '?p=' + post._id + '#' + answer._id,
+          link: '/room/'+ post.courseId + '?p=' + post._id + '#' + answer._id,
           seen: false
         }
 
@@ -126,8 +126,8 @@ Meteor.methods({
           $set: {
             body: answerAttributes.body,
             isAnonymous: answerAttributes.isAnonymous,
-            ownerIdenticon: Package.sha.SHA256(identiconHash),
-            updated_at: now
+            userIdenticon: Package.sha.SHA256(identiconHash),
+            updatedAt: now
           },
           // adds to revision history
           $addToSet: {
@@ -167,10 +167,10 @@ Meteor.methods({
 
     comment = _.extend(commentAttributes, {
       userId: user._id,
-      ownerIdenticon: Package.sha.SHA256(identiconHash),
+      userIdenticon: Package.sha.SHA256(identiconHash),
       //author: user.username,
-      created_at: new Date(),
-      updated_at: new Date(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
     });
 
     // create the answer, save the id
@@ -199,7 +199,7 @@ Meteor.methods({
     var course;
 
     if(post){
-      course = Courses.findOne(post.course_id);
+      course = Courses.findOne(post.courseId);
       if(!course)
       throw new Meteor.Error('invalid-course', 'The post must belong to a course');
     }else{
@@ -295,7 +295,7 @@ Meteor.methods({
       if(answer.isAnonymous) {
         var post = Posts.findOne(answer.postId);
         if (post) {
-          hasPermission = answer.ownerIdenticon == Package.sha.SHA256(post._id + userId)
+          hasPermission = answer.userIdenticon == Package.sha.SHA256(post._id + userId)
         } else {
           throw new Meteor.Error('invalid-post', 'The answer you\'re trying to delete must belong to a post');
         }

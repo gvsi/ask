@@ -41,10 +41,10 @@ Template.postCompose.rendered = function(){
 
 Template.postCompose.helpers({
   posts: function () {
-    return Posts.find({'course_id': Router.current().params.course_id}, {sort: {created_at: -1}});
+    return Posts.find({'courseId': Router.current().params.courseId}, {sort: {createdAt: -1}});
   },
   course: function() {
-    return Courses.findOne(Router.current().params.course_id);
+    return Courses.findOne(Router.current().params.courseId);
   },
   isEditingPost: function() {
     var postId = Router.current().params.query.p;
@@ -98,7 +98,7 @@ Template.postCompose.events({
       title: $("#postTitleInput").val(),
       text: tinymceText,
       isAnonymous: $('#anonymous').is(':checked'),
-      course_id: Router.current().params.course_id,
+      courseId: Router.current().params.courseId,
       tags: tags
     };
 
@@ -113,11 +113,11 @@ Template.postCompose.events({
       if (error)
         throw new Meteor.Error(error.reason);
       // show this result but route anyway
-      Router.go('room', {course_id: Router.current().params.course_id}, {query: "p="+result._id});
+      Router.go('room', {courseId: Router.current().params.courseId}, {query: "p="+result._id});
     });
   },
   'click .item': function(e) {
     var postId = $(e.currentTarget).attr('data-post-id');
-    Router.go('room', {course_id: Router.current().params.course_id}, {query: 'p='+postId});
+    Router.go('room', {courseId: Router.current().params.courseId}, {query: 'p='+postId});
   }
 });

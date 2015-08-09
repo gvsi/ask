@@ -5,9 +5,9 @@ Template.postPage.rendered = function () {
     $("#postList").ioslist();
   }
 
-  EasySearch.changeProperty('courseSearch', 'course_id', Router.current().params.course_id);
+  EasySearch.changeProperty('courseSearch', 'courseId', Router.current().params.courseId);
   console.log('changed');
-  
+
   loadMathQuill();
 
   if ($(window).width() < 980) {
@@ -45,7 +45,7 @@ Template.postPage.rendered = function () {
 
   $('.custom-tag-input').tagsinput({});
   $('#instructorsInput').tagsinput({});
-  var instructors = Courses.findOne(Router.current().params.course_id).instructors;
+  var instructors = Courses.findOne(Router.current().params.courseId).instructors;
 
   instructors.forEach(function(instructor){
     if(instructor != Meteor.user().username.toLowerCase()){
@@ -74,7 +74,7 @@ Template.postPage.events({
 })
 
 Template.registerHelper("isUserInstructor", function(){
-  var currentCourse = Courses.findOne(Router.current().params.course_id);
+  var currentCourse = Courses.findOne(Router.current().params.courseId);
   var un = Meteor.user().username.toLowerCase();
   if(currentCourse && (currentCourse.instructors.indexOf(un)!=-1)){
     return true;
@@ -89,10 +89,10 @@ Template.registerHelper('equals', function (a, b) {
 
 Template.postPage.helpers({
   posts: function () {
-    return Posts.find({'course_id': Router.current().params.course_id}, {sort: {created_at: -1}});
+    return Posts.find({'courseId': Router.current().params.courseId}, {sort: {createdAt: -1}});
   },
-  course_id: function () {
-    return Router.current().params.course_id;
+  courseId: function () {
+    return Router.current().params.courseId;
   },
   queryPathFor: function () {
     console.log("q="+this.post._id);
@@ -102,7 +102,7 @@ Template.postPage.helpers({
 
 Template.courseSettingsModal.helpers({
   course: function() {
-    return Courses.findOne(this.course_id);
+    return Courses.findOne(this.courseId);
   },
   defaultTagsChecked: function(){
     return this.areTagsDefault == true ? "checked" : "";
@@ -145,7 +145,7 @@ Template.courseSettingsModal.events({
   },
   "itemAdded .custom-tag-input": function(event){
     var tagAttributes = {
-      courseId: Router.current().params.course_id,
+      courseId: Router.current().params.courseId,
       isAdd: 1,
       tag: event.item
     };
@@ -154,7 +154,7 @@ Template.courseSettingsModal.events({
   },
   "itemRemoved .custom-tag-input": function(event){
     var tagAttributes = {
-      courseId: Router.current().params.course_id,
+      courseId: Router.current().params.courseId,
       isAdd: 0,
       tag: event.item
     };
@@ -163,7 +163,7 @@ Template.courseSettingsModal.events({
   },
   "itemAdded #instructorsInput": function(event){
     var instructorAttributes = {
-      courseId: Router.current().params.course_id,
+      courseId: Router.current().params.courseId,
       isAdd: 1,
       instructor: event.item
     };
@@ -172,7 +172,7 @@ Template.courseSettingsModal.events({
   },
   "itemRemoved #instructorsInput": function(event){
     var instructorAttributes = {
-      courseId: Router.current().params.course_id,
+      courseId: Router.current().params.courseId,
       isAdd: 0,
       instructor: event.item
     };
@@ -186,7 +186,7 @@ Template.postList.events({
     $('.item').removeClass('active');
     $(e.currentTarget).addClass('active');
     var postId = $(e.currentTarget).attr('data-post-id');
-    Router.go('room', {course_id: Router.current().params.course_id}, {query: 'p='+postId});
+    Router.go('room', {courseId: Router.current().params.courseId}, {query: 'p='+postId});
     Session.set("postId", postId);
     loadPage(postId);
   }
@@ -217,11 +217,11 @@ Template.postList.helpers({
       }
     ];
 
-    var lastPost = Posts.findOne({},{sort:{created_at:1}, limit:1})
+    var lastPost = Posts.findOne({},{sort:{createdAt:1}, limit:1})
     var startOfLastWeek = moment().startOf('isoweek').subtract(1, 'weeks');
 
-    if (lastPost && lastPost.created_at < startOfLastWeek) {
-      var lastDate = lastPost.created_at;
+    if (lastPost && lastPost.createdAt < startOfLastWeek) {
+      var lastDate = lastPost.createdAt;
       var st = moment(lastDate).startOf('isoweek');
       var en = moment(lastDate).endOf('isoweek');
 
@@ -239,16 +239,16 @@ Template.postList.helpers({
     return groups;
   },
   areTherePosts: function() {
-    return Posts.find({'course_id': Router.current().params.course_id}).count() > 0;
+    return Posts.find({'courseId': Router.current().params.courseId}).count() > 0;
   },
   postsByDate: function () {
-    return Posts.find({'course_id': Router.current().params.course_id, created_at: {$gte: this.start.toDate(), $lt: this.end.toDate()}}, {sort: {created_at: -1}});
+    return Posts.find({'courseId': Router.current().params.courseId, createdAt: {$gte: this.start.toDate(), $lt: this.end.toDate()}}, {sort: {createdAt: -1}});
   }
 })
 
 Template.postThumbnail.helpers({
   dateFromNow: function() {
-    return moment(this.created_at).fromNow();
+    return moment(this.createdAt).fromNow();
   },
   textWithoutTags: function() {
     var dummyNode = document.createElement('div'),
@@ -271,8 +271,8 @@ Template.postContent.helpers({
 
       if (post) {
         //if not anonymous
-        Meteor.subscribe('singleUser', post.owner);
-        var o = Meteor.users.findOne(post.owner);
+        Meteor.subscribe('singleUser', post.userId);
+        var o = Meteor.users.findOne(post.userId);
         if (o) {
           post.ownerName = o.profile.name;
           post.ownerSurname = o.profile.surname;
@@ -288,19 +288,19 @@ Template.postContent.helpers({
     var post = Posts.findOne(postId);
     if (post)
     if(post.isAnonymous) {
-      return post.ownerIdenticon == Package.sha.SHA256(post._id + Meteor.user()._id)
+      return post.userIdenticon == Package.sha.SHA256(post._id + Meteor.user()._id)
     } else {
-      return post.owner == Meteor.user()._id;
+      return post.userId == Meteor.user()._id;
     }
   },
   dateFromNow: function() {
     var post = Posts.findOne(Router.current().params.query.p);
     if (post) {
-      if (post.updated_at && post.created_at.getTime() == post.updated_at.getTime()) {
+      if (post.updatedAt && post.createdAt.getTime() == post.updatedAt.getTime()) {
         // the post has never been edited
-        return "posted " + moment(post.created_at).fromNow();
+        return "posted " + moment(post.createdAt).fromNow();
       } else {
-        return "updated " + moment(post.updated_at).fromNow();
+        return "updated " + moment(post.updatedAt).fromNow();
       }
     }
   },
@@ -443,14 +443,14 @@ Template.postContent.helpers({
         }
       });
 
-      Router.go('room', {course_id: Router.current().params.course_id});
+      Router.go('room', {courseId: Router.current().params.courseId});
     }
   });
 
   Template.answer.helpers({
     currentUserIsOwner: function() {
       if(this.isAnonymous) {
-        return this.ownerIdenticon == Package.sha.SHA256(this.postId + Meteor.user()._id)
+        return this.userIdenticon == Package.sha.SHA256(this.postId + Meteor.user()._id)
       } else {
         return this.userId == Meteor.user()._id;
       }
@@ -458,7 +458,7 @@ Template.postContent.helpers({
     disabledVoteForOwner: function() {
       var currentUserIsOwner;
       if(this.isAnonymous) {
-        currentUserIsOwner = this.ownerIdenticon == Package.sha.SHA256(this.postId + Meteor.user()._id)
+        currentUserIsOwner = this.userIdenticon == Package.sha.SHA256(this.postId + Meteor.user()._id)
       } else {
         currentUserIsOwner = this.userId == Meteor.user()._id;
       }
@@ -483,7 +483,7 @@ Template.postContent.helpers({
       return Meteor.users.findOne(authorId);
     },
     dateFromNow: function() {
-      return moment(this.created_at).fromNow();
+      return moment(this.createdAt).fromNow();
     },
     upvote: function(){
       var answerId = this._id;
@@ -810,7 +810,7 @@ Template.postContent.helpers({
 
           var currentRank = 0;
           var initial = true;
-          Answers.find({}, {sort: {isInstructor: -1, isInstructorUpvoted: -1, voteCount: -1, created_at: 1}}).observe({
+          Answers.find({}, {sort: {isInstructor: -1, isInstructorUpvoted: -1, voteCount: -1, createdAt: 1}}).observe({
             addedAt: function(document, atIndex){
               if(initial){
                 document.rank = atIndex;

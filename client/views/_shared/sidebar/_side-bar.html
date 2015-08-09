@@ -50,7 +50,7 @@
             <ul class="sub-menu" style="display:block;">
                   {{#each currentCourses}}
                   <li>
-                    <a href="{{pathFor 'room' course_id=this._id }}">{{name}}</a>
+                    <a href="{{pathFor 'room' courseId=this._id }}">{{name}}</a>
                     <span class="icon-thumbnail">{{courseInitials}}</span>
                   </li>
                   {{/each}}
@@ -72,7 +72,7 @@
                 <ul class="sub-menu">
                   {{#each coursesArray}}
                   <li>
-                    <a href="{{pathFor 'room' course_id=this._id }}">{{name}}</a>
+                    <a href="{{pathFor 'room' courseId=this._id }}">{{name}}</a>
                     <span class="icon-thumbnail">{{initials}}</span>
                   </li>
                   {{/each}}
