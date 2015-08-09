@@ -9,7 +9,7 @@ Template.overlaySearch.rendered = function (){
 
 Template.overlaySearch.helpers({
   searchType: function(){
-    if (Router.current().params.course_id) {
+    if (Router.current().params.courseId) {
       var s = Session.get('searchType');
       if (s) {
         return s;
@@ -21,9 +21,9 @@ Template.overlaySearch.helpers({
     }
   },
   courseName: function(){
-    var course_id = Router.current().params.course_id;
-    if (course_id) {
-      var course = Courses.findOne(course_id);
+    var courseId = Router.current().params.courseId;
+    if (courseId) {
+      var course = Courses.findOne(courseId);
       if (course) {
         return course.name;
       }
@@ -53,10 +53,10 @@ Template.overlaySearch.events({
 });
 
 Template.resultCard.helpers({
-  ownerName: function() {
+  userName: function() {
     if (!this.isAnonymous) {
-      Meteor.subscribe('singleUser', this.owner);
-      var o = Meteor.users.findOne(this.owner);
+      Meteor.subscribe('singleUser', this.userId);
+      var o = Meteor.users.findOne(this.userId);
       if (o) {
         return o.profile.name + " " + o.profile.surname;
       }
@@ -65,7 +65,7 @@ Template.resultCard.helpers({
     }
   },
   dateFromNow: function() {
-    return moment(this.created_at).fromNow();
+    return moment(this.createdAt).fromNow();
   },
   formattedTitle: function() {
     var string = this.title;

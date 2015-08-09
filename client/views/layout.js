@@ -11,6 +11,6 @@ Template.defaultLayout.rendered = function (){
 
 Template.postLayout.helpers({
 	courseId: function(){
-		return Router.current().params.course_id;
+		return Router.current().params.courseId;
 	}
 });

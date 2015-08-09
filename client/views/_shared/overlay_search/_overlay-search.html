@@ -74,7 +74,7 @@
 <template name="resultCard">
   <div class="row">
   <div class="card share share-self col-lg-6 col-md-6" data-social="item">
-    <a href="{{pathFor 'showPost' course_id=course_id post_id=_id}}">
+    <a href="{{pathFor 'showPost' courseId=courseId postId=_id}}">
     <div class="card-header clearfix">
       <h5>{{{formattedTitle}}}</h5>
       <!-- <h6>Shared a photo
@@ -88,9 +88,9 @@
     <div class="card-footer clearfix">
       <div class="pull-left" style="width: 300px">
       <div class="user-pic">
-            <img alt="Profile Image" width="33" height="33" src="{{identicon ownerIdenticon}}">
+            <img alt="Profile Image" width="33" height="33" src="{{identicon userIdenticon}}">
         </div>
-        <h5>{{ownerName}}{{#if isInstructorPost}}<span class="small hint-text"> - instructor</span>{{/if}}</h5>
+        <h5>{{userName}}{{#if isInstructorPost}}<span class="small hint-text"> - instructor</span>{{/if}}</h5>
         <h6>posted
            <span class="location semi-bold">{{dateFromNow}}</span>
         </h6>

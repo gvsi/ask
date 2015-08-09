@@ -21,7 +21,7 @@ Router.route('/social', function () {
  layoutTemplate:"socialLayout",
 });
 
-Router.route('/room/:course_id', function () {
+Router.route('/room/:courseId', function () {
   this.render('postPage');
 },{
  layoutTemplate:"postLayout",
@@ -31,13 +31,13 @@ Router.route('/room/:course_id', function () {
     $(".toggle-post-sidebar").remove();
     //$(".header-inner").prepend("<a href=\"#\" class=\"toggle-email-sidebar\">Room <span class=\"text-info\">(12)</span> <span class=\"caret\"></span></a>");
     return [
-      Meteor.subscribe('posts', this.params.course_id)
+      Meteor.subscribe('posts', this.params.courseId)
     ];
   }
 });
 
 
-Router.route('room/:course_id/compose', function () {
+Router.route('room/:courseId/compose', function () {
   this.render('postCompose');
 },{
  layoutTemplate:"composePostLayout" ,
@@ -45,17 +45,17 @@ Router.route('room/:course_id/compose', function () {
   name: 'compose',
   waitOn: function() {
     return [
-      Meteor.subscribe('posts', this.params.course_id),
+      Meteor.subscribe('posts', this.params.courseId),
     ];
   }
 });
 
-//Router.route('room/:course_id/compose?p=:post_id', {name: 'editPost'});
-Router.route('room/:course_id??p=:post_id', {name: 'showPost'});
+//Router.route('room/:courseId/compose?p=:postId', {name: 'editPost'});
+Router.route('room/:courseId??p=:postId', {name: 'showPost'});
 
-Router.route('room/:course_id/compose?p=:post_id', {name: 'editPost'});
+Router.route('room/:courseId/compose?p=:postId', {name: 'editPost'});
 
-// Router.route('room/:course_id/compose?p=:post_id', function () {
+// Router.route('room/:courseID/compose?p=:postId', function () {
 //   this.render('postCompose');
 // },{
 //  layoutTemplate:"composePostLayout" ,
@@ -63,7 +63,7 @@ Router.route('room/:course_id/compose?p=:post_id', {name: 'editPost'});
 //   name: 'editPost',
 //   waitOn: function() {
 //     return [
-//       Meteor.subscribe('posts', this.params.course_id),
+//       Meteor.subscribe('posts', this.params.courseId),
 //     ];
 //   }
 // });
