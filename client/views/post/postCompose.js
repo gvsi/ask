@@ -3,9 +3,6 @@ Template.postCompose.rendered = function(){
     $("#postList").ioslist();
   }
 
-  console.log("render");
-
-//  tinymce.PluginManager.load('equationeditor', '/tinymce/plugins/equationeditor/plugin.min.js');
   tinymce.EditorManager.execCommand('mceRemoveEditor',true, "tinymceTextArea");
   $("#summernote-wrapper").append('<textarea id="tinymceTextArea" name="content"></textarea>');
   tinymce.init({
@@ -15,7 +12,7 @@ Template.postCompose.rendered = function(){
              content_css: '/tinymce/plugins/equationeditor/mathquill.css',
              menu: {},
              menubar: false,
-             toolbar: "undo | redo | bold | italic | alignleft | aligncenter | alignright | alignjustify | link | unlink | image | sh4tinymce | equationeditor",
+             toolbar: "undo | redo | bold | italic | underline | alignleft | aligncenter | alignright | alignjustify | link | unlink | image | sh4tinymce | equationeditor |",
              resize: false,
              preview_styles: false,
              statusbar: false,

@@ -31,7 +31,7 @@
          {{>latexModal}}
          <div class="summernote-wrapper">
           <!-- <div id="summernote-compose">{{#if isEditingPost}}{{{editingPost.text}}}{{/if}}</div> -->
-         <textarea id="tinymceTextArea" name="content"></textarea>
+         <textarea id="tinymceTextArea" name="content">{{#if isEditingPost}}{{{editingPost.text}}}{{/if}}</textarea>
          </div>
        </div>
      </div>
