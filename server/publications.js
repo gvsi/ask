@@ -28,3 +28,11 @@ Meteor.publish('answers', function (post_id) {
 Meteor.publish("notifications", function(userId){
 	return Notifications.find({"userId": userId});
 });
+
+Meteor.startup(function () {
+  UploadServer.init({
+    tmpDir: process.env.PWD + '/.uploads/tmp',
+    uploadDir: process.env.PWD + '/.uploads/',
+    checkCreateDirectories: true //create the directories for you
+  })
+});
