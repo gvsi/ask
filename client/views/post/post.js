@@ -6,7 +6,6 @@ Template.postPage.rendered = function () {
   }
 
   EasySearch.changeProperty('courseSearch', 'courseId', Router.current().params.courseId);
-  console.log('changed');
 
   loadMathQuill();
 
@@ -62,16 +61,6 @@ Template.postPage.rendered = function () {
     $('#customTagsForCourse').show();
   }
 }
-
-Template.postPage.events({
-  //disable search when latex modal
-  "shown.bs.modal #courseSettingsModal": function() {
-    $('body').addClass('overlay-disabled');
-  },
-  "hidden.bs.modal #courseSettingsModal": function() {
-    $('body').removeClass('overlay-disabled');
-  }
-})
 
 Template.registerHelper("isUserInstructor", function(){
   var currentCourse = Courses.findOne(Router.current().params.courseId);
@@ -409,13 +398,6 @@ Template.postContent.helpers({
     "click .post-list-toggle": function(event) {
       $('.post-list').toggleClass('slideLeft');
     },
-    //disable search when latex modal
-    "shown.bs.modal #latexEditorModal": function() {
-      $('body').addClass('overlay-disabled');
-    },
-    "hidden.bs.modal #latexEditorModal": function() {
-      $('body').removeClass('overlay-disabled');
-    },
     "click #openDeleteAnswerModal": function(event){
       Session.set("deleteAnswerId", $(event.currentTarget).data("id"));
     },
@@ -516,10 +498,10 @@ Template.postContent.helpers({
       $('#summernote-'+this._id).summernote({
         height: 90,
         onfocus: function(e) {
-          $('body').addClass('overlay-disabled');
+          //$('body').addClass('overlay-disabled');
         },
         onblur: function(e) {
-          $('body').removeClass('overlay-disabled');
+          //$('body').removeClass('overlay-disabled');
         },
         onpaste: function(e) {
           var bufferText = (e.originalEvent.clipboardData).getData('Text');
@@ -667,10 +649,10 @@ Template.postContent.helpers({
     $(selector).summernote({
       height: 150,
       onfocus: function(e) {
-        $('body').addClass('overlay-disabled');
+        //$('body').addClass('overlay-disabled');
       },
       onblur: function(e) {
-        $('body').removeClass('overlay-disabled');
+        //$('body').removeClass('overlay-disabled');
       },
       onpaste: function(e) {
         var bufferText = (e.originalEvent.clipboardData).getData('Text');
@@ -828,7 +810,6 @@ Template.postContent.helpers({
               tempAnswers.remove(document._id);
             },
             changed: function(document){
-              //console.log('changed');
               var id = document._id;
               delete document._id;
               tempAnswers.update(id, {$set: document}); // keeps rank field
