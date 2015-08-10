@@ -36,6 +36,21 @@ Template.header.helpers({
 		}else{
 			return false;
 		}
+	},
+	searchBarText: function() {
+		var searchString = Session.get('searchString');
+		if (searchString) {
+			return "<span class=\"bold\">"+searchString+"</span>";
+		} else {
+			var courseId = Router.current().params.courseId;
+			if (courseId) {
+				var course = Courses.findOne(courseId);
+				if (course)
+	        return "Search in <span class=\"bold\">" + course.name + "</span>";
+			} else {
+					return "Click here to <span class=\"bold\">search</span>";
+			}
+		}
 	}
 });
 
@@ -46,7 +61,7 @@ Template.header.events({
 	"click #notification-center": function(event, template){
 		var notifications = Notifications.find({seen: false}).fetch();
 			notifications.forEach(function (notification) {
-					 Meteor.call("seeNotification", notification._id , function(error, result){ 
+					 Meteor.call("seeNotification", notification._id , function(error, result){
 					 	if(error){
 					 		console.log("error", error);
 					 	}
@@ -61,5 +76,15 @@ Template.header.events({
 		p.closest('.heading').children('.more-details').stop().slideToggle('fast', function() {
 				p.toggleClass('open');
 		});
-	}
+	},
+	"click #search-link": function(event) {
+    if ($('#overlay-search').val() == "") {
+      var searchString = Session.get('searchString');
+      if (searchString) {
+        $('#overlay-search').val(searchString);
+        $('#overlay-search').focus();
+        $('#overlay-search').keyup();
+      }
+    }
+  }
 });

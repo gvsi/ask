@@ -77,9 +77,9 @@
     <a href="{{pathFor 'showPost' courseId=courseId postId=_id}}">
     <div class="card-header clearfix">
       <h5>{{{formattedTitle}}}</h5>
-      <!-- <h6>Shared a photo
-        <span class="location semi-bold"><i class="fa fa-map-marker"></i> NYC, New York</span>
-      </h6> -->
+      {{#if isDefaultSearch}}
+        <h6>posted in <span class="bold"> {{courseName}}</span></h6>
+      {{/if}}
     </div>
     </a>
     <div class="card-description">
@@ -92,7 +92,7 @@
         </div>
         <h5>{{userName}}{{#if isInstructorPost}}<span class="small hint-text"> - instructor</span>{{/if}}</h5>
         <h6>posted
-           <span class="location semi-bold">{{dateFromNow}}</span>
+           <span class="semi-bold">{{dateFromNow}}</span>
         </h6>
       </div>
       <div class="pull-right hint-text">
