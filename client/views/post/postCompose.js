@@ -6,17 +6,17 @@ Template.postCompose.rendered = function(){
   tinymce.EditorManager.execCommand('mceRemoveEditor',true, "tinymceTextArea");
   $("#summernote-wrapper").append('<textarea id="tinymceTextArea" name="content"></textarea>');
   tinymce.init({
-             selector: "#tinymceTextArea",
-             plugins: "link , image, sh4tinymce, equationeditor",
-             min_height: 400,
-             content_css: '/tinymce/plugins/equationeditor/mathquill.css',
-             menu: {},
-             menubar: false,
-             toolbar: "undo | redo | bold | italic | underline | alignleft | aligncenter | alignright | alignjustify | link | unlink | image | sh4tinymce | equationeditor |",
-             resize: false,
-             preview_styles: false,
-             statusbar: false,
-         });
+       selector: "#tinymceTextArea",
+       plugins: "link , image, sh4tinymce, equationeditor",
+       min_height: 400,
+       content_css: '/tinymce/plugins/equationeditor/mathquill.css',
+       menu: {},
+       menubar: false,
+       toolbar: "undo | redo | bold | italic | underline | alignleft | aligncenter | alignright | alignjustify | link | unlink | image | sh4tinymce | equationeditor |",
+       resize: false,
+       preview_styles: false,
+       statusbar: false,
+   });
 
 
 

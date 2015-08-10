@@ -21,6 +21,14 @@ Router.route('/social', function () {
  layoutTemplate:"socialLayout",
 });
 
+Router.route('/feedback', function () {
+  this.render('feedback');
+},{
+ layoutTemplate:"defaultLayout",
+ name:"feedback",
+ loadingTemplate: 'loading',
+});
+
 Router.route('/room/:courseId', function () {
   this.render('postPage');
 },{
