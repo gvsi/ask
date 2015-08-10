@@ -16,7 +16,7 @@ Meteor.methods({
       createdAt: new Date(),
     });
 
-    Notifications.insert(notificationAttributes);
+    Notifications.insert(notification);
   },
   seeNotification: function(notificationId){
     check(notificationId, String);
