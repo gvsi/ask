@@ -155,8 +155,8 @@
         </div>
         <div class="panel-body">
           <label class="error">{{errorMessage 'answerBody'}}</label>
-          <div class="summernote-wrapper">
-            <p><div id="summernote"></div></p>
+          <div class="tinymce-wrapper">
+            <textarea id="answerTinyMCE" name="content"></textarea>
           </div>
           {{#unless isUserInstructor}}
           <div class="checkbox inline m-l-20">
@@ -164,7 +164,7 @@
             <label for="isAnswerAnonymous" class="hint-text">Post as anonymous</label>
           </div>
           {{/unless}}
-          <button type="submit" id="sendAnswerBtn" class="btn btn-complete btn-cons m-l-10">Send</button>
+          <button type="submit" id="sendAnswerBtn" class="btn btn-complete btn-cons m-l-10 m-t-10">Send answer</button>
         </div>
       </div>
     </div>
@@ -247,9 +247,9 @@
       </div>
       {{/each}}
       <button id="addCommentBtn" class="btn btn-default btn-xs m-t-10 pull-right">Add a comment</button>
-      <div class="summernote-wrapper pull-right m-t-10" id="summernote-wrapper-{{_id}}" style="width:100%" hidden>
+      <div class="answerTinyMCE-wrapper pull-right m-t-10" data-answer-id="{{_id}}" style="width:100%" hidden>
         <label class="error"></label>
-        <p><div id="summernote-{{_id}}" class="summernote"></div></p>
+        <textarea id="answerTinyMCE-{{_id}}" name="content"></textarea>
         {{#unless isUserInstructor}}
         <div class="checkbox inline m-l-20">
           <input type="checkbox" value="1" id="isCommentAnon-{{_id}}">

@@ -29,9 +29,9 @@
            </div>
          </div>
          {{>latexModal}}
-         <div class="summernote-wrapper">
+         <div class="tinymce-wrapper">
           <!-- <div id="summernote-compose">{{#if isEditingPost}}{{{editingPost.text}}}{{/if}}</div> -->
-         <textarea id="tinymceTextArea" name="content">{{#if isEditingPost}}{{{editingPost.text}}}{{/if}}</textarea>
+         <textarea id="composeTinyMCE" name="content">{{#if isEditingPost}}{{{editingPost.text}}}{{/if}}</textarea>
          </div>
        </div>
      </div>
@@ -44,7 +44,7 @@
            <label for="anonymous" class="hint-text">Post as anonymous</label>
          </div>
          {{/unless}}
-         <button type="submit" id="composeSubmitBtn" data-type-form="{{#if isEditingPost}}postUpdate{{else}}postInsert{{/if}}" class="btn btn-complete btn-cons m-l-10">{{#if isEditingPost}}Update{{else}}Send{{/if}}</button>
+         <button type="submit" id="composeSubmitBtn" data-type-form="{{#if isEditingPost}}postUpdate{{else}}postInsert{{/if}}" class="btn btn-complete btn-cons m-l-10">{{#if isEditingPost}}Update{{else}}Ask{{/if}}</button>
        </div>
      </div>
    </div>
