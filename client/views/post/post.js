@@ -9,6 +9,7 @@ Template.postPage.rendered = function () {
 
   loadMathQuill();
 
+
   if ($(window).width() < 980) {
     $('.post-list').attr('id', 'slide-left');
   } else {
@@ -302,58 +303,58 @@ Template.postContent.helpers({
     // return the answers from the sorted collection, based on the forced rank
     return tempAnswers.find({}, {
       sort: {rank: 1}});
-  },
-  errorMessage: function(field) {
-    var e = Session.get('answerSubmitErrors');
-    if (e)
-    return Session.get('answerSubmitErrors')[field];
-    else
-    return false;
-  },
-  upvoteButton: function(){
-    var postId = Router.current().params.query.p;
-    var post = Posts.findOne(postId);
-    if (post) {
-      var voters = post.upvoters;
-      var user = Meteor.user();
-      if (voters && user && voters.indexOf(user._id) != -1) {
-        return 'btn-success';
+    },
+    errorMessage: function(field) {
+      var e = Session.get('answerSubmitErrors');
+      if (e)
+      return Session.get('answerSubmitErrors')[field];
+      else
+      return false;
+    },
+    upvoteButton: function(){
+      var postId = Router.current().params.query.p;
+      var post = Posts.findOne(postId);
+      if (post) {
+        var voters = post.upvoters;
+        var user = Meteor.user();
+        if (voters && user && voters.indexOf(user._id) != -1) {
+          return 'btn-success';
+        } else {
+          return 'btn-default';
+        }
       } else {
-        return 'btn-default';
+        return false;
       }
-    } else {
-      return false;
-    }
-  },
-  followButton: function(){
-    var postId = Router.current().params.query.p;
-    var post = Posts.findOne(postId);
-    if (post) {
-      var followers = post.followers;
-      var user = Meteor.user();
-      if (followers && user && followers.indexOf(user._id) != -1) {
-        return 'btn-warning';
+    },
+    followButton: function(){
+      var postId = Router.current().params.query.p;
+      var post = Posts.findOne(postId);
+      if (post) {
+        var followers = post.followers;
+        var user = Meteor.user();
+        if (followers && user && followers.indexOf(user._id) != -1) {
+          return 'btn-warning';
+        } else {
+          return 'btn-default';
+        }
       } else {
-        return 'btn-default';
+        return false;
       }
-    } else {
-      return false;
+    },
+    tags: function(){
+      var postId = Router.current().params.query.p;
+      var post = Posts.findOne(postId);
+      if (post) {
+        return post.tags;
+      }else{
+        return false;
+      }
     }
-  },
-  tags: function(){
-    var postId = Router.current().params.query.p;
-    var post = Posts.findOne(postId);
-    if (post) {
-      return post.tags;
-    }else{
-      return false;
-    }
-  }
-});
+  });
 
   Template.postContent.events({
     'click #sendAnswerBtn': function(e) {
-      var body = $('#summernote').code();
+      var body = tinyMCE.get('answerTinyMCE').getContent();
       var answer = {
         body: body,
         postId: Router.current().params.query.p,
@@ -363,8 +364,8 @@ Template.postContent.helpers({
       if (strip_tags(body) == "") {
         var errors = {};
         errors.answerBody = "I know you're trying to be helpful, but an empty answer won't do much...";
-        $('#summernote').code("<p><br></p>");
-        $('#summernote').summernote({focus: true});
+        tinyMCE.get('answerTinyMCE').setContent("");
+        tinymce.execCommand('mceFocus',false,'answerTinyMCE');
         return Session.set('answerSubmitErrors', errors);
       } else {
         Session.set('answerSubmitErrors', {});
@@ -375,7 +376,8 @@ Template.postContent.helpers({
           Session.set('answerSubmitErrors', {answerBody: error.reason});
           throw new Meteor.Error(error.reason);
         } else {
-          $('#summernote').code("<p><br></p>");
+          tinyMCE.get('answerTinyMCE').setContent("");
+          //$('#summernote').code("<p><br></p>");
         }
       });
     },
@@ -497,32 +499,16 @@ Template.postContent.helpers({
 
   Template.answer.events({
     'click #addCommentBtn': function(e) {
-      $("#summernote-wrapper-"+this._id).toggle();
-      $('#summernote-'+this._id).destroy();
-      $('#summernote-'+this._id).summernote({
-        height: 90,
-        onfocus: function(e) {
-          //$('body').addClass('overlay-disabled');
-        },
-        onblur: function(e) {
-          //$('body').removeClass('overlay-disabled');
-        },
-        onpaste: function(e) {
-          var bufferText = (e.originalEvent.clipboardData).getData('Text');
-          e.preventDefault();
-          document.execCommand('insertText', false, bufferText);
-        },
-        toolbar: [
-          ['misc', ['undo','redo']],
-          ['style', ['bold', 'italic', 'underline']],
-          ['insert', ['link']],
-        ]
-      });
+      $(".answerTinyMCE-wrapper[data-answer-id="+this._id+"]").toggle();
+      //$("#summernote-wrapper-"+this._id).toggle();
+      loadTinyMCE("answerTinyMCE-"+this._id, 150);
+      tinymce.execCommand('mceFocus',false,"answerTinyMCE-"+this._id);
+
     },
     'click #sendCommentBtn': function (e) {
       var answerId = $(e.currentTarget).attr('data-answer-id');
-
-      var body = $('#summernote-'+answerId).code();
+      var selector = 'answerTinyMCE-'+answerId;
+      var body = tinyMCE.get(selector).getContent();
 
       var comment = {
         body: body,
@@ -531,21 +517,22 @@ Template.postContent.helpers({
       };
 
       if (strip_tags(body) == "") {
-        $('#summernote-'+answerId).code("<p><br></p>");
-        $('#summernote-'+answerId).summernote({focus: true});
-        $('#summernote-wrapper-'+answerId+' .error').text("I'm sure this would be a very insightful comment... if it weren't empty.");
+        tinyMCE.get(selector).setContent("");
+        tinymce.execCommand('mceFocus',false,selector);
+
+        $(".answerTinyMCE-wrapper[data-answer-id="+answerId+"] .error").text("I'm sure this would be a very insightful comment... if it weren't empty.");
         return false;
       } else {
-        $('#summernote-wrapper-'+answerId+' .error').text("");
+        $(".answerTinyMCE-wrapper[data-answer-id="+answerId+"] .error").text("");
       }
 
       Meteor.call('commentInsert', comment, function(error) {
         if (error){
-          $('#summernote-wrapper-'+answerId+' .error').text(error.reason);
+          $(".answerTinyMCE-wrapper[data-answer-id="+answerId+"] .error").text(error.reason);
           throw new Meteor.Error(error.reason);
         } else {
-          $('#summernote-'+answerId).code("<p><br></p>");
-          $("#summernote-wrapper-"+answerId).hide(700);
+          tinyMCE.get(selector).setContent("");
+          $(".answerTinyMCE-wrapper[data-answer-id="+answerId+"]").hide(700);
           $('[data-toggle="tooltip"]').tooltip();
         }
       });
@@ -620,32 +607,38 @@ Template.postContent.helpers({
   function loadPage(postId) {
     Session.set('answerSubmitErrors', {});
 
-    Meteor.subscribe('singlePost', postId);
+    Meteor.subscribe('singlePost', postId, {
+      onReady: function() {
+        var postOpened = $('.post-opened');
 
-    var post = Posts.findOne(postId);
-    var post = null;
+        $('.no-post').hide();
+        $('.post-content-wrapper').show();
 
-    var postOpened = $('.post-opened');
+        loadTinyMCE("answerTinyMCE", 150);
 
-    $('.no-post').hide();
-    $('.post-content-wrapper').show();
+        $(".post-content-wrapper").scrollTop(0);
 
-    $('#summernote').destroy();
+        // Initialize post action menu
+        $('.menuclipper').menuclipper({
+          bufferWidth: 20
+        });
 
-    initialiseSummernote("#summernote");
+        $('#slide-left').addClass('slideLeft');
 
-    $(".post-content-wrapper").scrollTop(0);
+        setTimeout(function(){
+          $('[data-toggle="tooltip"]').tooltip();
+        }, 1000);
 
-    // Initialize post action menu
-    $('.menuclipper').menuclipper({
-      bufferWidth: 20
-    });
+        setTimeout(function () {
+          console.log("init highlight");
+          $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+          });
+        }, 100);
+      }
+    }
+    );
 
-    $('#slide-left').addClass('slideLeft');
-
-    setTimeout(function(){
-      $('[data-toggle="tooltip"]').tooltip();
-    }, 1000);
   }
 
   function initialiseSummernote(selector) {
@@ -806,7 +799,7 @@ Template.postContent.helpers({
               } else {
                 document.rank = currentRank++;
                 if (!tempAnswers.findOne(document._id))
-                  tempAnswers.insert(document);
+                tempAnswers.insert(document);
               }
             },
             removed: function(document){
@@ -825,3 +818,20 @@ Template.postContent.helpers({
       });
     }
   });
+
+  loadTinyMCE = function(selector, height) {
+  console.log(selector);
+    tinymce.EditorManager.execCommand('mceRemoveEditor',true, selector);
+    //$("#summernote-wrapper").append('<textarea id="tinymceTextArea" name="content"></textarea>');
+    tinymce.init({
+      selector: "#" + selector,
+      plugins: "link , image, sh4tinymce, equationeditor",
+      min_height: height,
+      content_css: '/tinymce/plugins/equationeditor/mathquill.css',
+      menu: {},
+      menubar: false,
+      toolbar: "undo | redo | bold | italic | underline | alignleft | aligncenter | alignright | alignjustify | link | unlink | image | sh4tinymce | equationeditor |",
+      preview_styles: false,
+      elementpath: false
+    });
+  }

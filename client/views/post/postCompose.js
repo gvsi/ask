@@ -3,25 +3,9 @@ Template.postCompose.rendered = function(){
     $("#postList").ioslist();
   }
 
-  tinymce.EditorManager.execCommand('mceRemoveEditor',true, "tinymceTextArea");
-  $("#summernote-wrapper").append('<textarea id="tinymceTextArea" name="content"></textarea>');
-  tinymce.init({
-       selector: "#tinymceTextArea",
-       plugins: "link , image, sh4tinymce, equationeditor",
-       min_height: 400,
-       content_css: '/tinymce/plugins/equationeditor/mathquill.css',
-       menu: {},
-       menubar: false,
-       toolbar: "undo | redo | bold | italic | underline | alignleft | aligncenter | alignright | alignjustify | link | unlink | image | sh4tinymce | equationeditor |",
-       resize: false,
-       preview_styles: false,
-       statusbar: false,
-   });
+  loadTinyMCE("composeTinyMCE", 400);
 
-
-
-
-   mathquill();
+  mathquill();
 
   if ($(window).width() < 1024) {
     $('.post-list').hide();
@@ -89,10 +73,10 @@ Template.postCompose.events({
     var tags=[];
 
     $("#postTags>.active").each(function() {
-       tags.push($( this ).text().trim());
+      tags.push($( this ).text().trim());
     });
 
-    var tinymceText = tinyMCE.get('tinymceTextArea').getContent();
+    var tinymceText = tinyMCE.get('composeTinyMCE').getContent();
 
     var post = {
       title: $("#postTitleInput").val(),
@@ -111,7 +95,7 @@ Template.postCompose.events({
     Meteor.call(type, post, function(error, result) {
       // display the error to the user and abort
       if (error)
-        throw new Meteor.Error(error.reason);
+      throw new Meteor.Error(error.reason);
       // show this result but route anyway
       Router.go('room', {courseId: Router.current().params.courseId}, {query: "p="+result._id});
     });
