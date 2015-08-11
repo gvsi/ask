@@ -29,10 +29,10 @@ Meteor.publish("notifications", function(userId){
 	return Notifications.find({"userId": userId});
 });
 
-Meteor.startup(function () {
-  UploadServer.init({
-    tmpDir: process.env.PWD + '/.uploads/tmp',
-    uploadDir: process.env.PWD + '/.uploads/feedback',
-    checkCreateDirectories: true
-  })
-});
+// Meteor.startup(function () {
+//   UploadServer.init({
+//     tmpDir: process.env.PWD + '/.uploads/tmp',
+//     uploadDir: process.env.PWD + '/.uploads/feedback',
+//     checkCreateDirectories: true
+//   })
+// });
