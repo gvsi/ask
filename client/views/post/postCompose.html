@@ -1,5 +1,6 @@
 <template name="postCompose">
   {{>postList posts=posts courseId=courseId}}
+  <div class="compose-container">
   <form id="form-compose" role="form" autocomplete="off">
    <!-- START COMPOSE POST -->
    <div class="post-composer container-fluid">
@@ -44,10 +45,17 @@
            <label for="anonymous" class="hint-text">Post as anonymous</label>
          </div>
          {{/unless}}
-         <button type="submit" id="composeSubmitBtn" data-type-form="{{#if isEditingPost}}postUpdate{{else}}postInsert{{/if}}" class="btn btn-complete btn-cons m-l-10">{{#if isEditingPost}}Update{{else}}Ask{{/if}}</button>
+         {{#if isEditingPost}}
+           <button type="submit" id="composeSubmitBtn" data-type-form="postUpdate" class="btn btn-complete btn-cons m-l-10">Update</button>
+           <button id="cancelUpdateBtn" class="btn btn-default btn-cons m-l-10">Cancel</button>
+         {{else}}
+           <button type="submit" id="composeSubmitBtn" data-type-form="postInsert" class="btn btn-complete btn-cons m-l-10">Ask</button>
+         {{/if}}
+
        </div>
      </div>
    </div>
  </form>
+ </div>
  <!-- END COMPOSE POST -->
 </template>

@@ -1,13 +1,13 @@
 /*
 * syntaxhighlighter TinyMCE plugin
 * Released under LGPL License.
-* 
+*
 * by Robin Calmejane
 * http://nomadonweb.com
-* 
+*
 * Plugin page :
 * http://lab.nomadonweb/sh4tinymce
-* 
+*
 */
 tinymce.PluginManager.requireLangPack('sh4tinymce');
 tinymce.PluginManager.add('sh4tinymce', function(editor,url) {
@@ -15,7 +15,7 @@ tinymce.PluginManager.add('sh4tinymce', function(editor,url) {
 		/* Var declaration */
 		var win, dom = editor.dom, selection = editor.selection, data = {}, Elmt;
 		var shDefault = {}, defaultLanguage = 'html', selected = false, selectedCode, selectionNode = selection.getNode(), settings;
-		
+
 		/* Set default settings for SH and plugin */
 		/***** DON'T CHANGE DEFAULTS *****/
 		/* shDefault : Default SyntaxHighlighter settings */
@@ -27,7 +27,7 @@ tinymce.PluginManager.add('sh4tinymce', function(editor,url) {
 		shDefault.htmlscript	= false;
 		shDefault.tabsize		= '4';
 		shDefault.toolbar		= true;
-		
+
 		/* data : plugin settings */
 		data.language 		= '';
 		data.autolinks		= shDefault.autolinks;
@@ -39,7 +39,7 @@ tinymce.PluginManager.add('sh4tinymce', function(editor,url) {
 		data.tabsize		= shDefault.tabsize;
 		data.toolbar		= shDefault.toolbar;
 		/* End default settings */
-		
+
 		// List languages
 		var languageItems = [
 				{text: 'Language',		value: ''},
@@ -68,7 +68,7 @@ tinymce.PluginManager.add('sh4tinymce', function(editor,url) {
 				{text: 'Visual Basic',	value: 'vb'},
 				{text: 'XML',			value: 'xml'}
 		];
-		
+
 		// Get settings of SH existing code
 		function getSHSettings(settings) {
 			var s = settings.split(';');
@@ -89,7 +89,7 @@ tinymce.PluginManager.add('sh4tinymce', function(editor,url) {
 				}
 			});
 		}
-		
+
 		// Check code/text selection in tinyMCE editor
 		if(selectionNode.nodeName.toLowerCase() == 'pre'
 			&& selectionNode.className.indexOf('brush:') != -1) {
@@ -107,18 +107,18 @@ tinymce.PluginManager.add('sh4tinymce', function(editor,url) {
 			data.autolinks = false;
 			data.toolbar = false;
 		}
-		
+
 		// Select language item list
 		for(var i=0; i<languageItems.length; i++){
 			if(languageItems[i].value == data.language){
 				languageItems[i].selected = true;
 			}
 		}
-		
+
 		data.code = selectedCode;
 		if (data.code == '&nbsp;')
 			data.code = '';
-		
+
 		function onSubmitFunction(e) {
 			var code = e.data.code;
 			code = code.replace(/\</g,"&lt;").replace(/\>/g,"&gt;");
@@ -134,18 +134,18 @@ tinymce.PluginManager.add('sh4tinymce', function(editor,url) {
 				hlend=e.data.highlight.indexOf(",")!=-1?"]":"";
 			var highlight	= e.data.highlight.replace(/ /g,"").replace(/\[/g,"").replace(/\]/g,"") != shDefault.highlight ? ';highlight:' + hlstart + e.data.highlight.replace(/ /g,"").replace(/\[/g,"").replace(/\]/g,"").replace(/,$/g,"") + hlend : '';
 			var tabsize		= e.data.tabsize != shDefault.tabsize ? ';tab-size:' + e.data.tabsize : '';
-			
+
 			// Create SH element with string settings
 			Elmt = editor.dom.create('pre',
-						{class: language, style: 'display: block; padding: .769em; margin: 0 0 .769em; font-size: .929em; line-height: 1.428571429; color: #333333; word-break: break-all; word-wrap: break-word; background-color: #f5f5f5; border: 1px solid #cccccc; border-radius: .286em;'  },
+						{class: language, style: 'display: block; padding: .769em; margin: 0 0 .769em; font-size: .929em; line-height: 1.428571429; color: #333333; word-break: break-all; word-wrap: break-word; background-color: #f8f8f8; border: 1px solid #cccccc; border-radius: .286em;'  },
 						 code);
-			
+
 			if(selected)
 				editor.dom.replace(Elmt, selectionNode);
 			else
 				editor.insertContent(editor.dom.getOuterHTML(Elmt)+'<br>');
 		}
-		
+
 		win = editor.windowManager.open({
 			title: 'SH4TinyMCE - Code Editor',
 			data: data,

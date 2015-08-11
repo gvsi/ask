@@ -100,6 +100,10 @@ Template.postCompose.events({
       Router.go('room', {courseId: Router.current().params.courseId}, {query: "p="+result._id});
     });
   },
+  'click #cancelUpdateBtn': function(e) {
+    e.preventDefault();
+    Router.go('room', {courseId: Router.current().params.courseId}, {query: "p="+Router.current().params.query.p});
+  },
   'click .item': function(e) {
     var postId = $(e.currentTarget).attr('data-post-id');
     Router.go('room', {courseId: Router.current().params.courseId}, {query: 'p='+postId});

@@ -14,7 +14,8 @@ Answers = new Mongo.Collection('answers', {
 
 Meteor.methods({
   answerInsert: function(answerAttributes) {
-    answerAttributes.body = UniHTML.purify(answerAttributes.body);
+    //UniHTML.addNewAllowedTag("code", false);
+    //answerAttributes.body = UniHTML.purify(answerAttributes.body);
 
     check(answerAttributes, {
       postId: String,
@@ -105,7 +106,12 @@ Meteor.methods({
     return answer._id;
   },
   answerUpdate: function(answerAttributes) {
-    answerAttributes.body = UniHTML.purify(answerAttributes.body);
+    //answerAttributes.body = UniHTML.purify(answerAttributes.body);
+
+    var user = Meteor.user();
+
+    if (!user)
+    throw new Meteor.Error('invalid-user', 'You must be logged in to edit an answer');
 
     check(answerAttributes, {
       answerId: String,
@@ -118,7 +124,7 @@ Meteor.methods({
     //check existance of post to update
     if (answer) {
       // set identiconHash
-      var identiconHash = answerAttributes.isAnonymous ? answerAttributes.postId + answer.userId : answer.userId;
+      var identiconHash = answerAttributes.isAnonymous ? answerAttributes.postId + user._id : user._id;
       var now = new Date();
       Answers.update(
         {_id: answerAttributes.answerId},
@@ -148,7 +154,7 @@ Meteor.methods({
     return answerAttributes.answerId;
   },
   commentInsert: function(commentAttributes) {
-    commentAttributes.body = UniHTML.purify(commentAttributes.body);
+    //commentAttributes.body = UniHTML.purify(commentAttributes.body);
 
     check(commentAttributes, {
       answerId: String,

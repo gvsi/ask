@@ -5,7 +5,7 @@
   <!-- START OPENED POST -->
   <div class="post-opened">
     {{#if isUserInstructor}}
-       {{>courseSettingsModal courseId=courseId}}
+    {{>courseSettingsModal courseId=courseId}}
     {{/if}}
     <div class="no-post">
 
@@ -22,7 +22,7 @@
       {{/if}}
       <br><br><br>
       {{#if isUserInstructor}}
-         <button class="btn btn-green btn-lg" data-target="#courseSettingsModal" data-toggle="modal">Course Settings</button>
+      <button class="btn btn-green btn-lg" data-target="#courseSettingsModal" data-toggle="modal">Course Settings</button>
       {{/if}}
     </div>
 
@@ -35,20 +35,20 @@
 <template name="postContent">
 
   <div class="modal fade slide-up disable-scroll" id="modalDeleteAnswer" tabindex="-1" role="dialog" aria-labelledby="modalSlideUpLabel" aria-hidden="false">
-      <div class="modal-dialog " style="width:418px">
-          <div class="modal-content-wrapper">
-          <div class="modal-content">
-              <div class="modal-header clearfix text-left">
-                  <h5>Are you sure you want to delete this answer?</h5>
-              </div>
-              <div class="modal-footer" style="margin-top: 16px;text-align: center;">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" id="deleteAnswer" class="btn btn-danger">Delete</button>
-              </div>
+    <div class="modal-dialog " style="width:418px">
+      <div class="modal-content-wrapper">
+        <div class="modal-content">
+          <div class="modal-header clearfix text-left">
+            <h5>Are you sure you want to delete this answer?</h5>
           </div>
+          <div class="modal-footer" style="margin-top: 16px;text-align: center;">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" id="deleteAnswer" class="btn btn-danger">Delete</button>
           </div>
-          <!-- /.modal-content -->
+        </div>
       </div>
+      <!-- /.modal-content -->
+    </div>
   </div>
 
   <div class="post-content-wrapper" style="display:none">
@@ -70,16 +70,16 @@
           <div class="sender inline m-l-10">
             <p class="name no-margin">
               {{#if post.isAnonymous}}
-                <span class="bold">Anonymous</span>
+              <span class="bold">Anonymous</span>
               {{else}}
-                {{#if post.isInstructorPost}}
-                  <span class="bold">{{post.ownerName}} {{post.ownerSurname}}</span><span class="small hint-text"> - instructor</span>
-                {{else}}
-                  <span class="bold">
-                  {{post.ownerName}}
-                  {{post.ownerSurname}}
-                  </span>
-                {{/if}}
+              {{#if post.isInstructorPost}}
+              <span class="bold">{{post.ownerName}} {{post.ownerSurname}}</span><span class="small hint-text"> - instructor</span>
+              {{else}}
+              <span class="bold">
+                {{post.ownerName}}
+                {{post.ownerSurname}}
+              </span>
+              {{/if}}
               {{/if}}
             </p>
             <p class="datetime no-margin">
@@ -96,27 +96,27 @@
         </div>
 
         <div class="modal fade slide-up disable-scroll" id="modalDeletePost" tabindex="-1" role="dialog" aria-labelledby="modalSlideUpLabel" aria-hidden="false">
-            <div class="modal-dialog " style="width:394px">
-                <div class="modal-content-wrapper">
-                <div class="modal-content">
-                    <div class="modal-header clearfix text-left">
-                        <h5>Are you sure you want to delete this post?</h5>
-                    </div>
-                    <div class="modal-footer" style="margin-top: 16px;text-align: center;">
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                      <button type="button" id="deletePost" class="btn btn-danger">Delete</button>
-                    </div>
+          <div class="modal-dialog " style="width:394px">
+            <div class="modal-content-wrapper">
+              <div class="modal-content">
+                <div class="modal-header clearfix text-left">
+                  <h5>Are you sure you want to delete this post?</h5>
                 </div>
+                <div class="modal-footer" style="margin-top: 16px;text-align: center;">
+                  <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                  <button type="button" id="deletePost" class="btn btn-danger">Delete</button>
                 </div>
-                <!-- /.modal-content -->
+              </div>
             </div>
+            <!-- /.modal-content -->
+          </div>
         </div>
 
         {{else}}
-          <div class="buttons">
-            <button class="btn {{ upvoteButton }} btn-lg btn-rounded upvote" ><i class="fa fa-thumbs-up"></i><span class="m-l-10">{{post.upvoters.length}}</span></button>
-            <button class="btn {{ followButton }} btn-lg btn-rounded" id="followQuestion" >Follow</button>
-          </div>
+        <div class="buttons">
+          <button class="btn {{ upvoteButton }} btn-lg btn-rounded upvote" ><i class="fa fa-thumbs-up"></i><span class="m-l-10">{{post.upvoters.length}}</span></button>
+          <button class="btn {{ followButton }} btn-lg btn-rounded" id="followQuestion" >Follow</button>
+        </div>
         {{/if}}
         <div class="clearfix"></div>
       </div>
@@ -128,17 +128,17 @@
       <div class="clearfix"></div>
       <div class="post-content-body m-t-10">
         {{#mathjax}}
-          {{#autolink}}
-          {{{post.text}}}
-          {{/autolink}}
+        {{#autolink}}
+        {{{post.text}}}
+        {{/autolink}}
         {{/mathjax}}
       </div>
 
       <div class="q-footer" style="margin: 15px 0 -5px 0px;">
-       {{#each tags}}
-         <button class="btn btn-tag  btn-tag-light m-r-5">{{this}}</button>
-       {{/each}}
-     </div>
+        {{#each tags}}
+        <button class="btn btn-tag  btn-tag-light m-r-5">{{this}}</button>
+        {{/each}}
+      </div>
 
       {{>latexModal}}
 
@@ -181,55 +181,55 @@
       </div>
       <div class="nameLabel">
         {{#if isInstructor}}
-          <span class="bold">{{theAuthor.profile.name}} {{theAuthor.profile.surname}}</span><span class="small hint-text"> - instructor</span>
+        <span class="bold">{{theAuthor.profile.name}} {{theAuthor.profile.surname}}</span><span class="small hint-text"> - instructor</span>
         {{else}}
-          <span class="bold">
+        <span class="bold">
           {{#if isAnonymous}}
-            Anonymous
+          Anonymous
           {{else}}
-            {{theAuthor.profile.name}}
-            {{theAuthor.profile.surname}}
+          {{theAuthor.profile.name}}
+          {{theAuthor.profile.surname}}
           {{/if}}
-          </span>
+        </span>
         {{/if}}
       </div>
       <div class="datetime timeLabel">
         {{#if currentUserIsOwner}}
-            <button data-answer-id="{{_id}}" class="editAnswerBtn btn btn-default btn-rounded btn-xs edit"><i class="fa fa-pencil"></i></button>
-            <button class="btn btn-default btn-rounded btn-xs m-r-10 delete" id="openDeleteAnswerModal" data-id="{{_id}}" data-target="#modalDeleteAnswer" data-toggle="modal" ><i class="fa fa-trash-o"></i></button>
+        <button class="editAnswerBtn btn btn-default btn-rounded btn-xs edit" data-answer-id="{{_id}}"><i class="fa fa-pencil"></i></button>
+        <button class="btn btn-default btn-rounded btn-xs m-r-10 delete" id="openDeleteAnswerModal" data-id="{{_id}}" data-target="#modalDeleteAnswer" data-toggle="modal" ><i class="fa fa-trash-o"></i></button>
         {{/if}}
         {{dateFromNow}}
       </div>
     </div>
-    <div class="votingContainer" data-answer-id="{{this._id}}">
+    <div class="votingContainer" data-answer-id="{{_id}}">
       <button class="btn btn-sm btn-rounded {{upvote}}" id="upvoteAnswer" {{disabledVoteForOwner}}><i class="fa fa-angle-up"></i></button>
       <div id="answerVoteCount">{{voteCount }}</div>
       <button class="btn btn-sm btn-rounded {{downvote}}"  id="downvoteAnswer" {{disabledVoteForOwner}}><i class="fa fa-angle-down"></i></button>
       {{#if isInstructorUpvoted}}
-        <div class="check text-success"><i class="fa fa-check-circle" data-toggle="tooltip" data-placement="left" data-html="true" title="An instructor<br>upvoted<br>this answer"></i></div>
+      <div class="check text-success"><i class="fa fa-check-circle" data-toggle="tooltip" data-placement="left" data-html="true" title="An instructor<br>upvoted<br>this answer"></i></div>
       {{/if}}
     </div>
     <div class="answerBodyContainer">
-      <div id="body-{{_id}}">
+      <div class="answerBody" data-answer-id="{{_id}}">
         {{#mathjax}}
         {{#autolink}}
         {{{body}}}
         {{/autolink}}
         {{/mathjax}}
       </div>
-      <div class="summernote-wrapper" data-answer-id="{{_id}}" hidden>
+      <div class="editAnswerTinyMCE-wrapper" data-answer-id="{{_id}}" hidden>
         <label class="error"></label>
-        <p><div id="summernote-edit-{{_id}}">
-        {{{body}}}
-        </div></p>
-        {{#unless isUserInstructor}}
-        <div class="checkbox inline m-l-20">
-          <input type="checkbox" value="1" id="isAnswerAnonymous-edit-{{_id}}" {{isAnonymousChecked}}>
-          <label for="isAnswerAnonymous-edit-{{_id}}" class="hint-text">Post as anonymous</label>
+        <textarea id="editAnswerTinyMCE-{{_id}}" name="content">{{{body}}}</textarea>
+        <div class="m-t-20">
+          {{#unless isUserInstructor}}
+          <div class="checkbox inline m-l-20">
+            <input type="checkbox" value="1" id="isAnswerAnonymous-edit-{{_id}}" {{isAnonymousChecked}}>
+            <label for="isAnswerAnonymous-edit-{{_id}}" class="hint-text">Post as anonymous</label>
+          </div>
+          {{/unless}}
+          <button type="submit" data-answer-id="{{_id}}" class="updateAnswerBtn btn btn-complete btn-cons m-l-10">Update</button>
+          <button type="submit" data-answer-id="{{_id}}" class="cancelUpdateBtn btn btn-default btn-cons m-l-10">Cancel</button>
         </div>
-        {{/unless}}
-        <button type="submit" data-answer-id="{{_id}}" class="updateAnswerBtn btn btn-complete btn-cons m-l-10">Update</button>
-        <button type="submit" data-answer-id="{{_id}}" class="cancelUpdateBtn btn btn-default btn-cons m-l-10">Cancel</button>
       </div>
     </div>
     <div class="comments">
@@ -247,16 +247,18 @@
       </div>
       {{/each}}
       <button id="addCommentBtn" class="btn btn-default btn-xs m-t-10 pull-right">Add a comment</button>
-      <div class="answerTinyMCE-wrapper pull-right m-t-10" data-answer-id="{{_id}}" style="width:100%" hidden>
+      <div class="commentTinyMCE-wrapper pull-right m-t-10" data-answer-id="{{_id}}" style="width:100%" hidden>
         <label class="error"></label>
-        <textarea id="answerTinyMCE-{{_id}}" name="content"></textarea>
-        {{#unless isUserInstructor}}
-        <div class="checkbox inline m-l-20">
-          <input type="checkbox" value="1" id="isCommentAnon-{{_id}}">
-          <label for="isCommentAnon-{{_id}}" class="hint-text">Post as anonymous</label>
+        <textarea id="commentTinyMCE-{{_id}}" name="content"></textarea>
+        <div class="m-t-20">
+          {{#unless isUserInstructor}}
+          <div class="checkbox inline m-l-20">
+            <input type="checkbox" value="1" id="isCommentAnon-{{_id}}">
+            <label for="isCommentAnon-{{_id}}" class="hint-text">Post as anonymous</label>
+          </div>
+          {{/unless}}
+          <button type="submit" id="sendCommentBtn" data-answer-id="{{_id}}" class="btn btn-complete btn-sm m-l-10">Comment</button>
         </div>
-        {{/unless}}
-        <button type="submit" id="sendCommentBtn" data-answer-id="{{_id}}" class="btn btn-complete btn-sm m-l-10">Comment</button>
       </div>
     </div>
 
@@ -344,7 +346,7 @@
               </div>
             </div>
             {{else}}
-              {{loadCustomTags}}
+            {{loadCustomTags}}
             {{/if}}
 
             <div class="form-group form-group-default m-t-20" id="customTagsForCourse" hidden>
