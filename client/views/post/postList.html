@@ -2,13 +2,21 @@
   <div class="post-list b-r b-grey">
     {{#if courseId}}
 
-      <a href="{{pathFor 'compose' courseId=courseId }}" >
+      <!-- <a href="{{pathFor 'compose' courseId=courseId }}" >
         <button id="newQuestion" class="btn btn-sm btn-rounded">New question</button>
-      </a>
+      </a> -->
+
       {{#if isUserInstructor}}
-      <a class="course-settings" data-target="#courseSettingsModal" data-toggle="modal">
-        <i class="fa fa-cog"></i>
-      </a>
+          <a href="{{pathFor 'compose' courseId=courseId }}" style="opacity: 1;" class="course-settings">
+            <span id="newQuestion"><i class="fa fa-pencil-square-o" style="margin-right: 3px;"></i> New Question </span>
+          </a>
+          <a class="course-settings" id="cogsModal" data-target="#courseSettingsModal" data-toggle="modal">
+            <i class="fa fa-cog"></i>
+          </a>
+      {{else}}
+          <a href="{{pathFor 'compose' courseId=courseId }}" style="opacity: 1;" class="course-settings">
+            <span id="newQuestion" style="right: -11px;"><i class="fa fa-pencil-square-o" style="margin-right: 3px;"></i> New Question </span>
+          </a>
       {{/if}}
     {{/if}}
     <div id="postList">
@@ -59,8 +67,12 @@
     </div>
     <div class="datetime">{{dateFromNow}}</div>
     <div class="badge-wrapper">
-      {{#if badges.hasInstructorAnswer}}<div class="badge-icon answeredInstructor" data-toggle="tooltip" data-placement="left" data-html="true" title="Instructor Answer"> AI </div>{{/if}}
-      {{#if badges.hasStudentAnswer}}<div class="badge-icon answered" data-toggle="tooltip" data-placement="left" data-html="true" title="Student Answer"> A </div>{{/if}}
+      {{#if badges.isInstructorPost}}
+          <div class="badge-icon instructorPost" data-toggle="tooltip" data-placement="left" data-html="true" title="Instructor Note"> N </div>
+      {{else}}
+        {{#if badges.hasInstructorAnswer}}<div class="badge-icon answeredInstructor" data-toggle="tooltip" data-placement="left" data-html="true" title="Instructor Answer"> AI </div>{{/if}}
+        {{#if badges.hasStudentAnswer}}<div class="badge-icon answered" data-toggle="tooltip" data-placement="left" data-html="true" title="Student Answer"> A </div>{{/if}}
+      {{/if}}
     </div>
     <div class="clearfix"></div>
   </li>

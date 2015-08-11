@@ -42,7 +42,11 @@ Template.postPage.rendered = function () {
   var elems = Array.prototype.slice.call(document.querySelectorAll('.switchery'));
   // Success color: #10CFBD
   elems.forEach(function(html) {
-    var switchery = new Switchery(html, {color: '#10CFBD'});
+    if(html.id == "lectureMode"){
+      var switchery = new Switchery(html, {disabled: true});
+    }else{
+      var switchery = new Switchery(html, {color: '#10CFBD'});
+    }
   });
 
   $('.custom-tag-input').tagsinput({});

@@ -131,12 +131,30 @@
             opacity: .34;
             z-index: 101;
         }
+
+        #cogsModal{
+          height: 29px;
+          top: 0px;
+          padding-top: 5.3px;
+          width: 35px;
+          padding-left: 12px;
+          right: 0px;
+        }
         #newQuestion{
+          top: -4.4px;
+          padding-top: 7px;
+          width: 120px;
+          padding-left: 12px;
+          height: 29px;
+          font-size: 12px;
+          right: 24px;
           position: absolute;
-          padding: 2.5px 40px 2.5px 40px;
-          right: 35px;
-          top: 1px;
-          z-index: 101;
+          border-right: 1px solid #e6e6e6;
+          border-left: 1px solid #e6e6e6;
+
+          &:hover{
+            background-color: #e3e3e3;
+          }
         }
 
         .list-view-fake-header, .list-view-group-header{
@@ -214,14 +232,20 @@
               }
 
               .answered{
+                color: @color-complete;
+                border-color: @color-complete;
+              }
+
+              .answeredInstructor{
                 color: hsl(147, 60%, 53%);
                 border-color: hsl(147, 60%, 53%);
               }
 
-              .answeredInstructor{
+              .instructorPost{
                 color: hsl(66, 60%, 53%);
                 border-color: hsl(66, 60%, 53%);
               }
+
             }
 
             .recipients {
