@@ -14,7 +14,8 @@ Answers = new Mongo.Collection('answers', {
 
 Meteor.methods({
   answerInsert: function(answerAttributes) {
-    answerAttributes.body = UniHTML.purify(answerAttributes.body);
+    //UniHTML.addNewAllowedTag("code", false);
+    //answerAttributes.body = UniHTML.purify(answerAttributes.body);
 
     check(answerAttributes, {
       postId: String,

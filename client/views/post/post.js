@@ -356,7 +356,7 @@ Template.postContent.helpers({
         postId: Router.current().params.query.p,
         isAnonymous: $('#isAnswerAnonymous').is(':checked')
       };
-
+      console.log(body);
       if (strip_tags(body) == "") {
         var errors = {};
         errors.answerBody = "I know you're trying to be helpful, but an empty answer won't do much...";
@@ -634,7 +634,6 @@ Template.postContent.helpers({
       }
     }
     );
-
   }
 
   function initialiseSummernote(selector) {
