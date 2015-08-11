@@ -19,6 +19,10 @@ Template.postPage.rendered = function () {
   if (Router.current().params.query.p) {
     var postId = Router.current().params.query.p;
     Session.set("postId", postId);
+    $('.item').removeClass('active');
+    $("li[data-post-id="+ postId +"]").addClass('active');
+
+    $('.list-view-wrapper').scrollTop($("li[data-post-id="+ postId +"]").offset().top-92);
     loadPage(postId);
   }
 
