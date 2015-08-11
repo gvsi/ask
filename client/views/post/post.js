@@ -6,9 +6,7 @@ Template.postPage.rendered = function () {
   }
 
   EasySearch.changeProperty('courseSearch', 'courseId', Router.current().params.courseId);
-
-  loadMathQuill();
-
+  mathquill();
 
   if ($(window).width() < 980) {
     $('.post-list').attr('id', 'slide-left');
@@ -377,7 +375,6 @@ Template.postContent.helpers({
           throw new Meteor.Error(error.reason);
         } else {
           tinyMCE.get('answerTinyMCE').setContent("");
-          //$('#summernote').code("<p><br></p>");
         }
       });
     },
@@ -500,7 +497,6 @@ Template.postContent.helpers({
   Template.answer.events({
     'click #addCommentBtn': function(e) {
       $(".commentTinyMCE-wrapper[data-answer-id="+this._id+"]").toggle();
-      //$("#summernote-wrapper-"+this._id).toggle();
       loadTinyMCE("commentTinyMCE-"+this._id, 150);
       tinymce.execCommand('mceFocus',false,"commentTinyMCE-"+this._id);
     },
@@ -633,77 +629,6 @@ Template.postContent.helpers({
     );
   }
 
-  function initialiseSummernote(selector) {
-    $(selector).destroy();
-    $(selector).summernote({
-      height: 150,
-      onfocus: function(e) {
-        //$('body').addClass('overlay-disabled');
-      },
-      onblur: function(e) {
-        //$('body').removeClass('overlay-disabled');
-      },
-      onpaste: function(e) {
-        var bufferText = (e.originalEvent.clipboardData).getData('Text');
-        e.preventDefault();
-        document.execCommand('insertText', false, bufferText);
-      },
-      toolbar: [
-        ['misc', ['hello', 'undo','redo','fullscreen']],
-        ['style', ['bold', 'italic', 'underline']],
-        ['insert', ['picture', 'link']],
-        ['para', ['ul', 'ol', 'paragraph']]
-      ],
-      oninit: function() {
-        // Add "open" - "save" buttons
-        $(selector).parent().find('.note-file .latexToolbarBtn').remove()
-
-        var noteBtn = '<button type="button" class="btn btn-default btn-sm btn-small latexToolbarBtn" title="LaTeX Equation Editor" data-event="something" tabindex="-1"><span style="font-size:1.3em">&#931;</span></button>';
-
-        var fileGroup = '<div class="note-file btn-group">' + noteBtn + '</div>';
-
-        var sel;
-        var cursorPos;
-        var oldContent;
-
-        $(fileGroup).appendTo($(selector).parent().find(".note-toolbar"));
-        // Button tooltips
-        $('.latexToolbarBtn').tooltip({container: 'body', placement: 'bottom'});
-        // Button events
-        $('.latexToolbarBtn').click(function(event) {
-          $('#insertLatexBtn').attr('data-current-selector', "#" + $(event.currentTarget.parentNode.parentNode.parentNode.previousSibling).attr('id'));
-          sel = window.getSelection();
-          if (sel.anchorNode) {
-            cursorPos = sel.anchorOffset;
-            oldContent = sel.anchorNode.nodeValue;
-          }
-          $('#latexEditorModal').modal('show');
-        });
-        $('#insertLatexBtn').click(function(event) {
-          $('#latexEditorModal').modal('hide');
-
-          if (selector == $('#insertLatexBtn').attr("data-current-selector")) {
-            console.log('true' + selector);
-            console.log(oldContent);
-            console.log(cursorPos);
-            $(selector).summernote({focus:true});
-
-            setTimeout(function(){
-              var toInsert = "$"+$('#latex-source').val()+"$";
-              if (!oldContent) {
-                $(selector).code("<p>"+toInsert+"</p>")
-              } else {
-                var newContent = oldContent.substring(0, cursorPos) + toInsert + oldContent.substring(cursorPos);
-                sel.anchorNode.nodeValue = newContent;
-              }
-            }, 500);
-          } else {
-            console.log('false' + selector);
-          }
-        });
-      }
-    });
-  }
   //removes all tags and whitespaces (&nbsp;)
   function strip_tags(input, allowed) {
     allowed = (((allowed || '') + '')
@@ -716,53 +641,6 @@ Template.postContent.helpers({
     .replace(tags, function($0, $1) {
       return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
     }).replace(/&nbsp;/gi,'').replace(/\s+/g, ''); // removes spaces and &nbsp;
-  }
-
-  function loadMathQuill() {
-    mathquill();
-    var LatexImages = false;
-    function printTree(html)
-    {
-      html = html.match(/<[a-z]+|<\/[a-z]+>|./ig);
-      if(!html) return '';
-      var indent = '\n', tree = '';
-      while(html.length)
-      {
-        var token = html.shift();
-        if(token.charAt(0) === '<')
-        {
-          if(token.charAt(1) === '/')
-          {
-            indent = indent.slice(0,-2);
-            if(html[0] && html[0].slice(0,2) === '</')
-            token += indent.slice(0,-2);
-          }
-          else
-          {
-            tree += indent;
-            indent += '  ';
-          }
-          token = token.toLowerCase();
-        }
-
-        tree += token;
-      }
-      return tree.slice(1);
-    }
-    var editingSource = false, latexSource = $('#latex-source'), htmlSource = $('#html-source'), codecogs = $('#codecogs'), latexMath = $('.mathquill-editor').bind('keydown keypress', function()
-    {
-      setTimeout(function() {
-        htmlSource.text(printTree(latexMath.mathquill('html')));
-        var latex = latexMath.mathquill('latex');
-        if(!editingSource)
-        latexSource.val(latex);
-        if(!LatexImages)
-        return;
-        latex = encodeURIComponent(latexSource.val());
-        //            location.hash = '#'+latex; //extremely performance-crippling in Chrome for some reason
-        codecogs.attr('src','http://latex.codecogs.com/gif.latex?'+latex).parent().attr('href','http://latex.codecogs.com/gif.latex?'+latex);
-      });
-    }).keydown().focus();
   }
 
   // Special collection for holding the temporarily sorted answers
@@ -812,9 +690,7 @@ Template.postContent.helpers({
   });
 
   loadTinyMCE = function(selector, height) {
-  console.log(selector);
     tinymce.EditorManager.execCommand('mceRemoveEditor',true, selector);
-    //$("#summernote-wrapper").append('<textarea id="tinymceTextArea" name="content"></textarea>');
     tinymce.init({
       selector: "#" + selector,
       plugins: "link , image, sh4tinymce, equationeditor",
