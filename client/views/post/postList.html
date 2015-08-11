@@ -2,13 +2,21 @@
   <div class="post-list b-r b-grey">
     {{#if courseId}}
 
-      <a href="{{pathFor 'compose' courseId=courseId }}" >
+      <!-- <a href="{{pathFor 'compose' courseId=courseId }}" >
         <button id="newQuestion" class="btn btn-sm btn-rounded">New question</button>
-      </a>
+      </a> -->
+
       {{#if isUserInstructor}}
-      <a class="course-settings" data-target="#courseSettingsModal" data-toggle="modal">
-        <i class="fa fa-cog"></i>
-      </a>
+          <a href="{{pathFor 'compose' courseId=courseId }}" style="opacity: 1;" class="course-settings">
+            <span id="newQuestion"><i class="fa fa-pencil-square-o" style="margin-right: 3px;"></i> New Question </span>
+          </a>
+          <a class="course-settings" id="cogsModal" data-target="#courseSettingsModal" data-toggle="modal">
+            <i class="fa fa-cog"></i>
+          </a>
+      {{else}}
+          <a href="{{pathFor 'compose' courseId=courseId }}" style="opacity: 1;" class="course-settings">
+            <span id="newQuestion" style="right: -11px;"><i class="fa fa-pencil-square-o" style="margin-right: 3px;"></i> New Question </span>
+          </a>
       {{/if}}
     {{/if}}
     <div id="postList">
