@@ -9,6 +9,7 @@ Template.postPage.rendered = function () {
 
   loadMathQuill();
 
+
   if ($(window).width() < 980) {
     $('.post-list').attr('id', 'slide-left');
   } else {
@@ -602,30 +603,38 @@ Template.postContent.helpers({
   function loadPage(postId) {
     Session.set('answerSubmitErrors', {});
 
-    Meteor.subscribe('singlePost', postId);
+    Meteor.subscribe('singlePost', postId, {
+      onReady: function() {
+        var postOpened = $('.post-opened');
 
-    var post = Posts.findOne(postId);
-    var post = null;
+        $('.no-post').hide();
+        $('.post-content-wrapper').show();
 
-    var postOpened = $('.post-opened');
+        loadTinyMCE("answerTinyMCE", 150);
 
-    $('.no-post').hide();
-    $('.post-content-wrapper').show();
+        $(".post-content-wrapper").scrollTop(0);
 
-    loadTinyMCE("answerTinyMCE", 150);
+        // Initialize post action menu
+        $('.menuclipper').menuclipper({
+          bufferWidth: 20
+        });
 
-    $(".post-content-wrapper").scrollTop(0);
+        $('#slide-left').addClass('slideLeft');
 
-    // Initialize post action menu
-    $('.menuclipper').menuclipper({
-      bufferWidth: 20
-    });
+        setTimeout(function(){
+          $('[data-toggle="tooltip"]').tooltip();
+        }, 1000);
 
-    $('#slide-left').addClass('slideLeft');
+        setTimeout(function () {
+          console.log("init highlight");
+          $('pre code').each(function(i, block) {
+            hljs.highlightBlock(block);
+          });
+        }, 100);
+      }
+    }
+    );
 
-    setTimeout(function(){
-      $('[data-toggle="tooltip"]').tooltip();
-    }, 1000);
   }
 
   function initialiseSummernote(selector) {
