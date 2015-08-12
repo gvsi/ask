@@ -38,7 +38,6 @@ Template.postPage.rendered = function () {
   });
 
   var elems = Array.prototype.slice.call(document.querySelectorAll('.switchery'));
-  // Success color: #10CFBD
   elems.forEach(function(html) {
     if(html.id == "lectureMode"){
       var switchery = new Switchery(html, {disabled: true});
@@ -376,6 +375,17 @@ Template.postContent.helpers({
           throw new Meteor.Error(error.reason);
         } else {
           tinyMCE.get('answerTinyMCE').setContent("");
+          setTimeout(function () {
+
+            //highlights syntax in answer
+            $('#' + answerId + ' pre code').each(function(i, block) {
+              hljs.highlightBlock(block);
+            });
+
+            // puts badges in the postList
+            $(".list-view-wrapper [data-toggle=\"tooltip\"]").tooltip();
+          }, 100);
+
         }
       });
     },
@@ -495,7 +505,7 @@ Template.postContent.helpers({
     },
     createTooltip: function() {
       setTimeout(function(){
-         $('[data-toggle="tooltip"]').tooltip();
+        $('[data-toggle="tooltip"]').tooltip();
       }, 200);
     }
   });
@@ -626,80 +636,80 @@ Template.postContent.helpers({
         }, 100);
       }
     }
-    );
-  }
+  );
+}
 
-  //removes all tags and whitespaces (&nbsp;)
-  function strip_tags(input, allowed) {
-    allowed = (((allowed || '') + '')
-    .toLowerCase()
-    .match(/<[a-z][a-z0-9]*>/g) || [])
-    .join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
-    var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
-    commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
-    return input.replace(commentsAndPhpTags, '')
-    .replace(tags, function($0, $1) {
-      return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
-    }).replace(/&nbsp;/gi,'').replace(/\s+/g, ''); // removes spaces and &nbsp;
-  }
+//removes all tags and whitespaces (&nbsp;)
+function strip_tags(input, allowed) {
+  allowed = (((allowed || '') + '')
+  .toLowerCase()
+  .match(/<[a-z][a-z0-9]*>/g) || [])
+  .join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
+  var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
+  commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+  return input.replace(commentsAndPhpTags, '')
+  .replace(tags, function($0, $1) {
+    return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+  }).replace(/&nbsp;/gi,'').replace(/\s+/g, ''); // removes spaces and &nbsp;
+}
 
-  // Special collection for holding the temporarily sorted answers
-  tempAnswers = new Meteor.Collection(null);
+// Special collection for holding the temporarily sorted answers
+tempAnswers = new Meteor.Collection(null);
 
-  // rebuild the sorted results collection, on each page
-  Deps.autorun(function(){
-    var postId = Session.get("postId");
-    //console.log(postId);
-    if (postId) {
-      Meteor.subscribe('answers', postId, {
-        onReady: function() {
-          tempAnswers.remove({});
-          // observe is automatically torn down when computation is invalidated
-          // add each of the items with an enforced rank
+// rebuild the sorted results collection, on each page
+Deps.autorun(function(){
+  var postId = Session.get("postId");
+  //console.log(postId);
+  if (postId) {
+    Meteor.subscribe('answers', postId, {
+      onReady: function() {
+        tempAnswers.remove({});
+        // observe is automatically torn down when computation is invalidated
+        // add each of the items with an enforced rank
 
-          var currentRank = 0;
-          var initial = true;
-          Answers.find({}, {sort: {isInstructor: -1, isInstructorUpvoted: -1, voteCount: -1, createdAt: 1}}).observe({
-            addedAt: function(document, atIndex){
-              if(initial){
-                document.rank = atIndex;
-                currentRank = Math.max(currentRank, atIndex + 1);
-                //console.log("added initial - id: " + document._id + " rank: " + document.rank + " currentRank: " + currentRank + " voteCount: " + document.voteCount);
-                tempAnswers.insert(document)
-              } else {
-                document.rank = currentRank++;
-                if (!tempAnswers.findOne(document._id))
-                tempAnswers.insert(document);
-              }
-            },
-            removed: function(document){
-              //console.log('removed id: ' + document._id);
-              tempAnswers.remove(document._id);
-            },
-            changed: function(document){
-              var id = document._id;
-              delete document._id;
-              tempAnswers.update(id, {$set: document}); // keeps rank field
+        var currentRank = 0;
+        var initial = true;
+        Answers.find({}, {sort: {isInstructor: -1, isInstructorUpvoted: -1, voteCount: -1, createdAt: 1}}).observe({
+          addedAt: function(document, atIndex){
+            if(initial){
+              document.rank = atIndex;
+              currentRank = Math.max(currentRank, atIndex + 1);
+              //console.log("added initial - id: " + document._id + " rank: " + document.rank + " currentRank: " + currentRank + " voteCount: " + document.voteCount);
+              tempAnswers.insert(document)
+            } else {
+              document.rank = currentRank++;
+              if (!tempAnswers.findOne(document._id))
+              tempAnswers.insert(document);
             }
-          });
-          //console.log("initial set to false");
-          initial = false;
-        }
-      });
-    }
-  });
-
-  loadTinyMCE = function(selector, height) {
-    tinymce.EditorManager.execCommand('mceRemoveEditor',true, selector);
-    tinymce.init({
-      selector: "#" + selector,
-      plugins: "link , image, sh4tinymce, equationeditor",
-      min_height: height,
-      content_css: '/tinymce/plugins/equationeditor/mathquill.css',
-      menu: {},
-      menubar: false,
-      toolbar: "undo | redo | bold | italic | underline | alignleft | aligncenter | alignright | alignjustify | link | unlink | image | sh4tinymce | equationeditor |",
-      preview_styles: false,
-      elementpath: false
+          },
+          removed: function(document){
+            //console.log('removed id: ' + document._id);
+            tempAnswers.remove(document._id);
+          },
+          changed: function(document){
+            var id = document._id;
+            delete document._id;
+            tempAnswers.update(id, {$set: document}); // keeps rank field
+          }
+        });
+        //console.log("initial set to false");
+        initial = false;
+      }
     });
   }
+});
+
+loadTinyMCE = function(selector, height) {
+  tinymce.EditorManager.execCommand('mceRemoveEditor',true, selector);
+  tinymce.init({
+    selector: "#" + selector,
+    plugins: "link , image, sh4tinymce, equationeditor",
+    min_height: height,
+    content_css: '/tinymce/plugins/equationeditor/mathquill.css',
+    menu: {},
+    menubar: false,
+    toolbar: "undo | redo | bold | italic | underline | alignleft | aligncenter | alignright | alignjustify | link | unlink | image | sh4tinymce | equationeditor |",
+    preview_styles: false,
+    elementpath: false
+  });
+}
