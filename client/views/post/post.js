@@ -37,8 +37,6 @@ Template.postPage.rendered = function () {
 
   });
 
-  $('[data-toggle="tooltip"]').tooltip();
-
   var elems = Array.prototype.slice.call(document.querySelectorAll('.switchery'));
   // Success color: #10CFBD
   elems.forEach(function(html) {
@@ -362,7 +360,6 @@ Template.postContent.helpers({
         postId: Router.current().params.query.p,
         isAnonymous: $('#isAnswerAnonymous').is(':checked')
       };
-      console.log(body);
       if (strip_tags(body) == "") {
         var errors = {};
         errors.answerBody = "I know you're trying to be helpful, but an empty answer won't do much...";
@@ -495,6 +492,11 @@ Template.postContent.helpers({
           return 'btn-danger';
         }
       }
+    },
+    createTooltip: function() {
+      setTimeout(function(){
+         $('[data-toggle="tooltip"]').tooltip();
+      }, 200);
     }
   });
 
@@ -531,7 +533,6 @@ Template.postContent.helpers({
         } else {
           tinyMCE.get(selector).setContent("");
           $(".commentTinyMCE-wrapper[data-answer-id="+answerId+"]").hide(700);
-          $('[data-toggle="tooltip"]').tooltip();
         }
       });
     },
@@ -618,12 +619,7 @@ Template.postContent.helpers({
 
         $('#slide-left').addClass('slideLeft');
 
-        setTimeout(function(){
-          $('[data-toggle="tooltip"]').tooltip();
-        }, 1000);
-
         setTimeout(function () {
-          console.log("init highlight");
           $('pre code').each(function(i, block) {
             hljs.highlightBlock(block);
           });
