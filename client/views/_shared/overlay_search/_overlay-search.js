@@ -44,10 +44,17 @@ Template.overlaySearch.events({
       $('#overlay-search').keyup();
     }, 100);
   },
-  "click .card a": function() {
+  "click .card-header": function() {
+    var postId = this._id;
+    var courseId = this.courseId;
+    //console.log(this._id);
     $(".overlay").fadeOut("fast").addClass("closed");
-    $(".no-post").hide();
-    $('.post-content-wrapper').show();
+
+    setTimeout(function () {
+      Session.set("postId", postId);
+      loadPage(postId);
+      Router.go('room', {courseId: courseId}, {query: 'p='+postId});
+    }, 300);
   },
   "keyup #overlay-search": _.throttle(function(e) {
     var val = $('#overlay-search').val().trim();

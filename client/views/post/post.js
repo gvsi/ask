@@ -608,7 +608,7 @@ Template.postContent.helpers({
   });
 
 
-  function loadPage(postId) {
+  loadPage = function(postId) {
     Session.set('answerSubmitErrors', {});
 
     Meteor.subscribe('singlePost', postId, {
