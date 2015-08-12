@@ -51,26 +51,25 @@ Meteor.methods({
 
         var postId = Posts.insert(post);
 
-        // if(course.instructors.indexOf(un) != -1){
-        //   var courseStudents = Meteor.users.find({'profile.courses': postAttributes.courseId});
-        //   //console.log(courseStudents);
-        //
-        //   courseStudents.forEach(function(courseUser) {
-        //     if(courseUser._id != Meteor.userId()){
-        //       var notificationAttributes = {
-        //         intend: 'New instructor post: ',
-        //         postTitle: postAttributes.title,
-        //         text: postAttributes.text,
-        //         type: 'info',
-        //         userId: courseUser.id,
-        //         link: '/room/'+ postAttributes.courseId + '?p=' + postId,
-        //         seen: false
-        //       }
-        //
-        //       Meteor.call("addNotification", notificationAttributes);
-        //     }
-        //   });
-        // }
+        if(course.instructors.indexOf(un) != -1){
+          var courseStudents = Meteor.users.find({"profile.courses": postAttributes.courseId});
+
+          courseStudents.forEach(function(courseUser) {
+            if(courseUser._id != user._id){
+              var notificationAttributes = {
+                intend: 'An instructor posted a note: ',
+                postTitle: postAttributes.title,
+                text: postAttributes.text,
+                type: 'info',
+                userId: courseUser._id,
+                link: '/room/'+ postAttributes.courseId + '?p=' + postId,
+                seen: false
+              }
+
+              Meteor.call("addNotification", notificationAttributes);
+            }
+          });
+        }
 
         // set identiconHash
         var identiconHash = postAttributes.isAnonymous ? postId + postAttributes.userId : postAttributes.userId;
