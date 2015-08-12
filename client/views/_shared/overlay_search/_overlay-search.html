@@ -74,14 +74,12 @@
 <template name="resultCard">
   <div class="row">
   <div class="card share share-self col-lg-6 col-md-6" data-social="item">
-    <a href="{{pathFor 'showPost' courseId=courseId postId=_id}}">
     <div class="card-header clearfix">
       <h5>{{{formattedTitle}}}</h5>
       {{#if isDefaultSearch}}
         <h6>posted in <span class="bold"> {{courseName}}</span></h6>
       {{/if}}
     </div>
-    </a>
     <div class="card-description">
       {{{formattedText}}}
     </div>
