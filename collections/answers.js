@@ -184,6 +184,23 @@ Meteor.methods({
       "comments": comment
     }});
 
+    if(answer.userId != user._id){
+      var post = Posts.findOne(answer.postId);
+      var commentBodyWithoutTags = UniHTML.purify(commentAttributes.body, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
+      var answerBodyWithoutTags = UniHTML.purify(answer.body, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
+      var notificationAttributes = {
+        intend: 'New comment to answer: ',
+        postTitle: answerBodyWithoutTags,
+        text: commentBodyWithoutTags,
+        type: 'info',
+        userId: answer.userId,
+        link: '/room/'+ post.courseId + '?p=' + post._id + '#' + answer._id,
+        seen: false
+      }
+
+      Meteor.call("addNotification", notificationAttributes);
+    }
+
     // TODO: now create a notification, informing the user that there's been a answer
 
     return true;
