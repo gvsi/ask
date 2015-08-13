@@ -298,345 +298,402 @@ Template.postContent.helpers({
     }
   },
   answers: function(){
-    // non-reactive answer fetching
-    // return the answers from the sorted collection, based on the forced rank
-    return tempAnswers.find({}, {
-      sort: {rank: 1}});
-    },
-    errorMessage: function(field) {
-      var e = Session.get('answerSubmitErrors');
-      if (e)
-      return Session.get('answerSubmitErrors')[field];
-      else
+    return Answers.find({postId: Router.current().params.query.p}, {sort: {isInstructor: -1, isInstructorUpvoted: -1, voteCount: -1, createdAt: 1}});
+  },
+  errorMessage: function(field) {
+    var e = Session.get('answerSubmitErrors');
+    if (e)
+    return Session.get('answerSubmitErrors')[field];
+    else
+    return false;
+  },
+  upvoteButton: function(){
+    var postId = Router.current().params.query.p;
+    var post = Posts.findOne(postId);
+    if (post) {
+      var voters = post.upvoters;
+      var user = Meteor.user();
+      if (voters && user && voters.indexOf(user._id) != -1) {
+        return 'btn-success';
+      } else {
+        return 'btn-default';
+      }
+    } else {
       return false;
-    },
-    upvoteButton: function(){
-      var postId = Router.current().params.query.p;
-      var post = Posts.findOne(postId);
-      if (post) {
-        var voters = post.upvoters;
-        var user = Meteor.user();
-        if (voters && user && voters.indexOf(user._id) != -1) {
-          return 'btn-success';
-        } else {
-          return 'btn-default';
-        }
-      } else {
-        return false;
-      }
-    },
-    followButton: function(){
-      var postId = Router.current().params.query.p;
-      var post = Posts.findOne(postId);
-      if (post) {
-        var followers = post.followers;
-        var user = Meteor.user();
-        if (followers && user && followers.indexOf(user._id) != -1) {
-          return 'btn-warning';
-        } else {
-          return 'btn-default';
-        }
-      } else {
-        return false;
-      }
-    },
-    tags: function(){
-      var postId = Router.current().params.query.p;
-      var post = Posts.findOne(postId);
-      if (post) {
-        return post.tags;
-      }else{
-        return false;
-      }
     }
-  });
+  },
+  followButton: function(){
+    var postId = Router.current().params.query.p;
+    var post = Posts.findOne(postId);
+    if (post) {
+      var followers = post.followers;
+      var user = Meteor.user();
+      if (followers && user && followers.indexOf(user._id) != -1) {
+        return 'btn-warning';
+      } else {
+        return 'btn-default';
+      }
+    } else {
+      return false;
+    }
+  },
+  tags: function(){
+    var postId = Router.current().params.query.p;
+    var post = Posts.findOne(postId);
+    if (post) {
+      return post.tags;
+    }else{
+      return false;
+    }
+  }
+});
 
-  Template.postContent.events({
-    'click #sendAnswerBtn': function(e) {
-      var body = tinyMCE.get('answerTinyMCE').getContent();
-      var answer = {
-        body: body,
-        postId: Router.current().params.query.p,
-        isAnonymous: $('#isAnswerAnonymous').is(':checked')
-      };
-      if (strip_tags(body) == "") {
-        var errors = {};
-        errors.answerBody = "I know you're trying to be helpful, but an empty answer won't do much...";
+Template.postContent.events({
+  'click #sendAnswerBtn': function(e) {
+    var body = tinyMCE.get('answerTinyMCE').getContent();
+    var answer = {
+      body: body,
+      postId: Router.current().params.query.p,
+      isAnonymous: $('#isAnswerAnonymous').is(':checked')
+    };
+    if (strip_tags(body) == "") {
+      var errors = {};
+      errors.answerBody = "I know you're trying to be helpful, but an empty answer won't do much...";
+      tinyMCE.get('answerTinyMCE').setContent("");
+      tinymce.execCommand('mceFocus',false,'answerTinyMCE');
+      return Session.set('answerSubmitErrors', errors);
+    } else {
+      Session.set('answerSubmitErrors', {});
+    }
+
+    Meteor.call('answerInsert', answer, function(error, answerId) {
+      if (error){
+        Session.set('answerSubmitErrors', {answerBody: error.reason});
+        throw new Meteor.Error(error.reason);
+      } else {
         tinyMCE.get('answerTinyMCE').setContent("");
-        tinymce.execCommand('mceFocus',false,'answerTinyMCE');
-        return Session.set('answerSubmitErrors', errors);
-      } else {
-        Session.set('answerSubmitErrors', {});
-      }
-
-      Meteor.call('answerInsert', answer, function(error, answerId) {
-        if (error){
-          Session.set('answerSubmitErrors', {answerBody: error.reason});
-          throw new Meteor.Error(error.reason);
-        } else {
-          tinyMCE.get('answerTinyMCE').setContent("");
-          setTimeout(function () {
-
-            //highlights syntax in answer
-            $('#' + answerId + ' pre code').each(function(i, block) {
-              hljs.highlightBlock(block);
-            });
-
-            // puts badges in the postList
-            $(".list-view-wrapper [data-toggle=\"tooltip\"]").tooltip();
-          }, 100);
-
-        }
-      });
-    },
-    'click .upvote': function(e) {
-      var id = Router.current().params.query.p;
-      Meteor.call('upvote', id, function(error) {
-        if (error){
-          throw new Meteor.error(error.reason);
-        } else {
-          //$('#' + id).addClass('btn-success').removeClass('btn-default');
-        }
-      });
-    },
-    'click #followQuestion': function(e){
-      var id = Router.current().params.query.p;
-      Meteor.call('followQuestion', id, function(error) {
-        if (error){
-          throw new Meteor.error(error.reason);
-        } else {
-          //$('#' + id).addClass('btn-success').removeClass('btn-default');
-        }
-      });
-    },
-    "click .post-list-toggle": function(event) {
-      $('.post-list').toggleClass('slideLeft');
-    },
-    "click #openDeleteAnswerModal": function(event){
-      Session.set("deleteAnswerId", $(event.currentTarget).data("id"));
-    },
-    "click #deleteAnswer": function(){
-      var id = Session.get("deleteAnswerId");
-      Meteor.call("answerDelete", id, function(error, result){
-        if(error){
-          console.log("error", error);
-        }
-        if(result){
-
-        }
-      });
-
-      $("#modalDeleteAnswer").modal('hide');
-    },
-    "click #deletePost": function(){
-      var id = Router.current().params.query.p;
-      Meteor.call("postDelete", id, function(error, result){
-        if(error){
-          console.log("error", error);
-        }
-        if(result){
-
-        }
-      });
-
-      Router.go('room', {courseId: Router.current().params.courseId});
-    }
-  });
-
-  Template.answer.helpers({
-    currentUserIsOwner: function() {
-      if(this.isAnonymous) {
-        return this.userIdenticon == Package.sha.SHA256(this.postId + Meteor.user()._id)
-      } else {
-        return this.userId == Meteor.user()._id;
-      }
-    },
-    disabledVoteForOwner: function() {
-      var currentUserIsOwner;
-      if(this.isAnonymous) {
-        currentUserIsOwner = this.userIdenticon == Package.sha.SHA256(this.postId + Meteor.user()._id)
-      } else {
-        currentUserIsOwner = this.userId == Meteor.user()._id;
-      }
-
-      if (currentUserIsOwner) {
-        return "disabled";
-      } else {
-        return "";
-      }
-    },
-    isAnonymousChecked: function() {
-      if(this.isAnonymous) {
-        return "checked";
-      } else {
-        return "";
-      }
-    },
-    theAuthor: function() {
-      //works for both answer and comment
-      var authorId = this.userId;
-      Meteor.subscribe('singleUser', authorId);
-      return Meteor.users.findOne(authorId);
-    },
-    dateFromNow: function() {
-      return moment(this.createdAt).fromNow();
-    },
-    upvote: function(){
-      var answerId = this._id;
-      var answer = Answers.findOne(answerId);
-      if (answer) {
-        var voters = answer.upvoters;
-        var userId = Meteor.user()._id;
-        if(voters && voters.indexOf(userId) != -1){
-          return 'btn-success';
-        }
-      }
-    },
-    downvote: function(){
-      var answerId = this._id;
-      var answer = Answers.findOne(answerId);
-      if (answer) {
-        var voters = answer.downvoters;
-        var userId = Meteor.user()._id;
-        if(voters && voters.indexOf(userId) != -1){
-          return 'btn-danger';
-        }
-      }
-    },
-    createTooltip: function() {
-      setTimeout(function(){
-        $('[data-toggle="tooltip"]').tooltip();
-      }, 200);
-    }
-  });
-
-  Template.answer.events({
-    'click #addCommentBtn': function(e) {
-      $(".commentTinyMCE-wrapper[data-answer-id="+this._id+"]").toggle();
-      loadTinyMCE("commentTinyMCE-"+this._id, 150);
-      tinymce.execCommand('mceFocus',false,"commentTinyMCE-"+this._id);
-    },
-    'click #sendCommentBtn': function (e) {
-      var answerId = $(e.currentTarget).attr('data-answer-id');
-      var selector = 'commentTinyMCE-'+answerId;
-      var body = tinyMCE.get(selector).getContent();
-
-      var comment = {
-        body: body,
-        answerId: answerId,
-        isAnonymous:  $('#isCommentAnon-'+ answerId).is(':checked')
-      };
-
-      if (strip_tags(body) == "") {
-        tinyMCE.get(selector).setContent("");
-        tinymce.execCommand('mceFocus',false,selector);
-        $(".commentTinyMCE-wrapper[data-answer-id="+answerId+"] .error").text("I'm sure this would be a very insightful comment... if it weren't empty.");
-        return false;
-      } else {
-        $(".commentTinyMCE-wrapper[data-answer-id="+answerId+"] .error").text("");
-      }
-
-      Meteor.call('commentInsert', comment, function(error) {
-        if (error){
-          $(".commentTinyMCE-wrapper[data-answer-id="+answerId+"] .error").text(error.reason);
-          throw new Meteor.Error(error.reason);
-        } else {
-          tinyMCE.get(selector).setContent("");
-          $(".commentTinyMCE-wrapper[data-answer-id="+answerId+"]").hide(700);
-        }
-      });
-    },
-    'click .votingContainer button': function(e) {
-      var answerId = $(e.currentTarget).parent().data('answer-id');
-      var isUpvote =  $(e.currentTarget).attr('id') == 'upvoteAnswer';
-
-      var voteAttributes = {
-        answerId: answerId,
-        isUpvote: isUpvote
-      };
-
-      Meteor.call('answerVote', voteAttributes, function(error, result) {
-        // $('#' + id).addClass('btn-success').removeClass('btn-default');
-        //  $(e.currentTarget).parent().find('#answerVoteCount').text(result);
-      });
-    },
-    'click .editAnswerBtn': function(e) {
-      var answerId = this._id;
-      $(".editAnswerBtn[data-answer-id="+answerId+"]").hide();
-      $(".answerBody[data-answer-id="+answerId+"]").hide();
-      $(".editAnswerTinyMCE-wrapper[data-answer-id="+answerId+"]").show();
-      loadTinyMCE("editAnswerTinyMCE-"+answerId, 200);
-    },
-    'click .updateAnswerBtn': function(e) {
-      var answerId = $(e.currentTarget).attr('data-answer-id');
-      var selector = 'editAnswerTinyMCE-'+answerId;
-      var body = tinyMCE.get(selector).getContent();
-
-      var answer = {
-        answerId: answerId,
-        body: body,
-        postId: Router.current().params.query.p,
-        isAnonymous: $('#isAnswerAnonymous-edit-'+answerId).is(':checked')
-      };
-
-      if (strip_tags(body) == "") {
-        var errors = {};
-        tinyMCE.get(selector).setContent("");
-        tinymce.execCommand('mceFocus',false,selector);
-        $(".editAnswerTinyMCE-wrapper[data-answer-id="+answerId+"] .error").text("I know you're trying to be helpful, but an empty answer won't do much...");
-        return false;
-      } else {
-        $(".editAnswerTinyMCE-wrapper[data-answer-id="+answerId+"] .error").text("");
-      }
-
-      Meteor.call('answerUpdate', answer, function(error, answerId) {
-        if (error){
-          $(".editAnswerTinyMCE-wrapper[data-answer-id="+answerId+"] .error").text(error.reason);
-          throw new Meteor.Error(error.reason);
-        } else {
-          $(".editAnswerBtn[data-answer-id="+answerId+"]").show();
-          $(".answerBody[data-answer-id="+answerId+"]").show();
-          $(".editAnswerTinyMCE-wrapper[data-answer-id="+answerId+"]").hide();
-        }
-      });
-    },
-    'click .cancelUpdateBtn': function(e) {
-      $(".editAnswerBtn[data-answer-id="+this._id+"]").show();
-      $(".answerBody[data-answer-id="+this._id+"]").show();
-      $(".editAnswerTinyMCE-wrapper[data-answer-id="+this._id+"]").hide();
-    }
-  });
-
-
-  loadPage = function(postId) {
-    Session.set('answerSubmitErrors', {});
-
-    Meteor.subscribe('singlePost', postId, {
-      onReady: function() {
-        var postOpened = $('.post-opened');
-
-        $('.no-post').hide();
-        $('.post-content-wrapper').show();
-
-        loadTinyMCE("answerTinyMCE", 150);
-
-        $(".post-content-wrapper").scrollTop(0);
-
-        // Initialize post action menu
-        $('.menuclipper').menuclipper({
-          bufferWidth: 20
-        });
-
-        $('#slide-left').addClass('slideLeft');
-
         setTimeout(function () {
-          $('pre code').each(function(i, block) {
+
+          //highlights syntax in answer
+          $('#' + answerId + ' pre code').each(function(i, block) {
             hljs.highlightBlock(block);
           });
+
+          // puts badges in the postList
+          $(".list-view-wrapper [data-toggle=\"tooltip\"]").tooltip();
+
+          $('.post-content-wrapper').scrollTo("#"+answerId,1000);
+
         }, 100);
+
+      }
+    });
+  },
+  'click .upvote': function(e) {
+    var id = Router.current().params.query.p;
+    Meteor.call('upvote', id, function(error) {
+      if (error){
+        throw new Meteor.error(error.reason);
+      } else {
+        //$('#' + id).addClass('btn-success').removeClass('btn-default');
+      }
+    });
+  },
+  'click #followQuestion': function(e){
+    var id = Router.current().params.query.p;
+    Meteor.call('followQuestion', id, function(error) {
+      if (error){
+        throw new Meteor.error(error.reason);
+      } else {
+        //$('#' + id).addClass('btn-success').removeClass('btn-default');
+      }
+    });
+  },
+  "click .post-list-toggle": function(event) {
+    $('.post-list').toggleClass('slideLeft');
+  },
+  "click #openDeleteAnswerModal": function(event){
+    Session.set("deleteAnswerId", $(event.currentTarget).data("id"));
+  },
+  "click #deleteAnswer": function(){
+    var id = Session.get("deleteAnswerId");
+    Meteor.call("answerDelete", id, function(error, result){
+      if(error){
+        console.log("error", error);
+      }
+      if(result){
+
+      }
+    });
+
+    $("#modalDeleteAnswer").modal('hide');
+  },
+  "click #deletePost": function(){
+    var id = Router.current().params.query.p;
+    Meteor.call("postDelete", id, function(error, result){
+      if(error){
+        console.log("error", error);
+      }
+      if(result){
+
+      }
+    });
+
+    Router.go('room', {courseId: Router.current().params.courseId});
+  }
+});
+
+Template.postContent.onRendered(function () {
+  this.find('.answers-wrapper')._uihooks = {
+    insertElement: function (node, next) {
+      $(node)
+      .hide()
+      .insertBefore(next)
+      .fadeIn();
+    },
+    moveElement: function (node, next) {
+      var $node = $(node), $next = $(next);
+      var oldTop = $node.offset().top;
+      var height = $(node).outerHeight(true);
+
+      // find all the elements between next and node
+      var $inBetween = $(next).nextUntil(node);
+      if ($inBetween.length === 0)
+      $inBetween = $(node).nextUntil(next);
+
+      // now put node in place
+      $(node).insertBefore(next);
+
+      // measure new top
+      var newTop = $(node).offset().top;
+
+      // move node *back* to where it was before
+      $(node)
+      .removeClass('animate')
+      .css('top', oldTop - newTop);
+
+      // push every other element down (or up) to put them back
+      $inBetween
+      .removeClass('animate')
+      .css('top', oldTop < newTop ? height : -1 * height)
+
+
+      // force a redraw
+      $(node).offset();
+
+      // reset everything to 0, animated
+      $(node).addClass('animate').css('top', 0);
+      $inBetween.addClass('animate').css('top', 0);
+    },
+    removeElement: function(node) {
+      $(node).fadeOut(function() {
+        $(this).remove();
+      });
+    }
+  }
+});
+
+
+Template.answer.helpers({
+  currentUserIsOwner: function() {
+    if(this.isAnonymous) {
+      return this.userIdenticon == Package.sha.SHA256(this.postId + Meteor.user()._id)
+    } else {
+      return this.userId == Meteor.user()._id;
+    }
+  },
+  disabledVoteForOwner: function() {
+    var currentUserIsOwner;
+    if(this.isAnonymous) {
+      currentUserIsOwner = this.userIdenticon == Package.sha.SHA256(this.postId + Meteor.user()._id)
+    } else {
+      currentUserIsOwner = this.userId == Meteor.user()._id;
+    }
+
+    if (currentUserIsOwner) {
+      return "disabled";
+    } else {
+      return "";
+    }
+  },
+  isAnonymousChecked: function() {
+    if(this.isAnonymous) {
+      return "checked";
+    } else {
+      return "";
+    }
+  },
+  theAuthor: function() {
+    //works for both answer and comment
+    var authorId = this.userId;
+    Meteor.subscribe('singleUser', authorId);
+    return Meteor.users.findOne(authorId);
+  },
+  dateFromNow: function() {
+    return moment(this.createdAt).fromNow();
+  },
+  upvote: function(){
+    var answerId = this._id;
+    var answer = Answers.findOne(answerId);
+    if (answer) {
+      var voters = answer.upvoters;
+      var userId = Meteor.user()._id;
+      if(voters && voters.indexOf(userId) != -1){
+        return 'btn-success';
       }
     }
-  );
+  },
+  downvote: function(){
+    var answerId = this._id;
+    var answer = Answers.findOne(answerId);
+    if (answer) {
+      var voters = answer.downvoters;
+      var userId = Meteor.user()._id;
+      if(voters && voters.indexOf(userId) != -1){
+        return 'btn-danger';
+      }
+    }
+  },
+  createTooltip: function() {
+    setTimeout(function(){
+      $('[data-toggle="tooltip"]').tooltip();
+    }, 200);
+  }
+});
+
+Template.answer.events({
+  'click #addCommentBtn': function(e) {
+    $(".commentTinyMCE-wrapper[data-answer-id="+this._id+"]").toggle();
+    loadTinyMCE("commentTinyMCE-"+this._id, 150);
+    tinymce.execCommand('mceFocus',false,"commentTinyMCE-"+this._id);
+  },
+  'click #sendCommentBtn': function (e) {
+    var answerId = $(e.currentTarget).attr('data-answer-id');
+    var selector = 'commentTinyMCE-'+answerId;
+    var body = tinyMCE.get(selector).getContent();
+
+    var comment = {
+      body: body,
+      answerId: answerId,
+      isAnonymous:  $('#isCommentAnon-'+ answerId).is(':checked')
+    };
+
+    if (strip_tags(body) == "") {
+      tinyMCE.get(selector).setContent("");
+      tinymce.execCommand('mceFocus',false,selector);
+      $(".commentTinyMCE-wrapper[data-answer-id="+answerId+"] .error").text("I'm sure this would be a very insightful comment... if it weren't empty.");
+      return false;
+    } else {
+      $(".commentTinyMCE-wrapper[data-answer-id="+answerId+"] .error").text("");
+    }
+
+    Meteor.call('commentInsert', comment, function(error) {
+      if (error){
+        $(".commentTinyMCE-wrapper[data-answer-id="+answerId+"] .error").text(error.reason);
+        throw new Meteor.Error(error.reason);
+      } else {
+        tinyMCE.get(selector).setContent("");
+        $(".commentTinyMCE-wrapper[data-answer-id="+answerId+"]").hide(700);
+      }
+    });
+  },
+  'click .votingContainer button': function(e) {
+    var answerId = $(e.currentTarget).parent().data('answer-id');
+    var isUpvote =  $(e.currentTarget).attr('id') == 'upvoteAnswer';
+
+    var voteAttributes = {
+      answerId: answerId,
+      isUpvote: isUpvote
+    };
+
+    Meteor.call('answerVote', voteAttributes, function(error, result) {
+      if(!error) {
+        setTimeout(function(){
+          if (!$("#"+answerId).visible()) {
+            $('.post-content-wrapper').scrollTo("#"+answerId,1000);
+          }
+        }, 300);
+      }
+    });
+  },
+  'click .editAnswerBtn': function(e) {
+    var answerId = this._id;
+    $(".editAnswerBtn[data-answer-id="+answerId+"]").hide();
+    $(".answerBody[data-answer-id="+answerId+"]").hide();
+    $(".editAnswerTinyMCE-wrapper[data-answer-id="+answerId+"]").show();
+    loadTinyMCE("editAnswerTinyMCE-"+answerId, 200);
+  },
+  'click .updateAnswerBtn': function(e) {
+    var answerId = $(e.currentTarget).attr('data-answer-id');
+    var selector = 'editAnswerTinyMCE-'+answerId;
+    var body = tinyMCE.get(selector).getContent();
+
+    var answer = {
+      answerId: answerId,
+      body: body,
+      postId: Router.current().params.query.p,
+      isAnonymous: $('#isAnswerAnonymous-edit-'+answerId).is(':checked')
+    };
+
+    if (strip_tags(body) == "") {
+      var errors = {};
+      tinyMCE.get(selector).setContent("");
+      tinymce.execCommand('mceFocus',false,selector);
+      $(".editAnswerTinyMCE-wrapper[data-answer-id="+answerId+"] .error").text("I know you're trying to be helpful, but an empty answer won't do much...");
+      return false;
+    } else {
+      $(".editAnswerTinyMCE-wrapper[data-answer-id="+answerId+"] .error").text("");
+    }
+
+    Meteor.call('answerUpdate', answer, function(error, answerId) {
+      if (error){
+        $(".editAnswerTinyMCE-wrapper[data-answer-id="+answerId+"] .error").text(error.reason);
+        throw new Meteor.Error(error.reason);
+      } else {
+        $(".editAnswerBtn[data-answer-id="+answerId+"]").show();
+        $(".answerBody[data-answer-id="+answerId+"]").show();
+        $(".editAnswerTinyMCE-wrapper[data-answer-id="+answerId+"]").hide();
+      }
+    });
+  },
+  'click .cancelUpdateBtn': function(e) {
+    $(".editAnswerBtn[data-answer-id="+this._id+"]").show();
+    $(".answerBody[data-answer-id="+this._id+"]").show();
+    $(".editAnswerTinyMCE-wrapper[data-answer-id="+this._id+"]").hide();
+  }
+});
+
+
+loadPage = function(postId) {
+  Session.set('answerSubmitErrors', {});
+
+  Meteor.subscribe('answers', postId);
+  Meteor.subscribe('singlePost', postId, {
+    onReady: function() {
+      var postOpened = $('.post-opened');
+
+      $('.no-post').hide();
+      $('.post-content-wrapper').show();
+
+      loadTinyMCE("answerTinyMCE", 150);
+
+      $(".post-content-wrapper").scrollTop(0);
+
+      // Initialize post action menu
+      $('.menuclipper').menuclipper({
+        bufferWidth: 20
+      });
+
+      $('#slide-left').addClass('slideLeft');
+
+      setTimeout(function () {
+        $('pre code').each(function(i, block) {
+          hljs.highlightBlock(block);
+        });
+      }, 100);
+    }
+  }
+);
 }
 
 //removes all tags and whitespaces (&nbsp;)
@@ -652,52 +709,6 @@ function strip_tags(input, allowed) {
     return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
   }).replace(/&nbsp;/gi,'').replace(/\s+/g, ''); // removes spaces and &nbsp;
 }
-
-// Special collection for holding the temporarily sorted answers
-tempAnswers = new Meteor.Collection(null);
-
-// rebuild the sorted results collection, on each page
-Deps.autorun(function(){
-  var postId = Session.get("postId");
-  //console.log(postId);
-  if (postId) {
-    Meteor.subscribe('answers', postId, {
-      onReady: function() {
-        tempAnswers.remove({});
-        // observe is automatically torn down when computation is invalidated
-        // add each of the items with an enforced rank
-
-        var currentRank = 0;
-        var initial = true;
-        Answers.find({}, {sort: {isInstructor: -1, isInstructorUpvoted: -1, voteCount: -1, createdAt: 1}}).observe({
-          addedAt: function(document, atIndex){
-            if(initial){
-              document.rank = atIndex;
-              currentRank = Math.max(currentRank, atIndex + 1);
-              //console.log("added initial - id: " + document._id + " rank: " + document.rank + " currentRank: " + currentRank + " voteCount: " + document.voteCount);
-              tempAnswers.insert(document)
-            } else {
-              document.rank = currentRank++;
-              if (!tempAnswers.findOne(document._id))
-              tempAnswers.insert(document);
-            }
-          },
-          removed: function(document){
-            //console.log('removed id: ' + document._id);
-            tempAnswers.remove(document._id);
-          },
-          changed: function(document){
-            var id = document._id;
-            delete document._id;
-            tempAnswers.update(id, {$set: document}); // keeps rank field
-          }
-        });
-        //console.log("initial set to false");
-        initial = false;
-      }
-    });
-  }
-});
 
 loadTinyMCE = function(selector, height) {
   tinymce.EditorManager.execCommand('mceRemoveEditor',true, selector);

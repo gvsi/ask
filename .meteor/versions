@@ -52,8 +52,10 @@ momentjs:moment@2.10.6
 mongo@1.1.0
 mongo-livedata@1.0.8
 mrt:bootstrap3-wysihtml5@0.3.3
+mrt:jquery-visible@1.2.0
 mrt:mathjax@0.6.3
 mrt:modernizr-meteor@2.6.2
+natestrauser:jquery-scrollto@1.4.7
 npm-bcrypt@0.7.8_2
 observe-sequence@1.0.6
 ordered-dict@1.0.3

@@ -8,21 +8,24 @@
     {{>courseSettingsModal courseId=courseId}}
     {{/if}}
     <div class="no-post">
-
-      {{#if posts.count}}
-      <h1><i class="fa fa-warning"></i></h1>
-      <h2><strong>Under construction</strong></h2>
-      <h3>Course stats go here</h3>
-      <h4>Hold on tight – we are still building the course stats page</h4>
+      {{#if isLoading}}
+      <div style="margin-top:30%">{{>loading}}</div>
       {{else}}
-      <h1><i class="fa fa-warning"></i></h1>
-      <h2><strong>Under construction</strong></h2>
-      <h3>No posts error page goes here</h3>
-      <h4>Hold on tight – we are still building the page</h4>
-      {{/if}}
-      <br><br><br>
-      {{#if isUserInstructor}}
-      <button class="btn btn-green btn-lg" data-target="#courseSettingsModal" data-toggle="modal">Course Settings</button>
+        {{#if posts.count}}
+        <h1><i class="fa fa-warning"></i></h1>
+        <h2><strong>Under construction</strong></h2>
+        <h3>Course stats go here</h3>
+        <h4>Hold on tight – we are still building the course stats page</h4>
+        {{else}}
+        <h1><i class="fa fa-warning"></i></h1>
+        <h2><strong>Under construction</strong></h2>
+        <h3>No posts error page goes here</h3>
+        <h4>Hold on tight – we are still building the page</h4>
+        {{/if}}
+        <br><br><br>
+        {{#if isUserInstructor}}
+        <button class="btn btn-green btn-lg" data-target="#courseSettingsModal" data-toggle="modal">Course Settings</button>
+        {{/if}}
       {{/if}}
     </div>
 
@@ -142,10 +145,11 @@
 
       {{>latexModal}}
 
-
+      <div class="answers-wrapper">
       {{#each answers}}
       {{ >answer }}
       {{/each}}
+      </div>
 
       <hr>
       <div class="panel panel-transparent">
