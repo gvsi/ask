@@ -2,13 +2,9 @@
   <div class="post-list b-r b-grey">
     {{#if courseId}}
 
-      <!-- <a href="{{pathFor 'compose' courseId=courseId }}" >
-        <button id="newQuestion" class="btn btn-sm btn-rounded">New question</button>
-      </a> -->
-
       {{#if isUserInstructor}}
           <a href="{{pathFor 'compose' courseId=courseId }}" style="opacity: 1;" class="course-settings">
-            <span id="newQuestion"><i class="fa fa-pencil-square-o" style="margin-right: 3px;"></i> New Question </span>
+            <span id="newQuestion" style="padding-left:22px;"><i class="fa fa-pencil-square-o" style="margin-right: 3px;"></i> New Note </span>
           </a>
           <a class="course-settings" id="cogsModal" data-target="#courseSettingsModal" data-toggle="modal">
             <i class="fa fa-cog"></i>
