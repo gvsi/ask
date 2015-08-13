@@ -27,6 +27,14 @@ Template.notifications.helpers({
 			return notifications;
 		}
 	},
+	hasNotifications: function(){
+		var notificationsCount = Notifications.find({}, {sort: {createdAt: -1}}).count();
+		if(notificationsCount){
+			return true;
+		}else{
+			return false;
+		}
+	},
 	dateFromNow: function() {
     return moment(this.createdAt).fromNow();
   },

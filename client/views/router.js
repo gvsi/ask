@@ -79,7 +79,7 @@ Router.route('room/:courseId/compose?p=:postId', {name: 'editPost'});
 Router.route('/notifications', function () {
   this.render('notifications');
 },{
-  layoutTemplate:"defaultLayout",
+  layoutTemplate:"notificationsLayout",
   loadingTemplate: 'loading',
   name: 'notifications'
 });

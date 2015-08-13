@@ -1,7 +1,6 @@
 <template name="notifications">
+          {{#if hasNotifications}}
           <div class="container-fluid container-fixed-lg sm-p-l-5" style="background-color:#f0f0f0">
-
-
             <div class="timeline-container top-circle">
               <section class="timeline">
 
@@ -45,4 +44,23 @@
             <!-- -->
           </div>
           <!-- END CONTAINER FLUID -->
+          {{else}}
+              <div class="jumbotron full-height no-padding" data-pages="parallax">
+                <div class="container-fluid container-fixed-lg sm-p-l-20 sm-p-r-20 full-height">
+                  <div class="inner full-height">
+                    <div class="container-xs-height full-height">
+                      <div class="col-xs-height col-middle text-center">
+                        <div class="col-md-6 col-md-offset-3 text-center">
+                            <center>
+                            <h1><i class="fa fa-frown-o"></i></h1>
+                            <h2>No notifications yet</h2>
+                            <h4>Ask and follow questions to receive new notifications.</h4>
+                            </center>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div><!-- END JUMBOTRON -->
+          {{/if}}
   </template>

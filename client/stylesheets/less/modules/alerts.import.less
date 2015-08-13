@@ -47,13 +47,13 @@
             opacity: 1;
         }
     }
-    
+
 }
 
 /* Alert : Color Options
 ------------------------------------
 */
-.alert-danger, 
+.alert-danger,
 .alert-error{
     background-color: @color-danger-lighter;
     color: @color-danger-darker;
@@ -71,6 +71,9 @@
     background-color: @color-complete-lighter;
     color: @color-complete-darker;
     border-color: @color-complete-darker;
+    &:hover{
+        background-color: @color-success-light;
+    }
     .close {
         background-position: -67px -10px !important;
     }

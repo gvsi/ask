@@ -8,7 +8,7 @@
 Tracker.autorun(function(){
     if(Meteor.userId()) {
 			//console.log("I am subscribing");
-			Meteor.subscribe('coursesForStudent', Meteor.userId(), {reactive:false,
+			Meteor.subscribe('coursesForStudent', {reactive:false,
 			onReady: function(){
 				 Session.set('coursesLoaded', true);
 			}});
@@ -25,7 +25,7 @@ Template.sideBar.rendered = function (){
 	})
 
 
-	Meteor.subscribe("notifications", Meteor.userId(), {
+	Meteor.subscribe("notifications", {
 		onReady: function() {
 			var initial = true;
 			if(Session.get("areNotificationsObserved") != true){
