@@ -101,7 +101,18 @@ Template.resultCard.helpers({
       results.push( ($1?""+$1:"") +"<b>"+ $2 +"</b>"+ ($3?$3+"…":"") );
     });
 
-    return results.join("<br>");
+    var res = results.join("<br>");
+
+    if (res) {
+      return res;
+    } else {
+      var rgxwords = new RegExp('([^ ]*[ ]{0,1}){1,20}', 'g');      // regexp for specified number of spaces
+      var text = this.text.replace(/\s\s+/g, ' ');        // replace multiple whitespaces whit single space
+      var txt = text.match(rgxwords)[0];         // get the substring with "nrw" number of words
+      if (txt.length != this.text.length)
+        txt += "…";
+      return txt;
+    }
   },
   courseName: function() {
     var courseId = this.courseId;
