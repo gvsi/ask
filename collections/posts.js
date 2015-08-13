@@ -103,18 +103,22 @@ Meteor.methods({
         });
 
         var user = Meteor.user();
+
+        if (!user) {
+          throw new Meteor.Error('invalid-user', 'You must be logged in to update a post');
+          //TODO: CHECK USER PERMISSION TO DO THIS
+        }
         var type = 1;
 
         //if(user is instructor) -- 3
         //else if(poll) -- 2
         //else -- 1
 
-        //TODO: CHECK USER PERMISSION TO DO THIS
-
         //check existance of post to update
         if (Posts.find({_id: postAttributes.postId}, {_id: 1}).count() > 0) {
           // set identiconHash
-          var identiconHash = postAttributes.isAnonymous ? postAttributes.postId + Posts.findOne(postAttributes.postId).userId : Posts.findOne(postAttributes.postId).userId;
+
+          var identiconHash = postAttributes.isAnonymous ? postAttributes.postId + user._id : user._id;
           var now = new Date();
           Posts.update(
             {_id: postAttributes.postId},
@@ -184,10 +188,16 @@ Meteor.methods({
     },
     currentUserIsOwner: function(postId) {
       var post = Posts.findOne(postId);
-      if (post)
-        return post.userId == Meteor.user()._id;
-      else
+      if (post) {
+        var userId = Meteor.user()._id
+        if(post.isAnonymous) {
+          return post.userIdenticon == Package.sha.SHA256(post._id + userId)
+        } else {
+          return post.userId == userId;
+        }
+      } else {
         return false;
+      }
     },
     postDelete: function(postId){
       var userId = Meteor.user()._id;
