@@ -42,6 +42,27 @@
 </template>
 
 
+<!-- DASHBOARD LAYOUT -->
+<template name="notificationsLayout">
+    <body class="fixed-header">
+        {{ >sideBar }}
+        <!-- START PAGE-CONTAINER -->
+        <div class="page-container">
+            {{ >header }}
+            <!-- START PAGE CONTENT WRAPPER -->
+            <div class="page-content-wrapper full-height">
+                <!-- START PAGE CONTENT -->
+                <div class="content full-height">
+                    {{>yield}}
+                </div>
+            </div>
+        </div>
+        {{ >quickView }}
+        {{ >overlaySearch }}
+    </body>
+</template>
+
+
 <!-- SOCIAL LAYOUT -->
 <template name="socialLayout">
     <body class="fixed-header no-header">
