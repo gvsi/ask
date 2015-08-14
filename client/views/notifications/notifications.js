@@ -16,6 +16,18 @@ Template.notifications.rendered = function(){
 				}
 			});
 		});
+
+		var notifications = Notifications.find({seen: false}).fetch();
+			notifications.forEach(function (notification) {
+					 Meteor.call("seeNotification", notification._id , function(error, result){
+						if(error){
+							console.log("error", error);
+						}
+						if(result){
+
+						}
+					 });
+			 });
 }
 
 
