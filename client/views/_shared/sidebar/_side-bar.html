@@ -16,17 +16,23 @@
       <div class="sidebar-menu">
         <ul class="menu-items">
           <li class="m-t-30 ">
-            <a href="{{pathFor 'home'}}" class="detailed">
+            <a href="{{pathFor 'home'}}">
               <span class="title">Dashboard</span>
-              <span class="details">12 updates</span>
+              <!-- <span class="details">12 updates</span> -->
             </a>
             <span class="icon-thumbnail"><i class="pg pg-home"></i></span>
           </li>
-          <li class="">
-            <a href="{{pathFor 'notifications'}}" class="detailed">
-              <span class="title">Notifications</span>
-              <span class="details">3 new notifications</span>
-            </a>
+          <li class="" style="display:inline">
+            {{#if hasNewNotifications}}
+              <a href="{{pathFor 'notifications'}}" class="detailed">
+                <span class="title">Notifications</span>
+                <span class="details">{{newNotificationsCount}} new notifications</span>
+              </a>
+            {{else}}
+              <a href="{{pathFor 'notifications'}}">
+                <span class="title">Notifications</span>
+              </a>
+            {{/if}}
             <span class="icon-thumbnail "><i class="fa fa-globe"></i></span>
           </li>
           <!--<<li class="">

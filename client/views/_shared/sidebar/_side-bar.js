@@ -159,5 +159,22 @@ Template.sideBar.helpers({
 	},
 	courseInitials: function () {
 		return this.courseCode.substring(0,2);
-	}
+	},
+  hasNewNotifications: function(){
+    var notifications = Notifications.find({seen: false});
+    if(notifications){
+      notifications = notifications.count();
+      if(notifications){
+        return true;
+      }else{
+        return false;
+      }
+    }
+  },
+  newNotificationsCount: function(){
+    var notifications = Notifications.find({seen: false});
+    if(notifications){
+      return notifications.count();
+    }
+  }
 });

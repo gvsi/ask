@@ -696,6 +696,17 @@ loadPage = function(postId) {
           hljs.highlightBlock(block);
         });
       }, 100);
+
+      if(Posts.findOne({_id: postId}).viewers.indexOf(Meteor.userId()) == -1){
+        Meteor.call("viewPost", postId, function(error, result){
+          if(error){
+            console.log("error", error);
+          }
+          if(result){
+
+          }
+        });
+      }
     }
   }
 );

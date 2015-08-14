@@ -38,7 +38,8 @@ Meteor.methods({
           upvotesCount: 0,
           upvoters: [],
           isDeleted: false,
-          followers: [user._id]
+          followers: [user._id],
+          viewers: [user._id]
         });
 
         var un = user.username.toLowerCase();
@@ -217,6 +218,12 @@ Meteor.methods({
       } else {
         throw new Meteor.Error('invalid-delete-permission', 'You don\'t have permission to delete this post!');
       }
+    },
+    viewPost: function(postId){
+        var userId = Meteor.user()._id;
+        Posts.update({_id: postId}, {$addToSet : {
+          "viewers": userId
+        }});
     }
 });
 

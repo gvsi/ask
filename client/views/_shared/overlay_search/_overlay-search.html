@@ -4,7 +4,7 @@
     <!-- BEGIN Overlay Content !-->
     <div class="overlay-content has-results m-t-20">
       <!-- BEGIN Overlay Header !-->
-      <div class="container-fluid">
+      <div class="container-fluid p-l-75">
         <!-- BEGIN Overlay Logo !-->
         <img class="overlay-brand" src="
         /img/ask_logo.png" alt="logo" data-src="
@@ -18,7 +18,7 @@
         <!-- END Overlay Close !-->
       </div>
       <!-- END Overlay Header !-->
-      <div class="container-fluid">
+      <div class="container-fluid p-l-85">
         <!-- BEGIN Overlay Controls !-->
         {{#if equals searchType 'courseSearch'}}
         <div class="m-t-20"><h5>Searching in <span class="bold">{{courseName}}</span>:</h5></div>
@@ -44,21 +44,23 @@
         <!-- END Overlay Controls !-->
       </div>
       <!-- BEGIN Overlay Search Results, This part is for demo purpose, you can add anything you like !-->
-      <div class="container-fluid">
+      <div class="container-fluid" style="padding:0;">
         <div class="search-results m-t-40">
           {{#ifEsIsSearching index=searchType id="overlay-search" logic="OR" }}
-          <div class="progress-circle-indeterminate-base m-l-30 m-t-30"></div>
+            <div class="progress-circle-indeterminate-base" style="margin-left: auto;margin-right: auto;"></div>
           {{/ifEsIsSearching}}
-          <div class="row">
+          <div>
             {{#esEach index=searchType id="overlay-search"}}
             <!-- {<li><strong>{{title}}</strong> {{{text}}}</li>-->
             {{>resultCard}}
             {{/esEach}}
 
-            {{> esLoadMoreButton index=searchType id="overlay-search" class="btn btn-complete m-t-10 m-b-40"}}
+            <div style="text-align:center;">
+              {{> esLoadMoreButton index=searchType id="overlay-search" class="btn btn-complete m-t-10 m-b-40"}}
+            </div>
 
             {{#ifEsHasNoResults index=searchType id="overlay-search"}}
-            <div class="no-results"><h3 class="bold m-l-30" style="color: #3B4752">No results found!</h3></div>
+            <div class="no-results" style="text-align:center;"><h3 class="bold m-l-30" style="color: #3B4752">No results found!</h3></div>
             {{/ifEsHasNoResults}}
 
           </div>
@@ -72,32 +74,35 @@
 </template>
 
 <template name="resultCard">
-  <div class="row">
-  <div class="card share share-self col-lg-6 col-md-6" data-social="item">
-    <div class="card-header clearfix">
-      <h5>{{{formattedTitle}}}</h5>
-      {{#if isDefaultSearch}}
-        <h6>posted in <span class="bold"> {{courseName}}</span></h6>
-      {{/if}}
-    </div>
-    <div class="card-description">
-      {{{formattedText}}}
-    </div>
-    <div class="card-footer clearfix">
-      <div class="pull-left" style="width: 300px">
-      <div class="user-pic">
+  <hr style="margin:0;">
+  <div class="row searchTile">
+    <div class="col-lg-2 col-md-2"></div>
+    <div class="card share share-self col-lg-8 col-md-8" data-social="item">
+      <div class="card-header clearfix">
+        <div class="pull-left" style="width: 300px">
+          <div class="user-pic">
             <img alt="Profile Image" width="33" height="33" src="{{identicon userIdenticon}}">
+          </div>
+          <h5>{{userName}}{{#if isInstructorPost}}<span class="small hint-text"> - instructor</span>{{/if}}</h5>
+          <h6>posted
+            <span class="semi-bold">{{dateFromNow}}</span>
+          </h6>
         </div>
-        <h5>{{userName}}{{#if isInstructorPost}}<span class="small hint-text"> - instructor</span>{{/if}}</h5>
-        <h6>posted
-           <span class="semi-bold">{{dateFromNow}}</span>
-        </h6>
+        <div class="pull-right hint-text" style="margin-top: 11px;">
+          <i class="fa fa-thumbs-up"></i> {{upvotesCount}} &nbsp; &nbsp; <i class="fa fa-comment"></i> {{answersCount}}
+        </div>
+        <div class="clearfix"></div>
       </div>
-      <div class="pull-right hint-text">
-        <i class="fa fa-thumbs-up"></i> {{upvotesCount}} &nbsp; &nbsp; <i class="fa fa-comment"></i> {{answersCount}}
+      <div class="card-description">
+        <h5>{{{formattedTitle}}}</h5>
+        {{#if isDefaultSearch}}
+        <h6>posted in <span class="bold"> {{courseName}}</span></h6>
+        {{/if}}
       </div>
-      <div class="clearfix"></div>
+      <div class="card-footer clearfix">
+        {{{formattedText}}}
+      </div>
     </div>
+    <div class="col-lg-2 col-md-2"></div>
   </div>
-</div>
 </template>
