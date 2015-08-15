@@ -177,14 +177,16 @@ Meteor.methods({
       var userId = Meteor.user()._id;
       var followers = Posts.findOne(postId).followers;
 
-      if(followers.indexOf(userId) != -1){ // If the user is already a follower
-          Posts.update({_id: postId}, {$pull : {
-            "followers": userId
-          }});
-      }else{
-          Posts.update({_id: postId}, {$addToSet : {
-            "followers": userId
-          }});
+      if(followers){
+        if(followers.indexOf(userId) != -1){ // If the user is already a follower
+            Posts.update({_id: postId}, {$pull : {
+              "followers": userId
+            }});
+        }else{
+            Posts.update({_id: postId}, {$addToSet : {
+              "followers": userId
+            }});
+        }
       }
     },
     currentUserIsOwner: function(postId) {

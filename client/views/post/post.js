@@ -321,21 +321,6 @@ Template.postContent.helpers({
       return false;
     }
   },
-  followButton: function(){
-    var postId = Router.current().params.query.p;
-    var post = Posts.findOne(postId);
-    if (post) {
-      var followers = post.followers;
-      var user = Meteor.user();
-      if (followers && user && followers.indexOf(user._id) != -1) {
-        return 'btn-warning';
-      } else {
-        return 'btn-default';
-      }
-    } else {
-      return false;
-    }
-  },
   tags: function(){
     var postId = Router.current().params.query.p;
     var post = Posts.findOne(postId);
@@ -404,6 +389,11 @@ Template.postContent.events({
       if (error){
         throw new Meteor.error(error.reason);
       } else {
+        if($("#followQuestion").hasClass("btn-warning")){
+          $("#followQuestion").addClass('btn-default').removeClass('btn-warning');
+        }else{
+          $("#followQuestion").addClass("btn-warning").removeClass('btn-default');
+        }
         //$('#' + id).addClass('btn-success').removeClass('btn-default');
       }
     });
@@ -665,6 +655,16 @@ Template.answer.events({
 
 loadPage = function(postId) {
   Session.set('answerSubmitErrors', {});
+
+  Meteor.call("isUserFollowingPost", postId, function(err, result){
+    console.log(result);
+    if(result){
+      $("#followQuestion").addClass("btn-warning");
+    } else {
+      $("#followQuestion").addClass("btn-default");
+    }
+
+  });
 
   Meteor.subscribe('answers', postId);
   Meteor.subscribe('singlePost', postId, {
