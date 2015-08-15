@@ -45,7 +45,6 @@ Meteor.methods({
       userIdenticon: Package.sha.SHA256(identiconHash),
       //author: user.username,
       upvoters: [],
-      downvoters: [],
       createdAt: new Date(),
       updatedAt: new Date(),
       comments: [],
@@ -84,24 +83,23 @@ Meteor.methods({
     // create the answer, save the id
     answer._id = Answers.insert(answer);
 
-    post.followers.forEach(function(followerId) {
-      if(followerId != Meteor.userId()){
-        var notificationAttributes = {
-          intend: 'New answer added to: ',
-          postTitle: post.title,
-          text: answerAttributes.body,
-          type: 'info',
-          userId: followerId,
-          link: '/room/'+ post.courseId + '?p=' + post._id + '#' + answer._id,
-          seen: false
+    if(post.followers){
+      post.followers.forEach(function(followerId) {
+        if(followerId != Meteor.userId()){
+          var notificationAttributes = {
+            intend: 'New answer added to: ',
+            postTitle: post.title,
+            text: answerAttributes.body,
+            type: 'info',
+            userId: followerId,
+            link: '/room/'+ post.courseId + '?p=' + post._id + '#' + answer._id,
+            seen: false
+          }
+
+          Meteor.call("addNotification", notificationAttributes);
         }
-
-        Meteor.call("addNotification", notificationAttributes);
-      }
-    });
-
-
-    // TODO: now create a notification, informing the user that there's been a answer
+      });
+    }
 
     return answer._id;
   },
@@ -184,7 +182,7 @@ Meteor.methods({
       "comments": comment
     }});
 
-    if(answer.userId != user._id){
+    if(answer.userId && (answer.userId != user._id)){
       var post = Posts.findOne(answer.postId);
       var commentBodyWithoutTags = UniHTML.purify(commentAttributes.body, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
       var answerBodyWithoutTags = UniHTML.purify(answer.body, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
@@ -201,22 +199,15 @@ Meteor.methods({
       Meteor.call("addNotification", notificationAttributes);
     }
 
-    // TODO: now create a notification, informing the user that there's been a answer
-
     return true;
   },
-  answerVote: function(voteAttributes) {
-
-    check(voteAttributes, {
-      answerId: String,
-      isUpvote: Boolean
-    });
-
+  answerVote: function(answerId) {
     var userId = Meteor.userId();
-    var answer = Answers.findOne(voteAttributes.answerId);
+    var answer = Answers.findOne(answerId);
 
-    if (!answer)
-    throw new Meteor.Error('invalid-answer', 'You must answer on a post');
+    if (!answer){
+      throw new Meteor.Error('invalid-answer', 'You must answer on a post');
+    }
 
     var post = Posts.findOne(answer.postId);
     var course;
@@ -230,82 +221,36 @@ Meteor.methods({
     }
 
     var upVoters = answer.upvoters;
-    var downVoters = answer.downvoters;
 
     if(upVoters.indexOf(userId) != -1){ //It was already upvoted by the user
-      if(voteAttributes.isUpvote){
-        Answers.update({_id: voteAttributes.answerId},{
-          $inc: {voteCount: -1},
-          $pull : {"upvoters": userId}
-        });
-      }else{
-        Answers.update({_id: voteAttributes.answerId},{
-          $inc: {voteCount: -1},
-          $pull : {"upvoters": userId}
-        });
-        Answers.update({_id: voteAttributes.answerId},{
-          $inc: {voteCount: -1},
-          $addToSet : {"downvoters": userId}
-        });
-      }
+      Answers.update({_id: answerId},{
+        $inc: {voteCount: -1},
+        $pull : {"upvoters": userId}
+      });
 
       if(course.instructors.indexOf(Meteor.user().username) != -1){
-        Answers.update({_id: voteAttributes.answerId},{
+        Answers.update({_id: answerId},{
           $set: {
             isInstructorUpvoted: false
           }
         });
       }
-
-    }else if (downVoters.indexOf(userId) != -1) { //It was already downvoted by the user
-      if(voteAttributes.isUpvote){
-        Answers.update({_id: voteAttributes.answerId},{
-          $inc: {voteCount: 1},
-          $pull : {"downvoters": userId }
-        });
-        Answers.update({_id: voteAttributes.answerId},{
-          $inc: {voteCount: 1},
-          $addToSet : {"upvoters": userId}
-        });
-
-        if(course.instructors.indexOf(Meteor.user().username) != -1){
-          Answers.update({_id: voteAttributes.answerId},{
-            $set: {
-              isInstructorUpvoted: true
-            }
-          });
-        }
-
-      }else{
-        Answers.update({_id: voteAttributes.answerId},{
-          $inc: {voteCount: 1},
-          $pull : {"downvoters": userId }
-        });
-      }
     }else{
-      if(voteAttributes.isUpvote){
-        Answers.update({_id: voteAttributes.answerId},{
+        Answers.update({_id: answerId},{
           $inc: {voteCount: 1},
           $addToSet : {"upvoters": userId}
         });
 
         if(course.instructors.indexOf(Meteor.user().username) != -1){
-          Answers.update({_id: voteAttributes.answerId},{
+          Answers.update({_id: answerId},{
             $set: {
               isInstructorUpvoted: true
             }
           });
         }
-
-      }else{
-        Answers.update({_id: voteAttributes.answerId},{
-          $inc: {voteCount: -1},
-          $addToSet : {"downvoters": userId}
-        });
-      }
     }
 
-    var newAnswer = Answers.findOne(voteAttributes.answerId);
+    var newAnswer = Answers.findOne(answerId);
     return newAnswer.upvoters.length - newAnswer.downvoters.length;
   },
   answerDelete: function(answerId){

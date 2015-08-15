@@ -1,11 +1,4 @@
-Posts = new Mongo.Collection('posts', {
-    transform: function(doc) {
-        if (doc.isAnonymous) {
-            delete doc.userId;
-        }
-        return doc;
-    }
-});
+Posts = new Mongo.Collection('posts');
 
 Meteor.methods({
     postInsert: function(postAttributes) {
@@ -155,27 +148,27 @@ Meteor.methods({
     upvote: function(postId){
       var userId = Meteor.user()._id;
       var post = Posts.findOne(postId);
-      var voters = post.upvoters;
 
-      if(userId != post.userId){
-        if(voters.indexOf(userId) != -1){ // If the user has already upvoted
-            Posts.update({_id: postId}, {
-            $inc: {upvotesCount: -1},
-            $pull : {
-              "upvoters": userId
-            }});
-        }else{
-            Posts.update({_id: postId}, {
-              $inc: {upvotesCount: +1},
-              $addToSet : {
-              "upvoters": userId
-            }});
-        }
+      if(post.upvoters){
+
+          if (userId != post.userId) {
+            if (post.upvoters.indexOf(userId) != -1) { // If the user has already upvoted
+                Posts.update({_id: postId}, {
+                $inc: {upvotesCount: -1},
+                $pull : {
+                  "upvoters": userId
+                }});
+            } else {
+                Posts.update({_id: postId}, {
+                  $inc: {upvotesCount: +1},
+                  $addToSet : {
+                  "upvoters": userId
+                }});
+            }
+          }
       }
-
     },
     followQuestion: function(postId){
-      console.log('hello there');
       var userId = Meteor.user()._id;
       var followers = Posts.findOne(postId).followers;
 
@@ -235,6 +228,9 @@ Meteor.methods({
             }
           }
         );
+        Posts.update({_id: postId}, {$addToSet : {
+          "viewers": userId
+        }});
     }
 });
 
