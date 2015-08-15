@@ -17,12 +17,14 @@ Meteor.publish('singlePost', function(id) {
 
 
 Meteor.publish('coursesForStudent', function () {
-	var courses = Meteor.users.findOne({_id: this.userId},{'profile.courses': true}).profile.courses;
-	if (!courses) {
-		throw new Meteor.Error("Student does not exist in database");
+	var user = Meteor.users.findOne({_id: this.userId}, {fields: {'profile.courses': 1}});
+	if (user) {
+		courses = user.profile.courses;
+		if (!courses) {
+			throw new Meteor.Error("No courses for this student");
+		}
+		return Courses.find({'_id': {$in: courses}});
 	}
-
-	return Courses.find({'_id': {$in: courses}});
 });
 
 Meteor.publish('singleUser', function(id) {

@@ -63,6 +63,11 @@ Template.postPage.rendered = function () {
     Session.set('customTags', undefined)
     $('#customTagsForCourse').show();
   }
+  setTimeout(function () {
+    //$('[data-toggle="tooltip"]').tooltip();
+  }, 5000);
+  // $('[data-toggle="tooltip"]').tooltip();
+  // $(".list-view-wrapper [data-toggle=\"tooltip\"]").tooltip();
 }
 
 Template.registerHelper("isUserInstructor", function(){
@@ -364,7 +369,7 @@ Template.postContent.events({
           });
 
           // puts badges in the postList
-          $(".list-view-wrapper [data-toggle=\"tooltip\"]").tooltip();
+          //$(".list-view-wrapper [data-toggle=\"tooltip\"]").tooltip();
 
           $('.post-content-wrapper').scrollTo("#"+answerId,1000);
 
@@ -545,7 +550,7 @@ Template.answer.helpers({
   },
   createTooltip: function() {
     setTimeout(function(){
-      $('[data-toggle="tooltip"]').tooltip();
+      //$('[data-toggle="tooltip"]').tooltip();
     }, 200);
   }
 });
@@ -602,6 +607,7 @@ Template.answer.events({
             $('.post-content-wrapper').scrollTo("#"+answerId,1000);
           }
         }, 300);
+        //$('[data-toggle="tooltip"]').tooltip();
       }
     });
   },
