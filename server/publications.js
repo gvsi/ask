@@ -1,5 +1,6 @@
 Meteor.publish('posts', function(id) {
-	if(Meteor.users.findOne(this.userId).profile.courses.indexOf(id) != 1){
+	if(Meteor.users.findOne(this.userId).profile.courses.indexOf(id) != -1){
+		console.log('hello');
 		var posts = Posts.find({courseId: id, isDeleted: { $ne: true}},{fields: {revisionHistory: 0, followers: 0, tags: 0, type: 0, updatedAt: 0, upvoters: 0, isDeleted: 0}},{sort: {createdAt: -1}});
 		//posts.forEach(function(v){ delete v.isAnonymous });
 		if(posts){
