@@ -39,7 +39,8 @@ Meteor.methods({
           upvoters: [],
           isDeleted: false,
           followers: [user._id],
-          viewers: [user._id]
+          viewers: [user._id],
+          viewCount: 1
         });
 
         var un = user.username.toLowerCase();
@@ -174,6 +175,7 @@ Meteor.methods({
 
     },
     followQuestion: function(postId){
+      console.log('hello there');
       var userId = Meteor.user()._id;
       var followers = Posts.findOne(postId).followers;
 
@@ -223,9 +225,16 @@ Meteor.methods({
     },
     viewPost: function(postId){
         var userId = Meteor.user()._id;
-        Posts.update({_id: postId}, {$addToSet : {
-          "viewers": userId
-        }});
+        Posts.update({_id: postId},
+          {
+            $addToSet : {
+              "viewers": userId
+            },
+            $inc: {
+              "viewCount": 1
+            }
+          }
+        );
     }
 });
 

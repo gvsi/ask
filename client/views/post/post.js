@@ -17,9 +17,11 @@ Template.postPage.rendered = function () {
   if (Router.current().params.query.p) {
     var postId = Router.current().params.query.p;
     $('.item').removeClass('active');
-    $("li[data-post-id="+ postId +"]").addClass('active');
 
-    $('.list-view-wrapper').scrollTop($("li[data-post-id="+ postId +"]").offset().top-92);
+    setTimeout(function () {
+      $("li[data-post-id="+ postId +"]").addClass('active');
+      $('.list-view-wrapper').scrollTop($("li[data-post-id="+ postId +"]").offset().top-92);
+    }, 500);
     loadPage(postId);
   }
 
@@ -85,9 +87,6 @@ Template.registerHelper('equals', function (a, b) {
 });
 
 Template.postPage.helpers({
-  posts: function () {
-    return Posts.find({'courseId': Router.current().params.courseId}, {sort: {createdAt: -1}});
-  },
   courseId: function () {
     return Router.current().params.courseId;
   },
@@ -662,14 +661,12 @@ Template.answer.events({
 loadPage = function(postId) {
   Session.set('answerSubmitErrors', {});
 
-  Meteor.call("isUserFollowingPost", postId, function(err, result){
-    console.log(result);
+Meteor.call("isUserFollowingPost", postId, function(err, result){
     if(result){
       $("#followQuestion").addClass("btn-warning");
     } else {
       $("#followQuestion").addClass("btn-default");
     }
-
   });
 
   Meteor.subscribe('answers', postId);
@@ -697,6 +694,15 @@ loadPage = function(postId) {
         });
       }, 100);
 
+
+      Meteor.call("hasUserViewed", postId, function(err, res){
+        if(res){
+          $("#followQuestion").addClass("btn-warning");
+        } else {
+          $("#followQuestion").addClass("btn-default");
+        }
+      });
+
       if(Posts.findOne({_id: postId}).viewers.indexOf(Meteor.userId()) == -1){
         Meteor.call("viewPost", postId, function(error, result){
           if(error){
@@ -707,6 +713,7 @@ loadPage = function(postId) {
           }
         });
       }
+
     }
   }
 );
