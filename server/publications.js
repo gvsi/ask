@@ -10,7 +10,7 @@ Meteor.publish('posts', function(id) {
 });
 
 Meteor.publish('singlePost', function(id) {
-	var post = Posts.find({_id: id, isDeleted: { $ne: true}},{fields: {userId: 0, followers: 0, revisionHistory: 0}});
+	var post = Posts.find({_id: id, isDeleted: { $ne: true}},{fields: {userId: 0, upvoters: 0, followers: 0, revisionHistory: 0}});
 	if(post && (Meteor.users.findOne(this.userId).profile.courses.indexOf(post.courseId) != 1)){
 			return post;
 	}

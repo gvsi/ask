@@ -154,24 +154,26 @@ Meteor.methods({
     upvote: function(postId){
       var userId = Meteor.user()._id;
       var post = Posts.findOne(postId);
-      var voters = post.upvoters;
+      
+      if(post.upvoters){
+          var voters = post.upvoters;
 
-      if(userId != post.userId){
-        if(voters.indexOf(userId) != -1){ // If the user has already upvoted
-            Posts.update({_id: postId}, {
-            $inc: {upvotesCount: -1},
-            $pull : {
-              "upvoters": userId
-            }});
-        }else{
-            Posts.update({_id: postId}, {
-              $inc: {upvotesCount: +1},
-              $addToSet : {
-              "upvoters": userId
-            }});
-        }
+          if(userId != post.userId){
+            if(voters.indexOf(userId) != -1){ // If the user has already upvoted
+                Posts.update({_id: postId}, {
+                $inc: {upvotesCount: -1},
+                $pull : {
+                  "upvoters": userId
+                }});
+            }else{
+                Posts.update({_id: postId}, {
+                  $inc: {upvotesCount: +1},
+                  $addToSet : {
+                  "upvoters": userId
+                }});
+            }
+          }
       }
-
     },
     followQuestion: function(postId){
       var userId = Meteor.user()._id;
@@ -236,6 +238,21 @@ Meteor.methods({
 
         if(post.followers){
       		if(post.followers.indexOf(Meteor.userId()) != -1){
+      			return true;
+      		}else{
+      			return false;
+      		}
+        }
+    },
+    hasUserUpvotedPost: function(postId){
+        var post = Posts.findOne({_id: postId});
+
+        if(!post){
+          throw new Meteor.Error('post-dont-eist', 'A post with this ID does not exist!');
+        }
+
+        if(post.upvoters){
+      		if(post.upvoters.indexOf(Meteor.userId()) != -1){
       			return true;
       		}else{
       			return false;

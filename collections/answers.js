@@ -45,7 +45,6 @@ Meteor.methods({
       userIdenticon: Package.sha.SHA256(identiconHash),
       //author: user.username,
       upvoters: [],
-      downvoters: [],
       createdAt: new Date(),
       updatedAt: new Date(),
       comments: [],
@@ -202,18 +201,13 @@ Meteor.methods({
 
     return true;
   },
-  answerVote: function(voteAttributes) {
-
-    check(voteAttributes, {
-      answerId: String,
-      isUpvote: Boolean
-    });
-
+  answerVote: function(answerId) {
     var userId = Meteor.userId();
-    var answer = Answers.findOne(voteAttributes.answerId);
+    var answer = Answers.findOne(answerId);
 
-    if (!answer)
-    throw new Meteor.Error('invalid-answer', 'You must answer on a post');
+    if (!answer){
+      throw new Meteor.Error('invalid-answer', 'You must answer on a post');
+    }
 
     var post = Posts.findOne(answer.postId);
     var course;
@@ -227,82 +221,36 @@ Meteor.methods({
     }
 
     var upVoters = answer.upvoters;
-    var downVoters = answer.downvoters;
 
     if(upVoters.indexOf(userId) != -1){ //It was already upvoted by the user
-      if(voteAttributes.isUpvote){
-        Answers.update({_id: voteAttributes.answerId},{
-          $inc: {voteCount: -1},
-          $pull : {"upvoters": userId}
-        });
-      }else{
-        Answers.update({_id: voteAttributes.answerId},{
-          $inc: {voteCount: -1},
-          $pull : {"upvoters": userId}
-        });
-        Answers.update({_id: voteAttributes.answerId},{
-          $inc: {voteCount: -1},
-          $addToSet : {"downvoters": userId}
-        });
-      }
+      Answers.update({_id: answerId},{
+        $inc: {voteCount: -1},
+        $pull : {"upvoters": userId}
+      });
 
       if(course.instructors.indexOf(Meteor.user().username) != -1){
-        Answers.update({_id: voteAttributes.answerId},{
+        Answers.update({_id: answerId},{
           $set: {
             isInstructorUpvoted: false
           }
         });
       }
-
-    }else if (downVoters.indexOf(userId) != -1) { //It was already downvoted by the user
-      if(voteAttributes.isUpvote){
-        Answers.update({_id: voteAttributes.answerId},{
-          $inc: {voteCount: 1},
-          $pull : {"downvoters": userId }
-        });
-        Answers.update({_id: voteAttributes.answerId},{
-          $inc: {voteCount: 1},
-          $addToSet : {"upvoters": userId}
-        });
-
-        if(course.instructors.indexOf(Meteor.user().username) != -1){
-          Answers.update({_id: voteAttributes.answerId},{
-            $set: {
-              isInstructorUpvoted: true
-            }
-          });
-        }
-
-      }else{
-        Answers.update({_id: voteAttributes.answerId},{
-          $inc: {voteCount: 1},
-          $pull : {"downvoters": userId }
-        });
-      }
     }else{
-      if(voteAttributes.isUpvote){
-        Answers.update({_id: voteAttributes.answerId},{
+        Answers.update({_id: answerId},{
           $inc: {voteCount: 1},
           $addToSet : {"upvoters": userId}
         });
 
         if(course.instructors.indexOf(Meteor.user().username) != -1){
-          Answers.update({_id: voteAttributes.answerId},{
+          Answers.update({_id: answerId},{
             $set: {
               isInstructorUpvoted: true
             }
           });
         }
-
-      }else{
-        Answers.update({_id: voteAttributes.answerId},{
-          $inc: {voteCount: -1},
-          $addToSet : {"downvoters": userId}
-        });
-      }
     }
 
-    var newAnswer = Answers.findOne(voteAttributes.answerId);
+    var newAnswer = Answers.findOne(answerId);
     return newAnswer.upvoters.length - newAnswer.downvoters.length;
   },
   answerDelete: function(answerId){
