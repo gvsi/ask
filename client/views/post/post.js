@@ -663,13 +663,14 @@ loadPage = function(postId) {
   Session.set('answerSubmitErrors', {});
 
   Meteor.call("isUserFollowingPost", postId, function(err, result){
-    console.log(result);
+    if(err){
+      console.log("error", err);
+    }
     if(result){
       $("#followQuestion").addClass("btn-warning");
     } else {
       $("#followQuestion").addClass("btn-default");
     }
-
   });
 
   Meteor.subscribe('answers', postId);

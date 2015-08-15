@@ -69,16 +69,6 @@ Meteor.methods({
 	} else {
 		throw new Meteor.Error('invalid-permission', 'You don\'t have permission to run this');
 	}
-},
-isUserFollowingPost: function(postId){
-		var postFollowers = Posts.findOne({_id: postId}).followers;
-		if(postFollowers.indexOf(Meteor.userId()) != -1){
-			return true;
-		}else{
-			return false;
-		}
-
-		return true;
 }
 });
 

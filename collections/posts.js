@@ -226,6 +226,21 @@ Meteor.methods({
         Posts.update({_id: postId}, {$addToSet : {
           "viewers": userId
         }});
+    },
+    isUserFollowingPost: function(postId){
+        var post = Posts.findOne({_id: postId});
+
+        if(!post){
+          throw new Meteor.Error('post-dont-eist', 'A post with this ID does not exist!');
+        }
+
+        if(post.followers){
+      		if(post.followers.indexOf(Meteor.userId()) != -1){
+      			return true;
+      		}else{
+      			return false;
+      		}
+        }
     }
 });
 

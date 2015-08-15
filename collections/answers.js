@@ -84,24 +84,23 @@ Meteor.methods({
     // create the answer, save the id
     answer._id = Answers.insert(answer);
 
-    post.followers.forEach(function(followerId) {
-      if(followerId != Meteor.userId()){
-        var notificationAttributes = {
-          intend: 'New answer added to: ',
-          postTitle: post.title,
-          text: answerAttributes.body,
-          type: 'info',
-          userId: followerId,
-          link: '/room/'+ post.courseId + '?p=' + post._id + '#' + answer._id,
-          seen: false
+    if(post.followers){
+      post.followers.forEach(function(followerId) {
+        if(followerId != Meteor.userId()){
+          var notificationAttributes = {
+            intend: 'New answer added to: ',
+            postTitle: post.title,
+            text: answerAttributes.body,
+            type: 'info',
+            userId: followerId,
+            link: '/room/'+ post.courseId + '?p=' + post._id + '#' + answer._id,
+            seen: false
+          }
+
+          Meteor.call("addNotification", notificationAttributes);
         }
-
-        Meteor.call("addNotification", notificationAttributes);
-      }
-    });
-
-
-    // TODO: now create a notification, informing the user that there's been a answer
+      });
+    }
 
     return answer._id;
   },
@@ -184,7 +183,7 @@ Meteor.methods({
       "comments": comment
     }});
 
-    if(answer.userId != user._id){
+    if(answer.userId && (answer.userId != user._id)){
       var post = Posts.findOne(answer.postId);
       var commentBodyWithoutTags = UniHTML.purify(commentAttributes.body, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
       var answerBodyWithoutTags = UniHTML.purify(answer.body, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
@@ -200,8 +199,6 @@ Meteor.methods({
 
       Meteor.call("addNotification", notificationAttributes);
     }
-
-    // TODO: now create a notification, informing the user that there's been a answer
 
     return true;
   },
