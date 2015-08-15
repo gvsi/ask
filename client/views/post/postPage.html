@@ -117,8 +117,8 @@
 
         {{else}}
         <div class="buttons">
-          <button class="btn btn-lg btn-rounded upvote" id="upvoteQuestion" ><i class="fa fa-thumbs-up"></i><span class="m-l-10">{{post.upvotesCount}}</span></button>
-          <button class="btn btn-lg btn-rounded" id="followQuestion" >Follow</button>
+          <button class="btn btn-lg {{upvoteButton}} btn-rounded upvote" id="upvoteQuestion" ><i class="fa fa-thumbs-up"></i><span class="m-l-10">{{post.upvotesCount}}</span></button>
+          <button class="btn btn-lg {{followButton}} btn-rounded" id="followQuestion" >Follow</button>
         </div>
         {{/if}}
         <div class="clearfix"></div>

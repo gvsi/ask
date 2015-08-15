@@ -310,6 +310,36 @@ Template.postContent.helpers({
     else
     return false;
   },
+  followButton: function(){
+    var postId = Router.current().params.query.p;
+    var post = Posts.findOne(postId);
+    if (post) {
+      var followers = post.followers;
+      var user = Meteor.user();
+      if (user && followers.length == 1) {
+        return 'btn-warning';
+      } else {
+        return 'btn-default';
+      }
+    } else {
+      return false;
+    }
+  },
+  upvoteButton: function(){
+    var postId = Router.current().params.query.p;
+    var post = Posts.findOne(postId);
+    if (post) {
+      var voters = post.upvoters;
+      var user = Meteor.user();
+      if (voters && user && voters.indexOf(user._id) != -1) {
+        return 'btn-success';
+      } else {
+        return 'btn-default';
+      }
+    } else {
+      return false;
+    }
+  },
   tags: function(){
     var postId = Router.current().params.query.p;
     var post = Posts.findOne(postId);
@@ -367,13 +397,6 @@ Template.postContent.events({
     Meteor.call('upvote', id, function(error) {
       if (error){
         throw new Meteor.error(error.reason);
-      } else {
-        if($("#upvoteQuestion").hasClass("btn-success")){
-          $("#upvoteQuestion").addClass('btn-default').removeClass('btn-success');
-        }else{
-          $("#upvoteQuestion").addClass("btn-success").removeClass('btn-default');
-        }
-        //$('#' + id).addClass('btn-success').removeClass('btn-default');
       }
     });
   },
@@ -382,13 +405,6 @@ Template.postContent.events({
     Meteor.call('followQuestion', id, function(error) {
       if (error){
         throw new Meteor.error(error.reason);
-      } else {
-        if($("#followQuestion").hasClass("btn-warning")){
-          $("#followQuestion").addClass('btn-default').removeClass('btn-warning');
-        }else{
-          $("#followQuestion").addClass("btn-warning").removeClass('btn-default');
-        }
-        //$('#' + id).addClass('btn-success').removeClass('btn-default');
       }
     });
   },
@@ -659,15 +675,6 @@ loadPage = function(postId) {
           hljs.highlightBlock(block);
         });
       }, 100);
-
-
-      Meteor.call("hasUserViewed", postId, function(err, res){
-        if(res){
-          $("#followQuestion").addClass("btn-warning");
-        } else {
-          $("#followQuestion").addClass("btn-default");
-        }
-      });
 
       if(Posts.findOne({_id: postId}).viewers.indexOf(Meteor.userId()) == -1){
         Meteor.call("viewPost", postId, function(error, result){

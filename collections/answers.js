@@ -202,58 +202,60 @@ Meteor.methods({
     return true;
   },
   answerVote: function(answerId) {
+    check(answerId, String);
+
     var userId = Meteor.userId();
     var answer = Answers.findOne(answerId);
 
-    if (!answer){
+    if (!answer) {
       throw new Meteor.Error('invalid-answer', 'You must answer on a post');
     }
 
     var post = Posts.findOne(answer.postId);
     var course;
 
-    if(post){
+    if (post) {
       course = Courses.findOne(post.courseId);
       if(!course)
       throw new Meteor.Error('invalid-course', 'The post must belong to a course');
-    }else{
+    } else {
       throw new Meteor.Error('invalid-post', 'The answer must belong to a post');
     }
 
     var upVoters = answer.upvoters;
 
-    if(upVoters.indexOf(userId) != -1){ //It was already upvoted by the user
+    if (upVoters.indexOf(userId) != -1) { //It was already upvoted by the user
       Answers.update({_id: answerId},{
         $inc: {voteCount: -1},
         $pull : {"upvoters": userId}
       });
 
-      if(course.instructors.indexOf(Meteor.user().username) != -1){
+      if (course.instructors.indexOf(Meteor.user().username) != -1) {
         Answers.update({_id: answerId},{
           $set: {
             isInstructorUpvoted: false
           }
         });
       }
-    }else{
-        Answers.update({_id: answerId},{
-          $inc: {voteCount: 1},
-          $addToSet : {"upvoters": userId}
-        });
+    } else {
+      Answers.update({_id: answerId},{
+        $inc: {voteCount: 1},
+        $addToSet : {"upvoters": userId}
+      });
 
-        if(course.instructors.indexOf(Meteor.user().username) != -1){
-          Answers.update({_id: answerId},{
-            $set: {
-              isInstructorUpvoted: true
-            }
-          });
-        }
+      if (course.instructors.indexOf(Meteor.user().username) != -1) {
+        Answers.update({_id: answerId},{
+          $set: {
+            isInstructorUpvoted: true
+          }
+        });
+      }
     }
 
     var newAnswer = Answers.findOne(answerId);
     return newAnswer.upvoters.length - newAnswer.downvoters.length;
   },
-  answerDelete: function(answerId){
+  answerDelete: function(answerId) {
     var userId = Meteor.user()._id;
     var answer = Answers.findOne(answerId);
 

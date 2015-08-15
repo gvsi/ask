@@ -1,30 +1,59 @@
 Meteor.publish('posts', function(id) {
 	if(Meteor.users.findOne(this.userId).profile.courses.indexOf(id) != -1){
 		var self = this;
-		var cursor = Posts.find({courseId: id, isDeleted: { $ne: true}},{fields: {revisionHistory: 0, followers: 0, tags: 0, type: 0, updatedAt: 0, upvoters: 0, isDeleted: 0}},{sort: {createdAt: -1}});
-
-		cursor.forEach(function(doc) {
-			if (doc.viewers.indexOf(self.userId) != -1) {
-				doc.viewers = [self.userId];
-			} else {
-				doc.viewers = [];
-			}
-      self.added('posts', doc._id, doc);
-    }, self);
+		var cursor = Posts.find({courseId: id, isDeleted: { $ne: true}},{fields: {revisionHistory: 0, tags: 0, type: 0, updatedAt: 0, isDeleted: 0}},{sort: {createdAt: -1}});
 
 		var handle = cursor.observeChanges({
-	    added: function (id, fields) {
-	      self.added("posts", id, fields);
-	    },
-	    changed: function(id, fields) {
-	      self.changed("posts", id, fields);
-	    },
-	    removed: function (id) {
-	      self.removed("posts", id);
-	    }
-	  });
+			added: function (id, doc) {
+				var d = checkFields(doc);
+				self.added("posts", id, d);
+			},
+			changed: function(id, doc) {
+				var d = checkFields(doc);
+				self.changed("posts", id, d);
+			},
+			removed: function (id) {
+				self.removed("posts", id);
+			}
+		});
 
-    self.ready();
+		function checkFields(doc) {
+			//followers
+			if (doc.followers) {
+				if (doc.followers.indexOf(self.userId) != -1) {
+					doc.followers = [self.userId];
+				} else {
+					doc.followers = [];
+				}
+			}
+
+			// Viewers
+			if (doc.viewers) {
+				if (doc.viewers.indexOf(self.userId) != -1) {
+					doc.viewers = [self.userId];
+				} else {
+					doc.viewers = [];
+				}
+			}
+
+			// Upvoters
+			if (doc.upvoters) {
+				if (doc.upvoters.indexOf(self.userId) != -1) {
+					doc.upvoters = [self.userId];
+				} else {
+					doc.upvoters = [];
+				}
+			}
+
+			// Anonymity
+			if (doc.isAnonymous) {
+				delete doc.userId;
+			}
+
+			return doc;
+		}
+
+		self.ready();
 
 		self.onStop(function () {
 			handle.stop();
@@ -36,7 +65,7 @@ Meteor.publish('posts', function(id) {
 Meteor.publish('singlePost', function(id) {
 	var post = Posts.find({_id: id, isDeleted: { $ne: true}},{fields: {userId: 0, upvoters: 0, followers: 0, viewers: 0, revisionHistory: 0}});
 	if(post && (Meteor.users.findOne(this.userId).profile.courses.indexOf(post.courseId) != 1)){
-			return post;
+		return post;
 	}
 });
 
@@ -53,7 +82,7 @@ Meteor.publish('coursesForStudent', function () {
 });
 
 Meteor.publish('singleUser', function(id) {
- 	return Meteor.users.find({_id: id},{fields: {'profile.name': 1, 'profile.surname': 1}});
+	return Meteor.users.find({_id: id},{fields: {'profile.name': 1, 'profile.surname': 1}});
 });
 
 Meteor.publish('answers', function (postId) {
