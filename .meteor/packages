@@ -24,10 +24,10 @@ vazco:universe-html-purifier
 mrt:mathjax
 hillmark:meteor-identicon
 matteodem:easy-search
-konecty:autolinker
 tomi:upload-server
 tomi:upload-jquery
 simple:highlight.js
 matb33:collection-hooks
 natestrauser:jquery-scrollto
 mrt:jquery-visible
+meteor-autolinker
