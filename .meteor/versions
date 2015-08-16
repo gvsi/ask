@@ -17,6 +17,7 @@ fastclick@1.0.3
 fortawesome:fontawesome@4.3.0
 geojson-utils@1.0.3
 gromo:jquery.scrollbar@0.0.1
+gwendall:body-events@0.1.6
 hillmark:meteor-identicon@1.0.0
 html-tools@1.0.4
 htmljs@1.0.4

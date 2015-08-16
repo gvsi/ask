@@ -86,13 +86,17 @@ Meteor.methods({
     if(post.followers){
       post.followers.forEach(function(followerId) {
         if(followerId != Meteor.userId()){
+          var answerBodyWithoutTags = UniHTML.purify(answerAttributes.body, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
+
           var notificationAttributes = {
             intend: 'New answer added to: ',
             postTitle: post.title,
-            text: answerAttributes.body,
-            type: 'info',
+            text: answerBodyWithoutTags,
+            type: 'answerToPost',
+            answerId: answer._id,
+            postId: post._id,
+            postCourseId: post.courseId,
             userId: followerId,
-            link: '/room/'+ post.courseId + '?p=' + post._id + '#' + answer._id,
             seen: false
           }
 
@@ -190,9 +194,11 @@ Meteor.methods({
         intend: 'New comment to answer: ',
         postTitle: answerBodyWithoutTags,
         text: commentBodyWithoutTags,
-        type: 'info',
+        type: 'commentToAnswer',
+        answerId: answer._id,
+        postId: post._id,
+        postCourseId: post.courseId,
         userId: answer.userId,
-        link: '/room/'+ post.courseId + '?p=' + post._id + '#' + answer._id,
         seen: false
       }
 

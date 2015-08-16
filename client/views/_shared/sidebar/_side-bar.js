@@ -12,9 +12,7 @@ Tracker.autorun(function(){
 			onReady: function(){
 				 Session.set('coursesLoaded', true);
 			}});
-
-
-    }
+   }
 });
 
 Template.sideBar.rendered = function (){
@@ -33,15 +31,25 @@ Template.sideBar.rendered = function (){
 						added: function(id, notification){
 							if(notification.userId == Meteor.userId()){
 								if (!initial) {
+
+                  var iconType="";
+                  if(notification.type == "instructorNote"){
+                    iconType = '<i style="margin-left:-6px;" class="fa fa-file-o"></i>';
+                  }else{
+                    iconType = '<i class="pg-comment"></i>';
+                  }
+
 									$('body').pgNotification({
 										style: 'circle',
 										title: notification.intend,
 										message: notification.postTitle,
-										type: notification.type,
-										thumbnail: '<div class="timeline-point success" style="margin-left: 12px;margin-top: -2px;"><i class="pg-comment"></i></div>',
-										onShown: function(){
-											$( ".alert:last" ).wrap( "<a href="+ notification.link +"></a>" );
-										}
+										type: 'info',
+                    postId: notification.postId,
+                    answerId: notification.answerId,
+                    postCourseId: notification.postCourseId,
+                    typeNotification: notification.type,
+                    timeout: 10000,
+										thumbnail: '<div class="timeline-point success" style="margin-left: 12px;margin-top: -2px;">' + iconType + '</div>'
 									}).show();
 
 									Meteor.call("seeNotification", id, function(error, result){
@@ -52,6 +60,7 @@ Template.sideBar.rendered = function (){
 
 										}
 									});
+
 								}
 							}
 						}
@@ -63,6 +72,7 @@ Template.sideBar.rendered = function (){
 	});
 
 };
+
 
 Template.sideBar.helpers({
 	currentCourses: function () {
