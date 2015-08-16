@@ -148,12 +148,13 @@
       {{>latexModal}}
 
       <div class="answers-wrapper m-t-30">
-        {{#if answers.count}}
-          <span class="liveAnswers-wrapper">
-          {{answerCount}}</span>
-        {{/if}}
-        <span class="pull-right liveAnswers-wrapper" style="font-size: 10px; padding-top:4px;">{{viewCount}}</span>
-
+        <div style="height: 23px">
+          {{#if answers.count}}
+            <span class="liveAnswers-wrapper">
+            {{answerCount}}</span>
+          {{/if}}
+          <span class="pull-right liveAnswers-wrapper" style="font-size: 10px; padding-top:4px;">{{viewCount}}</span>
+        </div>
         <hr style="margin-top:0px">
       {{#each answers}}
       {{ >answer }}
@@ -173,7 +174,12 @@
           </div>
           <br><br>
           {{/if}}
-          <div class="panel-title">Write an answer:</div>
+
+          {{#if answers.count}}
+            <div class="panel-title">Write an answer:</div>
+          {{else}}
+            <div class="panel-title">Be the first to write an answer:</div>
+          {{/if}}
         </div>
         <div class="panel-body">
           <label class="error">{{errorMessage 'answerBody'}}</label>
