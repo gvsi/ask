@@ -216,8 +216,8 @@
       </div>
     </div>
     <div class="votingContainer" data-answer-id="{{_id}}">
-      <button class="btn btn-sm btn-rounded {{upvote}}" id="upvoteAnswer" {{disabledVoteForOwner}}><i class="fa fa-angle-up"></i></button>
-      <div id="answerVoteCount">{{voteCount }}</div>
+      <button class="btn btn-sm btn-rounded {{isAnswerUpvoted}}" id="upvoteAnswer" {{disabledVoteForOwner}}><i class="fa fa-thumbs-up"></i><br>{{voteCount}}</button>
+      <!-- <div id="answerVoteCount">{{voteCount }}</div> -->
       <!-- <button class="btn btn-sm btn-rounded {{downvote}}"  id="downvoteAnswer" {{disabledVoteForOwner}}><i class="fa fa-angle-down"></i></button> -->
       {{#if isInstructorUpvoted}}
       <div class="check text-success"><i class="fa fa-check-circle"></i></div>
