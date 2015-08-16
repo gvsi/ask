@@ -76,8 +76,10 @@ Meteor.methods({
       }
     }
 
+    //increments answers counts, pulls user from users answering live
     Posts.update({_id: answerAttributes.postId}, {
-      $inc: {answersCount: 1}
+      $inc: {answersCount: 1},
+      $pull: {usersLiveAnswering: user._id}
     });
 
     // create the answer, save the id
@@ -146,8 +148,6 @@ Meteor.methods({
     } else {
       throw new Meteor.Error('invalid-answer', 'The answer you\'re trying to edit does not exist');
     }
-
-    // TODO: now create a notification, informing the user that there's been a answer
 
     return answerAttributes.answerId;
   },

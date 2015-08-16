@@ -11,7 +11,7 @@
       {{#if isLoading}}
       <div style="margin-top:30%">{{>loading}}</div>
       {{else}}
-        {{#if posts.count}}
+        {{#if areTherePosts}}
         <h1><i class="fa fa-warning"></i></h1>
         <h2><strong>Under construction</strong></h2>
         <h3>Course stats go here</h3>
@@ -38,11 +38,12 @@
 <template name="postContent">
 
   <div class="modal fade slide-up disable-scroll" id="modalDeleteAnswer" tabindex="-1" role="dialog" aria-labelledby="modalSlideUpLabel" aria-hidden="false">
-    <div class="modal-dialog " style="width:418px">
+    <div class="modal-dialog " style="width:448px; text-align:center;">
       <div class="modal-content-wrapper">
         <div class="modal-content">
           <div class="modal-header clearfix text-left">
-            <h5>Are you sure you want to delete this answer?</h5>
+            <h5><strong>Are you sure you want to delete this answer?</strong></h5>
+            Did you consider making making it anonymous, instead?
           </div>
           <div class="modal-footer" style="margin-top: 16px;text-align: center;">
             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -99,11 +100,12 @@
         </div>
 
         <div class="modal fade slide-up disable-scroll" id="modalDeletePost" tabindex="-1" role="dialog" aria-labelledby="modalSlideUpLabel" aria-hidden="false">
-          <div class="modal-dialog " style="width:394px">
+          <div class="modal-dialog " style="width:420px">
             <div class="modal-content-wrapper">
               <div class="modal-content">
                 <div class="modal-header clearfix text-left">
-                  <h5>Are you sure you want to delete this post?</h5>
+                  <h5><strong>Are you sure you want to delete this post?</strong></h5>
+                  Did you consider making making it anonymous, instead?
                 </div>
                 <div class="modal-footer" style="margin-top: 16px;text-align: center;">
                   <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -147,15 +149,8 @@
 
       <div class="answers-wrapper m-t-30">
         {{#if answers.count}}
-          <span style="font-family: 'Montserrat';
-          text-transform: uppercase;
-          display: inline-block;
-          letter-spacing: 0.02em;
-          font-size: 14px;
-          font-weight: 600;
-          line-height: normal;
-          overflow: hidden;
-          ">{{answerCount}}</span>
+          <span class="liveAnswers-wrapper">
+          {{answerCount}}</span>
         {{/if}}
           <hr style="margin-top:0px">
       {{#each answers}}
@@ -165,8 +160,18 @@
 
       <div class="panel panel-transparent">
         <div class="panel-heading">
-          <div class="panel-title">Write an answer:
+          {{#if post.usersLiveAnsweringCount}}
+          <div class="panel-title text-complete">
+            {{post.usersLiveAnsweringCount}}
+            {{#if equals post.usersLiveAnsweringCount 1}}
+             user is currently writing an answer...
+            {{else}}
+             users are currently writing an answer...
+            {{/if}}
           </div>
+          <br><br>
+          {{/if}}
+          <div class="panel-title">Write an answer:</div>
         </div>
         <div class="panel-body">
           <label class="error">{{errorMessage 'answerBody'}}</label>

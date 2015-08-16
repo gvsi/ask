@@ -93,6 +93,9 @@ Template.postPage.helpers({
   queryPathFor: function () {
     console.log("q="+this.post._id);
     return "q="+this.post._id;
+  },
+  areTherePosts: function() {
+    return Posts.find({'courseId': Router.current().params.courseId}).count() > 0;
   }
 });
 
@@ -273,6 +276,9 @@ Template.postContent.helpers({
           post.ownerName = o.profile.name;
           post.ownerSurname = o.profile.surname;
         }
+        // if (post.usersLiveAnswering) {
+        //     post.usersLiveAnsweringCount = post.usersLiveAnswering.length;
+        // }
         return post;
       } else {
         return false;
@@ -316,7 +322,7 @@ Template.postContent.helpers({
     if (post) {
       var followers = post.followers;
       var user = Meteor.user();
-      if (user && followers.length == 1) {
+      if (user && followers && followers.length == 1) {
         return 'btn-warning';
       } else {
         return 'btn-default';
@@ -356,6 +362,9 @@ Template.postContent.helpers({
     } else {
       return count + " Answers"
     }
+  },
+  usersLiveAnsweringCount: function() {
+    return this.usersLiveAnswering.length;
   }
 });
 
@@ -731,10 +740,22 @@ loadTinyMCE = function(selector, height) {
     setup: function(editor) {
         if (selector == "answerTinyMCE") {
           editor.on('focus', function(e) {
+              console.log('focus');
               if (Answers.find({postId: Router.current().params.query.p, userId: Meteor.userId()},{limit:1}).count() > 0) {
                 Session.set('answerSubmitErrors', {answerBody: "Are you sure you want to add another answer? You could use the edit button to refine and improve your existing answer, instead."});
               }
           });
+          editor.on('keyup', _.throttle(function(e) {
+              var postId = Router.current().params.query.p;
+              //Meteor.call("liveAnswer", postId);
+              console.log('change');
+              var postId = Router.current().params.query.p;
+              Meteor.call("liveAnswer", postId);
+
+              if (Answers.find({postId: Router.current().params.query.p, userId: Meteor.userId()},{limit:1}).count() > 0) {
+                Session.set('answerSubmitErrors', {answerBody: "Are you sure you want to add another answer? You could use the edit button to refine and improve your existing answer, instead."});
+              }
+          }, 1500));
         }
     }
   });
