@@ -531,14 +531,16 @@ Template.answer.helpers({
   dateFromNow: function() {
     return moment(this.createdAt).fromNow();
   },
-  upvote: function(){
+  isAnswerUpvoted: function(){
     var answerId = this._id;
     var answer = Answers.findOne(answerId);
     if (answer) {
       var voters = answer.upvoters;
       var userId = Meteor.user()._id;
-      if(voters && voters.indexOf(userId) != -1){
+      if(voters && voters.length == 1){
         return 'btn-success';
+      }else{
+        return 'btn-default';
       }
     }
   },

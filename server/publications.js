@@ -88,10 +88,43 @@ Meteor.publish('singleUser', function(id) {
 Meteor.publish('answers', function (postId) {
 	var post = Posts.find({_id: postId, isDeleted: { $ne: true}});
 	if(post && (Meteor.users.findOne(this.userId).profile.courses.indexOf(post.courseId) != 1)){
-		var answer = Answers.find({'postId': postId, isDeleted: {$ne: true}},{fields: {revisionHistory: 0}},{sort: {isInstructor: -1, isInstructorUpvoted: -1, voteCount: -1, createdAt: 1}});
-		if(answer){
-			return answer;
+
+		var self = this;
+		var cursor = Answers.find({'postId': postId, isDeleted: {$ne: true}},{fields: {revisionHistory: 0}},{sort: {isInstructor: -1, isInstructorUpvoted: -1, voteCount: -1, createdAt: 1}});
+
+		var handle = cursor.observeChanges({
+			added: function (id, doc) {
+				var d = checkFields(doc);
+				self.added("answers", id, d);
+			},
+			changed: function(id, doc) {
+				var d = checkFields(doc);
+				self.changed("answers", id, d);
+			},
+			removed: function (id) {
+				self.removed("answers", id);
+			}
+		});
+
+		function checkFields(doc) {
+			//Upvoters
+			if (doc.upvoters) {
+				if (doc.upvoters.indexOf(self.userId) != -1) {
+					doc.upvoters = [self.userId];
+				} else {
+					doc.upvoters = [];
+				}
+			}
+
+			return doc;
 		}
+
+		self.ready();
+
+		self.onStop(function () {
+			handle.stop();
+		});
+
 	}
 });
 
