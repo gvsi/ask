@@ -152,7 +152,9 @@
           <span class="liveAnswers-wrapper">
           {{answerCount}}</span>
         {{/if}}
-          <hr style="margin-top:0px">
+        <span class="pull-right liveAnswers-wrapper" style="font-size: 10px; padding-top:4px;">{{viewCount}}</span>
+
+        <hr style="margin-top:0px">
       {{#each answers}}
       {{ >answer }}
       {{/each}}

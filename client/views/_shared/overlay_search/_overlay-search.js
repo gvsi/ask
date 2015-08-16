@@ -44,7 +44,7 @@ Template.overlaySearch.events({
       $('#overlay-search').keyup();
     }, 100);
   },
-  "click .card-header": function() {
+  "click .searchTile": function() {
     var postId = this._id;
     var courseId = this.courseId;
     //console.log(this._id);
@@ -52,7 +52,7 @@ Template.overlaySearch.events({
 
     setTimeout(function () {
       Session.set("postId", postId);
-      loadPage(postId);
+      loadPage(postId, true);
       Router.go('room', {courseId: courseId}, {query: 'p='+postId});
     }, 300);
   },

@@ -15,14 +15,7 @@ Template.postPage.rendered = function () {
   }
 
   if (Router.current().params.query.p) {
-    var postId = Router.current().params.query.p;
-    $('.item').removeClass('active');
-
-    setTimeout(function () {
-      $("li[data-post-id="+ postId +"]").addClass('active');
-      $('.list-view-wrapper').scrollTop($("li[data-post-id="+ postId +"]").offset().top-92);
-    }, 500);
-    loadPage(postId);
+    loadPage(Router.current().params.query.p, true);
   }
 
   $(window).resize(function() {
@@ -187,7 +180,7 @@ Template.postList.events({
     var postId = $(e.currentTarget).attr('data-post-id');
     Router.go('room', {courseId: Router.current().params.courseId}, {query: 'p='+postId});
     Session.set("postId", postId);
-    loadPage(postId);
+    loadPage(postId, false);
   }
 });
 
@@ -255,6 +248,11 @@ Template.postThumbnail.helpers({
     dummyNode.innerHTML = this.text;
     resultText = dummyNode.innerText || dummyNode.textContent
     return resultText;
+  },
+  isPostViewed: function(){
+    if(this.viewers.length == 0){
+      return "bg-warning-lighter";
+    }
   }
 });
 
@@ -360,12 +358,20 @@ Template.postContent.helpers({
     if (count == 1) {
       return "1 answer";
     } else {
-      return count + " Answers"
+      return count + " answers"
     }
   },
   usersLiveAnsweringCount: function() {
     return this.usersLiveAnswering.length;
-  }
+  },
+  viewCount: function() {
+      var post = Posts.findOne({_id: Router.current().params.query.p});
+      if (post && post.viewCount == 1) {
+        return "VIEWED 1 TIME";
+      } else {
+        return "VIEWED " + post.viewCount + " TIMES";
+      }
+    }
 });
 
 Template.postContent.events({
@@ -667,8 +673,17 @@ Template.answer.events({
 });
 
 
-loadPage = function(postId) {
+loadPage = function(postId, needsScroll) {
   Session.set('answerSubmitErrors', {});
+
+  if(needsScroll){
+    $('.item').removeClass('active');
+
+    setTimeout(function () {
+      $("li[data-post-id="+ postId +"]").addClass('active');
+      $('.list-view-wrapper').scrollTop($("li[data-post-id="+ postId +"]").offset().top-92);
+    }, 500);
+  }
 
   Meteor.subscribe('answers', postId);
   Meteor.subscribe('singlePost', postId, {
