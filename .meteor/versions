@@ -33,7 +33,6 @@ iron:router@1.0.9
 iron:url@1.0.9
 jquery@1.11.3_2
 json@1.0.3
-konecty:autolinker@1.0.2
 launch-screen@1.0.2
 less@1.0.14
 livedata@1.0.13
@@ -42,6 +41,7 @@ logging@1.0.7
 matb33:collection-hooks@0.7.13
 matteodem:easy-search@1.6.2
 meteor@1.1.6
+meteor-autolinker@1.0.2
 meteor-platform@1.2.2
 meteorhacks:aggregate@1.2.1
 meteorhacks:collection-utils@1.2.0

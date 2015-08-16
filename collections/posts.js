@@ -235,6 +235,25 @@ Meteor.methods({
               });
           }
         }
+    },
+    liveAnswer: function(postId) {
+    	if (Meteor.isServer) {
+        var userId = Meteor.userId();
+        Posts.update({_id: postId}, {
+          $push: {
+            usersLiveAnswering: userId
+          }
+        });
+
+        Meteor.setTimeout(function(){
+      		 Posts.update({_id: postId},{
+             $pop: {
+               usersLiveAnswering: userId
+             }
+           })
+      	}, 60000);
+      	return true;
+      }
     }
 });
 
