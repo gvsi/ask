@@ -252,6 +252,11 @@ Template.postThumbnail.helpers({
     dummyNode.innerHTML = this.text;
     resultText = dummyNode.innerText || dummyNode.textContent
     return resultText;
+  },
+  isPostViewed: function(){
+    if(this.viewers.length == 0){
+      return "bg-warning-lighter";
+    }
   }
 });
 
@@ -354,7 +359,7 @@ Template.postContent.helpers({
     if (count == 1) {
       return "1 answer";
     } else {
-      return count + " Answers"
+      return count + " answers"
     }
   }
 });

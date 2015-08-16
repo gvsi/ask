@@ -146,17 +146,30 @@
       {{>latexModal}}
 
       <div class="answers-wrapper m-t-30">
-        {{#if answers.count}}
-          <span style="font-family: 'Montserrat';
-          text-transform: uppercase;
-          display: inline-block;
-          letter-spacing: 0.02em;
-          font-size: 14px;
-          font-weight: 600;
-          line-height: normal;
-          overflow: hidden;
-          ">{{answerCount}}</span>
-        {{/if}}
+        <div style="height: 23px;">
+          {{#if answers.count}}
+            <span style="font-family: 'Montserrat';
+            text-transform: uppercase;
+            display: inline-block;
+            letter-spacing: 0.02em;
+            font-size: 14px;
+            font-weight: 600;
+            line-height: normal;
+            overflow: hidden;
+            ">{{answerCount}}</span>
+          {{/if}}
+            <span class="pull-right" style="font-family: 'Montserrat';
+            text-transform: uppercase;
+            display: inline-block;
+            letter-spacing: 0.02em;
+            font-size: 10px;
+            font-weight: 600;
+            line-height: normal;
+            overflow: hidden;
+            float:right;
+            padding-top:4px;
+            ">VIEWED {{post.viewCount}} TIMES </span>
+        </div>
           <hr style="margin-top:0px">
       {{#each answers}}
       {{ >answer }}
