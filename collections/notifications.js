@@ -7,8 +7,10 @@ Meteor.methods({
       postTitle: String,
       text: String,
       type: String,
+      answerId: String,
+      postId: String,
+      postCourseId: String,
       userId: String,
-      link: String,
       seen: Boolean
     });
 

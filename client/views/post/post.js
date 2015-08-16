@@ -707,13 +707,11 @@ Template.answer.events({
 loadPage = function(postId, needsScroll) {
   Session.set('answerSubmitErrors', {});
 
-  if(needsScroll){
-    $('.item').removeClass('active');
+  $('.item').removeClass('active');
+  $("li[data-post-id="+ postId +"]").addClass('active');
 
-    setTimeout(function () {
-      $("li[data-post-id="+ postId +"]").addClass('active');
+  if(needsScroll && !$("li[data-post-id="+ postId +"]").visible() && $("li[data-post-id="+ postId +"]").offset()){
       $('.list-view-wrapper').scrollTop($("li[data-post-id="+ postId +"]").offset().top-92);
-    }, 500);
   }
 
   Meteor.subscribe('answers', postId);

@@ -51,13 +51,17 @@ Meteor.methods({
 
           courseStudents.forEach(function(courseUser) {
             if(courseUser._id != user._id){
+              var postBodyWithoutTags = UniHTML.purify(postAttributes.text, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
+
               var notificationAttributes = {
-                intend: 'An instructor posted a note: ',
+                intend: 'New instructor\'s note: ',
                 postTitle: postAttributes.title,
-                text: postAttributes.text,
-                type: 'info',
+                text: postBodyWithoutTags,
+                type: 'instructorNote',
+                answerId: "",
+                postId: postId,
+                postCourseId: postAttributes.courseId,
                 userId: courseUser._id,
-                link: '/room/'+ postAttributes.courseId + '?p=' + postId,
                 seen: false
               }
 
@@ -218,19 +222,19 @@ Meteor.methods({
     },
     viewPost: function(postId){
         var userId = Meteor.user()._id;
-        Posts.update({_id: postId},
-          {
-            $addToSet : {
-              "viewers": userId
-            },
-            $inc: {
-              "viewCount": 1
-            }
+        var post = Posts.findOne({_id: postId});
+        if(post.viewers){
+          if(post.viewers.indexOf(userId) == -1){
+            Posts.update({_id: postId},{
+                $addToSet : {
+                  "viewers": userId
+                },
+                $inc: {
+                  "viewCount": 1
+                }
+              });
           }
-        );
-        Posts.update({_id: postId}, {$addToSet : {
-          "viewers": userId
-        }});
+        }
     },
     liveAnswer: function(postId) {
     	if (Meteor.isServer) {

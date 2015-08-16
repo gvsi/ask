@@ -925,7 +925,7 @@
     var self = this;
 
     // Element collection
-    self.container = $(container); // 'body' recommended
+    self.container = $(".fixed-header"); // 'body' recommended
     self.notification = $('<div class="pgn"></div>');
     self.options = $.extend(true, {}, $.fn.pgNotification.defaults, options);
 
@@ -936,7 +936,7 @@
       self.wrapper = $('.pgn-wrapper[data-position=' + this.options.position + ']');
     }
 
-    self.alert = $('<div class="alert"></div>');
+    self.alert = $('<div data-dismiss="alert" data-type="'+ this.options.typeNotification +'" data-answer-id="'+ this.options.answerId +'" data-post-course-id="'+ this.options.postCourseId +'" data-post-id="'+ this.options.postId +'" class="alert"></div>');
     self.alert.addClass('alert-' + self.options.type);
 
     if (self.options.style == 'bar') {
@@ -1069,6 +1069,10 @@ $.fn.pgNotification = function(options) {
 $.fn.pgNotification.defaults = {
   style: 'simple',
   message: null,
+  typeNotification: '',
+  answerId: '',
+  postId: '',
+  postCourseId: '',
   position: 'top-right',
   type: 'info',
   showClose: true,

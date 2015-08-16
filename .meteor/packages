@@ -30,4 +30,5 @@ simple:highlight.js
 matb33:collection-hooks
 natestrauser:jquery-scrollto
 mrt:jquery-visible
+gwendall:body-events
 meteor-autolinker
