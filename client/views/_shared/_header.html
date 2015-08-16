@@ -34,7 +34,7 @@
         <ul class="notification-list no-margin hidden-sm hidden-xs b-grey b-l b-r no-style p-l-30 p-r-20">
           <li class="p-r-15 inline">
             <div class="dropdown">
-              <a href="" id="notification-center" style="cursor:pointer" class="icon-set globe-fill" data-toggle="dropdown">
+              <a href="" id="notification-center" style="cursor:pointer; font-size:19px" class="fa fa-globe" data-toggle="dropdown">
                 {{#if areThereUnseenNotifications}}
                   <span class="bubble"></span>
                 {{/if}}
@@ -107,9 +107,9 @@
               </div>
             </div>
           </li>
-          <li class="p-r-15 inline">
-            <a href="{{pathFor 'home'}}" class="icon-set grid-box"></a>
-          </li>
+          <!-- <li class="p-r-15 inline">
+            <a href="{{pathFor 'home'}}" style="font-size:19px" class="fa fa-tachometer"></a>
+          </li> -->
         </ul>
         <!-- END NOTIFICATION DROPDOWN -->
         <a href="#" id="search-link" class="search-link" data-toggle="search"><i class="pg-search"></i>{{{searchBarText}}}</a>

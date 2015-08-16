@@ -145,13 +145,24 @@
 
       {{>latexModal}}
 
-      <div class="answers-wrapper">
+      <div class="answers-wrapper m-t-30">
+        {{#if answers.count}}
+          <span style="font-family: 'Montserrat';
+          text-transform: uppercase;
+          display: inline-block;
+          letter-spacing: 0.02em;
+          font-size: 14px;
+          font-weight: 600;
+          line-height: normal;
+          overflow: hidden;
+          ">{{answerCount}}</span>
+        {{/if}}
+          <hr style="margin-top:0px">
       {{#each answers}}
       {{ >answer }}
       {{/each}}
       </div>
 
-      <hr>
       <div class="panel panel-transparent">
         <div class="panel-heading">
           <div class="panel-title">Write an answer:
@@ -177,7 +188,6 @@
 </template>
 
 <template name="answer">
-  <hr>
   <div class="answer" id="{{_id}}">
     <div class="postInfo">
       <div class="thumbnail-wrapper bordered circular" >
@@ -268,6 +278,7 @@
     </div>
 
   </div>
+  <hr>
 </template>
 
 <template name="latexModal">

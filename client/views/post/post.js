@@ -348,6 +348,14 @@ Template.postContent.helpers({
     }else{
       return false;
     }
+  },
+  answerCount: function() {
+    var count = Answers.find({postId: Router.current().params.query.p}).count();
+    if (count == 1) {
+      return "1 answer";
+    } else {
+      return count + " Answers"
+    }
   }
 });
 
