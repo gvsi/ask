@@ -3,6 +3,8 @@ Template.postCompose.rendered = function(){
     $("#postList").ioslist();
   }
 
+  Session.set("DocumentTitle", "Compose | Ask");
+
   loadTinyMCE("composeTinyMCE", 400);
 
   mathquill();

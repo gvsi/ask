@@ -1,4 +1,7 @@
 Template.notifications.rendered = function(){
+		//Set Title
+		Session.set("DocumentTitle","Notifications | Ask");
+
 		var $timeline_block = $('.timeline-block');
 
 		//hide timeline blocks which are outside the viewport

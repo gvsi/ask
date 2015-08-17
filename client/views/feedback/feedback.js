@@ -5,6 +5,7 @@ Template.feedbackForm.created = function() {
 Template.feedbackForm.rendered = function (){
    Uploader.render.call(this);
    $('#form-personal').validate();
+   Session.set("DocumentTitle","Feedback | Ask");
 }
 
 Template.feedbackForm.events({
