@@ -322,16 +322,16 @@ Template.postContent.helpers({
     else
     return false;
   },
-  followButton: function(){
+  isUserFollowing: function(){
     var postId = Router.current().params.query.p;
     var post = Posts.findOne(postId);
     if (post) {
       var followers = post.followers;
       var user = Meteor.user();
       if (user && followers && followers.length == 1) {
-        return 'btn-warning';
+        return true;
       } else {
-        return 'btn-default';
+        return false;
       }
     } else {
       return false;
