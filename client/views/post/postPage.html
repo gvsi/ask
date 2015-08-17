@@ -12,7 +12,7 @@
       <div style="margin-top:30%">{{>loading}}</div>
       {{else}}
         {{#if areTherePosts}}
-          {{>courseStats}}
+          {{>courseStats courseId=courseId}}
         {{else}}
         <h1><i class="fa fa-warning"></i></h1>
         <h2><strong>Under construction</strong></h2>

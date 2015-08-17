@@ -369,7 +369,7 @@ Template.postContent.helpers({
       if (post && post.viewCount == 1) {
         return "VIEWED 1 TIME";
       } else {
-        if (post.viewCount)
+        if (post)
           return "VIEWED " + post.viewCount + " TIMES";
       }
     }

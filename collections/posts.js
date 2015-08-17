@@ -281,6 +281,7 @@ Meteor.methods({
     }
 });
 
+
 EasySearch.createSearchIndex('defaultSearch', {
   'collection': Posts, // instanceof Meteor.Collection
   'field': ['title','text'], // array of fields to be searchable
