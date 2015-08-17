@@ -143,6 +143,47 @@ Meteor.publish("notifications", function(){
 	}
 });
 
+// Course Stats publications
+
+Meteor.publish("courseStats", function(courseId) {
+	// online users
+	Counts.publish(this, "onlineUsersCount",
+		Meteor.users.find({
+			'status.online':true,
+			'profile.courses': courseId
+		})
+	);
+
+	// online instructors
+	Counts.publish(this, "onlineInstructorsCount",
+		Meteor.users.find({
+			'status.online':true,
+			'username': {
+				$in: Courses.findOne({'_id': courseId}).instructors
+			}
+		})
+	);
+
+	// posts unread by user
+	Counts.publish(this, "unreadPostsCount",
+		Posts.find({
+			'courseId': courseId,
+			'viewers': {$ne: this.userId},
+			'isDeleted': false
+		})
+	);
+
+	// unanswered questions
+	Counts.publish(this, "unansweredQuestionsCount",
+		Posts.find({
+			'courseId': courseId,
+			'answersCount': 0,
+			'isDeleted': false,
+			'isInstructorPost': {$exists: false}
+		})
+	);
+})
+
 // Meteor.startup(function () {
 //   UploadServer.init({
 //     tmpDir: process.env.PWD + '/.uploads/tmp',

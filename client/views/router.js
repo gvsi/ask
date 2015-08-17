@@ -39,7 +39,8 @@ Router.route('/room/:courseId', function () {
     $(".toggle-post-sidebar").remove();
     //$(".header-inner").prepend("<a href=\"#\" class=\"toggle-email-sidebar\">Room <span class=\"text-info\">(12)</span> <span class=\"caret\"></span></a>");
     return [
-      Meteor.subscribe('posts', this.params.courseId)
+      Meteor.subscribe('posts', this.params.courseId),
+      Meteor.subscribe('courseStats', this.params.courseId)
     ];
   }
 });
