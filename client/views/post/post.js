@@ -751,7 +751,7 @@ loadPage = function(postId, needsScroll) {
       if(post){
           Session.set("DocumentTitle",  post.title + " | Ask");
 
-        if(post.viewers.indexOf(Meteor.userId()) == -1){
+        if(post.viewers && post.viewers.indexOf(Meteor.userId()) == -1){
           Meteor.call("viewPost", postId, function(error, result){
             if(error){
               console.log("error", error);

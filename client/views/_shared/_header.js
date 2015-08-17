@@ -26,7 +26,7 @@ Template.header.helpers({
 		if(this.seen){
 			return "";
 		}else{
-			return "unread";
+			return "bg-warning-lighter";
 		}
 	},
 	areThereUnseenNotifications: function(){
@@ -70,19 +70,6 @@ Template.header.events({
 	"click .notification-list .dropdown-menu": function(event, template){
 		event.stopPropagation();
 	},
-	"click #notification-center": function(event, template){
-		var notifications = Notifications.find({seen: false}).fetch();
-			notifications.forEach(function (notification) {
-					 Meteor.call("seeNotification", notification._id , function(error, result){
-					 	if(error){
-					 		console.log("error", error);
-					 	}
-					 	if(result){
-
-					 	}
-					 });
-			 });
-	},
 	"click #toggle-more-details": function(event, template){
 		var p = $(event.currentTarget).closest('.heading');
 		p.closest('.heading').children('.more-details').stop().slideToggle('fast', function() {
@@ -98,5 +85,28 @@ Template.header.events({
         $('#overlay-search').keyup();
       }
     }
-  }
+  },
+	"click .notification-link": function(event, template){
+		var notificationId = this._id;
+		var postId = this.postId;
+		var postCourseId = this.postCourseId;
+		var type = this.type;
+
+		Meteor.call("seeNotification", notificationId, function(error, result){
+			if(error){
+				console.log("error", error);
+			}
+		});
+
+		$(".dropdown").removeClass("open");
+
+		if(type == "instructorNote"){
+			loadPage(postId, true);
+			Router.go('room', {courseId: postCourseId}, {query: 'p='+postId});
+		}else if (type == "answerToPost" || type == "commentToAnswer") {
+			var answerId = this.answerId;
+			loadPage(postId, true);
+			Router.go('room', {courseId: postCourseId}, {query: 'p='+postId, hash: answerId});
+		}
+	},
 });
