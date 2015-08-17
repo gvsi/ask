@@ -144,6 +144,30 @@ Meteor.methods({
           )
         }
 
+        var answerNotifications = Notifications.find({"postId": postAttributes.postId, "type": 'answerToPost'});
+        answerNotifications.forEach(function(notification) {
+            Notifications.update({_id: notification._id}, {$set:{
+              postTitle: postAttributes.title,
+            }});
+          });
+
+        var course = Courses.findOne(postAttributes.courseId);
+        if (!course)
+          throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
+
+        if(course.instructors.indexOf(user.username.toLowerCase()) != -1){
+          var noteNotifications = Notifications.find({"postId": postAttributes.postId, "type": 'instructorNote'});
+          var postBodyWithoutTags = UniHTML.purify(postAttributes.text, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
+
+          noteNotifications.forEach(function(notification) {
+              Notifications.update({_id: notification._id}, {$set:{
+                postTitle: postAttributes.title,
+                text: postBodyWithoutTags,
+              }});
+            }
+          );
+        }
+
         return {
           _id: postAttributes.postId
         };

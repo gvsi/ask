@@ -14,6 +14,13 @@ Template.body.events({
 		var postId = $(e.currentTarget).attr('data-post-id');
 		var postCourseId = $(e.currentTarget).attr('data-post-course-id');
 		var type = $(e.currentTarget).attr('data-type');
+		var notificationId = $(e.currentTarget).attr('data-notification-id');
+
+		Meteor.call("seeNotification", notificationId, function(error, result){
+			if(error){
+				console.log("error", error);
+			}
+		});
 
 		if(type == "instructorNote"){
 			loadPage(postId, true);

@@ -47,19 +47,11 @@ Template.sideBar.rendered = function (){
                     postId: notification.postId,
                     answerId: notification.answerId,
                     postCourseId: notification.postCourseId,
+                    notificationId: id,
                     typeNotification: notification.type,
                     timeout: 10000,
 										thumbnail: '<div class="timeline-point success" style="margin-left: 12px;margin-top: -2px;">' + iconType + '</div>'
 									}).show();
-
-									Meteor.call("seeNotification", id, function(error, result){
-										if(error){
-											console.log("error", error);
-										}
-										if(result){
-
-										}
-									});
 
 								}
 							}

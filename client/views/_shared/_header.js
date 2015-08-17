@@ -51,6 +51,18 @@ Template.header.helpers({
 					return "Click here to <span class=\"bold\">search</span>";
 			}
 		}
+	},
+	queryId: function(){
+		 return 'p=' + this.postId;
+	},
+	notificationIcon: function(){
+		var iconType="";
+		if(this.type == "instructorNote"){
+			iconType = 'fa fa-file-o';
+		}else{
+			iconType = 'fa fa-comment';
+		}
+		 return iconType;
 	}
 });
 

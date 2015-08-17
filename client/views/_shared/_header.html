@@ -51,8 +51,8 @@
                           <!-- START Notification Item-->
                           <div class="heading">
                             <a class="text-complete">
-                              <i class="fa fa-comment fs-16 m-r-10"></i>
-                              <a href="{{link}}" class="text-complete"> <span class="bold">{{intend}} </span></a>
+                              <i class="{{notificationIcon}} fs-16 m-r-10"></i>
+                              <a href="{{pathFor 'room' courseId=postCourseId query=queryId hash=answerId }}" class="text-complete"> <span class="bold">{{intend}} </span></a>
                               <div class="pull-right time-date">
                                 <div id="toggle-more-details" class="thumbnail-wrapper d16 circular inline m-t-15 m-r-10 toggle-more-details">
                                   <div>
@@ -61,7 +61,7 @@
                                 </div>
                                 <span class="time">{{dateFromNow}}</span>
                               </div>
-                              <a href="{{link}}" class="text-complete"> <div class="fs-12 m-l-10 notificationTitle">
+                              <a href="{{pathFor 'room' courseId=postCourseId query=queryId hash=answerId }}" class="text-complete"> <div class="fs-12 m-l-10 notificationTitle">
                                 {{postTitle}}
                               </div></a>
                             </a>

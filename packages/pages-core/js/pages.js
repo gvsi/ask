@@ -936,7 +936,7 @@
       self.wrapper = $('.pgn-wrapper[data-position=' + this.options.position + ']');
     }
 
-    self.alert = $('<div data-dismiss="alert" data-type="'+ this.options.typeNotification +'" data-answer-id="'+ this.options.answerId +'" data-post-course-id="'+ this.options.postCourseId +'" data-post-id="'+ this.options.postId +'" class="alert"></div>');
+    self.alert = $('<div data-dismiss="alert" data-notification-id="'+ this.options.notificationId +'" data-type="'+ this.options.typeNotification +'" data-answer-id="'+ this.options.answerId +'" data-post-course-id="'+ this.options.postCourseId +'" data-post-id="'+ this.options.postId +'" class="alert"></div>');
     self.alert.addClass('alert-' + self.options.type);
 
     if (self.options.style == 'bar') {
@@ -1073,6 +1073,7 @@ $.fn.pgNotification.defaults = {
   answerId: '',
   postId: '',
   postCourseId: '',
+  notificationId: '',
   position: 'top-right',
   type: 'info',
   showClose: true,
