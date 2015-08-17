@@ -124,6 +124,19 @@ Meteor.publish('answers', function (postId) {
 				}
 			}
 
+			// Anonymity
+			if (doc.isAnonymous) {
+				delete doc.userId;
+			}
+
+			if (doc.comments) {
+				doc.comments.forEach(function(comment){
+		      if (comment.isAnonymous) {
+		        delete comment.userId;
+		      }
+		    });
+			}
+
 			return doc;
 		}
 
@@ -147,7 +160,7 @@ Meteor.publish("notifications", function(){
 
 Meteor.publish("courseStats", function(courseId) {
 	// online users
-	Counts.publish(this, "onlineUsersCount",
+	Counts.publish(this, "onlineUsers",
 		Meteor.users.find({
 			'status.online':true,
 			'profile.courses': courseId
@@ -155,7 +168,7 @@ Meteor.publish("courseStats", function(courseId) {
 	);
 
 	// online instructors
-	Counts.publish(this, "onlineInstructorsCount",
+	Counts.publish(this, "onlineInstructors",
 		Meteor.users.find({
 			'status.online':true,
 			'username': {
@@ -165,7 +178,7 @@ Meteor.publish("courseStats", function(courseId) {
 	);
 
 	// posts unread by user
-	Counts.publish(this, "unreadPostsCount",
+	Counts.publish(this, "unreadPosts",
 		Posts.find({
 			'courseId': courseId,
 			'viewers': {$ne: this.userId},
@@ -174,7 +187,7 @@ Meteor.publish("courseStats", function(courseId) {
 	);
 
 	// unanswered questions
-	Counts.publish(this, "unansweredQuestionsCount",
+	Counts.publish(this, "unansweredQuestions",
 		Posts.find({
 			'courseId': courseId,
 			'answersCount': 0,
@@ -182,6 +195,49 @@ Meteor.publish("courseStats", function(courseId) {
 			'isInstructorPost': {$exists: false}
 		})
 	);
+
+	// total questions (excludes posts)
+	Counts.publish(this, "totalQuestions",
+		Posts.find({
+			'courseId': courseId,
+			'isDeleted': false,
+			'isInstructorPost': {$exists: false}
+		})
+	);
+
+	var allCoursePosts = Posts.find({
+		'courseId': courseId,
+		'isDeleted': false
+	});
+
+	// all posts
+	Counts.publish(this, "totalPosts", allCoursePosts);
+
+	// contributions (answers)
+	Counts.publish(this, "contributions", allCoursePosts, { countFromField: 'answersCount' });
+
+	//instructor answers
+	Counts.publish(this, "instructorResponses",
+		Answers.find({
+			'postId': {
+				$in: allCoursePosts.fetch().map( function(u) { return u._id ; } )
+			},
+			'isInstructor': true,
+			'isDeleted': false
+		})
+	);
+
+	// total response time in minutes (minutes)
+	Counts.publish(this, "totalResponseTime",
+		Posts.find({
+			'courseId': courseId,
+			'isDeleted': false,
+			'isInstructorPost': {$exists: false},
+			'responseTime': {$exists: true}
+		}),
+		{ countFromField: 'responseTime' }
+	);
+
 })
 
 // Meteor.startup(function () {
