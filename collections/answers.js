@@ -153,6 +153,24 @@ Meteor.methods({
       throw new Meteor.Error('invalid-answer', 'The answer you\'re trying to edit does not exist');
     }
 
+    var answerNotifications = Notifications.find({"answerId": answerAttributes.answerId, "type": 'answerToPost'});
+    var commentNotifications = Notifications.find({"answerId": answerAttributes.answerId, "type": 'commentToAnswer'});
+    var answerBodyWithoutTags = UniHTML.purify(answerAttributes.body, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
+    var post = Posts.findOne(answerAttributes.postId);
+
+    answerNotifications.forEach(function(notification) {
+        Notifications.update({_id: notification._id}, {$set:{
+          postTitle: post.title,
+          text: answerBodyWithoutTags,
+        }});
+      });
+
+    commentNotifications.forEach(function(notification) {
+        Notifications.update({_id: notification._id}, {$set:{
+          postTitle: answerBodyWithoutTags
+        }});
+      });
+
     return answerAttributes.answerId;
   },
   commentInsert: function(commentAttributes) {
