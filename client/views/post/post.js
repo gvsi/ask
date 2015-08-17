@@ -369,7 +369,8 @@ Template.postContent.helpers({
       if (post && post.viewCount == 1) {
         return "VIEWED 1 TIME";
       } else {
-        return "VIEWED " + post.viewCount + " TIMES";
+        if (post.viewCount)
+          return "VIEWED " + post.viewCount + " TIMES";
       }
     }
 });
