@@ -9,7 +9,7 @@ Router.configure({
 */});
 
 Router.route('/', function () {
-  this.render('blankPage');
+  this.render('dashboard');
 },{
  name: "home",
  layoutTemplate:"dashboardLayout"

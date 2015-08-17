@@ -16,6 +16,14 @@ Template.postPage.rendered = function () {
 
   if (Router.current().params.query.p) {
     loadPage(Router.current().params.query.p, true);
+  }else{
+    var course = Courses.findOne(Router.current().params.courseId);
+    if(course){
+      Session.set("DocumentTitle",  course.name + " | Ask");
+    }else{
+      Session.set("DocumentTitle", "Ask");
+    }
+
   }
 
   $(window).resize(function() {
@@ -58,11 +66,11 @@ Template.postPage.rendered = function () {
     Session.set('customTags', undefined)
     $('#customTagsForCourse').show();
   }
-  setTimeout(function () {
-    //$('[data-toggle="tooltip"]').tooltip();
-  }, 5000);
-  // $('[data-toggle="tooltip"]').tooltip();
-  // $(".list-view-wrapper [data-toggle=\"tooltip\"]").tooltip();
+  // setTimeout(function () {
+  //   //
+  // }, 5000);
+  // // $('[data-toggle="tooltip"]').tooltip();
+  // // $(".list-view-wrapper [data-toggle=\"tooltip\"]").tooltip();
 }
 
 Template.registerHelper("isUserInstructor", function(){
@@ -631,7 +639,6 @@ Template.answer.events({
   },
   'click .votingContainer button': function(e) {
     var answerId = $(e.currentTarget).parent().data('answer-id');
-    var isUpvote =  $(e.currentTarget).attr('id') == 'upvoteAnswer';
 
     Meteor.call('answerVote', answerId, function(error, result) {
       if(!error) {
@@ -644,6 +651,7 @@ Template.answer.events({
           if (!$("#"+answerId).visible()) {
             $('.post-content-wrapper').scrollTo("#"+answerId,1000);
           }
+          //$('[data-toggle="tooltip"]').tooltip();
         }, 300);
         //$('[data-toggle="tooltip"]').tooltip();
       }
@@ -739,16 +747,25 @@ loadPage = function(postId, needsScroll) {
         });
       }, 100);
 
-      if(Posts.findOne({_id: postId}).viewers.indexOf(Meteor.userId()) == -1){
-        Meteor.call("viewPost", postId, function(error, result){
-          if(error){
-            console.log("error", error);
-          }
-          if(result){
+      var post = Posts.findOne({_id: postId});
+      if(post){
+          Session.set("DocumentTitle",  post.title + " | Ask");
 
-          }
-        });
+        if(post.viewers.indexOf(Meteor.userId()) == -1){
+          Meteor.call("viewPost", postId, function(error, result){
+            if(error){
+              console.log("error", error);
+            }
+            if(result){
+
+            }
+          });
+        }
+      }else {
+          Session.set("DocumentTitle", "Ask");
       }
+
+      //$('[data-toggle="tooltip"]').tooltip();
 
     }
   }

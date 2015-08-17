@@ -1,4 +1,8 @@
-Template.blankPage.events({
+Template.dashboard.rendered = function(){
+  	Session.set("DocumentTitle","Dashboard | Ask");
+}
+
+Template.dashboard.events({
     'submit #register-form' : function(e, t) {
       e.preventDefault();
       var username = t.find('#account-username').value;
@@ -23,7 +27,7 @@ Template.blankPage.events({
       // retrieve the input field values
       var username = t.find('#login-username').value;
 
-        // Trim and validate your fields here.... 
+        // Trim and validate your fields here....
 
         // If validation passes, supply the appropriate fields to the
         // Meteor.loginWithPassword() function.
@@ -33,7 +37,7 @@ Template.blankPage.events({
         } else
           console.log('success');
       });
-         return false; 
+         return false;
       },
 
     'click #logout' : function(e, t){

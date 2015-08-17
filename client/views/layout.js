@@ -2,6 +2,7 @@ Template.defaultLayout.rendered = function (){
 	//INIT PAGES : API CALLS
 	$('[data-pages="sidebar"]').sidebar();
 
+
 	//Pages Progress Bar API
 	$('[data-pages-progress="circle"]').each(function() {
 		var $progress = $(this)
@@ -34,6 +35,10 @@ Template.body.events({
 	}
 });
 
+Tracker.autorun(function(){
+	Session.setDefault('DocumentTitle', 'Ask')
+  document.title = Session.get("DocumentTitle");
+});
 
 Template.postLayout.helpers({
 	courseId: function(){

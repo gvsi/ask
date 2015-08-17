@@ -64,12 +64,12 @@
     <div class="datetime">{{dateFromNow}}</div>
     <div class="badge-wrapper">
       {{#if badges.isInstructorPost}}
-          <div class="badge-icon instructorPost" data-toggle="tooltip" data-placement="left" data-html="true" title="Instructor Note">
+          <div class="badge-icon instructorPost simptip-position-left simptip-smooth simptip-movable" data-tooltip="Instructor Note" >
             <i class="fa  fa-file-o" style="font-weight: 700;"></i>
           </div>
       {{else}}
-        {{#if badges.hasInstructorAnswer}}<div class="badge-icon answeredInstructor" data-toggle="tooltip" data-placement="left" data-html="true" title="Instructor Answer"> AI </div>{{/if}}
-        {{#if badges.hasStudentAnswer}}<div class="badge-icon answered" data-toggle="tooltip" data-placement="left" data-html="true" title="Student Answer"> A </div>{{/if}}
+        {{#if badges.hasInstructorAnswer}}<div class="badge-icon answeredInstructor simptip-position-left simptip-smooth simptip-movable" data-tooltip="Instructor Answer" > AI </div>{{/if}}
+        {{#if badges.hasStudentAnswer}}<div class="badge-icon answered simptip-position-left simptip-smooth simptip-movable" data-tooltip="Student Answer" > A </div>{{/if}}
       {{/if}}
     </div>
     <div class="clearfix"></div>

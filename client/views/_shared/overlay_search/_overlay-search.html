@@ -77,8 +77,8 @@
   <hr style="margin:0;">
   <div class="row searchTile">
     <div class="col-lg-2 col-md-2"></div>
-    <div class="card share share-self col-lg-8 col-md-8" data-social="item">
-      <div class="card-header clearfix">
+    <div class="search-card share share-self col-lg-8 col-md-8" data-social="item">
+      <div class="search-card-header clearfix">
         <div class="pull-left" style="width: 300px">
           <div class="user-pic">
             <img alt="Profile Image" width="33" height="33" src="{{identicon userIdenticon}}">
@@ -93,13 +93,13 @@
         </div>
         <div class="clearfix"></div>
       </div>
-      <div class="card-description">
+      <div class="search-card-description">
         <h5>{{{formattedTitle}}}</h5>
         {{#if isDefaultSearch}}
         <h6>posted in <span class="bold"> {{courseName}}</span></h6>
         {{/if}}
       </div>
-      <div class="card-footer clearfix">
+      <div class="search-card-footer clearfix">
         {{{formattedText}}}
       </div>
     </div>
