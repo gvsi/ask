@@ -1,16 +1,4 @@
-Answers = new Mongo.Collection('answers', {
-  transform: function(doc) {
-    if (doc.isAnonymous) {
-      delete doc.userId;
-    }
-    doc.comments.forEach(function(comment){
-      if (comment.isAnonymous) {
-        delete comment.userId;
-      }
-    });
-    return doc;
-  }
-});
+Answers = new Mongo.Collection('answers');
 
 Meteor.methods({
   answerInsert: function(answerAttributes) {
@@ -24,6 +12,7 @@ Meteor.methods({
     });
 
     var user = Meteor.user();
+    var now = new Date();
 
     if (!user)
     throw new Meteor.Error('invalid-user', 'You must be logged in to post an answer');
@@ -45,10 +34,11 @@ Meteor.methods({
       userIdenticon: Package.sha.SHA256(identiconHash),
       //author: user.username,
       upvoters: [],
-      createdAt: new Date(),
-      updatedAt: new Date(),
+      createdAt: now,
+      updatedAt: now,
       comments: [],
-      voteCount: 0
+      voteCount: 0,
+      isDeleted: false
     });
 
 
@@ -77,10 +67,21 @@ Meteor.methods({
     }
 
     //increments answers counts, pulls user from users answering live
-    Posts.update({_id: answerAttributes.postId}, {
+    var postUpdateOptions = {
       $inc: {answersCount: 1},
       $pull: {usersLiveAnswering: user._id}
-    });
+    }
+
+    // if first answer, add response time to post
+    if (post.answersCount == 0) {
+      var diff = Math.round(moment.duration(moment(now).diff(post.createdAt)).asMinutes());
+
+      postUpdateOptions = _.extend(postUpdateOptions, {
+        $set: {responseTime: diff}
+      })
+    }
+
+    Posts.update({_id: answerAttributes.postId}, postUpdateOptions);
 
     // create the answer, save the id
     answer._id = Answers.insert(answer);
@@ -283,10 +284,10 @@ Meteor.methods({
     var answer = Answers.findOne(answerId);
 
     var hasPermission;
+    var post = Posts.findOne(answer.postId);
 
     if (answer) {
       if(answer.isAnonymous) {
-        var post = Posts.findOne(answer.postId);
         if (post) {
           hasPermission = answer.userIdenticon == Package.sha.SHA256(post._id + userId)
         } else {
@@ -300,9 +301,36 @@ Meteor.methods({
     }
 
     if(hasPermission){
+
+      // decrease answer count
+      var postUpdateOptions = {
+        $inc: {answersCount: -1}
+      };
+
+      // if only answers, unset post response time
+      if (post.answersCount == 1) {
+        postUpdateOptions = _.extend(postUpdateOptions, {
+          $unset: {responseTime: ""}
+        })
+      } else {
+        // set response time to second answer's diff, if this answer is the first
+        var firstTwoAnswers = Answers.find({postId: answer.postId, isDeleted: false},{limit: 2, sort: {createdAt:1}}).fetch();
+        if (firstTwoAnswers[0]._id == answerId) {
+          var diff = Math.round(moment.duration(moment(firstTwoAnswers[1].createdAt).diff(post.createdAt)).asMinutes());
+
+          postUpdateOptions = _.extend(postUpdateOptions, {
+            $set: {responseTime: diff}
+          })
+        }
+      }
+
+      Posts.update({_id: answer.postId}, postUpdateOptions);
+
+      // delete answer
       Answers.update({_id: answerId}, {$set : {
         "isDeleted": true
       }});
+
     } else {
       throw new Meteor.Error('invalid-delete-permission', 'You don\'t have permission to delete this answer!');
     }

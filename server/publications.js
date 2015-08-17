@@ -124,6 +124,19 @@ Meteor.publish('answers', function (postId) {
 				}
 			}
 
+			// Anonymity
+			if (doc.isAnonymous) {
+				delete doc.userId;
+			}
+
+			if (doc.comments) {
+				doc.comments.forEach(function(comment){
+		      if (comment.isAnonymous) {
+		        delete comment.userId;
+		      }
+		    });
+			}
+
 			return doc;
 		}
 
@@ -182,6 +195,29 @@ Meteor.publish("courseStats", function(courseId) {
 			'isInstructorPost': {$exists: false}
 		})
 	);
+
+	var allCoursePosts = Posts.find({
+		'courseId': courseId,
+		'isDeleted': false
+	});
+
+	// all posts
+	Counts.publish(this, "totalPostsCount", allCoursePosts);
+
+	// contributions (answers)
+	Counts.publish(this, "contributionsCount", allCoursePosts, { countFromField: 'answersCount' });
+
+	//instructor answers
+	Counts.publish(this, "instructorResponsesCount",
+		Answers.find({
+			'postId': {
+				$in: allCoursePosts.fetch().map( function(u) { return u._id ; } )
+			},
+			'isInstructor': true,
+			'isDeleted': false
+		})
+	);
+
 })
 
 // Meteor.startup(function () {
