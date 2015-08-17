@@ -90,11 +90,12 @@
 
         </div>
         {{#if currentUserIsOwner}}
-        <div class="buttons">
+        <div class="buttons" >
           <a href="{{pathFor 'editPost' courseId=post.courseId postId=post._id}}"> <button class="btn btn-lg btn-rounded edit"><i class="fa fa-pencil"></i></button> </a>
-          <button class="btn btn-lg btn-rounded upvote delete" data-target="#modalDeletePost" data-toggle="modal" ><i class="fa fa-trash-o"></i></button>
+          <button  class="btn btn-lg btn-rounded upvote delete" data-target="#modalDeletePost" data-toggle="modal" ><i class="fa fa-trash-o"></i></button>
           <button class="btn btn-lg btn-rounded upvote" disabled><i class="fa fa-thumbs-up"></i><span class="m-l-10">{{post.upvotesCount}}</span></button>
         </div>
+
 
         <div class="modal fade slide-up disable-scroll" id="modalDeletePost" tabindex="-1" role="dialog" aria-labelledby="modalSlideUpLabel" aria-hidden="false">
           <div class="modal-dialog " style="width:420px">
@@ -230,7 +231,7 @@
       <!-- <div id="answerVoteCount">{{voteCount }}</div> -->
       <!-- <button class="btn btn-sm btn-rounded {{downvote}}"  id="downvoteAnswer" {{disabledVoteForOwner}}><i class="fa fa-angle-down"></i></button> -->
       {{#if isInstructorUpvoted}}
-      <div class="check text-success"><i class="fa fa-check-circle"></i></div>
+      <div style="display:block;" class="check text-success simptip-position-right simptip-smooth simptip-movable" data-tooltip="An instructor upvoted this answer" ><i class="fa fa-check-circle"></i></div>
       {{/if}}
     </div>
     <div class="answerBodyContainer">
@@ -259,9 +260,11 @@
     <div class="comments">
       {{#each comments}}
       <hr>
-      <div class="thumbnail-wrapper circular" data-toggle="tooltip" data-placement="top" data-html="true" title="{{#if isAnonymous}} Anonymous {{else}} {{theAuthor.profile.name}} <br> {{theAuthor.profile.surname}} {{/if}} <br> ({{dateFromNow}})">
-        <img width="40" height="40" alt="" src="{{identicon this.userIdenticon}}">
-      </div>
+      <span style="float:left;" class="simptip-position-right simptip-smooth simptip-movable" data-tooltip="{{#if isAnonymous}} Anonymous {{else}}{{theAuthor.profile.name}} {{theAuthor.profile.surname}} {{/if}} ({{dateFromNow}})">
+        <div class="thumbnail-wrapper circular">
+          <img width="40" height="40" alt="" src="{{identicon this.userIdenticon}}">
+        </div>
+      </span>
       <div class="commentBody">
         {{#mathjax}}
         {{#autolink}}

@@ -58,11 +58,11 @@ Template.postPage.rendered = function () {
     Session.set('customTags', undefined)
     $('#customTagsForCourse').show();
   }
-  setTimeout(function () {
-    //$('[data-toggle="tooltip"]').tooltip();
-  }, 5000);
-  // $('[data-toggle="tooltip"]').tooltip();
-  // $(".list-view-wrapper [data-toggle=\"tooltip\"]").tooltip();
+  // setTimeout(function () {
+  //   //
+  // }, 5000);
+  // // $('[data-toggle="tooltip"]').tooltip();
+  // // $(".list-view-wrapper [data-toggle=\"tooltip\"]").tooltip();
 }
 
 Template.registerHelper("isUserInstructor", function(){
@@ -631,7 +631,6 @@ Template.answer.events({
   },
   'click .votingContainer button': function(e) {
     var answerId = $(e.currentTarget).parent().data('answer-id');
-    var isUpvote =  $(e.currentTarget).attr('id') == 'upvoteAnswer';
 
     Meteor.call('answerVote', answerId, function(error, result) {
       if(!error) {
@@ -644,6 +643,7 @@ Template.answer.events({
           if (!$("#"+answerId).visible()) {
             $('.post-content-wrapper').scrollTo("#"+answerId,1000);
           }
+          //$('[data-toggle="tooltip"]').tooltip();
         }, 300);
         //$('[data-toggle="tooltip"]').tooltip();
       }
@@ -749,6 +749,8 @@ loadPage = function(postId, needsScroll) {
           }
         });
       }
+
+      //$('[data-toggle="tooltip"]').tooltip();
 
     }
   }
