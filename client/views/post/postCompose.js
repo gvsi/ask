@@ -106,6 +106,19 @@ Template.postCompose.events({
     e.preventDefault();
     Router.go('room', {courseId: Router.current().params.courseId}, {query: "p="+Router.current().params.query.p});
   },
+  'click #previewButton': function(e) {
+    e.preventDefault();
+    $("#previewTitle").text($('#postTitleInput').val());
+    $("#previewContent").html(tinyMCE.get('composeTinyMCE').getContent());
+    $("#postTags>.active").each(function() {
+       $("#previewTags").append('<button class="btn btn-tag btn-tag-light m-r-5">' + $( this ).text().trim() + '</button>');
+    });
+
+    $('#previewContent pre code').each(function(i, block) {
+      hljs.highlightBlock(block);
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+  },
   'click .item': function(e) {
     var postId = $(e.currentTarget).attr('data-post-id');
     Router.go('room', {courseId: Router.current().params.courseId}, {query: 'p='+postId});
