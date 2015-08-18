@@ -7,6 +7,10 @@
      <div class="row">
        <div class="col-sm-12 no-padding">
          <div class="form-group-attached">
+
+          {{#if errorMessage 'compose'}}
+           <label class="error m-t-10 m-l-10">{{{errorMessage 'compose'}}}</label>
+          {{/if}}
            <div class="row clearfix">
                 <div class="col-sm-12">
                <div class="form-group form-group-default" style="padding-top:4px;">
@@ -39,7 +43,7 @@
        <div class="col-sm-11 m-t-5">
 
          {{#unless isUserInstructor}}
-         <div class="checkbox inline m-l-20">
+         <div class="checkbox inline m-l-20 simptip-position-top simptip-smooth simptip-movable simptip-multiline" data-tooltip="Post as anonymous to instructors and coursemates.">
            <input type="checkbox" value="1" id="anonymous" {{isAnonymousChecked}}>
            <label for="anonymous" class="hint-text">Post as anonymous</label>
          </div>

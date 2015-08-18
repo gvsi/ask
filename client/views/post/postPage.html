@@ -189,7 +189,7 @@
             <textarea id="answerTinyMCE" name="content"></textarea>
           </div>
           {{#unless isUserInstructor}}
-          <div class="checkbox inline m-l-20">
+          <div class="checkbox inline m-l-20 simptip-position-top simptip-smooth simptip-movable simptip-multiline" data-tooltip="Post as anonymous to instructors and coursemates.">
             <input type="checkbox" value="1" id="isAnswerAnonymous">
             <label for="isAnswerAnonymous" class="hint-text">Post as anonymous</label>
           </div>
@@ -251,7 +251,7 @@
         <textarea id="editAnswerTinyMCE-{{_id}}" name="content">{{{body}}}</textarea>
         <div class="m-t-20">
           {{#unless isUserInstructor}}
-          <div class="checkbox inline m-l-20">
+          <div class="checkbox inline m-l-20 simptip-position-top simptip-smooth simptip-movable simptip-multiline" data-tooltip="Post as anonymous to instructors and coursemates.">
             <input type="checkbox" value="1" id="isAnswerAnonymous-edit-{{_id}}" {{isAnonymousChecked}}>
             <label for="isAnswerAnonymous-edit-{{_id}}" class="hint-text">Post as anonymous</label>
           </div>
@@ -284,7 +284,7 @@
         <textarea id="commentTinyMCE-{{_id}}" name="content"></textarea>
         <div class="m-t-20">
           {{#unless isUserInstructor}}
-          <div class="checkbox inline m-l-20">
+          <div class="checkbox inline m-l-20 simptip-position-top simptip-smooth simptip-movable simptip-multiline" data-tooltip="Post as anonymous to instructors and coursemates.">
             <input type="checkbox" value="1" id="isCommentAnon-{{_id}}">
             <label for="isCommentAnon-{{_id}}" class="hint-text">Post as anonymous</label>
           </div>

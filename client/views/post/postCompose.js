@@ -63,6 +63,13 @@ Template.postCompose.helpers({
     } else {
       return "";
     }
+  },
+  errorMessage: function(field) {
+    var e = Session.get('postSubmitError');
+    if (e)
+    return Session.get('postSubmitError')[field];
+    else
+    return false;
   }
 });
 
@@ -88,6 +95,33 @@ Template.postCompose.events({
       tags: tags
     };
 
+    var errors = {};
+
+    var titleLength = post.title.trim().length;
+    var textLength = strip_tags(post.text).length;
+
+    if (titleLength == 0) {
+      errors.compose = "Add a title to your question (at least 5 characters)";
+      tinymce.execCommand('mceFocus',false,'composeTinyMCE');
+      return Session.set('postSubmitError', errors);
+    } else if (titleLength < 5 || titleLength > 60) {
+      errors.compose = "The title cannot be shorter than 5 characters or longer than 60 characters (you have <strong>" + titleLength + "</strong> now)";
+      tinymce.execCommand('mceFocus',false,'composeTinyMCE');
+      return Session.set('postSubmitError', errors);
+    } else if (textLength == 0) {
+      errors.compose = "You should add a brief description to your question (at least 30 characters)";
+      tinyMCE.get('composeTinyMCE').setContent("");
+      tinymce.execCommand('mceFocus',false,'composeTinyMCE');
+      return Session.set('postSubmitError', errors);
+    } else if (textLength < 30 || textLength > 50000) {
+      errors.compose = "The description cannot be shorter than 30 characters (you have <strong>" + textLength + "</strong> now)";
+      tinymce.execCommand('mceFocus',false,'composeTinyMCE');
+      return Session.set('postSubmitError', errors);
+    } else {
+      // no error
+      Session.set('postSubmitError', {});
+    }
+
     if (type == "postUpdate") {
       var post = _.extend(post, {
         postId: Router.current().params.query.p
@@ -96,10 +130,12 @@ Template.postCompose.events({
 
     Meteor.call(type, post, function(error, result) {
       // display the error to the user and abort
-      if (error)
-      throw new Meteor.Error(error.reason);
-      // show this result but route anyway
-      Router.go('room', {courseId: Router.current().params.courseId}, {query: "p="+result._id});
+      if (error) {
+        Session.set('postSubmitError', {answerBody: error.reason});
+        throw new Meteor.Error(error.reason);
+      } else {
+        Router.go('room', {courseId: Router.current().params.courseId}, {query: "p="+result._id});
+      }
     });
   },
   'click #cancelUpdateBtn': function(e) {

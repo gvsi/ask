@@ -773,7 +773,7 @@ loadPage = function(postId, needsScroll) {
 }
 
 //removes all tags and whitespaces (&nbsp;)
-function strip_tags(input, allowed) {
+strip_tags = function(input, allowed) {
   allowed = (((allowed || '') + '')
   .toLowerCase()
   .match(/<[a-z][a-z0-9]*>/g) || [])
