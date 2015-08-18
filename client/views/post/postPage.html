@@ -134,9 +134,11 @@
       </div>
       <div class="clearfix"></div>
       <div class="post-content-body m-t-10">
+        {{#mathjax}}
         {{#autolink}}
         {{{post.text}}}
         {{/autolink}}
+        {{/mathjax}}
       </div>
 
       <div class="q-footer" style="margin: 15px 0 -5px 0px;">

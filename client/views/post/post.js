@@ -259,7 +259,7 @@ Template.postThumbnail.helpers({
   },
   isPostViewed: function(){
     if(this.viewers.length == 0){
-      return "bg-warning-lighter";
+      return "new-post";
     }
   }
 });

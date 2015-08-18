@@ -82,8 +82,8 @@ spacebars-compiler@1.0.6
 srp@1.0.3
 templating@1.1.1
 themeteorchef:jquery-validation@1.13.1
-tmeasday:publish-counts@0.7.0
 tmeasday:paginated-subscription@0.2.4
+tmeasday:publish-counts@0.6.0
 tomi:upload-jquery@2.1.7
 tomi:upload-server@1.2.7
 tracker@1.0.7
