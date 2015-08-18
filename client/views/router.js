@@ -8,6 +8,22 @@ Router.configure({
     }
 */});
 
+var OnBeforeActions;
+
+OnBeforeActions = {
+    loginRequired: function(pause) {
+      if (!Meteor.userId()) {
+        Router.go('login');
+       }else{
+        this.next();
+      }
+    }
+};
+
+Router.onBeforeAction(OnBeforeActions.loginRequired, {
+    except: ['login']
+});
+
 Router.route('/', function () {
   this.render('dashboard');
 },{
@@ -190,7 +206,9 @@ Router.route('/forms/wizard', function () {
 Router.route('/login', function() {
   this.render('loginPage');
 }, {
-  layoutTemplate:"loginLayout"
+  layoutTemplate:"loginLayout",
+  loadingTemplate: 'loading',
+  name: 'login',
 });
 
 Router.route('/logout', function () {
