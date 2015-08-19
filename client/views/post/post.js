@@ -481,7 +481,17 @@ Template.postContent.events({
     });
 
     Router.go('room', {courseId: Router.current().params.courseId});
-  }
+  },
+  'click #previewButton': function(e) {
+    e.preventDefault();
+    $("#previewTitle").text("Answer preview: ");
+    $("#previewContent").html(tinyMCE.get('answerTinyMCE').getContent());
+
+    $('#previewContent pre code').each(function(i, block) {
+      hljs.highlightBlock(block);
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+  },
 });
 
 Template.postContent.onRendered(function () {
@@ -708,7 +718,17 @@ Template.answer.events({
     $(".editAnswerBtn[data-answer-id="+this._id+"]").show();
     $(".answerBody[data-answer-id="+this._id+"]").show();
     $(".editAnswerTinyMCE-wrapper[data-answer-id="+this._id+"]").hide();
-  }
+  },
+  'click .comment-preview': function(e) {
+    e.preventDefault();
+    $("#previewTitle").text("Comment preview: ");
+    $("#previewContent").html(tinyMCE.get('commentTinyMCE-'+this._id).getContent());
+
+    $('#previewContent pre code').each(function(i, block) {
+      hljs.highlightBlock(block);
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+  },
 });
 
 
@@ -795,7 +815,7 @@ loadTinyMCE = function(selector, height) {
     content_css: '/tinymce/plugins/equationeditor/mathquill.css',
     menu: {},
     menubar: false,
-    toolbar: "undo | redo | bold | italic | underline | alignleft | aligncenter | bullist | numlist  | link | unlink | image | sh4v | equationeditor |",
+    toolbar: "undo | redo | bold | italic | underline | alignleft | aligncenter | bullist | numlist  | link | unlink | image | sh4tinymce | equationeditor |",
     preview_styles: false,
     elementpath: false,
     setup: function(editor) {

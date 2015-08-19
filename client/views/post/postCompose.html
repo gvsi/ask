@@ -49,44 +49,19 @@
          {{/unless}}
          {{#if isEditingPost}}
            <button type="submit" id="composeSubmitBtn" data-type-form="postUpdate" class="btn btn-complete btn-cons m-l-10">Update</button>
-           <button id="cancelUpdateBtn" class="btn btn-default btn-cons m-l-10">Cancel</button>
+           <button id="cancelUpdateBtn" class="btn btn-default btn-cons m-l-5">Cancel</button>
          {{else}}
               <button type="submit" id="composeSubmitBtn" data-type-form="postInsert" class="btn btn-complete btn-cons m-l-10">
                 {{#if isUserInstructor}}
-                  Ask
-                {{else}}
                   Post
+                {{else}}
+                  Ask
                 {{/if}}
               </button>
          {{/if}}
          <button id="previewButton" data-target="#previewModal" data-toggle="modal" class="btn btn-default btn-cons m-l-5">Preview</button>
 
-           <div class="modal fade slide-up disable-scroll" id="previewModal" tabindex="-1" role="dialog"  aria-labelledby="modalSlideUpLabel" aria-hidden="false">
-             <div class="modal-dialog">
-               <div class="modal-content-wrapper">
-                 <div class="modal-content">
-                   <div class="modal-header clearfix text-left" style="padding-top:15px;">
-                     <div class="post-content-header" style="margin-bottom:15px">
-                       <h2><strong id="previewTitle"></strong></h2>
-                     </div>
-                     <div class="post-content-body m-t-10">
-                       {{#autolink}}
-                       <span id="previewContent"> </span>
-                       {{/autolink}}
-                     </div>
-
-                     <div class="q-footer" id="previewTags" style="margin: 15px 0 -5px 0px;">
-
-                     </div>
-                   </div>
-                   <div class="modal-footer" style="margin-top: 16px;text-align: center;">
-                     <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
-                   </div>
-                 </div>
-               </div>
-               <!-- /.modal-content -->
-             </div>
-           </div>
+         {{>previewModal}}
 
        </div>
      </div>
@@ -94,4 +69,34 @@
  </form>
  </div>
  <!-- END COMPOSE POST -->
+</template>
+
+<template name="previewModal">
+  <div class="modal fade slide-up disable-scroll" id="previewModal" tabindex="-1" role="dialog"  aria-labelledby="modalSlideUpLabel" aria-hidden="false">
+    <div class="modal-dialog" style="width: 60%;">
+      <div class="modal-content-wrapper">
+        <div class="modal-content" style="max-height:100%;overflow:auto;">
+          <button type="button" class="close m-r-10" data-dismiss="modal" aria-hidden="true"><i class="pg-close fs-14"></i></button>
+          <div class="modal-header clearfix text-left" style="padding-top:15px;">
+            <div class="post-content-header" style="margin-bottom:15px">
+              <h2><strong id="previewTitle"></strong></h2>
+            </div>
+            <div class="post-content-body m-t-10">
+              {{#autolink}}
+              <span id="previewContent"> </span>
+              {{/autolink}}
+            </div>
+
+            <div class="q-footer" id="previewTags" style="margin: 15px 0 -5px 0px;">
+
+            </div>
+          </div>
+          <div class="modal-footer" style="margin-top: 16px;text-align: center;">
+            <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+  </div>
 </template>
