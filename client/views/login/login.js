@@ -23,7 +23,7 @@ Template.loginPage.events({
 	'submit #form-login' : function(e, t){
       e.preventDefault();
       // retrieve the input field values
-      var username = t.find('#login-username').value;
+      var username = t.find('#login-username').value.trim();
 
         // Trim and validate your fields here....
 
