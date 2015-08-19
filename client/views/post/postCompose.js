@@ -130,12 +130,12 @@ Template.postCompose.events({
       tinymce.execCommand('mceFocus',false,'composeTinyMCE');
       return Session.set('postSubmitError', errors);
     } else if (textLength == 0) {
-      errors.compose = "You should add a brief description to your question (at least 30 characters)";
+      errors.compose = "You should add a brief description to your question (at least 20 characters)";
       tinyMCE.get('composeTinyMCE').setContent("");
       tinymce.execCommand('mceFocus',false,'composeTinyMCE');
       return Session.set('postSubmitError', errors);
-    } else if (textLength < 30 || textLength > 50000) {
-      errors.compose = "The description cannot be shorter than 30 characters (you have <strong>" + textLength + "</strong> now)";
+    } else if (textLength < 20 || textLength > 50000) {
+      errors.compose = "The description cannot be shorter than 20 characters (you have <strong>" + textLength + "</strong> now)";
       tinymce.execCommand('mceFocus',false,'composeTinyMCE');
       return Session.set('postSubmitError', errors);
     } else {

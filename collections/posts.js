@@ -46,6 +46,9 @@ Meteor.methods({
 
         var postId = Posts.insert(post);
 
+        //delete any answer drafts
+        Drafts.remove({courseId: postAttributes.courseId, userId: user._id, type: "post"});
+
         if(course.instructors.indexOf(un) != -1){
           var courseStudents = Meteor.users.find({"profile.courses": postAttributes.courseId});
 
