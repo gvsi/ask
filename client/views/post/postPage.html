@@ -184,7 +184,7 @@
         <div class="panel-body">
           <label class="error">{{errorMessage 'answerBody'}}</label>
           <div class="tinymce-wrapper">
-            <textarea id="answerTinyMCE" name="content"></textarea>
+            <textarea id="answerTinyMCE" name="content">{{{draft}}}</textarea>
           </div>
           {{#unless isUserInstructor}}
           <div class="checkbox inline m-l-20 simptip-position-top simptip-smooth simptip-movable simptip-multiline" data-tooltip="Post as anonymous to instructors and coursemates.">
@@ -193,6 +193,7 @@
           </div>
           {{/unless}}
           <button type="submit" id="sendAnswerBtn" class="btn btn-complete btn-cons m-l-10 m-t-10">Send answer</button>
+          <button type="submit" id="saveDraftBtn" class="pull-right btn btn-default btn-cons m-l-10 m-t-10">Save draft</button>
         </div>
       </div>
     </div>

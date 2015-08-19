@@ -1,4 +1,5 @@
 Answers = new Mongo.Collection('answers');
+Drafts = new Mongo.Collection('drafts');
 
 Meteor.methods({
   answerInsert: function(answerAttributes) {
@@ -83,6 +84,10 @@ Meteor.methods({
 
     Posts.update({_id: answerAttributes.postId}, postUpdateOptions);
 
+
+    //delete any answer drafts
+    Drafts.remove({postId: answerAttributes.postId, userId: user._id, type: "answer"});
+
     // create the answer, save the id
     answer._id = Answers.insert(answer);
 
@@ -108,7 +113,18 @@ Meteor.methods({
       });
     }
 
+
     return answer._id;
+  },
+  saveAnswerDraft: function(answerAttributes) {
+    var userId = Meteor.userId();
+    answerDraft = Drafts.findOne({postId: answerAttributes.postId, userId: userId, type: "answer"});
+    if (answerDraft) {
+      Drafts.update({postId: answerAttributes.postId, userId: userId, type: "answer"}, {$set: {body: answerAttributes.body}});
+    } else {
+      Drafts.insert({postId: answerAttributes.postId, userId: userId, type: "answer", body: answerAttributes.body});
+    }
+    return true;
   },
   answerUpdate: function(answerAttributes) {
     //answerAttributes.body = UniHTML.purify(answerAttributes.body);

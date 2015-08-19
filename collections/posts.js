@@ -276,6 +276,7 @@ Meteor.methods({
              }
            })
       	}, 60000);
+
       	return true;
       }
     }

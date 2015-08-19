@@ -240,6 +240,13 @@ Meteor.publish("courseStats", function(courseId) {
 
 })
 
+Meteor.publish("draft", function(postId, type){
+	var draft = Drafts.find({postId: postId, userId: this.userId, type: type});
+	if(draft){
+		return draft;
+	}
+});
+
 // Meteor.startup(function () {
 //   UploadServer.init({
 //     tmpDir: process.env.PWD + '/.uploads/tmp',
