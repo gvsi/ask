@@ -25,7 +25,8 @@
         {{/if}}
       {{/if}}
     </div>
-
+    
+    {{>previewModal}}
     {{>postContent}}
 
   </div>
@@ -195,7 +196,6 @@
           <button type="submit" id="sendAnswerBtn" class="btn btn-complete btn-cons m-l-5">Send answer</button>
           <button id="previewButton" data-target="#previewModal" data-toggle="modal" class="btn btn-default btn-cons m-l-5">Preview</button>
           <button type="submit" id="saveDraftBtn" class="pull-right btn btn-default btn-cons" style="margin-top:3px">Save draft</button>
-          {{>previewModal}}
         </div>
       </div>
     </div>
@@ -293,7 +293,6 @@
           <button type="submit" id="sendCommentBtn" data-answer-id="{{_id}}" class="btn btn-complete btn-sm m-l-5">Comment</button>
           <button data-target="#previewModal" data-toggle="modal" class="comment-preview btn btn-default btn-sm m-l-5">Preview</button>
 
-          {{>previewModal}}
         </div>
       </div>
     </div>
