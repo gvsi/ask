@@ -109,4 +109,7 @@ Template.header.events({
 			Router.go('room', {courseId: postCourseId}, {query: 'p='+postId, hash: answerId});
 		}
 	},
+	"click .see-all-notifications": function(event, template){
+		  Router.go('notifications');
+	}
 });

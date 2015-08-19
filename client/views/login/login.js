@@ -1,3 +1,7 @@
+Template.loginPage.rendered = function(){
+	Session.set("DocumentTitle", "Login | Ask");
+}
+
 Template.loginPage.events({
 	'submit #register-form' : function(e, t) {
      e.preventDefault();

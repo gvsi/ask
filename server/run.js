@@ -32,7 +32,8 @@ Meteor.methods({
 					}
 				);
 			}else{
-				Courses.insert(
+
+				var courseId = Courses.insert(
 					{
 						"courseCode": coursesCsv[i].MOD_CODE,
 						"name": coursesCsv[i].MOD_NAME,
@@ -43,6 +44,10 @@ Meteor.methods({
 						"instructors": [coursesCsv[i].MUA_EXTU.toLowerCase()]
 					}
 				);
+
+				Meteor.users.update({username : coursesCsv[i].MUA_EXTU.toLowerCase()}, {$addToSet : {
+					"profile.courses": courseId
+				}});
 			}
 		}
 
