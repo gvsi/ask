@@ -33,7 +33,29 @@ Template.notifications.rendered = function(){
 			 });
 }
 
+Template.notifications.events({
+	"click .notification-card-link": function(event, template){
+		var postId = this.postId;
+		var postCourseId = this.postCourseId;
+		var type = this.type;
 
+		console.log(postId + "  " + postCourseId + " " + type);
+
+		$(".dropdown").removeClass("open");
+
+		if(type == "instructorNote"){
+			console.log("gere");
+			loadPage(postId, true);
+			Router.go('room', {courseId: postCourseId}, {query: 'p='+postId});
+		}else if (type == "answerToPost" || type == "commentToAnswer") {
+			var answerId = this.answerId;
+			console.log(answerId);
+			loadPage(postId, true);
+			Router.go('room', {courseId: postCourseId}, {query: 'p='+postId, hash: answerId});
+			console.log("AARE YOU FS D S");
+		}
+	},
+});
 
 Template.notifications.helpers({
 	notifications: function(){

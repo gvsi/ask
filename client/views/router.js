@@ -214,6 +214,7 @@ Router.route('/login', function() {
 Router.route('/logout', function () {
   Meteor.logout(function() {
       // Redirect to login
+      Object.keys(Session.keys).forEach(function(key){ Session.set(key, undefined); })
       Session.set("areNotificationsObserved", true);
       Router.go('/login');
     });

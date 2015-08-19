@@ -87,17 +87,15 @@
                       </div>
                       <!-- END Notification Body-->
                   <!-- START Notification Footer-->
-                  <div class="notification-footer text-center">
-                    {{#if notifications.count }}
-                      <a href="{{pathFor 'notifications'}}" class="">See all notifications</a>
-                    {{else}}
-                      <a href="#" class="">No notifications yet</a>
-                    {{/if}}
-                    <!-- <a data-toggle="refresh" class="portlet-refresh text-black pull-right" href="#">
-                      <i class="pg-refresh_new"></i>
-                    </a> -->
+                  {{#if notifications.count }}
+                  <div style="cursor: pointer;" class="see-all-notifications notification-footer text-center">
+                      <a href=# class="">See all notifications</a>
                   </div>
-                  <!-- END Notification Footer-->
+                  {{else}}
+                  <div style="cursor: pointer;" class="notification-footer text-center">
+                      <a href="#" class="">No notifications yet</a>
+                  </div>
+                  {{/if}}
                 </div>
               </div>
             </div>
