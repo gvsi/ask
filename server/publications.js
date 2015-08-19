@@ -240,10 +240,17 @@ Meteor.publish("courseStats", function(courseId) {
 
 })
 
-Meteor.publish("draft", function(postId, type){
-	var draft = Drafts.find({postId: postId, userId: this.userId, type: type});
-	if(draft){
-		return draft;
+Meteor.publish("draft", function(id, type){
+	if (type == "post") {
+		var draft = Drafts.find({courseId: id, userId: this.userId, type: type});
+		if(draft){
+			return draft;
+		}
+	} else if (type == "answer") {
+		var draft = Drafts.find({postId: id, userId: this.userId, type: type});
+		if(draft){
+			return draft;
+		}
 	}
 });
 

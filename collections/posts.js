@@ -173,6 +173,16 @@ Meteor.methods({
         };
 
     },
+    savePostDraft: function(postAttributes) {
+      var userId = Meteor.userId();
+      postDraft = Drafts.findOne({courseId: postAttributes.courseId, userId: userId, type: "post"});
+      if (postDraft) {
+        Drafts.update({courseId: postAttributes.courseId, userId: userId, type: "post"}, {$set: {body: postAttributes.body, title: postAttributes.title}});
+      } else {
+        Drafts.insert({courseId: postAttributes.courseId, userId: userId, type: "post", title: postAttributes.title, body: postAttributes.body});
+      }
+      return true;
+    },
     upvote: function(postId){
       var userId = Meteor.user()._id;
       var post = Posts.findOne(postId);

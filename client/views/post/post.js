@@ -838,6 +838,7 @@ strip_tags = function(input, allowed) {
 }
 
 loadTinyMCE = function(selector, height) {
+  tinymce.EditorManager.execCommand('mceRemoveEditor',true, selector);
   tinymce.init({
     selector: "#" + selector,
     plugins: "link , image, sh4tinymce, equationeditor",

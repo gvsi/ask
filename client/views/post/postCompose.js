@@ -5,8 +5,6 @@ Template.postCompose.rendered = function(){
 
   Session.set("DocumentTitle", "Compose | Ask");
 
-  loadTinyMCE("composeTinyMCE", 400);
-
   mathquill();
 
   if ($(window).width() < 1024) {
@@ -21,6 +19,21 @@ Template.postCompose.rendered = function(){
       $('.post-list').hide();
     }else{
       $('.post-list').show();
+    }
+  });
+
+  Meteor.subscribe('draft', Router.current().params.courseId, "post", {
+    onReady: function() {
+      loadTinyMCE("composeTinyMCE", 400);
+
+      setTimeout(function () {
+        var draft = Drafts.findOne({courseId: Router.current().params.courseId, userId: Meteor.userId(), type: "post"});
+        if (draft) {
+          tinyMCE.get('composeTinyMCE').setContent(draft.body);
+        } else {
+          tinyMCE.get('composeTinyMCE').setContent("");
+        }
+      }, 500);
     }
   });
 }
@@ -70,6 +83,14 @@ Template.postCompose.helpers({
     return Session.get('postSubmitError')[field];
     else
     return false;
+  },
+  draftTitle: function() {
+    var draft = Drafts.findOne({courseId: Router.current().params.courseId, userId: Meteor.userId(), type: "post"});
+    if (draft) {
+      return draft.title;
+    } else {
+      return "";
+    }
   }
 });
 
@@ -131,7 +152,7 @@ Template.postCompose.events({
     Meteor.call(type, post, function(error, result) {
       // display the error to the user and abort
       if (error) {
-        Session.set('postSubmitError', {answerBody: error.reason});
+        Session.set('postSubmitError', {compose: error.reason});
         throw new Meteor.Error(error.reason);
       } else {
         Router.go('room', {courseId: Router.current().params.courseId}, {query: "p="+result._id});
@@ -154,6 +175,40 @@ Template.postCompose.events({
       hljs.highlightBlock(block);
     });
     MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+  },
+  'click #saveDraftBtn': function(e) {
+    e.preventDefault();
+
+    var body = tinyMCE.get('composeTinyMCE').getContent();
+    var post = {
+      title: $("#postTitleInput").val(),
+      body: body,
+      courseId: Router.current().params.courseId,
+    };
+    if (strip_tags(body) == "" && post.title == "") {
+      var errors = {};
+      errors.compose = "There's nothing to save as a draft. Write something first.";
+      tinyMCE.get('composeTinyMCE').setContent("");
+      tinymce.execCommand('mceFocus',false,'answerTinyMCE');
+      return Session.set('postSubmitError', errors);
+    }
+
+    Meteor.call('savePostDraft', post, function(error, result) {
+      if (error){
+        Session.set('postSubmitError', {compose: error.reason});
+        throw new Meteor.Error(error.reason);
+      } else {
+        if (result) {
+          $("#saveDraftBtn").html("Saved!");
+          $("#saveDraftBtn").removeClass('btn-default').addClass('btn-success');
+          setTimeout(function () {
+            $("#saveDraftBtn").html("Save draft");
+            $("#saveDraftBtn").removeClass('btn-success').addClass('btn-default');
+          }, 2000);
+        }
+
+      }
+    });
   },
   'click .item': function(e) {
     var postId = $(e.currentTarget).attr('data-post-id');
