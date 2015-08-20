@@ -849,7 +849,7 @@ loadTinyMCE = function(selector, height) {
     content_css: '/tinymce/plugins/equationeditor/mathquill.css',
     menu: {},
     menubar: false,
-    toolbar: "undo | redo | bold | italic | underline | alignleft | aligncenter | bullist | numlist  | link | unlink | image | sh4v | equationeditor |",
+    toolbar: "undo | redo | bold | italic | underline | alignleft | aligncenter | bullist | numlist  | link | unlink | image | sh4tinymce | equationeditor |",
     preview_styles: false,
     elementpath: false,
     setup: function(editor) {

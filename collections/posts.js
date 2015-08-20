@@ -253,6 +253,10 @@ Meteor.methods({
         Posts.update({_id: postId}, {$set : {
           "isDeleted": true
         }});
+
+        Notifications.remove({postId: post._id, postCourseId: post.courseId});
+
+
       } else {
         throw new Meteor.Error('invalid-delete-permission', 'You don\'t have permission to delete this post!');
       }
