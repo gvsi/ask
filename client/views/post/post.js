@@ -490,6 +490,17 @@ Template.postContent.events({
       }
     });
   },
+  'click #previewButton': function(e) {
+    e.preventDefault();
+    console.log('preview');
+    $("#previewTitle").text("Answer preview: ");
+    $("#previewContent").html(tinyMCE.get('answerTinyMCE').getContent());
+
+    $('#previewContent pre code').each(function(i, block) {
+      hljs.highlightBlock(block);
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+  },
   "click .post-list-toggle": function(event) {
     $('.post-list').toggleClass('slideLeft');
   },
@@ -748,6 +759,17 @@ Template.answer.events({
     $(".editAnswerBtn[data-answer-id="+this._id+"]").show();
     $(".answerBody[data-answer-id="+this._id+"]").show();
     $(".editAnswerTinyMCE-wrapper[data-answer-id="+this._id+"]").hide();
+  },
+  'click .comment-preview': function(e) {
+    e.preventDefault();
+    console.log('hello');
+    $("#previewTitle").text("Comment preview: ");
+    $("#previewContent").html(tinyMCE.get('commentTinyMCE-'+this._id).getContent());
+
+    $('#previewContent pre code').each(function(i, block) {
+      hljs.highlightBlock(block);
+    });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
   }
 });
 
@@ -839,7 +861,7 @@ strip_tags = function(input, allowed) {
 
 loadTinyMCE = function(selector, height) {
   try {
-    tinymce.remove();
+    tinyMCE.get(selector).remove();
   } catch(e) {}
 
   tinymce.init({
