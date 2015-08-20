@@ -97,5 +97,12 @@ Template.notifications.helpers({
 		}
 
 		return iconType
+	},
+	postedIn: function(){
+		var course = Courses.findOne({_id: this.postCourseId});
+		if(course){
+			console.log(course._id);
+			return 'Posted in ' + course.name;
+		}
 	}
 });
