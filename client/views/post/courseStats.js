@@ -2,32 +2,27 @@ Template.courseStats.rendered = function(){
   $(".widget-3 .metro").liveTile();
 
   (function() {
-      var container = '.widget-15-chart2';
+      var container = '.widget-15-chart';
 
       var seriesData = [
           [],
           []
       ];
-      var random = new Rickshaw.Fixtures.RandomData(40);
+      var random = new Rickshaw.Fixtures.RandomData(20);
       for (var i = 0; i < 20; i++) {
           random.addData(seriesData);
       }
-
       var graph = new Rickshaw.Graph({
           renderer: 'bar',
           element: document.querySelector(container),
+          height: 100,
           padding: {
               top: 0.5
           },
           series: [{
-              data: seriesData[0],
+              data: [{"x":1,"y":10},{"x":2,"y":8},{"x":3,"y":12},{"x":4,"y":1},{"x":5,"y":15}],
               color: $.Pages.getColor('complete-light'),
               name: "New users"
-          }, {
-              data: seriesData[1],
-              color: $.Pages.getColor('master-lighter'),
-              name: "Returning users"
-
           }]
 
       });
@@ -47,7 +42,7 @@ Template.courseStats.rendered = function(){
       $(window).resize(function() {
           graph.configure({
               width: $(container).width(),
-              height: 100
+              height: 200
           });
 
           graph.render()
@@ -57,48 +52,6 @@ Template.courseStats.rendered = function(){
 
   })();
 
-  d3.json('http://revox.io/json/min_sales_chart.json', function(data) {
-
-      // Widget-15
-      nv.addGraph(function() {
-          var chart = nv.models.lineChart()
-              .x(function(d) {
-                  return d[0]
-              })
-              .y(function(d) {
-                  return d[1]
-              })
-              .color(['#27cebc'])
-              .useInteractiveGuideline(true)
-              .margin({
-                  top: 10,
-                  right: -10,
-                  bottom: 10,
-                  left: -10
-              })
-              .showXAxis(false)
-              .showYAxis(false)
-              .showLegend(false)
-
-          d3.select('.widget-16-chart svg')
-              .datum(data.siteVisits)
-              .call(chart);
-
-          nv.utils.windowResize(chart.update);
-
-          nv.utils.windowResize(function() {
-              setTimeout(function() {
-                  $('.widget-16-chart .nvd3 circle.nv-point').attr("r", "4");
-              }, 500);
-          });
-
-          return chart;
-      }, function() {
-          setTimeout(function() {
-              $('.widget-16-chart .nvd3 circle.nv-point').attr("r", "4");
-          }, 500);
-      });
-  });
 }
 
 Template.courseStats.helpers({
@@ -108,5 +61,11 @@ Template.courseStats.helpers({
   averageResponseTime: function(){
     // average = total response time / (# questions - # unansweredQuestions)
     return Math.round(Counts.get('totalResponseTime') / (Counts.get('totalQuestions') - Counts.get('unansweredQuestions')));
+  },
+  course: function() {
+    var course = Courses.findOne({_id: Router.current().params.courseId});
+    console.log(course);
+
+    return course;
   }
 });
