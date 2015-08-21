@@ -7,7 +7,6 @@
 
 Tracker.autorun(function(){
     if(Meteor.userId()) {
-			//console.log("I am subscribing");
 			Meteor.subscribe('coursesForStudent', {reactive:false,
 			onReady: function(){
 				 Session.set('coursesLoaded', true);
@@ -137,7 +136,6 @@ Template.sideBar.helpers({
 					}
 				}
 
-				//console.log(pastYears);
 				return pastYears;
 			}
 	},

@@ -41,20 +41,15 @@ Template.notifications.events({
 		var postCourseId = this.postCourseId;
 		var type = this.type;
 
-		console.log(postId + "  " + postCourseId + " " + type);
-
 		$(".dropdown").removeClass("open");
 
 		if(type == "instructorNote"){
-			console.log("gere");
 			loadPage(postId, true);
 			Router.go('room', {courseId: postCourseId}, {query: 'p='+postId});
 		}else if (type == "answerToPost" || type == "commentToAnswer") {
 			var answerId = this.answerId;
-			console.log(answerId);
 			loadPage(postId, true);
 			Router.go('room', {courseId: postCourseId}, {query: 'p='+postId, hash: answerId});
-			console.log("AARE YOU FS D S");
 		}
 	},
 });
@@ -101,8 +96,7 @@ Template.notifications.helpers({
 	postedIn: function(){
 		var course = Courses.findOne({_id: this.postCourseId});
 		if(course){
-			console.log(course._id);
-			return 'Posted in ' + course.name;
+			return 'posted in ' + course.name;
 		}
 	}
 });

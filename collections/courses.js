@@ -46,5 +46,10 @@ Meteor.methods({
       "tags": []
     }});
   }
+},
+ setLastCourse: function(courseId){
+    Meteor.users.update({_id: Meteor.userId()}, {$set:{
+      "profile.lastCourse": courseId,
+    }});
  }
 });
