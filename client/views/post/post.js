@@ -23,7 +23,7 @@ Template.postPage.rendered = function () {
     }else{
       Session.set("DocumentTitle", "Ask");
     }
-
+    setUserLastCourse();
   }
 
   $(window).resize(function() {
@@ -92,7 +92,6 @@ Template.postPage.helpers({
     return Router.current().params.courseId;
   },
   queryPathFor: function () {
-    console.log("q="+this.post._id);
     return "q="+this.post._id;
   },
   areTherePosts: function() {
@@ -492,7 +491,6 @@ Template.postContent.events({
   },
   'click #previewButton': function(e) {
     e.preventDefault();
-    console.log('preview');
     $("#previewTitle").text("Answer preview: ");
     $("#previewContent").html(tinyMCE.get('answerTinyMCE').getContent());
 
@@ -762,7 +760,6 @@ Template.answer.events({
   },
   'click .comment-preview': function(e) {
     e.preventDefault();
-    console.log('hello');
     $("#previewTitle").text("Comment preview: ");
     $("#previewContent").html(tinyMCE.get('commentTinyMCE-'+this._id).getContent());
 
@@ -789,7 +786,7 @@ loadPage = function(postId, needsScroll) {
 
       setTimeout(function(){
         var draft = Drafts.findOne({postId: postId, userId: Meteor.userId(), type: "answer"});
-        if (draft) {
+        if (draft && tinyMCE.get('answerTinyMCE')) {
           tinyMCE.get('answerTinyMCE').setContent(draft.body);
         } else {
           tinyMCE.get('answerTinyMCE').setContent("");
@@ -841,8 +838,21 @@ loadPage = function(postId, needsScroll) {
       //$('[data-toggle="tooltip"]').tooltip();
 
     }
-  }
-);
+  });
+
+  setUserLastCourse();
+
+}
+
+ function setUserLastCourse(){
+   var currentCourseId = Router.current().params.courseId;
+   if(Meteor.user().lastCourse != currentCourseId){
+     Meteor.call("setLastCourse", currentCourseId, function(error, result){
+       if(error){
+         console.log("error", error);
+       }
+     });
+   }
 }
 
 //removes all tags and whitespaces (&nbsp;)
@@ -877,7 +887,6 @@ loadTinyMCE = function(selector, height) {
     setup: function(editor) {
         if (selector == "answerTinyMCE") {
           editor.on('focus', function(e) {
-              console.log('focus');
               if (Answers.find({postId: Router.current().params.query.p, userId: Meteor.userId()},{limit:1}).count() > 0) {
                 Session.set('answerSubmitErrors', {answerBody: "Are you sure you want to add another answer? You could use the edit button to refine and improve your existing answer, instead."});
               }
@@ -885,7 +894,6 @@ loadTinyMCE = function(selector, height) {
           editor.on('keyup', _.throttle(function(e) {
               var postId = Router.current().params.query.p;
               //Meteor.call("liveAnswer", postId);
-              console.log('change');
               var postId = Router.current().params.query.p;
               Meteor.call("liveAnswer", postId);
           }, 1500));

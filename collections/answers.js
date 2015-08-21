@@ -347,6 +347,8 @@ Meteor.methods({
         "isDeleted": true
       }});
 
+      Notifications.remove({answerId: answerId, postId: post._id, postCourseId: post.courseId});
+
     } else {
       throw new Meteor.Error('invalid-delete-permission', 'You don\'t have permission to delete this answer!');
     }

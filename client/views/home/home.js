@@ -1,8 +1,8 @@
-Template.dashboard.rendered = function(){
-  	Session.set("DocumentTitle","Dashboard | Ask");
+Template.home.rendered = function(){
+  	Session.set("DocumentTitle","Home | Ask");
 }
 
-Template.dashboard.events({
+Template.home.events({
     'submit #register-form' : function(e, t) {
       e.preventDefault();
       var username = t.find('#account-username').value;

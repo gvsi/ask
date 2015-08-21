@@ -62,49 +62,6 @@
     </body>
 </template>
 
-
-<!-- SOCIAL LAYOUT -->
-<template name="socialLayout">
-    <body class="fixed-header no-header">
-        {{ >sideBar }}
-        <!-- START PAGE-CONTAINER -->
-        <div class="page-container">
-            {{ >header }}
-            <!-- START PAGE CONTENT WRAPPER -->
-            <div class="page-content-wrapper">
-                <!-- START PAGE CONTENT -->
-                <div class="content">
-                    {{>yield}}
-                </div>
-                {{ >footer }}
-            </div>
-        </div>
-        {{ >quickView }}
-        {{ >overlaySearch }}
-    </body>
-</template>
-
-<!-- CALENDAR LAYOUT -->
-<template name="calendarLayout">
-    <body class="fixed-header no-header">
-        {{ >sideBar }}
-        <!-- START PAGE-CONTAINER -->
-        <div class="page-container">
-            {{ >header }}
-            <!-- START PAGE CONTENT WRAPPER -->
-            <div class="page-content-wrapper full-height">
-                <!-- START PAGE CONTENT -->
-                <div class="content full-height">
-                    {{>yield}}
-                </div>
-            </div>
-        </div>
-        {{ >quickView }}
-        {{ >calendarEventManager }}
-        {{ >overlaySearch }}
-    </body>
-</template>
-
 <!-- POST LAYOUT -->
 <template name="postLayout">
     <body class="fixed-header">
@@ -130,7 +87,6 @@
             </div>
         </div>
         {{ >quickView }}
-        {{ >calendarEventManager }}
         {{ >overlaySearch }}
     </body>
 </template>
@@ -159,7 +115,6 @@
             </div>
         </div>
         {{ >quickView }}
-        {{ >calendarEventManager }}
         {{ >overlaySearch }}
     </body>
 </template>
