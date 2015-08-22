@@ -65,7 +65,27 @@ Template.courseStats.helpers({
   course: function() {
     var course = Courses.findOne({_id: Router.current().params.courseId});
     console.log(course);
-
     return course;
+  },
+  studentsOnlineText: function() {
+    var count = Counts.get('onlineUsers') - Counts.get('onlineInstructors');
+    if (count <= 0) {
+      return "No students are online at the moment"
+    } else if (count == 1) {
+      return "<strong>1</strong> student is currently online."
+    } else if (count > 1) {
+      return "<strong>" + count + "</strong> students are currently online."
+    }
+  },
+  instructorsOnlineText: function() {
+    var count = Counts.get('onlineInstructors');
+    if (count == 1) {
+      return "<strong>1</strong> instructor is currently online."
+    } else if (count > 1) {
+      return "<strong>" + count + "</strong> instructors are currently online."
+    }
+
+    //list
   }
+
 });
