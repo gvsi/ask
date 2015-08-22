@@ -238,6 +238,14 @@ Meteor.publish("courseStats", function(courseId) {
 		{ countFromField: 'responseTime' }
 	);
 
+	for (var i = 0; i < 10; i++) {
+		var date = moment().subtract(i, 'days').format("L");
+		Counts.publish(this, "visitsOn-"+date,
+			 Visits.find({date: date})
+		);
+	}
+
+
 })
 
 Meteor.publish("draft", function(id, type){
