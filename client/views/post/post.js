@@ -2,7 +2,6 @@ Template.postPage.rendered = function () {
   //number of users per day
   for (var i = 0; i < 10; i++) {
     var date = moment().subtract(i, 'days').format("L");
-    console.log(Counts.get("visitsOn-"+date));
   }
 
   if (!$("#no-post-error").length) {

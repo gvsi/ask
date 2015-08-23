@@ -16,6 +16,15 @@ Meteor.methods({
     });
 
     Feedbacks.insert(feedback);
+
+    if (Meteor.isServer) {
+      Email.send({
+        from: "martingeorgiev1995@gmail.com",
+        to: "martingeorgiev1995@gmail.com",
+        subject: feedbackAttributes.subject,
+        text: feedbackAttributes.text + '\n\nAttachemnt: ' + feedbackAttributes.attachment,
+      });
+    }
   },
 
 });
