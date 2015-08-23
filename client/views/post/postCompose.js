@@ -22,16 +22,24 @@ Template.postCompose.rendered = function(){
     }
   });
 
+  var postId = Router.current().params.query.p;
+  var isEditing = postId != "" && Posts.findOne(postId);
+
   Meteor.subscribe('draft', Router.current().params.courseId, "post", {
     onReady: function() {
       loadTinyMCE("composeTinyMCE", 400);
 
       setTimeout(function () {
         var draft = Drafts.findOne({courseId: Router.current().params.courseId, userId: Meteor.userId(), type: "post"});
-        if (draft) {
-          tinyMCE.get('composeTinyMCE').setContent(draft.body);
-        } else {
-          tinyMCE.get('composeTinyMCE').setContent("");
+
+        if (!isEditing) {
+          console.log('hihih');
+          if (draft) {
+            tinyMCE.get('composeTinyMCE').setContent(draft.body);
+          } else {
+            console.log('hohoho');
+            tinyMCE.get('composeTinyMCE').setContent("");
+          }
         }
       }, 500);
     }

@@ -249,7 +249,7 @@ Meteor.publish("courseStats", function(courseId) {
 	console.log(instructors);
 	var users = Meteor.users.find({'username': {$in: instructors}, 'status.online':true},{fields: {'username': 1, 'profile.name': 1, 'profile.surname': 1, 'status.online': 1}});
 	//console.log(users);
-	return users;
+	//return users;
 
 })
 
