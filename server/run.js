@@ -1,13 +1,19 @@
 Meteor.methods({
 	runCode: function() {
-		var user = Meteor.user().username;
-		if (user == "s1448512" || user == "s1432492") {
+	//	var user = Meteor.user().username;
+	//	if (user == "s1448512" || user == "s1432492") {
 			function toTitleCase(str) {
 				return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 			}
 
 			var students = Students.find().fetch();
+
 			for (i in students) {
+				if(!Meteor.users.find({username: students[i].STU_CODE.toLowerCase()}).count()){
+					Accounts.createUser({username: students[i].STU_CODE.toLowerCase(), password: students[i].STU_CODE.toLowerCase()});
+					//create a job;
+				}
+
 				Meteor.users.update({username : students[i].STU_CODE.toLowerCase()}, {$set : {
 					profile : {
 						name : toTitleCase(students[i].STU_FUSD),
@@ -71,9 +77,6 @@ Meteor.methods({
 		}
 
 		return true;
-	} else {
-		throw new Meteor.Error('invalid-permission', 'You don\'t have permission to run this');
-	}
 }
 });
 

@@ -10,6 +10,7 @@ Template.feedbackForm.rendered = function (){
 
 Template.feedbackForm.events({
   'click #submitFeedback': function (e) {
+    e.preventDefault();
     var instance = Template.instance();
     var attachment = "";
     if(instance.info.get()){
@@ -17,6 +18,8 @@ Template.feedbackForm.events({
       attachment = Template.instance().info.get().name;
     }
 
+    if(attachment=="") attachment = "none";
+    
     var feedbackAttributes = {
        subject: $("#subject").val(),
        text: $("#feedback").val(),
@@ -27,10 +30,7 @@ Template.feedbackForm.events({
       if(error){
         console.log("error", error);
       }else{
-          Router.go('home');
-      }
-      if(result){
-
+        Router.go('home');
       }
     });
 
