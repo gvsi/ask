@@ -56,7 +56,7 @@ Template.courseStats.rendered = function(){
 
 Template.courseStats.helpers({
   studentResponsesCount: function(){
-    return Counts.get('contributions') - Counts.get('instructorResponses')
+    return Counts.get('answers') - Counts.get('instructorResponses')
   },
   averageResponseTime: function(){
     // average = total response time / (# questions - # unansweredQuestions)
@@ -64,28 +64,77 @@ Template.courseStats.helpers({
   },
   course: function() {
     var course = Courses.findOne({_id: Router.current().params.courseId});
-    console.log(course);
     return course;
   },
   studentsOnlineText: function() {
     var count = Counts.get('onlineUsers') - Counts.get('onlineInstructors');
     if (count <= 0) {
-      return "No students are online at the moment"
+      return "0 students"
     } else if (count == 1) {
-      return "<strong>1</strong> student is currently online."
+      return "<strong>1</strong> student"
     } else if (count > 1) {
-      return "<strong>" + count + "</strong> students are currently online."
+      return "<strong>" + count + "</strong> students"
     }
   },
   instructorsOnlineText: function() {
     var count = Counts.get('onlineInstructors');
     if (count == 1) {
-      return "<strong>1</strong> instructor is currently online."
+      var str = "<strong>1</strong> instructor:"
+      str = addInstructor(str, this.instructors);
+      return str;
     } else if (count > 1) {
-      return "<strong>" + count + "</strong> instructors are currently online."
+      var str = "<strong>" + count + "</strong> instructors:"
+      str = addInstructor(str, this.instructors);
+      return str;
+    } else {
+      return "0 instructors"
     }
 
-    //list
+    function addInstructor(str, instructorsArray) {
+      str += "<ul class='fs-14'>"
+      var instructors = Meteor.users.find({username: {$in : instructorsArray}, 'status.online': true}).fetch();
+      instructors.forEach(function(instructor) {
+        str+= "<li>" + instructor.profile.name + " " + instructor.profile.surname + "</li>";
+      })
+      str += "</ul>"
+      return str;
+    }
+  },
+  unansweredQuestionsText: function() {
+    var count = Counts.get('unansweredQuestions');
+    if (count == 0) {
+      return "Sweet! There are no answered questions"
+    } else if (count == 1) {
+      return "<strong>1</strong> answered question &nbsp; &nbsp;<span class='label font-montserrat'><a href='#'>view</a></span>"
+    } else if (count > 1) {
+      return "<strong>"+count+"</strong> answered questions &nbsp; &nbsp;<span class='label font-montserrat'><a href='#'>view</a></span>"
+    }
+  },
+  unreadPostsText: function() {
+    var count = Counts.get('unreadPosts');
+    if (count == 0) {
+      return "You're all caught up! There are no unread posts"
+    } else if (count == 1) {
+      return "<strong>1</strong> unread post &nbsp; &nbsp;<span class='label font-montserrat'><a href='#'>view</a></span>"
+    } else if (count > 1) {
+      return "<strong>"+count+"</strong> unread posts &nbsp; &nbsp;<span class='label font-montserrat'><a href='#'>view</a></span>"
+    }
+  },
+  lastPost: function() {
+    var post = Posts.findOne({courseId: this._id}, {sort:{createdAt:-1}});
+    return post;
+  },
+  latestPosts: function() {
+    var posts = Posts.find({courseId: this._id}, {limit: 3});
+    return posts;
   }
+});
 
+Template.latestPostSlide.helpers({
+  dateFromNow: function() {
+    return moment(this.createdAt).fromNow();
+  },
+  postLink: function() {
+    return "/room/" + this.courseId + "?p=" + this._id;
+  }
 });

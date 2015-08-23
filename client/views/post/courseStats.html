@@ -1,10 +1,10 @@
 <template name="courseStats">
+  {{#with course}}
   <div class="container-fluid">
     <div class="row">
       <div class="col-md-6">
         <div class="row">
           <div class="ar-1-1">
-            {{#with course}}
             <div class="widget-1 panel no-border bg-complete no-margin">
               <div class="panel-body">
                 <div class="pull-bottom bottom-left bottom-right ">
@@ -17,7 +17,6 @@
                 </div>
               </div>
             </div>
-            {{/with}}
           </div>
         </div>
         <div class="row">
@@ -26,65 +25,18 @@
               <div class="widget-3 panel no-border bg-complete no-margin widget-loader-bar">
                 <div class="panel-body no-padding">
                   <div class="metro live-tile" data-mode="carousel" data-start-now="true" data-delay="3000">
+                    {{#if lastPost}}
+                    {{#with lastPost}}
                     <div class="slide-front tiles slide active">
-                      <div class="padding-30">
-                        <div class="pull-top">
-                          <div class="pull-left visible-lg visible-xlg">
-                            <i class="pg-map"></i>
-                          </div>
-                          <div class="pull-right">
-                            <ul class="list-inline ">
-                              <li>
-                                <a href="#" class="no-decoration"><i class="pg-comment"></i>
-                                </a>
-                              </li>
-                              <li>
-                                <a href="#" class="widget-3-fav no-decoration"><i class="pg-like"></i>
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                          <div class="clearfix"></div>
-                        </div>
-                        <div class="pull-bottom p-b-30">
-                          <p class="p-t-10 fs-12 p-b-5 hint-text">21 Jan</p>
-                          <h5 class="no-margin text-white p-b-10">Carefully
-                            <br>designed for a
-                            <br>great
-                            <span class="semi-bold">experience</span>
-                          </h5>
-                        </div>
-                      </div>
+                      {{>latestPostSlide}}
                     </div>
+                    {{/with}}
+                    {{/if}}
+                    {{#each latestPosts}}
                     <div class="slide-back tiles">
-                      <div class="padding-30">
-                        <div class="pull-top">
-                          <div class="pull-left visible-lg visible-xlg">
-                            <i class="pg-map"></i>
-                          </div>
-                          <div class="pull-right">
-                            <ul class="list-inline ">
-                              <li>
-                                <a href="#" class="no-decoration"><i class="pg-comment"></i>
-                                </a>
-                              </li>
-                              <li>
-                                <a href="#" class="widget-3-fav no-decoration"><i class="pg-like"></i>
-                                </a>
-                              </li>
-                            </ul>
-                          </div>
-                          <div class="clearfix"></div>
-                        </div>
-                        <div class="pull-bottom p-b-30">
-                          <p class="p-t-10 fs-12 p-b-5 hint-text">21 Jan</p>
-                          <h5 class="no-margin text-white p-b-10">A whole new
-                            <br>
-                            <span class="semi-bold">page</span>
-                          </h5>
-                        </div>
-                      </div>
+                      {{>latestPostSlide}}
                     </div>
+                    {{/each}}
                   </div>
                 </div>
               </div>
@@ -94,68 +46,44 @@
             <div class="ar-1-1">
               <div class="widget-11 panel no-border  no-margin">
                 <div class="panel-heading ">
-                  <div class="panel-title">Other stats
+                  <div class="panel-title fs-18">Other stats
                   </div>
                 </div>
                 <div class="widget-11-table auto-overflow">
-                  <table class="table table-condensed table-hover">
+                  <table class="table table-hover">
                     <tbody>
                       <tr>
-                        <td class="font-montserrat all-caps fs-12">Purchase CODE #2345</td>
+                        <td class="font-montserrat all-caps fs-12 padding-10">Total<br>posts</td>
                         <td>
-                          <span class="font-montserrat fs-18">$27</span>
+                          <span class="font-montserrat fs-12">{{getPublishedCount 'totalPosts'}}</span>
                         </td>
                       </tr>
                       <tr>
-                        <td class="font-montserrat all-caps fs-12">Purchase CODE #2345</td>
+                        <td class="font-montserrat all-caps fs-12 padding-10">Total answers</td>
                         <td>
-                          <span class="font-montserrat fs-18 text-primary">$1000</span>
+                          <span class="font-montserrat fs-12 text-primary">{{getPublishedCount 'answers'}}</span>
                         </td>
                       </tr>
                       <tr>
-                        <td class="font-montserrat all-caps fs-12">Purchase CODE #2345</td>
+                        <td class="font-montserrat all-caps fs-12 padding-10">Average <br>response time</td>
                         <td>
-                          <span class="font-montserrat fs-18">$27</span>
+                          <span class="font-montserrat fs-12 padding-10">{{averageResponseTime}}&nbsp;min</span>
                         </td>
                       </tr>
                       <tr>
-                        <td class="font-montserrat all-caps fs-12">Purchase CODE #2345</td>
+                        <td class="font-montserrat all-caps fs-12 padding-10">Instructors'<br>responses</td>
                         <td>
-                          <span class="font-montserrat fs-18 text-primary">$1000</span>
+                          <span class="font-montserrat fs-12">{{getPublishedCount 'instructorResponses'}}</span>
                         </td>
                       </tr>
                       <tr>
-                        <td class="font-montserrat all-caps fs-12">Purchase CODE #2345</td>
+                        <td class="font-montserrat all-caps fs-12 padding-10">Students'<br>responses</td>
                         <td>
-                          <span class="font-montserrat fs-18">$27</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="font-montserrat all-caps fs-12">Purchase CODE #2345</td>
-                        <td>
-                          <span class="font-montserrat fs-18 text-primary">$1000</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="font-montserrat all-caps fs-12">Purchase CODE #2345</td>
-                        <td>
-                          <span class="font-montserrat fs-18">$27</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="font-montserrat all-caps fs-12">Purchase CODE #2345</td>
-                        <td>
-                          <span class="font-montserrat fs-18 text-primary">$1000</span>
+                          <span class="font-montserrat fs-12 text-primary">{{studentResponsesCount}}</span>
                         </td>
                       </tr>
                     </tbody>
                   </table>
-                </div>
-                <div class="padding-25">
-                  <p class="small no-margin">
-                    <a href="#"><i class="fa fs-16 fa-arrow-circle-o-down text-success m-r-10"></i></a>
-                    <span class="hint-text ">Show more details of APPLE . INC</span>
-                  </p>
                 </div>
               </div>
             </div>
@@ -166,14 +94,14 @@
         <div class="row">
           <div class="col-md-6">
             <div class="ar-1-1">
-              <div class="widget-2 panel no-border bg-primary widget no-margin">
+              <div class="widget-2 panel no-border bg-primary widget no-margin" style="overflow:scroll">
                 <div class="panel-body">
-                  <span class="label font-montserrat fs-11 m-t-10">Who's online?</span>
+                  <span class="label font-montserrat fs-11 m-t-10">WHO'S ONLINE?</span>
                   <!-- <div class="bottom-left bottom-right padding-25"> -->
                   <div>
                     <br>
-                    <div class="text-white fs-16">{{{studentsOnlineText}}}</div>
-                    <div class="text-white fs-16">{{{instructorsOnlineText}}}</div>
+                    <div class="text-white fs-14"><i class="fa fa-user"></i> {{{studentsOnlineText}}}</div>
+                    <div class="text-white fs-14 m-t-10"><i class="fa fa-university"></i> {{{instructorsOnlineText}}}</div>
                   </div>
                 </div>
               </div>
@@ -183,12 +111,19 @@
             <div class="ar-1-1">
               <div class="widget-2 panel no-border bg-primary widget no-margin">
                 <div class="panel-body">
-                  <div class="pull-bottom bottom-left bottom-right padding-25">
-                    <span class="label font-montserrat fs-11">NEWS</span>
-                    <br>
-                    <h5 class="text-white">So much more to see at a glance.</h5>
-                    <p class="text-white hint-text hidden-md">Learn More at Project Pages</p>
+                  <div class="panel-title text-white hint-text">
+                    <span class="font-montserrat fs-11 all-caps">UNANSWERED QUESTIONS <i class="fa fa-chevron-right"></i>
+                    </span>
                   </div>
+                  {{{unansweredQuestionsText}}}
+
+                  <br><br>
+
+                  <div class="panel-title text-white hint-text">
+                    <span class="font-montserrat fs-11 all-caps">UNREAD POSTS<i class="fa fa-chevron-right"></i>
+                    </span>
+                  </div>
+                  {{{unreadPostsText}}}
                 </div>
               </div>
             </div>
@@ -266,5 +201,32 @@
 </div>
 </div>
 
+{{/with}}
+</template>
 
+<template name="latestPostSlide">
+  <div class="padding-30">
+    <div class="pull-top">
+      <div class="pull-left visible-lg visible-xlg">
+        <i class="fa fa-question-circle" style="font-size:40px"></i>
+      </div>
+      <div class="pull-right">
+        <ul class="list-inline ">
+          <li>
+            <a href="#" class="no-decoration"><i class="pg-comment"></i>
+            </a>
+          </li>
+          <li>
+            <a href="#" class="widget-3-fav no-decoration"><i class="pg-like"></i>
+            </a>
+          </li>
+        </ul>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <div class="pull-bottom p-b-20">
+      <p class="p-t-10 fs-12 p-b-5 hint-text">{{dateFromNow}}</p>
+      <h5 class="no-margin text-white p-b-10"><a href="{{postLink}}">{{title}}</a></h5>
+    </div>
+  </div>
 </template>

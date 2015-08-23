@@ -2,14 +2,14 @@ Students = new Mongo.Collection('students');
 Visits = new Mongo.Collection('visits');
 
 UserStatus.events.on("connectionLogin", function(fields) {
-      Meteor.userId = function() {
-          return fields.userId;
-      };
-      Meteor.call("userVisit", function(error, result){
-        if(error){
-          console.log("error", error);
-        }
-      });
+  Meteor.userId = function() {
+    return fields.userId;
+  };
+  Meteor.call("userVisit", function(error, result){
+    if(error){
+      console.log("error", error);
+    }
+  });
 });
 
 Meteor.methods({
