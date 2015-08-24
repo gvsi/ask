@@ -1,56 +1,56 @@
 Template.courseStats.rendered = function(){
   $(".widget-3 .metro").liveTile();
 
-  (function() {
-    var container = '.widget-15-chart';
-
-    var data = [];
-    var dates = [];
-    for (var i = 0; i < 10; i++) {
-  		var date = moment().subtract(9, 'days').add(i, 'days');
-      dates.push(date.format("MMM Do YY"));
-  		data.push({x:i+1, y:Counts.get("visitsOn-"+date.format("L"))+Math.floor((Math.random() * 14) + 1)});
-  	}
-
-    var graph = new Rickshaw.Graph({
-      renderer: 'area',
-      element: document.querySelector(container),
-      height: 150,
-      padding: {
-        top: 0.1
-      },
-      series: [{
-        data: data,
-        color: $.Pages.getColor('complete-light'),
-        name: "Visits"
-      }]
-
-    });
-
-    var hoverDetail = new Rickshaw.Graph.HoverDetail({
-      graph: graph,
-      formatter: function(series, x, y) {
-        var date = '<span class="date">' + dates[x-1] + '</span>';
-        var swatch = '<span class="detail_swatch" style="background-color: ' + series.color + '"></span>';
-        var content = swatch + series.name + ": " + parseInt(y) + '<br>' + date;
-        return content;
-      }
-    });
-
-    graph.render();
-
-    $(window).resize(function() {
-      graph.configure({
-        width: $(container).width(),
-        height: 150
-      });
-
-      graph.render()
-    });
-
-    $(container).data('chart', graph);
-
-  })();
+  // (function() {
+  //   var container = '.widget-15-chart';
+  //
+  //   var data = [];
+  //   var dates = [];
+  //   for (var i = 0; i < 10; i++) {
+  // 		var date = moment().subtract(9, 'days').add(i, 'days');
+  //     dates.push(date.format("MMM Do YY"));
+  // 		data.push({x:i+1, y:Counts.get("visitsOn-"+date.format("L"))+Math.floor((Math.random() * 14) + 1)});
+  // 	}
+  //
+  //   var graph = new Rickshaw.Graph({
+  //     renderer: 'area',
+  //     element: document.querySelector(container),
+  //     height: 150,
+  //     padding: {
+  //       top: 0.1
+  //     },
+  //     series: [{
+  //       data: data,
+  //       color: $.Pages.getColor('complete-light'),
+  //       name: "Visits"
+  //     }]
+  //
+  //   });
+  //
+  //   var hoverDetail = new Rickshaw.Graph.HoverDetail({
+  //     graph: graph,
+  //     formatter: function(series, x, y) {
+  //       var date = '<span class="date">' + dates[x-1] + '</span>';
+  //       var swatch = '<span class="detail_swatch" style="background-color: ' + series.color + '"></span>';
+  //       var content = swatch + series.name + ": " + parseInt(y) + '<br>' + date;
+  //       return content;
+  //     }
+  //   });
+  //
+  //   graph.render();
+  //
+  //   $(window).resize(function() {
+  //     graph.configure({
+  //       width: $(container).width(),
+  //       height: 150
+  //     });
+  //
+  //     graph.render()
+  //   });
+  //
+  //   $(container).data('chart', graph);
+  //
+  // })();
 
 }
 
@@ -105,9 +105,9 @@ Template.courseStats.helpers({
     if (count == 0) {
       return "Sweet! There are no answered questions"
     } else if (count == 1) {
-      return "<strong>1</strong> answered question &nbsp; &nbsp;<span class='label font-montserrat'><a href='#'>view</a></span>"
+      return "<strong>1</strong> unanswered question &nbsp; &nbsp;<span data-filter='unanswered' class='changeFilterBtn label font-montserrat'><a href='#'>view</a></span>"
     } else if (count > 1) {
-      return "<strong>"+count+"</strong> answered questions &nbsp; &nbsp;<span class='label font-montserrat'><a href='#'>view</a></span>"
+      return "<strong>"+count+"</strong> unanswered questions &nbsp; &nbsp;<span data-filter='unanswered' class='changeFilterBtn label font-montserrat'><a href='#'>view</a></span>"
     }
   },
   unreadPostsText: function() {
@@ -115,9 +115,9 @@ Template.courseStats.helpers({
     if (count == 0) {
       return "You're all caught up! There are no unread posts"
     } else if (count == 1) {
-      return "<strong>1</strong> unread post &nbsp; &nbsp;<span class='label font-montserrat'><a href='#'>view</a></span>"
+      return "<strong>1</strong> unread post &nbsp; &nbsp;<span data-filter='unread' class='changeFilterBtn label font-montserrat'><a href='#'>view</a></span>"
     } else if (count > 1) {
-      return "<strong>"+count+"</strong> unread posts &nbsp; &nbsp;<span class='label font-montserrat'><a href='#'>view</a></span>"
+      return "<strong>"+count+"</strong> unread posts &nbsp; &nbsp;<span data-filter='unread' class='changeFilterBtn label font-montserrat'><a href='#'>view</a></span>"
     }
   },
   lastPost: function() {
@@ -130,6 +130,13 @@ Template.courseStats.helpers({
   },
   visitsToday: function() {
     return Counts.get("visitsOn-"+moment().format("L"));
+  }
+});
+
+Template.courseStats.events({
+  "click .changeFilterBtn": function(e){
+     var filter = $(e.currentTarget).attr('data-filter');
+     Session.set('postFilter', filter);
   }
 });
 

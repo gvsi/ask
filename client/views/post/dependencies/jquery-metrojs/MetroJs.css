@@ -3,8 +3,8 @@
 .list-tile,
 .copy-tile,
 .tile-strip .flip-list > li {
-  
- 
+
+
   outline: 1px solid transparent;
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
@@ -3909,4 +3909,3 @@ html body .black.accentBorderTop {
     width: 30%;
   }
 }
-

@@ -11,6 +11,8 @@ Meteor.methods({
         });
 
         var user = Meteor.user();
+        console.log(Meteor.userId());
+        console.log(user._id);
         var type = 1;
         var now = new Date();
 
@@ -23,7 +25,7 @@ Meteor.methods({
           throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
 
         var post = _.extend(postAttributes, {
-          userId: user._id,
+          userId: Meteor.userId(),
           type: type,
           createdAt: now,
           updatedAt: now,

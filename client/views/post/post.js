@@ -243,7 +243,23 @@ Template.postList.helpers({
     return Posts.find({'courseId': Router.current().params.courseId}).count() > 0;
   },
   postsByDate: function () {
-    return Posts.find({'courseId': Router.current().params.courseId, createdAt: {$gte: this.start.toDate(), $lt: this.end.toDate()}}, {sort: {createdAt: -1}});
+    var filter = Session.get('postFilter');
+    if (filter == 'unanswered') {
+      $(".filterContainer").show();
+      $(".postList").css('height', '94%');
+      return Posts.find({'courseId': Router.current().params.courseId, 'answersCount': 0, 'isInstructorPost': {$exists: false}, 'createdAt': {$gte: this.start.toDate(), $lt: this.end.toDate()}}, {sort: {createdAt: -1}});
+    } else if (filter == 'unread') {
+      $(".filterContainer").show();
+      $(".postList").css('height', '94%');
+      return Posts.find({'courseId': Router.current().params.courseId, 'viewers': {$ne: Meteor.userId()}, 'createdAt': {$gte: this.start.toDate(), $lt: this.end.toDate()}}, {sort: {createdAt: -1}});
+    } else {
+      $(".filterContainer").hide();
+      $(".postList").css('height', '100%');
+      return Posts.find({'courseId': Router.current().params.courseId, createdAt: {$gte: this.start.toDate(), $lt: this.end.toDate()}}, {sort: {createdAt: -1}});
+    }
+  },
+  filterName: function() {
+    return Session.get('postFilter');
   }
 })
 
