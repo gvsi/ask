@@ -189,7 +189,6 @@ Template.postList.events({
     $(e.currentTarget).addClass('active');
     var postId = $(e.currentTarget).attr('data-post-id');
     Router.go('room', {courseId: Router.current().params.courseId}, {query: 'p='+postId});
-    Session.set("postId", postId);
     loadPage(postId, false);
   }
 });

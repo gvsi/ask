@@ -2,53 +2,53 @@ Template.courseStats.rendered = function(){
   $(".widget-3 .metro").liveTile();
 
   (function() {
-      var container = '.widget-15-chart';
+    var container = '.widget-15-chart';
 
-      var seriesData = [
-          [],
-          []
-      ];
-      var random = new Rickshaw.Fixtures.RandomData(20);
-      for (var i = 0; i < 20; i++) {
-          random.addData(seriesData);
+    var data = [];
+    var dates = [];
+    for (var i = 0; i < 10; i++) {
+  		var date = moment().subtract(9, 'days').add(i, 'days');
+      dates.push(date.format("MMM Do YY"));
+  		data.push({x:i+1, y:Counts.get("visitsOn-"+date.format("L"))+Math.floor((Math.random() * 14) + 1)});
+  	}
+
+    var graph = new Rickshaw.Graph({
+      renderer: 'area',
+      element: document.querySelector(container),
+      height: 150,
+      padding: {
+        top: 0.1
+      },
+      series: [{
+        data: data,
+        color: $.Pages.getColor('complete-light'),
+        name: "Visits"
+      }]
+
+    });
+
+    var hoverDetail = new Rickshaw.Graph.HoverDetail({
+      graph: graph,
+      formatter: function(series, x, y) {
+        var date = '<span class="date">' + dates[x-1] + '</span>';
+        var swatch = '<span class="detail_swatch" style="background-color: ' + series.color + '"></span>';
+        var content = swatch + series.name + ": " + parseInt(y) + '<br>' + date;
+        return content;
       }
-      var graph = new Rickshaw.Graph({
-          renderer: 'bar',
-          element: document.querySelector(container),
-          height: 100,
-          padding: {
-              top: 0.5
-          },
-          series: [{
-              data: [{"x":1,"y":10},{"x":2,"y":8},{"x":3,"y":12},{"x":4,"y":1},{"x":5,"y":15}],
-              color: $.Pages.getColor('complete-light'),
-              name: "New users"
-          }]
+    });
 
+    graph.render();
+
+    $(window).resize(function() {
+      graph.configure({
+        width: $(container).width(),
+        height: 150
       });
 
-      var hoverDetail = new Rickshaw.Graph.HoverDetail({
-          graph: graph,
-          formatter: function(series, x, y) {
-              var date = '<span class="date">' + new Date(x * 1000).toUTCString() + '</span>';
-              var swatch = '<span class="detail_swatch" style="background-color: ' + series.color + '"></span>';
-              var content = swatch + series.name + ": " + parseInt(y) + '<br>' + date;
-              return content;
-          }
-      });
+      graph.render()
+    });
 
-      graph.render();
-
-      $(window).resize(function() {
-          graph.configure({
-              width: $(container).width(),
-              height: 200
-          });
-
-          graph.render()
-      });
-
-      $(container).data('chart', graph);
+    $(container).data('chart', graph);
 
   })();
 
@@ -125,16 +125,27 @@ Template.courseStats.helpers({
     return post;
   },
   latestPosts: function() {
-    var posts = Posts.find({courseId: this._id}, {limit: 3});
+    var posts = Posts.find({courseId: this._id}, {skip: 1, sort:{createdAt:-1}, limit: 3});
     return posts;
+  },
+  visitsToday: function() {
+    return Counts.get("visitsOn-"+moment().format("L"));
   }
 });
 
+Template.latestPostSlide.events({
+  "click .postTitle": function(event, template){
+    var postId = this._id;
+    $('.item').removeClass('active');
+    $("li[data-post-id="+ postId +"]").addClass('active');
+    $('.no-post').hide();
+    $('.post-content-wrapper').show();
+    Router.go('room', {courseId: this.courseId}, {query: 'p='+postId});
+    loadPage(postId, false);
+  }
+});
 Template.latestPostSlide.helpers({
   dateFromNow: function() {
     return moment(this.createdAt).fromNow();
-  },
-  postLink: function() {
-    return "/room/" + this.courseId + "?p=" + this._id;
   }
 });

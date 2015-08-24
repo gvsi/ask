@@ -238,15 +238,27 @@ Meteor.publish("courseStats", function(courseId) {
 		{ countFromField: 'responseTime' }
 	);
 
+	Counts.publish(this, "thisWeekVisits",
+		Visits.find({
+			'date': {
+				$gte: moment().startOf('isoweek').toDate(),
+				$lt: moment().toDate()
+			}
+		},
+		{
+			sort: {createdAt: -1}
+		}
+		)
+	);
+
 	for (var i = 0; i < 10; i++) {
-		var date = moment().subtract(i, 'days').format("L");
-		Counts.publish(this, "visitsOn-"+date,
-			 Visits.find({date: date})
+		var date = moment().startOf("day").subtract(i, 'days');
+		Counts.publish(this, "visitsOn-"+date.format("L"),
+			 Visits.find({date: date.toDate()})
 		);
 	}
 
 	var instructors = Courses.findOne({'_id':courseId}).instructors;
-	console.log(instructors);
 	var users = Meteor.users.find({'username': {$in: instructors}, 'status.online':true},{fields: {'username': 1, 'profile.name': 1, 'profile.surname': 1, 'status.online': 1}});
 	//console.log(users);
 	//return users;

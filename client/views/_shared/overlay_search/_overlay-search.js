@@ -51,7 +51,6 @@ Template.overlaySearch.events({
     $(".overlay").fadeOut("fast").addClass("closed");
 
     setTimeout(function () {
-      Session.set("postId", postId);
       loadPage(postId, true);
       Router.go('room', {courseId: courseId}, {query: 'p='+postId});
     }, 300);

@@ -15,7 +15,7 @@ UserStatus.events.on("connectionLogin", function(fields) {
 Meteor.methods({
   userVisit:function(){
     if(Meteor.isServer){
-      var currentDate = moment().format("L");
+      var currentDate = moment().startOf('day').toDate();
       var visit = Visits.findOne({userId: Meteor.userId(), date: currentDate});
 
       if(!visit){
