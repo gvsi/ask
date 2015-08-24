@@ -37,6 +37,14 @@ Router.route('/home', function () {
  name:'home',
 });
 
+Router.route('/settings', function () {
+  this.render('settings');
+},{
+ layoutTemplate:"dashboardLayout",
+ name:'settings',
+});
+
+
 Router.route('/feedback', function () {
   this.render('feedback');
 },{

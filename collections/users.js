@@ -2,30 +2,17 @@ Students = new Mongo.Collection('students');
 Visits = new Mongo.Collection('visits');
 
 UserStatus.events.on("connectionLogin", function(fields) {
-  Meteor.userId = function() {
-    return fields.userId;
-  };
-  Meteor.call("userVisit", function(error, result){
-    if(error){
-      console.log("error", error);
-    }
-  });
-});
+  if(Meteor.isServer){
+    var currentDate = moment().startOf('day').toDate();
+    var visit = Visits.findOne({userId: fields.userId, date: currentDate});
 
-Meteor.methods({
-  userVisit:function(){
-    if(Meteor.isServer){
-      var currentDate = moment().startOf('day').toDate();
-      var visit = Visits.findOne({userId: Meteor.userId(), date: currentDate});
+    if(!visit){
+      var visitAttributes = {
+        userId: fields.userId,
+        date: currentDate
+      };
 
-      if(!visit){
-        var visitAttributes = {
-          userId: Meteor.userId(),
-          date: currentDate
-        };
-
-        Visits.insert(visitAttributes);
-      }
+      Visits.insert(visitAttributes);
     }
   }
 });

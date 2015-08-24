@@ -1,0 +1,23 @@
+<template name="settings">
+    <div class="jumbotron full-height no-padding" data-pages="parallax">
+      <div class="container-fluid container-fixed-lg sm-p-l-20 sm-p-r-20 full-height">
+        <div class="inner full-height">
+          <div class="container-xs-height full-height">
+              <div class="m-t-50 col-md-6 col-md-offset-3">
+                <h4>Email notifications frequency: </h4>
+                <div class="radio radio-success m-t-20">
+                  <input type="radio" value="realTime" name="emailOption" id="realTime">
+                  <label for="realTime">Real Time</label>
+                  <input type="radio" value="once4hours" name="emailOption" id="once4hours">
+                  <label for="once4hours">Once every 4 hours</label>
+                  <input type="radio" value="onceADay" name="emailOption" id="onceADay">
+                  <label for="onceADay">Once a day</label>
+                  <input type="radio" value="never" name="emailOption" id="never">
+                  <label for="never">Never</label>
+                </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>

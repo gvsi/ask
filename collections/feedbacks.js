@@ -17,12 +17,17 @@ Meteor.methods({
 
     Feedbacks.insert(feedback);
 
+    var attachment = '';
+    if(feedbackAttributes.attachment!=""){
+       attachment = '<br> Attachment: <a href="localhost3000/'+ feedbackAttributes.attachment +'">Attachment</a>';
+    }
+
     if (Meteor.isServer) {
       Email.send({
         from: "martingeorgiev1995@gmail.com",
         to: "martingeorgiev1995@gmail.com",
-        subject: feedbackAttributes.subject,
-        text: feedbackAttributes.text + '\n\nAttachemnt: ' + feedbackAttributes.attachment,
+        subject: "Ask Feedback",
+        html: 'From: '+ Meteor.user().profile.name +' '+ Meteor.user().profile.surname +' <br> Subject: '+ feedbackAttributes.subject +' <br> Body: '+ feedbackAttributes.text + attachment
       });
     }
   },

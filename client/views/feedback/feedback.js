@@ -18,8 +18,6 @@ Template.feedbackForm.events({
       attachment = Template.instance().info.get().name;
     }
 
-    if(attachment=="") attachment = "none";
-    
     var feedbackAttributes = {
        subject: $("#subject").val(),
        text: $("#feedback").val(),
@@ -29,11 +27,10 @@ Template.feedbackForm.events({
     Meteor.call("addFeedback", feedbackAttributes, function(error, result){
       if(error){
         console.log("error", error);
-      }else{
-        Router.go('home');
       }
     });
-
+    
+    Router.go('home');
   }
 });
 

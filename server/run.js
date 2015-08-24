@@ -1,7 +1,6 @@
 Meteor.methods({
 	runCode: function() {
-	//	var user = Meteor.user().username;
-	//	if (user == "s1448512" || user == "s1432492") {
+
 			function toTitleCase(str) {
 				return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
 			}
@@ -17,7 +16,8 @@ Meteor.methods({
 				Meteor.users.update({username : students[i].STU_CODE.toLowerCase()}, {$set : {
 					profile : {
 						name : toTitleCase(students[i].STU_FUSD),
-						surname: toTitleCase(students[i].STU_SURN)
+						surname: toTitleCase(students[i].STU_SURN),
+						emailPreferences: ''
 					}
 				}});
 			}
@@ -51,9 +51,18 @@ Meteor.methods({
 					}
 				);
 
-				Meteor.users.update({username : coursesCsv[i].MUA_EXTU.toLowerCase()}, {$addToSet : {
-					"profile.courses": courseId
-				}});
+				if(!Meteor.users.find({username: coursesCsv[i].MUA_EXTU.toLowerCase()}).count()){
+					Accounts.createUser({username: coursesCsv[i].MUA_EXTU.toLowerCase(), password: coursesCsv[i].MUA_EXTU.toLowerCase()});
+				}
+
+				Meteor.users.update({username : coursesCsv[i].MUA_EXTU.toLowerCase()}, {
+				$addToSet : {
+					"profile.courses": courseId,
+				},
+				$set: {
+					"profile.emailPreferences": '',
+				}
+				});
 			}
 		}
 
@@ -77,8 +86,39 @@ Meteor.methods({
 		}
 
 		return true;
+},
+setEmailPreferences: function(type){
+	var currentUser =  Meteor.userId();
+	SyncedCron.remove(Meteor.userId());
+
+	var emailFrequency;
+	if(type=='onceADay'){
+		emailFrequency = 'at 5:00 pm';
+	}else if (type=='once4hours') {
+		emailFrequency = 'every 4 hours';
+	}
+
+  if(type!='none' && type!='realTime'){
+		SyncedCron.add({
+			name: Meteor.userId(),
+			schedule: function(parser) {
+				// parser is a later.parse object
+				return parser.text(emailFrequency);
+			},
+			job: function() {
+				console.log("SEND MESSAGE TO " + currentUser);
+			}
+		});
+	}
+
+	Meteor.users.update({_id: Meteor.userId()}, {$set : {
+		"profile.emailPreferences": type
+	}});
 }
+
 });
+
+
 
 
 /*Meteor.call('runCode', function (err, response) {

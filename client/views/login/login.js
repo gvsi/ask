@@ -33,6 +33,15 @@ Template.loginPage.events({
         if (err) {
           console.log(err);
         } else {
+
+					if(Meteor.user().profile.emailPreferences == ''){
+						Meteor.call("setEmailPreferences", 'onceADay', function(error, result){
+							if(error){
+								console.log("error", error);
+							}
+						});
+					 }
+
           Router.go('/');
         }
       });
