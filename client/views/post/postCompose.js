@@ -1,8 +1,4 @@
 Template.postCompose.rendered = function(){
-  if (!$("#no-post-error").length) {
-    $("#postList").ioslist();
-  }
-
   Session.set("DocumentTitle", "Compose | Ask");
 
   mathquill();

@@ -2,7 +2,7 @@ Template.courseStats.rendered = function(){
   $(".widget-3 .metro").liveTile();
 
   // (function() {
-  //   var container = '.widget-15-chart';
+  //   var container = '#widget-15-chart';
   //
   //   var data = [];
   //   var dates = [];

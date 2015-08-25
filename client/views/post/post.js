@@ -190,10 +190,17 @@ Template.postList.events({
     var postId = $(e.currentTarget).attr('data-post-id');
     Router.go('room', {courseId: Router.current().params.courseId}, {query: 'p='+postId});
     loadPage(postId, false);
+  },
+  'click .closeFilter': function(e) {
+    Session.set('postFilter', undefined);
   }
 });
 
-Template.postList.helpers({
+Template.registerHelper("filterName", function(){
+  return Session.get('postFilter');
+});
+
+Template.thumbnailList.helpers({
   dateGroups: function() {
     var groups = [
       {
@@ -240,28 +247,33 @@ Template.postList.helpers({
     return groups;
   },
   areTherePosts: function() {
-    return Posts.find({'courseId': Router.current().params.courseId}).count() > 0;
+    var filter = Session.get('postFilter');
+    if (filter == 'unanswered') {
+      return Posts.find({'courseId': Router.current().params.courseId, 'answersCount': 0, 'isInstructorPost': {$exists: false}}).count() > 0;
+    } else if (filter == "unread") {
+      return Posts.find({'courseId': Router.current().params.courseId, 'viewers': {$ne: Meteor.userId()}}).count() > 0;
+    } else {
+      return Posts.find({'courseId': Router.current().params.courseId}).count() > 0;
+    }
   },
   postsByDate: function () {
     var filter = Session.get('postFilter');
     if (filter == 'unanswered') {
-      $(".filterContainer").show();
-      $(".postList").css('height', '94%');
+      $(".post-list").css('height', '94%');
       return Posts.find({'courseId': Router.current().params.courseId, 'answersCount': 0, 'isInstructorPost': {$exists: false}, 'createdAt': {$gte: this.start.toDate(), $lt: this.end.toDate()}}, {sort: {createdAt: -1}});
     } else if (filter == 'unread') {
-      $(".filterContainer").show();
-      $(".postList").css('height', '94%');
+      $(".post-list").css('height', '94%');
       return Posts.find({'courseId': Router.current().params.courseId, 'viewers': {$ne: Meteor.userId()}, 'createdAt': {$gte: this.start.toDate(), $lt: this.end.toDate()}}, {sort: {createdAt: -1}});
     } else {
-      $(".filterContainer").hide();
-      $(".postList").css('height', '100%');
+      $(".post-list").css('height', '100%');
       return Posts.find({'courseId': Router.current().params.courseId, createdAt: {$gte: this.start.toDate(), $lt: this.end.toDate()}}, {sort: {createdAt: -1}});
     }
-  },
-  filterName: function() {
-    return Session.get('postFilter');
   }
-})
+});
+
+Template.thumbnailList.rendered = function(){
+  $("#postList").ioslist();
+}
 
 Template.postThumbnail.helpers({
   dateFromNow: function() {
