@@ -1,7 +1,11 @@
 <template name="postList">
-  <div class="b-r b-grey" style="position:relative; height: 100%; width:360px; float:left">
-  <div class="filterContainer" style="padding: 11px; height: 6%; padding: 13px 50px 0px 16px;display:none">Filtered by: <span class="bold all-caps font-montserrat">{{filterName}}</span> <i class="closeFilter pull-right fa fa-times" style="font-size:18px"></i>
-  </div>
+  <div class="postListContainer b-r b-grey">
+  {{#if filterName}}
+    <div class="filterContainer">
+      Filtered by: <span class="bold all-caps font-montserrat">{{filterName}}</span>
+      <i class="closeFilter pull-right fa fa-times"></i>
+    </div>
+  {{/if}}
   <div class="post-list b-r b-grey">
     {{#if courseId}}
 
@@ -25,7 +29,7 @@
       {{#if equals filterName 'unanswered'}}
         {{>thumbnailList}}
       {{else}}
-        {{#if equals filter 'unread'}}
+        {{#if equals filterName 'unread'}}
           {{>thumbnailList}}
         {{else}}
           {{>thumbnailList}}

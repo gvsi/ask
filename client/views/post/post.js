@@ -196,11 +196,9 @@ Template.postList.events({
   }
 });
 
-Template.postList.helpers({
-  filterName: function() {
-    return Session.get('postFilter');
-  }
-})
+Template.registerHelper("filterName", function(){
+  return Session.get('postFilter');
+});
 
 Template.thumbnailList.helpers({
   dateGroups: function() {
@@ -261,15 +259,12 @@ Template.thumbnailList.helpers({
   postsByDate: function () {
     var filter = Session.get('postFilter');
     if (filter == 'unanswered') {
-      $(".filterContainer").show();
       $(".post-list").css('height', '94%');
       return Posts.find({'courseId': Router.current().params.courseId, 'answersCount': 0, 'isInstructorPost': {$exists: false}, 'createdAt': {$gte: this.start.toDate(), $lt: this.end.toDate()}}, {sort: {createdAt: -1}});
     } else if (filter == 'unread') {
-      $(".filterContainer").show();
       $(".post-list").css('height', '94%');
       return Posts.find({'courseId': Router.current().params.courseId, 'viewers': {$ne: Meteor.userId()}, 'createdAt': {$gte: this.start.toDate(), $lt: this.end.toDate()}}, {sort: {createdAt: -1}});
     } else {
-      $(".filterContainer").hide();
       $(".post-list").css('height', '100%');
       return Posts.find({'courseId': Router.current().params.courseId, createdAt: {$gte: this.start.toDate(), $lt: this.end.toDate()}}, {sort: {createdAt: -1}});
     }
