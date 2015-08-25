@@ -89,29 +89,53 @@ Meteor.methods({
 },
 setEmailPreferences: function(type){
 	var currentUser =  Meteor.userId();
-	SyncedCron.remove(Meteor.userId());
+	SyncedCron.remove('email-'+currentUser);
 
 	var emailFrequency;
 	if(type=='onceADay'){
-		emailFrequency = 'at 5:00 pm';
+		emailFrequency = 'every 1 minutes'//'at 5:00 pm';
 	}else if (type=='once4hours') {
 		emailFrequency = 'every 4 hours';
 	}
 
-  if(type!='none' && type!='realTime'){
+  if(type!='never' && type!='realTime'){
 		SyncedCron.add({
-			name: Meteor.userId(),
+			name: 'email-'+currentUser,
 			schedule: function(parser) {
 				// parser is a later.parse object
 				return parser.text(emailFrequency);
 			},
 			job: function() {
-				console.log("SEND MESSAGE TO " + currentUser);
+
+				var emailBody = '';
+				var courses = Meteor.users.findOne({_id: currentUser}).profile.courses;
+				courses.forEach(function(courseId) {
+					var tempBody = '';
+					var currentCourse = Courses.findOne({_id: courseId});
+					tempBody += '<h1>' + currentCourse.name + '</h1>';
+
+					var posts = Posts.find({"courseId": courseId}, {limit: 5, sort: {createdAt : -1}});
+					posts.forEach(function(post){
+						if(moment(new Date()).diff(moment(post.createdAt), 'hours') < 10){
+							console.log(post.title);
+						}
+						//	console.log(post.title);
+					});
+
+					//add to html variable : name of the course
+						//foreach question in this course
+							// add its title (date) and text to the html variable
+							// increase the count variable
+						//endforeach
+				});
+
+				//if count variable is bigger than 0
+					//sendEmail
 			}
 		});
 	}
 
-	Meteor.users.update({_id: Meteor.userId()}, {$set : {
+	Meteor.users.update({_id: currentUser}, {$set : {
 		"profile.emailPreferences": type
 	}});
 }

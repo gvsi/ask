@@ -5,8 +5,14 @@ Template.settings.rendered = function(){
 }
 
 Template.settings.events({
-    'submit #settingsSubmit' : function(e, t){
-      e.preventDefault();
+    'change input[name="emailOption"]:radio' : function(e, t){
+      Meteor.call("setEmailPreferences", $(e.currentTarget).val(), function(error, result){
+        if(error){
+          console.log("error", error);
+        }
+        if(result){
 
+        }
+      });
     },
   });
