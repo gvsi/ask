@@ -1,6 +1,6 @@
 <template name="postList">
   <div class="b-r b-grey" style="position:relative; height: 100%; width:360px; float:left">
-  <div class="filterContainer" style="padding: 11px; height: 6%; padding: 13px 50px 0px 16px;display:none">Filtered by: <span class="bold all-caps font-montserrat">{{filterName}}</span> <i class="pull-right fa fa-times" style="font-size:18px"></i>
+  <div class="filterContainer" style="padding: 11px; height: 6%; padding: 13px 50px 0px 16px;display:none">Filtered by: <span class="bold all-caps font-montserrat">{{filterName}}</span> <i class="closeFilter pull-right fa fa-times" style="font-size:18px"></i>
   </div>
   <div class="post-list b-r b-grey">
     {{#if courseId}}
@@ -22,36 +22,48 @@
       <!-- START POST LIST SORTED BY DATE -->
       <!-- END POST LIST SORTED BY DATE -->
 
-      {{#if areTherePosts}}
-        {{#each dateGroups}}
-          {{#if postsByDate.count}}
-          <div class="list-view-group-container">
-            <div class="list-view-group-header">
-              <span id="date">{{title}}</span>
-
-            </div>
-            <ul class="no-padding">
-                {{#each postsByDate}}
-                {{> postThumbnail}}
-                {{/each}}
-            </ul>
-          </div>
-          {{/if}}
-        {{/each}}
+      {{#if equals filterName 'unanswered'}}
+        {{>thumbnailList}}
       {{else}}
-      <div class="list-view-group-container" style="padding-top: 30px;">
-        <div class="list-view-group-header">
-          <span id="date">  </span>
-        </div>
-      </div>
-          <div id="no-post-error" style="margin-top: 50px; text-align:center"><h4>Nothing going on here</h4></div>
-
+        {{#if equals filter 'unread'}}
+          {{>thumbnailList}}
+        {{else}}
+          {{>thumbnailList}}
+        {{/if}}
       {{/if}}
     </div>
   </div>
 </div>
 </template>
 
+<template name="thumbnailList">
+  {{#if areTherePosts}}
+    {{#each dateGroups}}
+      {{#if postsByDate.count}}
+      <div class="list-view-group-container">
+        <div class="list-view-group-header">
+          <span id="date">{{title}}</span>
+
+        </div>
+        <ul class="no-padding">
+            {{#each postsByDate}}
+            {{> postThumbnail}}
+            {{/each}}
+
+        </ul>
+      </div>
+      {{/if}}
+    {{/each}}
+  {{else}}
+  <div class="list-view-group-container" style="padding-top: 30px;">
+    <div class="list-view-group-header">
+      <span id="date">  </span>
+    </div>
+  </div>
+      <div id="no-post-error" style="margin-top: 50px; text-align:center"><h4>Nothing going on here</h4></div>
+
+  {{/if}}
+</template>
 <template name="postThumbnail">
   <li class="item padding-15 {{isPostViewed}}" data-post-id="{{_id}}">
     <!--<div class="thumbnail-wrapper d32 circular bordered b-complete">
