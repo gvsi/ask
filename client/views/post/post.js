@@ -12,9 +12,9 @@ Template.postPage.rendered = function () {
   mathquill();
 
   if ($(window).width() < 980) {
-    $('.post-list').attr('id', 'slide-left');
+    $('.postListContainer').attr('id', 'slide-left');
   } else {
-    $('.post-list').removeAttr('id', 'slide-left');
+    $('.postListContainer').removeAttr('id', 'slide-left');
   }
 
   if (Router.current().params.query.p) {
@@ -31,13 +31,13 @@ Template.postPage.rendered = function () {
 
   $(window).resize(function() {
     if ($(window).width() < 980) {
-      $('.post-list').attr('id', 'slide-left');
+      $('.postListContainer').attr('id', 'slide-left');
     } else {
-      $('.post-list').removeAttr('id', 'slide-left');
+      $('.postListContainer').removeAttr('id', 'slide-left');
     }
 
     if ($(window).width() > 1024) {
-      $('.post-list').length && $('.post-list').removeClass('slideLeft');
+      $('.postListContainer').length && $('.postListContainer').removeClass('slideLeft');
     }
 
   });
@@ -530,7 +530,7 @@ Template.postContent.events({
     MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
   },
   "click .post-list-toggle": function(event) {
-    $('.post-list').toggleClass('slideLeft');
+    $('.postListContainer').toggleClass('slideLeft');
   },
   "click #openDeleteAnswerModal": function(event){
     Session.set("deleteAnswerId", $(event.currentTarget).data("id"));

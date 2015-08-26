@@ -4,17 +4,17 @@ Template.postCompose.rendered = function(){
   mathquill();
 
   if ($(window).width() < 1024) {
-    $('.post-list').hide();
+    $('.postListContainer').hide();
   }else{
-    $('.post-list').show();
+    $('.postListContainer').show();
   }
 
 
   $(window).resize(function() {
     if ($(window).width() < 1024) {
-      $('.post-list').hide();
+      $('.postListContainer').hide();
     }else{
-      $('.post-list').show();
+      $('.postListContainer').show();
     }
   });
 

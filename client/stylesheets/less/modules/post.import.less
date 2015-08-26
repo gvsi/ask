@@ -115,6 +115,11 @@
     height: 100%;
     width:360px;
     float:left;
+    overflow-y: auto;
+    .transition(all .5s ease);
+    &.slideLeft{
+      .translate(-100%, 0);
+    }
 
     .filterContainer {
       padding: 11px;
@@ -135,9 +140,9 @@
       position: relative;
       -webkit-overflow-scrolling: touch;
       .transition(all .5s ease);
-      &.slideLeft{
-        .translate(-100%, 0);
-      }
+      // &.slideLeft{
+      //   .translate(-100%, 0);
+      // }
       .course-settings{
         cursor: pointer;
         position: absolute;
@@ -774,7 +779,7 @@
   }
 
   .post-wrapper{
-    .post-list{
+    .postListContainer{
       width: 100%;
       height: auto;
       bottom: 50px;
@@ -783,6 +788,9 @@
       position: absolute;
       z-index: 2000;
       float: none;
+      .post-list{
+        width: 100%;
+      }
       .item{
         padding: 8px;
         .inline{
