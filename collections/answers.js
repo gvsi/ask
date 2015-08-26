@@ -109,6 +109,8 @@ Meteor.methods({
           }
 
           Meteor.call("addNotification", notificationAttributes);
+
+          console.log('send email to follower');
         }
       });
     }

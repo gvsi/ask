@@ -91,11 +91,13 @@ setEmailPreferences: function(type){
 	var currentUser =  Meteor.userId();
 	SyncedCron.remove('email-'+currentUser);
 
-	var emailFrequency;
+	var emailFrequency,hours;
 	if(type=='onceADay'){
 		emailFrequency = 'every 1 minutes'//'at 5:00 pm';
+		hours = 24;
 	}else if (type=='once4hours') {
 		emailFrequency = 'every 4 hours';
+		hours = 4;
 	}
 
   if(type!='never' && type!='realTime'){
@@ -108,29 +110,39 @@ setEmailPreferences: function(type){
 			job: function() {
 
 				var emailBody = '';
+				var postsCount = 0;
 				var courses = Meteor.users.findOne({_id: currentUser}).profile.courses;
 				courses.forEach(function(courseId) {
 					var tempBody = '';
+					var tempCount = 0;
+					var tempUrl;
 					var currentCourse = Courses.findOne({_id: courseId});
-					tempBody += '<h1>' + currentCourse.name + '</h1>';
+					tempBody += '<br><h1>>New questions in ' + currentCourse.name + '</h1>';
 
 					var posts = Posts.find({"courseId": courseId}, {limit: 5, sort: {createdAt : -1}});
 					posts.forEach(function(post){
-						if(moment(new Date()).diff(moment(post.createdAt), 'hours') < 10){
-							console.log(post.title);
+						if(moment(new Date()).diff(moment(post.createdAt), 'hours') < hours){
+							tempUrl = 'http://localhost:3000/room/' + currentCourse._id +'?p=' + post._id;
+							tempBody += '<a href='+ tempUrl +'><h2>' + post.title + ' - ' + moment(post.createdAt).format('MMMM Do YYYY, H:mm:ss') + '</h2></a>' ;
+							tempBody += '<p>' + post.text + '</p>';
+							tempCount+=1;
 						}
-						//	console.log(post.title);
 					});
 
-					//add to html variable : name of the course
-						//foreach question in this course
-							// add its title (date) and text to the html variable
-							// increase the count variable
-						//endforeach
+					if(tempCount){
+						emailBody+=tempBody;
+						postsCount +=1
+					}
 				});
 
-				//if count variable is bigger than 0
-					//sendEmail
+				if(postsCount){
+					Email.send({
+						from: "martingeorgiev1995@gmail.com",
+						to: "martingeorgiev1995@gmail.com",
+						subject: "Ask Digest",
+						html: emailBody
+					});
+				}
 			}
 		});
 	}
