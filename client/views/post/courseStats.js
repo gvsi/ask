@@ -1,6 +1,7 @@
 Template.courseStats.rendered = function(){
   $(".widget-3 .metro").liveTile();
 
+  builtArea();
   // (function() {
   //   var container = '#widget-15-chart';
   //
@@ -127,7 +128,10 @@ Template.courseStats.helpers({
   latestPosts: function() {
     var posts = Posts.find({courseId: this._id}, {skip: 1, sort:{createdAt:-1}, limit: 3});
     return posts;
-  },
+  }
+});
+
+Template.visitsGraph.helpers({
   visitsToday: function() {
     return Counts.get("visitsOn-"+moment().format("L"));
   }
@@ -135,8 +139,8 @@ Template.courseStats.helpers({
 
 Template.courseStats.events({
   "click .changeFilterBtn": function(e){
-     var filter = $(e.currentTarget).attr('data-filter');
-     Session.set('postFilter', filter);
+    var filter = $(e.currentTarget).attr('data-filter');
+    Session.set('postFilter', filter);
   }
 });
 
@@ -156,3 +160,84 @@ Template.latestPostSlide.helpers({
     return moment(this.createdAt).fromNow();
   }
 });
+
+function builtArea() {
+
+  var data = [];
+  var dates = [];
+  for (var i = 0; i < 10; i++) {
+    var date = moment().subtract(9, 'days').add(i, 'days');
+    dates.push(date.format("DD/MM"));
+    data.push(Counts.get("visitsOn-"+date.format("L"))+Math.floor((Math.random() * 14) + 1));
+  }
+
+  console.log(data);
+  console.log(dates);
+
+  var chartsOptions = {
+    chart: {
+      type: 'area',
+      height: 300
+    },
+    title: {
+      text: 'Daily Visits',
+      x: -20 //center
+    },
+    xAxis: {
+      categories: dates
+    },
+    yAxis: {
+      title: {
+        text: 'Visits'
+      },
+      plotLines: [{
+        value: 0,
+        width: 1,
+        color: '#808080'
+      }]
+    },
+    plotOptions: {
+      area: {
+        fillColor: {
+          linearGradient: {
+            x1: 0,
+            y1: 0,
+            x2: 0,
+            y2: 1
+          },
+          stops: [
+            [0, Highcharts.getOptions().colors[0]],
+            [1, Highcharts.Color(Highcharts.getOptions().colors[0]).setOpacity(0).get('rgba')]
+          ]
+        },
+        marker: {
+          radius: 2
+        },
+        lineWidth: 1,
+        states: {
+          hover: {
+            lineWidth: 1
+          }
+        },
+        threshold: null
+      }
+    },
+    legend: {
+      enabled: false
+    },
+    credits: {
+      enabled: false
+    },
+    tooltip: {
+      valueSuffix: ' users'
+    },
+    series: [{
+      name: 'Views',
+      data: data
+    }]
+  }
+
+  $('#graph-lg').highcharts(chartsOptions);
+  $('#graph-md').highcharts(chartsOptions);
+
+}

@@ -2,7 +2,7 @@
   {{#with course}}
   <div class="container-fluid">
     <div class="row">
-      <div class="col-md-6">
+      <div class="col-md-8 col-lg-6">
         <div class="row">
           <div class="ar-1-1">
             <div class="widget-1 panel no-border bg-complete no-margin">
@@ -20,7 +20,7 @@
           </div>
         </div>
         <div class="row">
-          <div class="col-md-6 p-t-20">
+          <div class="col-md-6 col-lg-6 p-t-20">
             <div class="ar-1-1">
               <div class="widget-3 panel no-border bg-complete no-margin widget-loader-bar">
                 <div class="panel-body no-padding">
@@ -42,7 +42,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-6 p-t-20">
+          <div class="col-md-6 col-lg-6 p-t-20">
             <div class="ar-1-1">
               <div class="widget-11 panel no-border  no-margin">
                 <div class="panel-heading ">
@@ -90,9 +90,9 @@
           </div>
         </div>
       </div>
-      <div class="col-md-6">
+      <div class="col-md-4 col-lg-6">
         <div class="row">
-          <div class="col-md-6">
+          <div class="col-lg-6 m-t-10">
             <div class="ar-1-1">
               <div class="widget-2 panel no-border bg-primary widget no-margin" style="overflow:scroll">
                 <div class="panel-body">
@@ -107,7 +107,7 @@
               </div>
             </div>
           </div>
-          <div class="col-md-6">
+          <div class="col-lg-6 m-t-10">
             <div class="ar-1-1">
               <div class="widget-2 panel no-border bg-primary widget no-margin">
                 <div class="panel-body">
@@ -129,46 +129,21 @@
             </div>
           </div>
         </div>
-        <div class="row" style="margin: 30px 0px 0px 0px">
-          <div class="ar-1-1">
-            <div class="widget-15 panel panel-condensed  no-margin no-border widget-loader-circle" style="background-color: transparent">
-              <div class="panel-heading m-b-10">
-                <span class="label font-montserrat fs-15 all-caps">Daily visits</span>
-              </div>
-              <div class="panel-body no-padding">
-            <div class="tab-content p-l-20 p-r-20">
-              <div class="tab-pane no-padding active" id="dailyVisitsTab">
-                <div class="full-width">
-                    <div id="widget-15-chart" class="rickshaw-chart"></div>
-                </div>
-              </div>
-            </div>
-            <div class="p-t-20 p-l-20 p-r-20 p-b-30">
-              <div class="row">
-                <div class="col-md-7">
-                  <div class="row"><span class="fs-16 text-black">Visits today:</span></div>
-                  <div class="row"><span class="fs-16 text-black">Visits this week:</span></div>
-                </div>
-                <div class="col-md-5">
-                  <div class="row">
-                    <span class="font-montserrat bold text-success m-r-20 fs-16">{{visitsToday}}</span>
-                  </div>
-                  <div class="row">
-                    <p class="font-montserrat bold text-danger m-r-20 fs-16">{{getPublishedCount 'thisWeekVisits'}}</p>
-                  </div>
-                </div>
-
-              </div>
-            </div>
+        <div class="row hidden-md m-t-30">
+          <div class="col-lg-12">
+            {{>visitsGraph selector='graph-lg'}}
           </div>
         </div>
       </div>
     </div>
+    <div class="row hidden-lg m-t-20">
+      <div class="col-md-12">
+        {{>visitsGraph selector='graph-md'}}
+      </div>
+    </div>
   </div>
-</div>
-</div>
 
-{{/with}}
+  {{/with}}
 </template>
 
 <template name="latestPostSlide">
@@ -194,6 +169,39 @@
     <div class="pull-bottom p-b-20">
       <p class="p-t-10 fs-12 p-b-5 hint-text">{{dateFromNow}}</p>
       <h5 class="postTitle no-margin text-white p-b-10" style="cursor:pointer">{{title}}</h5>
+    </div>
+  </div>
+</template>
+
+<template name="visitsGraph">
+  <div class="ar-1-1">
+    <div class="widget-15 panel panel-condensed  no-margin no-border widget-loader-circle" style="background-color: transparent">
+      <div class="panel-body no-padding">
+        <div class="tab-content p-l-20 p-r-20">
+          <div class="tab-pane no-padding active" id="dailyVisitsTab">
+            <div class="full-width">
+              <div id="{{selector}}"></div>
+            </div>
+          </div>
+        </div>
+        <div class="p-t-20 p-l-20 p-r-20 p-b-30">
+          <div class="row">
+            <div class="col-md-5">
+              <div class="row"><span class="fs-16 text-black">Visits today:</span></div>
+              <div class="row"><span class="fs-16 text-black">Visits this week:</span></div>
+            </div>
+            <div class="col-md-7">
+              <div class="row">
+                <span class="font-montserrat bold text-success m-r-20 fs-16">{{visitsToday}}</span>
+              </div>
+              <div class="row">
+                <p class="font-montserrat bold text-danger m-r-20 fs-16">{{getPublishedCount 'thisWeekVisits'}}</p>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </template>
