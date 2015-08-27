@@ -101,6 +101,20 @@ Router.route('/login', function() {
   name: 'login',
 });
 
+Router.route('/settings/unsubscribe', function () {
+    Meteor.call("setEmailPreferences", "never", function(error, result){ 
+      if(error){
+        console.log("error", error);
+      }
+      if(result){
+
+      }
+    });
+    Router.go('/settings');
+},{
+ layoutTemplate:"defaultLayout"
+});
+
 Router.route('/logout', function () {
   Meteor.logout(function() {
       // Redirect to login
