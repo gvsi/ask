@@ -213,12 +213,16 @@
         {{#if isInstructor}}
         <span class="bold">{{theAuthor.profile.name}} {{theAuthor.profile.surname}}</span><span class="small hint-text"> - instructor</span>
         {{else}}
+
         <span class="bold">
           {{#if isAnonymous}}
           Anonymous
           {{else}}
           {{theAuthor.profile.name}}
           {{theAuthor.profile.surname}}
+          {{/if}}
+          {{#if posterIsOwner}}
+          <span class="small"> - <span class="text-complete">OP</span></span>
           {{/if}}
         </span>
         {{/if}}
@@ -265,8 +269,8 @@
     <div class="comments">
       {{#each comments}}
       <hr>
-      <span style="float:left;" class="simptip-position-right simptip-smooth simptip-movable" data-tooltip="{{#if isAnonymous}} Anonymous {{else}}{{theAuthor.profile.name}} {{theAuthor.profile.surname}} {{/if}} ({{dateFromNow}})">
-        <div class="thumbnail-wrapper circular">
+      <span style="float:left;" class="simptip-position-right simptip-smooth simptip-movable" data-tooltip="{{#if isAnonymous}} Anonymous {{else}}{{theAuthor.profile.name}} {{theAuthor.profile.surname}} {{/if}} {{#if isInstructor}} - instructor {{else}}{{#if posterIsOwner}} - OP{{/if}}{{/if}} ({{dateFromNow}})">
+        <div class="thumbnail-wrapper circular {{#unless isInstructor}}{{#if posterIsOwner}} b-complete b-thick {{/if}}{{/unless}}">
           <img width="40" height="40" alt="" src="{{identicon this.userIdenticon}}">
         </div>
       </span>
@@ -278,6 +282,7 @@
         {{/mathjax}}
       </div>
       {{/each}}
+
       <button id="addCommentBtn" class="btn btn-default btn-xs m-t-10 pull-right">Add a comment</button>
       <div class="commentTinyMCE-wrapper pull-right m-t-10" data-answer-id="{{_id}}" style="width:100%" hidden>
         <label class="error"></label>

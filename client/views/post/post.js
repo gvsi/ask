@@ -82,6 +82,13 @@ Template.registerHelper("isUserInstructor", function(){
   }
 });
 
+Template.registerHelper("posterIsOwner", function(){
+  var post = Posts.findOne({_id: this.postId}, {fields: {userIdenticon: true}});
+  if (post) {
+    return this.userIdenticon == post.userIdenticon;
+  }
+});
+
 Template.registerHelper('equals', function (a, b) {
   return a === b;
 });

@@ -223,6 +223,14 @@ Meteor.methods({
     if (!answer)
     throw new Meteor.Error('invalid-comment', 'You must comment on an answer');
 
+    var post = Posts.findOne(answer.postId);
+    if (!post)
+    throw new Meteor.Error('invalid-post', 'You comment must belong to answer in a post');
+
+    var course = Courses.findOne(post.courseId);
+    if (!course)
+    throw new Meteor.Error('invalid-course', 'You comment must belong to answer in a post in a course');
+
     // set identiconHash
     var identiconHash = commentAttributes.isAnonymous ? answer.postId + user._id : user._id;
 
@@ -232,6 +240,8 @@ Meteor.methods({
       //author: user.username,
       createdAt: new Date(),
       updatedAt: new Date(),
+      postId: answer.postId,
+      isInstructor: course.instructors.indexOf(user.username) != -1
     });
 
     // create the answer, save the id
@@ -240,7 +250,6 @@ Meteor.methods({
     }});
 
     if(answer.userId && (answer.userId != user._id)){
-      var post = Posts.findOne(answer.postId);
       var commentBodyWithoutTags = UniHTML.purify(commentAttributes.body, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
       var answerBodyWithoutTags = UniHTML.purify(answer.body, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
       var notificationAttributes = {
