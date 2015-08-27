@@ -51,6 +51,7 @@
     </div>
   </div>
 
+  {{#with post}}
   <div class="post-content-wrapper" style="display:none">
     <div class="actions-wrapper menuclipper bg-master-lightest" id="postTopbar">
       <ul class="actions menuclipper-menu no-margin p-l-20" >
@@ -65,19 +66,19 @@
       <div class="q-footer">
         <div style="float:left">
           <div class="thumbnail-wrapper bordered circular" >
-            <img width="40" height="40" alt="" src="{{identicon post.userIdenticon}}">
+            <img width="40" height="40" alt="" src="{{identicon userIdenticon}}">
           </div>
           <div class="sender inline m-l-10">
             <p class="name no-margin">
-              {{#if post.isAnonymous}}
+              {{#if isAnonymous}}
               <span class="bold">Anonymous</span>
               {{else}}
-              {{#if post.isInstructorPost}}
-              <span class="bold">{{post.ownerName}} {{post.ownerSurname}}</span><span class="small hint-text"> - instructor</span>
+              {{#if isInstructorPost}}
+              <span class="bold">{{ownerName}} {{ownerSurname}}</span><span class="small hint-text"> - instructor</span>
               {{else}}
               <span class="bold">
-                {{post.ownerName}}
-                {{post.ownerSurname}}
+                {{ownerName}}
+                {{ownerSurname}}
               </span>
               {{/if}}
               {{/if}}
@@ -90,9 +91,9 @@
         </div>
         {{#if currentUserIsOwner}}
         <div class="buttons" >
-          <a href="{{pathFor 'editPost' courseId=post.courseId postId=post._id}}"> <button class="btn btn-lg btn-rounded edit"><i class="fa fa-pencil"></i></button> </a>
+          <a href="{{pathFor 'editPost' courseId=courseId postId=_id}}"> <button class="btn btn-lg btn-rounded edit"><i class="fa fa-pencil"></i></button> </a>
           <button  class="btn btn-lg btn-rounded upvote delete" data-target="#modalDeletePost" data-toggle="modal" ><i class="fa fa-trash-o"></i></button>
-          <button class="btn btn-lg btn-rounded upvote" disabled><i class="fa fa-thumbs-up"></i><span class="m-l-10">{{post.upvotesCount}}</span></button>
+          <button class="btn btn-lg btn-rounded upvote" disabled><i class="fa fa-thumbs-up"></i><span class="m-l-10">{{upvotesCount}}</span></button>
         </div>
 
 
@@ -129,13 +130,13 @@
 
 
       <div class="post-content-header">
-        <h2><strong>{{post.title}}</strong></h2>
+        <h2><strong>{{title}}</strong></h2>
       </div>
       <div class="clearfix"></div>
       <div class="post-content-body m-t-10">
         {{#mathjax}}
         {{#autolink}}
-        {{{post.text}}}
+        {{{text}}}
         {{/autolink}}
         {{/mathjax}}
       </div>
@@ -162,10 +163,10 @@
 
       <div class="panel panel-transparent">
         <div class="panel-heading">
-          {{#if post.usersLiveAnsweringCount}}
+          {{#if usersLiveAnsweringCount}}
           <div class="panel-title text-complete">
-            {{post.usersLiveAnsweringCount}}
-            {{#if equals post.usersLiveAnsweringCount 1}}
+            {{usersLiveAnsweringCount}}
+            {{#if equals usersLiveAnsweringCount 1}}
              user is currently writing an answer...
             {{else}}
              users are currently writing an answer...
@@ -198,6 +199,7 @@
       </div>
     </div>
   </div>
+  {{/with}}
 
 </template>
 
