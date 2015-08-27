@@ -11,8 +11,6 @@ Meteor.methods({
         });
 
         var user = Meteor.user();
-        console.log(Meteor.userId());
-        console.log(user._id);
         var type = 1;
         var now = new Date();
 
@@ -51,29 +49,43 @@ Meteor.methods({
         //delete any answer drafts
         Drafts.remove({courseId: postAttributes.courseId, userId: user._id, type: "post"});
 
-        if(course.instructors.indexOf(un) != -1){
-          var courseStudents = Meteor.users.find({"profile.courses": postAttributes.courseId});
+        var courseStudents = Meteor.users.find({"profile.courses": postAttributes.courseId});
 
-          courseStudents.forEach(function(courseUser) {
+        courseStudents.forEach(function(courseUser) {
             if(courseUser._id != user._id){
-              var postBodyWithoutTags = UniHTML.purify(postAttributes.text, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
+              if(course.instructors.indexOf(un) != -1){
+                var postBodyWithoutTags = UniHTML.purify(postAttributes.text, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
 
-              var notificationAttributes = {
-                intend: 'New instructor\'s note: ',
-                postTitle: postAttributes.title,
-                text: postBodyWithoutTags,
-                type: 'instructorNote',
-                answerId: "",
-                postId: postId,
-                postCourseId: postAttributes.courseId,
-                userId: courseUser._id,
-                seen: false
+                var notificationAttributes = {
+                  intend: 'New instructor\'s note: ',
+                  postTitle: postAttributes.title,
+                  text: postBodyWithoutTags,
+                  type: 'instructorNote',
+                  answerId: "",
+                  postId: postId,
+                  postCourseId: postAttributes.courseId,
+                  userId: courseUser._id,
+                  seen: false
+                }
+
+                Meteor.call("addNotification", notificationAttributes);
               }
 
-              Meteor.call("addNotification", notificationAttributes);
+              if(courseUser.profile.emailPreferences == 'realTime'){
+                var tempUrl = 'http://localhost:3000/room/' + course._id +'?p=' + postId;
+                var emailBody = '<a href='+ tempUrl +'><h2>' + postAttributes.title + ' - ' + moment(now).format('MMMM Do YYYY, H:mm:ss') + '</h2></a>' ;
+                    emailBody += '<p>' + postAttributes.text + '</p>';
+
+                Email.send({
+      						from: "martingeorgiev1995@gmail.com",
+      						to: "martingeorgiev1995@gmail.com",
+      						subject: "New question in " + course.name,
+      						html: emailBody
+      					});
+              }
             }
           });
-        }
+
 
         // set identiconHash
         var identiconHash = postAttributes.isAnonymous ? postId + postAttributes.userId : postAttributes.userId;
