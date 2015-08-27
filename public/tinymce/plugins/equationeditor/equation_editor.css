@@ -95,14 +95,14 @@
   white-space: nowrap;
   background-color: #f0f0f0;
   border-left: 1px solid #e6e6e6;
-  border-bottom: 1px solid #e6e6e6;
+  border-top: 1px solid#e6e6e6;
 }
 
 .equation-editor .math-button:hover {
   background: #e3e3e3;
 }
 
-.equation-editor .math-button.small-exponent sup {
+.equation-editor .ton.small-exponent sup {
   font-size: 0.7em;
   margin-left: -4px;
 }
