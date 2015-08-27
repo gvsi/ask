@@ -68,7 +68,7 @@
   min-height: 230px;
   max-height: 294px;
   background-color: #fff;
-  overflow: scroll;
+  overflow: auto;
 }
 
 .equation-editor .mathquill-editable.empty {
@@ -87,21 +87,19 @@
   font-family: 'Symbola';
   width: 44px;
   height: 44px;
-  border: 1px solid black;
-  border-radius: 5px;
+  background-color: #f0f0f0;
   float: left;
   text-align: center;
-  margin: 0 5px 5px 0;
+  padding: 0px 2.8px;
   background: #fff;
   white-space: nowrap;
+  background-color: #f0f0f0;
+  border-left: 1px solid #e6e6e6;
+  border-bottom: 1px solid #e6e6e6;
 }
 
 .equation-editor .math-button:hover {
-  background: #ddd;
-}
-
-.equation-editor .math-button:active {
-  box-shadow: 1px 2px 2px #888888 inset;
+  background: #e3e3e3;
 }
 
 .equation-editor .math-button.small-exponent sup {
