@@ -29,11 +29,9 @@ Template.postCompose.rendered = function(){
         var draft = Drafts.findOne({courseId: Router.current().params.courseId, userId: Meteor.userId(), type: "post"});
 
         if (!isEditing) {
-          console.log('hihih');
           if (draft) {
             tinyMCE.get('composeTinyMCE').setContent(draft.body);
           } else {
-            console.log('hohoho');
             tinyMCE.get('composeTinyMCE').setContent("");
           }
         }
@@ -213,9 +211,5 @@ Template.postCompose.events({
 
       }
     });
-  },
-  'click .item': function(e) {
-    var postId = $(e.currentTarget).attr('data-post-id');
-    Router.go('room', {courseId: Router.current().params.courseId}, {query: 'p='+postId});
   }
 });
