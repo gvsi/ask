@@ -405,9 +405,8 @@ Template.postContent.helpers({
     }
   },
   usersLiveAnsweringCount: function() {
-    if (this.usersLiveAnswering) {
-      return this.usersLiveAnswering.length;
-    }
+    if (this.usersLiveAnsweringCount)
+      return this.usersLiveAnsweringCount;
   },
   viewCount: function() {
     var post = Posts.findOne({_id: Router.current().params.query.p});

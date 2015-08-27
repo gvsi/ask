@@ -1,5 +1,5 @@
 Template.courseStats.rendered = function(){
-  //$(".widget-2 .metro").liveTile();
+  $(".widget-2 .metro").liveTile();
 
   builtArea();
 
