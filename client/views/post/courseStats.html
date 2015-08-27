@@ -13,7 +13,11 @@
                   <h3 class="text-white">{{name}}</h3>
                   <span class="font-montserrat text-white fs-13">Academic year {{year}} ({{semester}})</span>
                   <hr>
-                  <button class="btn btn-default btn-rounded m-r-10">Ask question</button><span class="text-white fs-14">or browse questions in the sidebar</span>
+                  {{#if isUserInstructor}}
+                    <button class="composeBtn btn btn-default btn-rounded m-r-10">Post new note</button><span class="text-white fs-14">or &nbsp;</span><button class="openCourseSettingsBtn btn btn-default btn-rounded m-r-10" data-target="#courseSettingsModal" data-toggle="modal">Edit Course Settings</button>
+                  {{else}}
+                    <button class="composeBtn btn btn-default btn-rounded m-r-10">Ask question</button><span class="text-white fs-14">or browse questions in the sidebar</span>
+                  {{/if}}
                 </div>
               </div>
             </div>
@@ -22,7 +26,7 @@
         <div class="row">
           <div class="col-md-6 col-lg-6 p-t-20">
             <div class="ar-1-1">
-              <div class="widget-3 panel no-border bg-complete no-margin widget-loader-bar">
+              <div class="widget-2 panel no-border bg-complete no-margin widget-loader-bar">
                 <div class="panel-body no-padding">
                   <div class="metro live-tile" data-mode="carousel" data-start-now="true" data-delay="3000">
                     {{#if lastPost}}
@@ -44,12 +48,12 @@
           </div>
           <div class="col-md-6 col-lg-6 p-t-20">
             <div class="ar-1-1">
-              <div class="widget-11 panel no-border  no-margin">
+              <div class="widget-3 panel no-border  no-margin">
                 <div class="panel-heading ">
                   <div class="panel-title fs-18">Other stats
                   </div>
                 </div>
-                <div class="widget-11-table auto-overflow">
+                <div class="widget-3-table auto-overflow">
                   <table class="table table-hover">
                     <tbody>
                       <tr>
@@ -94,14 +98,13 @@
         <div class="row">
           <div class="col-lg-6 m-t-10">
             <div class="ar-1-1">
-              <div class="widget-2 panel no-border bg-primary widget no-margin" style="overflow:scroll">
+              <div class="widget-4 panel no-border bg-success widget no-margin" style="overflow:scroll">
                 <div class="panel-body">
                   <span class="label font-montserrat fs-11 m-t-10">WHO'S ONLINE?</span>
-                  <!-- <div class="bottom-left bottom-right padding-25"> -->
-                  <div>
+                  <div class="onlineUsersContainer">
                     <br>
-                    <div class="text-white fs-14"><i class="fa fa-user"></i> {{{studentsOnlineText}}}</div>
-                    <div class="text-white fs-14 m-t-10"><i class="fa fa-university"></i> {{{instructorsOnlineText}}}</div>
+                    <div class="text-white"><i class="fa fa-user"></i> {{{studentsOnlineText}}}</div>
+                    <div class="text-white m-t-10"><i class="fa fa-university"></i> {{{instructorsOnlineText}}}</div>
                   </div>
                 </div>
               </div>
@@ -109,19 +112,17 @@
           </div>
           <div class="col-lg-6 m-t-10">
             <div class="ar-1-1">
-              <div class="widget-2 panel no-border bg-primary widget no-margin">
-                <div class="panel-body">
-                  <div class="panel-title text-white hint-text">
-                    <span class="font-montserrat fs-11 all-caps">UNANSWERED QUESTIONS <i class="fa fa-chevron-right"></i>
-                    </span>
+              <div class="widget-4 panel no-border bg-info widget no-margin">
+                <div class="panel-body text-white">
+                  <div class="panel-title hint-text">
+                    <span class="font-montserrat fs-11 all-caps">UNANSWERED QUESTIONS:</span>
                   </div>
                   {{{unansweredQuestionsText}}}
 
                   <br><br>
 
-                  <div class="panel-title text-white hint-text">
-                    <span class="font-montserrat fs-11 all-caps">UNREAD POSTS<i class="fa fa-chevron-right"></i>
-                    </span>
+                  <div class="panel-title hint-text">
+                    <span class="font-montserrat fs-11 all-caps">UNREAD POSTS:</span>
                   </div>
                   {{{unreadPostsText}}}
                 </div>
@@ -153,16 +154,7 @@
         <i class="fa fa-question-circle" style="font-size:40px"></i>
       </div>
       <div class="pull-right">
-        <ul class="list-inline ">
-          <li>
-            <a href="#" class="no-decoration"><i class="pg-comment"></i>
-            </a>
-          </li>
-          <li>
-            <a href="#" class="widget-3-fav no-decoration"><i class="pg-like"></i>
-            </a>
-          </li>
-        </ul>
+        <i class="fa fa-eye"></i> {{viewCount}}   &nbsp; <i class="fa fa-thumbs-up"></i> {{upvotesCount}} &nbsp; <i class="fa fa-comment"></i> {{answersCount}}
       </div>
       <div class="clearfix"></div>
     </div>
@@ -175,7 +167,7 @@
 
 <template name="visitsGraph">
   <div class="ar-1-1">
-    <div class="widget-15 panel panel-condensed  no-margin no-border widget-loader-circle" style="background-color: transparent">
+    <div class="widget-5 panel panel-condensed  no-margin no-border widget-loader-circle" style="background-color: transparent">
       <div class="panel-body no-padding">
         <div class="tab-content p-l-20 p-r-20">
           <div class="tab-pane no-padding active" id="dailyVisitsTab">

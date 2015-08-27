@@ -116,6 +116,7 @@
     width:360px;
     float:left;
     overflow-y: auto;
+    overflow-x: hidden;
     .transition(all .5s ease);
     &.slideLeft{
       .translate(-100%, 0);
@@ -126,8 +127,12 @@
       height: 6%;
       padding: 13px 50px 0px 16px;
 
-      i {
+      .closeFilter {
         font-size:18px;
+        cursor: pointer;
+        &:hover{
+          color: #BF0000;
+        }
       }
     }
 
@@ -495,7 +500,7 @@
       position: absolute;
       right: 0;
       //text-align: center;
-      top: 20px;
+      top: 10px;
     }
     .loadingScreen{
       bottom: 0;
