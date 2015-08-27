@@ -122,7 +122,7 @@ function builtArea() {
   for (var i = 0; i < 10; i++) {
     var date = moment().subtract(9, 'days').add(i, 'days');
     dates.push(date.format("DD/MM"));
-    data.push(Counts.get("visitsOn-"+date.format("L"))+Math.floor((Math.random() * 14) + 1));
+    data.push(Counts.get("visitsOn-"+date.format("L")));
   }
 
   var chartsOptions = {

@@ -70,11 +70,6 @@ Template.postPage.rendered = function () {
     Session.set('customTags', undefined)
     $('#customTagsForCourse').show();
   }
-  // setTimeout(function () {
-  //   //
-  // }, 5000);
-  // // $('[data-toggle="tooltip"]').tooltip();
-  // // $(".list-view-wrapper [data-toggle=\"tooltip\"]").tooltip();
 }
 
 Template.registerHelper("isUserInstructor", function(){
@@ -190,12 +185,9 @@ Template.postList.events({
     $(e.currentTarget).addClass('active');
     var postId = $(e.currentTarget).attr('data-post-id');
 
-    var p = Router.current().params.query.p;
-
     Router.go('room', {courseId: Router.current().params.courseId}, {query: 'p='+postId});
-    if (p && p != "") {
-      loadPage(postId, false);
-    }
+    loadPage(postId, false);
+
   },
   'click .closeFilter': function(e) {
     Session.set('postFilter', undefined);
@@ -459,9 +451,6 @@ Template.postContent.events({
             hljs.highlightBlock(block);
           });
 
-          // puts badges in the postList
-          //$(".list-view-wrapper [data-toggle=\"tooltip\"]").tooltip();
-
           $('.post-content-wrapper').scrollTo("#"+answerId,1000);
           Session.set('answerSubmitErrors', {});
         }, 100);
@@ -671,11 +660,6 @@ Template.answer.helpers({
         return 'btn-default';
       }
     }
-  },
-  createTooltip: function() {
-    setTimeout(function(){
-      //$('[data-toggle="tooltip"]').tooltip();
-    }, 200);
   }
 });
 
@@ -754,9 +738,7 @@ Template.answer.events({
           if (!$("#"+answerId).visible()) {
             $('.post-content-wrapper').scrollTo("#"+answerId,1000);
           }
-          //$('[data-toggle="tooltip"]').tooltip();
         }, 300);
-        //$('[data-toggle="tooltip"]').tooltip();
       }
     });
   },
@@ -899,8 +881,6 @@ loadPage = function(postId, needsScroll) {
       }else {
         Session.set("DocumentTitle", "Ask");
       }
-
-      //$('[data-toggle="tooltip"]').tooltip();
 
     }
   });

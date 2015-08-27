@@ -154,7 +154,17 @@
         <i class="fa fa-question-circle" style="font-size:40px"></i>
       </div>
       <div class="pull-right">
-        <i class="fa fa-eye"></i> {{viewCount}}   &nbsp; <i class="fa fa-thumbs-up"></i> {{upvotesCount}} &nbsp; <i class="fa fa-comment"></i> {{answersCount}}
+        <div class="viewCountLabel badge-icon simptip-position-bottom simptip-smooth simptip-movable" data-tooltip="Views">
+          <i class="fa fa-eye"></i> {{viewCount}}&nbsp;
+        </div>
+
+        <div class="upvoteCountLabel badge-icon simptip-position-bottom simptip-smooth simptip-movable" data-tooltip="Upvotes">
+          <i class="fa fa-thumbs-up"></i> {{upvotesCount}}&nbsp;
+        </div>
+
+        <div class="answerCountLabel badge-icon simptip-position-bottom simptip-smooth simptip-movable" data-tooltip="Answers">
+          <i class="fa fa-comment"></i> {{answersCount}}
+        </div>
       </div>
       <div class="clearfix"></div>
     </div>

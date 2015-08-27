@@ -1,6 +1,6 @@
 <template name="overlaySearch">
   <!-- START OVERLAY -->
-  <div class="overlay" style="display: none" data-pages="search">
+  <div class="overlay" style="display: none; overflow-x: hidden" data-pages="search">
     <!-- BEGIN Overlay Content !-->
     <div class="overlay-content has-results m-t-20">
       <!-- BEGIN Overlay Header !-->
@@ -47,7 +47,7 @@
       <div class="container-fluid" style="padding:0;">
         <div class="search-results m-t-40">
           {{#ifEsIsSearching index=searchType id="overlay-search" logic="OR" }}
-            <div class="progress-circle-indeterminate-base" style="margin-left: auto;margin-right: auto;"></div>
+          <div class="progress-circle-indeterminate-base" style="margin-left: auto;margin-right: auto;"></div>
           {{/ifEsIsSearching}}
           <div>
             {{#esEach index=searchType id="overlay-search"}}
@@ -88,8 +88,19 @@
             <span class="semi-bold">{{dateFromNow}}</span>
           </h6>
         </div>
-        <div class="pull-right hint-text" style="margin-top: 11px;">
-         <i class="fa fa-eye"></i> {{viewCount}}   &nbsp; &nbsp; <i class="fa fa-thumbs-up"></i> {{upvotesCount}} &nbsp; &nbsp; <i class="fa fa-comment"></i> {{answersCount}}
+        <div class="pull-right hint-text m-t-10">
+          <div class="viewCountLabel badge-icon simptip-position-top simptip-smooth simptip-movable" data-tooltip="Views">
+            <i class="fa fa-eye"></i> {{viewCount}}   &nbsp; &nbsp;
+          </div>
+
+          <div class="upvoteCountLabel badge-icon simptip-position-top simptip-smooth simptip-movable" data-tooltip="Upvotes">
+            <i class="fa fa-thumbs-up"></i> {{upvotesCount}} &nbsp; &nbsp;
+          </div>
+
+          <div class="answerCountLabel badge-icon simptip-position-top simptip-smooth simptip-movable" data-tooltip="Answers">
+            <i class="fa fa-comment"></i> {{answersCount}}
+          </div>
+
         </div>
         <div class="clearfix"></div>
       </div>
