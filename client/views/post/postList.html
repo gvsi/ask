@@ -83,7 +83,7 @@
   {{/if}}
 </template>
 <template name="postThumbnail">
-  <li class="item padding-15 {{isPostViewed}}" data-post-id="{{_id}}">
+  <li class="item padding-15" data-post-id="{{_id}}">
     <!--<div class="thumbnail-wrapper d32 circular bordered b-complete">
       <img width="40" height="40" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="/img/profiles/avatar2x.jpg">
     </div> -->
@@ -92,19 +92,19 @@
       <label for="postcheckbox-0-0"></label>
     </div>
     <div class="inline m-l-15">
-      <p class="subject no-margin">{{title}}</p>
+      <p class="subject {{isPostViewed}} no-margin">{{#if badges.isInstructorPost}}<span class="label label-warning small" style="padding: 2px 5px">instr</span> {{/if}}{{title}}</p>
       <p class="body no-margin">{{textWithoutTags}}</p>
     </div>
     <div class="datetime">{{dateFromNow}}</div>
     <div class="badge-wrapper">
-      {{#if badges.isInstructorPost}}
+      <!-- {{#if badges.isInstructorPost}}
           <div class="badge-icon instructorPost simptip-position-left simptip-smooth simptip-movable" data-tooltip="Instructor Note" >
             <i class="fa  fa-file-o" style="font-weight: 700;"></i>
           </div>
-      {{else}}
+      {{else}} -->
+
         {{#if badges.hasInstructorAnswer}}<div class="badge-icon answeredInstructor simptip-position-left simptip-smooth simptip-movable" data-tooltip="Instructor Answer" > AI </div>{{/if}}
         {{#if badges.hasStudentAnswer}}<div class="badge-icon answered simptip-position-left simptip-smooth simptip-movable" data-tooltip="Student Answer" > A </div>{{/if}}
-      {{/if}}
     </div>
     <div class="clearfix"></div>
   </li>

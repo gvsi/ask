@@ -1,5 +1,4 @@
 Template.postPage.rendered = function () {
-  console.log('rend');
   //number of users per day
   for (var i = 0; i < 10; i++) {
     var date = moment().subtract(i, 'days').format("L");
@@ -422,7 +421,7 @@ Template.postContent.helpers({
   },
   usersLiveAnsweringCount: function() {
     if (this.usersLiveAnsweringCount)
-      return this.usersLiveAnsweringCount;
+    return this.usersLiveAnsweringCount;
   },
   viewCount: function() {
     var post = Posts.findOne({_id: Router.current().params.query.p});
@@ -595,51 +594,53 @@ Template.postContent.events({
 });
 
 Template.postContent.onRendered(function () {
-  this.find('.answers-wrapper')._uihooks = {
-    insertElement: function (node, next) {
-      $(node)
-      .hide()
-      .insertBefore(next)
-      .fadeIn();
-    },
-    moveElement: function (node, next) {
-      var $node = $(node), $next = $(next);
-      var oldTop = $node.offset().top;
-      var height = $(node).outerHeight(true);
+  if (this.find('.answers-wrapper')) {
+    this.find('.answers-wrapper')._uihooks = {
+      insertElement: function (node, next) {
+        $(node)
+        .hide()
+        .insertBefore(next)
+        .fadeIn();
+      },
+      moveElement: function (node, next) {
+        var $node = $(node), $next = $(next);
+        var oldTop = $node.offset().top;
+        var height = $(node).outerHeight(true);
 
-      // find all the elements between next and node
-      var $inBetween = $(next).nextUntil(node);
-      if ($inBetween.length === 0)
-      $inBetween = $(node).nextUntil(next);
+        // find all the elements between next and node
+        var $inBetween = $(next).nextUntil(node);
+        if ($inBetween.length === 0)
+        $inBetween = $(node).nextUntil(next);
 
-      // now put node in place
-      $(node).insertBefore(next);
+        // now put node in place
+        $(node).insertBefore(next);
 
-      // measure new top
-      var newTop = $(node).offset().top;
+        // measure new top
+        var newTop = $(node).offset().top;
 
-      // move node *back* to where it was before
-      $(node)
-      .removeClass('animate')
-      .css('top', oldTop - newTop);
+        // move node *back* to where it was before
+        $(node)
+        .removeClass('animate')
+        .css('top', oldTop - newTop);
 
-      // push every other element down (or up) to put them back
-      $inBetween
-      .removeClass('animate')
-      .css('top', oldTop < newTop ? height : -1 * height)
+        // push every other element down (or up) to put them back
+        $inBetween
+        .removeClass('animate')
+        .css('top', oldTop < newTop ? height : -1 * height)
 
 
-      // force a redraw
-      $(node).offset();
+        // force a redraw
+        $(node).offset();
 
-      // reset everything to 0, animated
-      $(node).addClass('animate').css('top', 0);
-      $inBetween.addClass('animate').css('top', 0);
-    },
-    removeElement: function(node) {
-      $(node).fadeOut(function() {
-        $(this).remove();
-      });
+        // reset everything to 0, animated
+        $(node).addClass('animate').css('top', 0);
+        $inBetween.addClass('animate').css('top', 0);
+      },
+      removeElement: function(node) {
+        $(node).fadeOut(function() {
+          $(this).remove();
+        });
+      }
     }
   }
 });
@@ -969,14 +970,15 @@ loadTinyMCE = function(selector, height) {
   function getTinyMCEconfig(selector, height) {
     return {
       selector: "#" + selector,
-      plugins: "link, image, sh4tinymce, equationeditor",
+      plugins: "link, image, sh4tinymce, equationeditor, paste",
       min_height: height,
       content_css: '/tinymce/plugins/equationeditor/mathquill.css',
       menu: {},
       menubar: false,
-      toolbar: "undo | redo | bold | italic | underline | alignleft | aligncenter | bullist | numlist  | link | unlink | image | sh4tinymce | equationeditor",
+      toolbar: "undo | redo | bold | italic | underline | alignleft | aligncenter | bullist | numlist  | link | image | sh4tinymce | equationeditor",
       preview_styles: false,
       elementpath: false,
+      paste_as_text: true,
       setup: function(editor) {
         if (selector == "answerTinyMCE") {
           editor.on('focus', function(e) {
@@ -1000,18 +1002,17 @@ loadTinyMCE = function(selector, height) {
       },
       init_instance_callback: function(editor) {
         var posts = Posts.find({'courseId': Router.current().params.courseId},{sort: {createdAt:-1}, fields: {_id: true, title: true, text: true, courseId: true}}).fetch();
-        console.log(posts);
         posts.forEach(function(post) {
           // stripping tags
           var dummyNode = document.createElement('div'),
           resultText = '';
           dummyNode.innerHTML = post.text;
           resultText = dummyNode.innerText || dummyNode.textContent
-      		if(resultText.length > 40){
-          	post.text = resultText.substring(0,40) + "…";
-      		}else{
-      			post.text = resultText;
-      		}
+          if(resultText.length > 40){
+            post.text = resultText.substring(0,40) + "…";
+          }else{
+            post.text = resultText;
+          }
         })
 
         $(editor.contentDocument.activeElement).atwho({
