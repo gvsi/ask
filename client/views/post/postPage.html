@@ -11,16 +11,7 @@
       {{#if isLoading}}
       <div style="margin-top:30%">{{>loading}}</div>
       {{else}}
-        {{#if areTherePosts}}
           {{>courseStats courseId=courseId}}
-        {{else}}
-        <center>
-        <h1><i class="fa fa-warning"></i></h1>
-        <h2><strong>Under construction</strong></h2>
-        <h3>No posts error page goes here</h3>
-        <h4>Hold on tight – we are still building the page</h4>
-        </center>
-        {{/if}}
       {{/if}}
     </div>
 
@@ -149,7 +140,7 @@
 
       <div class="q-footer" style="margin: 15px 0 -5px 0px;">
         {{#each tags}}
-        <button class="btn btn-tag  btn-tag-light m-r-5">{{this}}</button>
+        <button class="btn btn-tag btn-tag-light m-r-5" data-filter="{{this}}">{{this}}</button>
         {{/each}}
       </div>
 
