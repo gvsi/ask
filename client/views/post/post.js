@@ -306,7 +306,7 @@ Template.postThumbnail.helpers({
   },
   isPostViewed: function(){
     if(this.viewers.length == 0){
-      return "new-post";
+      return "new-post bold";
     }
   }
 });
