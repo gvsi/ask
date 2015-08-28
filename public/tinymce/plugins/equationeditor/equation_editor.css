@@ -35,7 +35,7 @@
 }
 
 .equation-editor .collapsible.button-group .collapsible-box-toggle:before {
-  content: '>';
+  content: '';
 }
 
 .equation-editor .collapsible.button-group .collapsible-box-toggle.collapsible-box-toggle-open {
@@ -77,6 +77,12 @@
 
 .equation-editor .button-group header {
   cursor: pointer;
+  background-color: #e3e3e3;
+  text-align: center;
+  border: 1px solid rgba(169, 157, 157, 0.1);
+  border-top: 0px;
+  height: 27px;
+  line-height: 27px;
 }
 
 .equation-editor .button-group .collapsible-box-toggle {
@@ -99,12 +105,18 @@
 }
 
 .equation-editor .math-button:hover {
-  background: #e3e3e3;
+  
 }
 
-.equation-editor .ton.small-exponent sup {
+.equation-editor .math-button.small-exponent sup {
   font-size: 0.7em;
   margin-left: -4px;
+}
+
+.mathquill-editable .hasCursor {
+  -webkit-box-shadow: #68b4df 0 0 3px 2px;
+  -moz-box-shadow: #68b4df 0 0 3px 2px;
+  box-shadow: #68b4df 0 0 3px 2px;
 }
 
 .equation-editor .math-button.tall a {
