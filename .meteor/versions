@@ -76,6 +76,8 @@ reactive-var@1.0.5
 reload@1.1.3
 retry@1.0.3
 revox:pages-core@1.2.0
+risul:autocomplete@1.3.2
+risul:caret@0.0.2
 routepolicy@1.0.5
 service-configuration@1.0.4
 session@1.1.0

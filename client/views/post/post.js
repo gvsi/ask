@@ -188,8 +188,6 @@ Template.courseSettingsModal.events({
 
 Template.postList.events({
   'click .item': function(e) {
-    $('.item').removeClass('active');
-    $(e.currentTarget).addClass('active');
     var postId = $(e.currentTarget).attr('data-post-id');
 
     Router.go('room', {courseId: Router.current().params.courseId}, {query: 'p='+postId});
@@ -458,7 +456,10 @@ Template.postContent.events({
             hljs.highlightBlock(block);
           });
 
-          $('.post-content-wrapper').scrollTo("#"+answerId,1000);
+          if (!$("#"+answerId).visible()) {
+            $('.post-content-wrapper').scrollTo("#"+answerId,1000);
+          }
+
           Session.set('answerSubmitErrors', {});
         }, 100);
 
@@ -821,6 +822,14 @@ Template.answer.events({
       hljs.highlightBlock(block);
     });
     MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
+  },
+  'click a[data-post-id]': function(e) {
+    e.preventDefault();
+    var postId = $(e.currentTarget).attr('data-post-id');
+    if (postId) {
+      Router.go('room', {courseId: Router.current().params.courseId}, {query: 'p='+postId});
+      loadPage(postId, false);
+    }
   }
 });
 
@@ -958,6 +967,31 @@ loadTinyMCE = function(selector, height) {
             }
           });
         }
+      },
+      init_instance_callback: function(editor) {
+        var posts = Posts.find({'courseId': Router.current().params.courseId},{sort: {createdAt:-1}, fields: {_id: true, title: true, text: true, courseId: true}}).fetch();
+        console.log(posts);
+        posts.forEach(function(post) {
+          // stripping tags
+          var dummyNode = document.createElement('div'),
+          resultText = '';
+          dummyNode.innerHTML = post.text;
+          resultText = dummyNode.innerText || dummyNode.textContent
+      		if(resultText.length > 40){
+          	post.text = resultText.substring(0,40) + "…";
+      		}else{
+      			post.text = resultText;
+      		}
+        })
+
+        $(editor.contentDocument.activeElement).atwho({
+          at: "#",
+          data: posts,
+          displayTpl: '<li>${title} <small>${text}</small></li>',
+          insertTpl: '[<a data-post-id="${_id}" href="/room/${courseId}?p=${_id}">${title}</a>]',
+          searchKey: "title",
+          limit: posts.length
+        });
       }
     }
   }
