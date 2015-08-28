@@ -21,7 +21,6 @@ check
 accounts-password
 accounts-base
 vazco:universe-html-purifier
-mrt:mathjax
 hillmark:meteor-identicon
 matteodem:easy-search
 tomi:upload-server
@@ -40,3 +39,4 @@ email
 percolate:synced-cron
 maazalik:highcharts
 risul:autocomplete
+mrt:mathjax

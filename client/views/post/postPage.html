@@ -134,11 +134,17 @@
       </div>
       <div class="clearfix"></div>
       <div class="post-content-body m-t-10">
-        {{#mathjax}}
-        {{#autolink}}
-        {{{text}}}
-        {{/autolink}}
-        {{/mathjax}}
+          {{#if isThereMathJax}}
+            {{#mathjax}}
+            {{#autolink}}
+            {{{text}}}
+            {{/autolink}}
+            {{/mathjax}}
+          {{else}}
+            {{#autolink}}
+            {{{text}}}
+            {{/autolink}}
+          {{/if}}
       </div>
 
       <div class="q-footer" style="margin: 15px 0 -5px 0px;">
@@ -245,11 +251,17 @@
     </div>
     <div class="answerBodyContainer">
       <div class="answerBody" data-answer-id="{{_id}}">
-        {{#mathjax}}
-        {{#autolink}}
-        {{{body}}}
-        {{/autolink}}
-        {{/mathjax}}
+        {{#if isThereMathJax}}
+          {{#mathjax}}
+          {{#autolink}}
+          {{{body}}}
+          {{/autolink}}
+          {{/mathjax}}
+        {{else}}
+          {{#autolink}}
+          {{{text}}}
+          {{/autolink}}
+        {{/if}}
       </div>
       <div class="editAnswerTinyMCE-wrapper" data-answer-id="{{_id}}" hidden>
         <label class="error"></label>
@@ -275,11 +287,17 @@
         </div>
       </span>
       <div class="commentBody">
-        {{#mathjax}}
-        {{#autolink}}
-        {{{this.body}}}
-        {{/autolink}}
-        {{/mathjax}}
+        {{#if isThereMathJax}}
+          {{#mathjax}}
+          {{#autolink}}
+          {{{body}}}
+          {{/autolink}}
+          {{/mathjax}}
+        {{else}}
+          {{#autolink}}
+          {{{text}}}
+          {{/autolink}}
+        {{/if}}
       </div>
       {{/each}}
 

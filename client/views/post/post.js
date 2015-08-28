@@ -369,6 +369,9 @@ Template.postContent.helpers({
       return false;
     }
   },
+  isThereMathJax: function() {
+    return /\$(.*?)\$/.test(this.text) || /\$\$(.*?)\$\$/.test(this.text);
+  },
   upvoteButton: function(){
     var postId = Router.current().params.query.p;
     var post = Posts.findOne(postId);
@@ -531,7 +534,6 @@ Template.postContent.events({
     $('#previewContent pre code').each(function(i, block) {
       hljs.highlightBlock(block);
     });
-    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
   },
   "click .post-list-toggle": function(event) {
     $('.postListContainer').toggleClass('slideLeft');
@@ -625,6 +627,10 @@ Template.answer.helpers({
     } else {
       return this.userId == Meteor.user()._id;
     }
+  },
+  isThereMathJax: function() {
+    //works for both answer and comment
+    return /\$(.*?)\$/.test(this.body) || /\$\$(.*?)\$\$/.test(this.body);
   },
   disabledVoteForOwner: function() {
     var currentUserIsOwner;
@@ -821,7 +827,6 @@ Template.answer.events({
     $('#previewContent pre code').each(function(i, block) {
       hljs.highlightBlock(block);
     });
-    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
   },
   'click a[data-post-id]': function(e) {
     e.preventDefault();
