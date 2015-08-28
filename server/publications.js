@@ -1,7 +1,7 @@
 Meteor.publish('posts', function(id) {
 	if(Meteor.users.findOne(this.userId).profile.courses.indexOf(id) != -1){
 		var self = this;
-		var cursor = Posts.find({courseId: id, isDeleted: { $ne: true}},{fields: {revisionHistory: 0, tags: 0, type: 0, updatedAt: 0, isDeleted: 0}},{sort: {createdAt: -1}});
+		var cursor = Posts.find({courseId: id, isDeleted: { $ne: true}},{fields: {revisionHistory: 0, type: 0, updatedAt: 0, isDeleted: 0}},{sort: {createdAt: -1}});
 
 		var handle = cursor.observeChanges({
 			added: function (id, doc) {

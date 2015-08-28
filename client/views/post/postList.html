@@ -32,7 +32,15 @@
         {{#if equals filterName 'unread'}}
           {{>thumbnailList}}
         {{else}}
-          {{>thumbnailList}}
+          {{#if equals isTagFilter 1}}
+            {{>thumbnailList}}
+          {{else}}
+            {{#if equals isTagFilter 2}}
+              {{>thumbnailList}}
+            {{else}}
+              {{>thumbnailList}}
+            {{/if}}
+          {{/if}}
         {{/if}}
       {{/if}}
     </div>
@@ -47,13 +55,11 @@
       <div class="list-view-group-container">
         <div class="list-view-group-header">
           <span id="date">{{title}}</span>
-
         </div>
         <ul class="no-padding">
             {{#each postsByDate}}
             {{> postThumbnail}}
             {{/each}}
-
         </ul>
       </div>
       {{/if}}
@@ -64,7 +70,15 @@
       <span id="date">  </span>
     </div>
   </div>
-      <div id="no-post-error" style="margin-top: 50px; text-align:center"><h4>Nothing going on here</h4></div>
+
+      <div id="no-post-error" style="margin-top: 50%; text-align:center">
+        <h4>No questions in this room</h4>
+        {{#if courseId}}
+          <a href="{{pathFor 'compose' courseId=courseId }}">
+            <button class="askQuestion composeBtn btn btn-default btn-rounded m-r-10">Ask a question</button>
+          </a>
+        {{/if}}
+      </div>
 
   {{/if}}
 </template>

@@ -198,11 +198,16 @@ Template.postList.events({
   },
   'click .closeFilter': function(e) {
     Session.set('postFilter', undefined);
+    Session.set('isTagFilter', undefined);
   }
 });
 
 Template.registerHelper("filterName", function(){
   return Session.get('postFilter');
+});
+
+Template.registerHelper("isTagFilter", function(){
+  return Session.get('isTagFilter');
 });
 
 Template.thumbnailList.helpers({
@@ -253,16 +258,22 @@ Template.thumbnailList.helpers({
   },
   areTherePosts: function() {
     var filter = Session.get('postFilter');
+    var isTagFilter = Session.get('isTagFilter');
     if (filter == 'unanswered') {
       return Posts.find({'courseId': Router.current().params.courseId, 'answersCount': 0, 'isInstructorPost': {$exists: false}}).count() > 0;
     } else if (filter == "unread") {
       return Posts.find({'courseId': Router.current().params.courseId, 'viewers': {$ne: Meteor.userId()}}).count() > 0;
     } else {
-      return Posts.find({'courseId': Router.current().params.courseId}).count() > 0;
+      if(isTagFilter == 1 || isTagFilter == 2){
+        return Posts.find({'courseId': Router.current().params.courseId, 'tags': filter}).count() > 0;
+      }else{
+        return Posts.find({'courseId': Router.current().params.courseId}).count() > 0;
+      }
     }
   },
   postsByDate: function () {
     var filter = Session.get('postFilter');
+    var isTagFilter = Session.get('isTagFilter');
     if (filter == 'unanswered') {
       $(".post-list").css('height', '94%');
       return Posts.find({'courseId': Router.current().params.courseId, 'answersCount': 0, 'isInstructorPost': {$exists: false}, 'createdAt': {$gte: this.start.toDate(), $lt: this.end.toDate()}}, {sort: {createdAt: -1}});
@@ -270,8 +281,13 @@ Template.thumbnailList.helpers({
       $(".post-list").css('height', '94%');
       return Posts.find({'courseId': Router.current().params.courseId, 'viewers': {$ne: Meteor.userId()}, 'createdAt': {$gte: this.start.toDate(), $lt: this.end.toDate()}}, {sort: {createdAt: -1}});
     } else {
-      $(".post-list").css('height', '100%');
-      return Posts.find({'courseId': Router.current().params.courseId, createdAt: {$gte: this.start.toDate(), $lt: this.end.toDate()}}, {sort: {createdAt: -1}});
+      if(isTagFilter == 1 || isTagFilter == 2){
+        $(".post-list").css('height', '94%');
+        return Posts.find({'courseId': Router.current().params.courseId, 'tags': filter , 'createdAt': {$gte: this.start.toDate(), $lt: this.end.toDate()}}, {sort: {createdAt: -1}});
+      }else{
+        $(".post-list").css('height', '100%');
+        return Posts.find({'courseId': Router.current().params.courseId, createdAt: {$gte: this.start.toDate(), $lt: this.end.toDate()}}, {sort: {createdAt: -1}});
+      }
     }
   }
 });
@@ -563,6 +579,15 @@ Template.postContent.events({
     });
 
     Router.go('room', {courseId: Router.current().params.courseId});
+  },
+  "click .btn-tag": function(e){
+    var filter = $(e.currentTarget).attr('data-filter');
+    Session.set('postFilter', filter);
+    if(Session.get('isTagFilter') == 1){
+      Session.set('isTagFilter', 2);
+    }else{
+      Session.set('isTagFilter', 1);
+    }
   }
 });
 
