@@ -160,12 +160,12 @@ emailSend: function(emailAttributes){
 	fullEmail += emailAttributes.emailBody;
 	fullEmail += '<!-- Footer start --><table width="600" cellspacing="0" cellpadding="0" class="line" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;border-bottom:1px solid #AAAAAA;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"><td height="39" style="border-collapse:collapse;padding:0">&nbsp;</td></tr></table> <table width="600" cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"> <td class="small" align="left" valign="top" style="border-collapse:collapse;padding:0"> <div style="color:#787878;line-height:15px;font-size:10px;text-transform:uppercase;word-spacing:-1px;margin-bottom:4px;margin-top:6px">If you no longer wish to receive emails please <a href="'+ unsubscribeUrl +'" style="color:#00A9E0;text-decoration:none;padding:2px 0px">unsubscribe</a> </div> <div style="color:#787878;line-height:15px;font-size:10px;text-transform:uppercase;word-spacing:-1px;margin-bottom:4px;margin-top:6px">&copy; 2015 The University of Edinburgh, All rights reserved</div> </td> <td width="20" style="border-collapse:collapse;padding:0">&nbsp;</td> </tr></table> <!-- Footer end --> </td> </tr></table> </body> </html>';
 
-	Email.send({
-		from: "martingeorgiev1995@gmail.com",
-		to: emailAttributes.recipient,
-		subject: emailAttributes.subject,
-		html: fullEmail,
-	});
+	// Email.send({
+	// 	from: "martingeorgiev1995@gmail.com",
+	// 	to: emailAttributes.recipient,
+	// 	subject: emailAttributes.subject,
+	// 	html: fullEmail,
+	// });
 }
 
 });

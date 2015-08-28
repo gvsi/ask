@@ -17,7 +17,7 @@ Template.header.helpers({
     dummyNode.innerHTML = this.text;
     resultText = dummyNode.innerText || dummyNode.textContent
 		if(resultText.length > 100){
-    	return resultText.substring(0,100) + "...";
+    	return resultText.substring(0,100) + "…";
 		}else{
 			return resultText;
 		}
