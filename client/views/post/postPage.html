@@ -65,7 +65,7 @@
               <span class="bold">Anonymous</span>
               {{else}}
               {{#if isInstructorPost}}
-              <span class="bold">{{ownerName}} {{ownerSurname}}</span><span class="small hint-text"> - instructor</span>
+              <span class="bold">{{ownerName}} {{ownerSurname}}</span><span class="m-l-5 small label label-warning bold">instr</span>
               {{else}}
               <span class="bold">
                 {{ownerName}}
@@ -208,7 +208,7 @@
       </div>
       <div class="nameLabel">
         {{#if isInstructor}}
-        <span class="bold">{{theAuthor.profile.name}} {{theAuthor.profile.surname}}</span><span class="small hint-text"> - instructor</span>
+        <span class="bold">{{theAuthor.profile.name}} {{theAuthor.profile.surname}}</span> <span class="m-l-5 small label label-warning bold">instr</span>
         {{else}}
 
         <span class="bold">
@@ -219,7 +219,7 @@
           {{theAuthor.profile.surname}}
           {{/if}}
           {{#if posterIsOwner}}
-          <span class="small"> - <span class="text-complete">OP</span></span>
+          <span class="m-l-5 small label label-complete bold">OP</span>
           {{/if}}
         </span>
         {{/if}}
