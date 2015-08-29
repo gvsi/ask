@@ -682,3 +682,46 @@
         float:none !important;
     }
 }
+
+.courseThumb{
+  cursor:pointer;
+  text-align:center;
+  display:table;
+  height:100%;
+  border-right: 1px solid #e6e6e6;
+  &:hover{
+    background-color:rgba(240, 240, 240, 0.98);
+  }
+}
+
+.course-2{
+  float:left;
+  width: 50%;
+}
+.course-3{
+  float:left;
+  width: 33.3%;
+}
+.course-4{
+  float:left;
+  width: 25%;
+}
+.course-5{
+  float:left;
+  width: 20%;
+}
+.course-6{
+  float:left;
+  width: 16.6%;
+}
+.course-7{
+  float:left;
+  width: 14.2%;
+}
+
+@media (max-width: 992px) {
+  .course-2,.course-3,.course-4,.course-5,.course-6,.course-7{
+    float:none;
+    width: 100%;
+  }
+}

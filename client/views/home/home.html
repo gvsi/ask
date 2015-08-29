@@ -1,5 +1,5 @@
 <template name="home">
-  <!-- START JUMBOTRON -->
+  <!-- START JUMBOTRON
   <div class="jumbotron full-height no-padding" data-pages="parallax">
     <div class="container-fluid container-fixed-lg sm-p-l-20 sm-p-r-20 full-height">
       <div class="inner full-height">
@@ -21,7 +21,31 @@
       </div>
     </div>
   </div>
-</div><!-- END JUMBOTRON -->
+</div> END JUMBOTRON -->
+<div style="background-color: #6d5cae;height:70%;z-index: 1;position:relative;">
+  <div style="width:100%; height:100%; text-align:center; display:table;">
+      <div style="position:absolute;background-image:url('/img/edinburgh.jpg');width:100%;height:100%;opacity: 0.4;z-index: -1;">
+
+      </div>
+      <div style="display: table-cell;vertical-align: middle; opacity:1;position:relative;color:white">
+            <h1 style="margin:0;color:white;">Ask, Answer, Learn!</h1>
+            <p class="intro">Introducing "Ask". A modern and intuitive question and answer platform for the University of Edinburgh.</p>
+      </div>
+  </div>
+</div>
+<div style="height:31%;">
+  {{#each courses}}
+      <a href="{{pathFor 'room' courseId=this._id }}">
+        <div class="course-{{coursesCount}} courseThumb">
+          <div style="display: table-cell;vertical-align: middle; color:#626262">
+            {{name}}
+          </div>
+        </div>
+      </a>
+  {{/each}}
+
+</div>
+
 <!-- START CONTAINER FLUID -->
 <div class="container-fluid container-fixed-lg">
   <!-- BEGIN PlACE PAGE CONTENT HERE -->
