@@ -80,6 +80,7 @@
           </div>
 
         </div>
+
         {{#if currentUserIsOwner}}
         <div class="buttons" >
           <a href="{{pathFor 'editPost' courseId=courseId postId=_id}}"> <button class="btn btn-lg btn-rounded edit"><i class="fa fa-pencil"></i></button> </a>
@@ -121,6 +122,12 @@
 
 
       <div class="post-content-header">
+        {{#if badges.isInstructorUpvoted}}
+        <div class="m-t-10">
+          <span class="text-success bold small all-caps font-montserrat pull-left">An instructor thinks this is a good question:</span>
+        </div>
+        <div class="clearfix"></div>
+        {{/if}}
         <h2><strong>{{title}}</strong></h2>
       </div>
       <div class="clearfix"></div>

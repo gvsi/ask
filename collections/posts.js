@@ -210,22 +210,40 @@ Meteor.methods({
       var userId = Meteor.user()._id;
       var post = Posts.findOne(postId);
 
-      if(post.upvoters){
+      var course = Courses.findOne(post.courseId);
+      if (!course)
+        throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
 
+      if(post.upvoters){
           if (userId != post.userId) {
+
             if (post.upvoters.indexOf(userId) != -1) { // If the user has already upvoted
-                Posts.update({_id: postId}, {
+                var options = {
                 $inc: {upvotesCount: -1},
                 $pull : {
                   "upvoters": userId
-                }});
+                }}
+                // if user is an instructor
+                if (course.instructors.indexOf(Meteor.user().username) != -1) {
+                  options = _.extend(options, {
+                    $set: {'badges.isInstructorUpvoted': false}
+                  });
+                }
             } else {
-                Posts.update({_id: postId}, {
-                  $inc: {upvotesCount: +1},
-                  $addToSet : {
+              var options = {
+                $inc: {upvotesCount: +1},
+                $addToSet : {
                   "upvoters": userId
-                }});
+                }}
+                // if user is an instructor
+                if (course.instructors.indexOf(Meteor.user().username) != -1) {
+                  options = _.extend(options, {
+                    $set: {'badges.isInstructorUpvoted': true}
+                  });
+                }
             }
+            //updates post
+            Posts.update({_id: postId},options);
           }
       }
     },

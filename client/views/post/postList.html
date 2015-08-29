@@ -102,9 +102,10 @@
             <i class="fa  fa-file-o" style="font-weight: 700;"></i>
           </div>
       {{else}} -->
-
+      {{#unless badges.isInstructorPost}}
         {{#if badges.hasInstructorAnswer}}<div class="badge-icon answeredInstructor simptip-position-left simptip-smooth simptip-movable" data-tooltip="Instructor Answer" > IA </div>{{/if}}
         {{#if badges.hasStudentAnswer}}<div class="badge-icon answered simptip-position-left simptip-smooth simptip-movable" data-tooltip="Student Answer" > A </div>{{/if}}
+      {{/unless}}
     </div>
     <div class="clearfix"></div>
   </li>
