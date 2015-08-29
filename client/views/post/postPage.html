@@ -11,7 +11,7 @@
       {{#if isLoading}}
       <div style="margin-top:30%">{{>loading}}</div>
       {{else}}
-          {{>courseStats courseId=courseId}}
+      {{>courseStats courseId=courseId}}
       {{/if}}
     </div>
 
@@ -111,9 +111,9 @@
         <div class="buttons">
           <button class="btn btn-lg {{upvoteButton}} btn-rounded upvote" id="upvoteQuestion" ><i class="fa fa-thumbs-up"></i><span class="m-l-10">{{post.upvotesCount}}</span></button>
           {{#if isUserFollowing}}
-            <button class="btn btn-lg btn-warning btn-rounded" id="followQuestion" > Stop Following </button>
+          <button class="btn btn-lg btn-warning btn-rounded" id="followQuestion" > Stop Following </button>
           {{else}}
-            <button class="btn btn-lg btn-default btn-rounded" id="followQuestion" > Follow </button>
+          <button class="btn btn-lg btn-default btn-rounded" id="followQuestion" > Follow </button>
           {{/if}}
         </div>
         {{/if}}
@@ -132,17 +132,17 @@
       </div>
       <div class="clearfix"></div>
       <div class="post-content-body m-t-10">
-          {{#if isThereMathJax}}
-            {{#mathjax}}
-            {{#autolink}}
-            {{{text}}}
-            {{/autolink}}
-            {{/mathjax}}
-          {{else}}
-            {{#autolink}}
-            {{{text}}}
-            {{/autolink}}
-          {{/if}}
+        {{#if isThereMathJax}}
+        {{#mathjax}}
+        {{#autolink}}
+        {{{text}}}
+        {{/autolink}}
+        {{/mathjax}}
+        {{else}}
+        {{#autolink}}
+        {{{text}}}
+        {{/autolink}}
+        {{/if}}
       </div>
 
       <div class="q-footer" style="margin: 15px 0 -5px 0px;">
@@ -154,256 +154,267 @@
       <div class="answers-wrapper m-t-30">
         <div style="height: 23px">
           {{#if answers.count}}
-            <span class="liveAnswers-wrapper">
+          <span class="liveAnswers-wrapper">
             {{answerCount}}</span>
-          {{/if}}
-          <span class="pull-right liveAnswers-wrapper" style="font-size: 10px; padding-top:4px;">{{viewCount}}</span>
+            {{/if}}
+            <span class="pull-right liveAnswers-wrapper" style="font-size: 10px; padding-top:4px;">{{viewCount}}</span>
+          </div>
+          <hr style="margin-top:0px">
+          {{#each answers}}
+          {{ >answer }}
+          {{/each}}
         </div>
-        <hr style="margin-top:0px">
-      {{#each answers}}
-      {{ >answer }}
-      {{/each}}
-      </div>
 
-      <div class="panel panel-transparent">
-        <div class="panel-heading">
-          {{#if usersLiveAnsweringCount}}
-          <div class="panel-title text-complete">
-            {{usersLiveAnsweringCount}}
-            {{#if equals usersLiveAnsweringCount 1}}
-             user is currently writing an answer...
+        <div class="panel panel-transparent">
+          <div class="panel-heading">
+            {{#if usersLiveAnsweringCount}}
+            <div class="panel-title text-complete">
+              {{usersLiveAnsweringCount}}
+              {{#if equals usersLiveAnsweringCount 1}}
+              user is currently writing an answer...
+              {{else}}
+              users are currently writing an answer...
+              {{/if}}
+            </div>
+            <br><br>
+            {{/if}}
+
+            {{#if answers.count}}
+            <div class="panel-title">Write an answer:</div>
             {{else}}
-             users are currently writing an answer...
+            <div class="panel-title">Be the first to write an answer:</div>
             {{/if}}
           </div>
-          <br><br>
-          {{/if}}
+          <div class="panel-body">
+            <label class="error">{{errorMessage 'answerBody'}}</label>
+            <div class="tinymce-wrapper m-b-10">
+              <textarea id="answerTinyMCE" name="content">{{{draft}}}</textarea>
+            </div>
+            {{#unless isUserInstructor}}
+            <div class="checkbox inline m-t-10 simptip-position-top simptip-smooth simptip-movable simptip-multiline" data-tooltip="Post as anonymous to instructors and coursemates.">
+              <input type="checkbox" value="1" id="isAnswerAnonymous">
+              <label for="isAnswerAnonymous" class="hint-text">Post as anonymous</label>
+            </div>
+            {{/unless}}
+            <button type="submit" id="sendAnswerBtn" class="btn btn-complete btn-cons m-l-5">Send answer</button>
+            <button id="previewButton" data-target="#previewModal" data-toggle="modal" class="btn btn-default btn-cons m-l-5">Preview</button>
+            <button type="submit" id="saveDraftBtn" class="pull-right btn btn-default btn-cons" style="margin-top:3px">Save draft</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    {{/with}}
 
-          {{#if answers.count}}
-            <div class="panel-title">Write an answer:</div>
+  </template>
+
+  <template name="answer">
+    <div class="answer" id="{{_id}}">
+      <div class="postInfo">
+        <div class="thumbnail-wrapper bordered circular" >
+          <img width="40" height="40" alt="" src="{{identicon userIdenticon}}">
+        </div>
+        <div class="nameLabel">
+          {{#if isInstructor}}
+          <span class="bold">{{theAuthor.profile.name}} {{theAuthor.profile.surname}}</span> <span class="m-l-5 small label label-warning bold">instr</span>
           {{else}}
-            <div class="panel-title">Be the first to write an answer:</div>
+
+          <span class="bold">
+            {{#if isAnonymous}}
+            Anonymous
+            {{else}}
+            {{theAuthor.profile.name}}
+            {{theAuthor.profile.surname}}
+            {{/if}}
+            {{#if posterIsOwner}}
+            <span class="m-l-5 small label label-complete bold">OP</span>
+            {{/if}}
+          </span>
           {{/if}}
         </div>
-        <div class="panel-body">
-          <label class="error">{{errorMessage 'answerBody'}}</label>
-          <div class="tinymce-wrapper m-b-10">
-            <textarea id="answerTinyMCE" name="content">{{{draft}}}</textarea>
+        <div class="datetime timeLabel">
+          {{#if currentUserIsOwner}}
+          <button class="editAnswerBtn btn btn-default btn-rounded btn-xs edit" data-answer-id="{{_id}}"><i class="fa fa-pencil"></i></button>
+          <button class="btn btn-default btn-rounded btn-xs m-r-10 delete" id="openDeleteAnswerModal" data-id="{{_id}}" data-target="#modalDeleteAnswer" data-toggle="modal" ><i class="fa fa-trash-o"></i></button>
+          {{/if}}
+          {{dateFromNow}}
+        </div>
+      </div>
+      <div class="votingContainer" data-answer-id="{{_id}}">
+        <button class="btn btn-sm btn-rounded {{isAnswerUpvoted}}" id="upvoteAnswer" {{disabledVoteForOwner}}><i class="fa fa-thumbs-up"></i><br>{{voteCount}}</button>
+        <!-- <div id="answerVoteCount">{{voteCount }}</div> -->
+        <!-- <button class="btn btn-sm btn-rounded {{downvote}}"  id="downvoteAnswer" {{disabledVoteForOwner}}><i class="fa fa-angle-down"></i></button> -->
+        {{#if isInstructorUpvoted}}
+        <div style="display:block;" class="check text-success simptip-position-right simptip-smooth simptip-movable" data-tooltip="An instructor upvoted this answer" ><i class="fa fa-check-circle"></i></div>
+        {{/if}}
+      </div>
+      <div class="answerBodyContainer">
+        <div class="answerBody" data-answer-id="{{_id}}">
+          {{#if isThereMathJax}}
+          {{#mathjax}}
+          {{#autolink}}
+          {{{body}}}
+          {{/autolink}}
+          {{/mathjax}}
+          {{else}}
+          {{#autolink}}
+          {{{body}}}
+          {{/autolink}}
+          {{/if}}
+        </div>
+        <div class="editAnswerTinyMCE-wrapper" data-answer-id="{{_id}}" hidden>
+          <label class="error"></label>
+          <textarea id="editAnswerTinyMCE-{{_id}}" name="content">{{{body}}}</textarea>
+          <div class="m-t-10">
+            {{#unless isUserInstructor}}
+            <div class="checkbox inline simptip-position-top simptip-smooth simptip-movable simptip-multiline" data-tooltip="Post as anonymous to instructors and coursemates.">
+              <input type="checkbox" value="1" id="isAnswerAnonymous-edit-{{_id}}" {{isAnonymousChecked}}>
+              <label for="isAnswerAnonymous-edit-{{_id}}" class="hint-text">Post as anonymous</label>
+            </div>
+            {{/unless}}
+            <button type="submit" data-answer-id="{{_id}}" class="updateAnswerBtn btn btn-complete btn-cons m-l-5">Update</button>
+            <button type="submit" data-answer-id="{{_id}}" class="cancelUpdateBtn btn btn-default btn-cons m-l-5">Cancel</button>
           </div>
-          {{#unless isUserInstructor}}
-          <div class="checkbox inline m-t-10 simptip-position-top simptip-smooth simptip-movable simptip-multiline" data-tooltip="Post as anonymous to instructors and coursemates.">
-            <input type="checkbox" value="1" id="isAnswerAnonymous">
-            <label for="isAnswerAnonymous" class="hint-text">Post as anonymous</label>
+        </div>
+      </div>
+      <div class="comments">
+        {{#each comments}}
+        <hr>
+        <div class="comment">
+          <span style="float:left;" class="simptip-position-right simptip-smooth simptip-movable" data-tooltip="{{#if isAnonymous}} Anonymous {{else}}{{theAuthor.profile.name}} {{theAuthor.profile.surname}} {{/if}} {{#if isInstructor}} - instructor {{else}}{{#if posterIsOwner}} - OP{{/if}}{{/if}} ({{dateFromNow}})">
+            <div class="thumbnail-wrapper circular {{#unless isInstructor}}{{#if posterIsOwner}} b-complete b-thick {{/if}}{{/unless}}">
+              <img width="40" height="40" alt="" src="{{identicon this.userIdenticon}}">
+            </div>
+          </span>
+          <div class="commentBody">
+            {{#if isThereMathJax}}
+            {{#mathjax}}
+            {{#autolink}}
+            {{{body}}}
+            {{/autolink}}
+            {{/mathjax}}
+            {{else}}
+            {{#autolink}}
+            {{{body}}}
+            {{/autolink}}
+            {{/if}}
+            {{#if currentUserIsOwner}}
+            <div class="commentCtrlBtns pull-left">
+              <span id="editCommentBtn" class="label small">Edit</span> <span id="deleteCommentBtn" class="label small">Delete</span>
+              <!-- <button class="editCommentBtn btn btn-default btn-rounded btn-xs edit" data-answer-id="{{_id}}"><i class="fa fa-pencil"></i></button>
+              <button class="btn btn-default btn-rounded btn-xs m-r-10 delete" id="openDeleteAnswerModal" data-id="{{_id}}" data-target="#modalDeleteAnswer" data-toggle="modal" ><i class="fa fa-trash-o"></i></button> -->
+            </div>
+            <div class="clearfix"></div>
+            {{/if}}
           </div>
-          {{/unless}}
-          <button type="submit" id="sendAnswerBtn" class="btn btn-complete btn-cons m-l-5">Send answer</button>
-          <button id="previewButton" data-target="#previewModal" data-toggle="modal" class="btn btn-default btn-cons m-l-5">Preview</button>
-          <button type="submit" id="saveDraftBtn" class="pull-right btn btn-default btn-cons" style="margin-top:3px">Save draft</button>
+        </div>
+        {{/each}}
+
+
+        <button id="addCommentBtn" class="btn btn-default btn-xs m-t-10 pull-right">Add a comment</button>
+        <div class="commentTinyMCE-wrapper pull-right m-t-10" data-answer-id="{{_id}}" style="width:100%" hidden>
+          <label class="error"></label>
+          <textarea id="commentTinyMCE-{{_id}}" name="content"></textarea>
+          <div class="m-t-10">
+            {{#unless isUserInstructor}}
+            <div class="checkbox inline m-l-10 simptip-position-top simptip-smooth simptip-movable simptip-multiline" data-tooltip="Post as anonymous to instructors and coursemates.">
+              <input type="checkbox" value="1" id="isCommentAnon-{{_id}}">
+              <label for="isCommentAnon-{{_id}}" class="hint-text">Post as anonymous</label>
+            </div>
+            {{/unless}}
+            <button type="submit" id="sendCommentBtn" data-answer-id="{{_id}}" class="btn btn-complete btn-sm m-l-5">Comment</button>
+            <button data-target="#previewModal" data-toggle="modal" class="comment-preview btn btn-default btn-sm m-l-5">Preview</button>
+
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <hr>
+  </template>
+
+
+  <template name="courseSettingsModal">
+    {{#with course}}
+    <div class="modal fade slide-right" id="courseSettingsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-md" style="width: 420px">
+        <div class="modal-content-wrapper">
+          <div class="modal-content table-block" style="height:100%;overflow:auto;">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="pg-close fs-14"></i></button>
+            <div class="modal-body">
+              <div class="p-l-10 p-r-10">
+                <h2 class="semi-bold">
+                  Course Settings
+                </h2>
+                <!-- <p class=" hint-text no-margin">
+                Color makes it different
+              </p>-->
+              <p class="small hint-text m-b-20">
+                Control and customize this course.
+              </p>
+              <div class="m-t-20" style="width: 100%;">
+                <span style="font-size: 19px;margin-top: 4px;" class="pull-left"> Lecture mode </span>
+                <span class="pull-right"><input type="checkbox" class="switchery" id="lectureMode" /></span>
+                <br>
+                <p class="small hint-text m-t-10">
+                  When lecture mode is activated, students will be redirected to a special interface where they can ask question during lectures. Instructors will have their own interface to keep track of the questions that students have and manage them as they want during the lecture.
+                </p>
+              </div>
+              <div class="m-t-20" style="width: 100%;">
+                <span style="font-size: 19px;margin-top: 4px;" class="pull-left"> Use default tags </span>
+                <span class="pull-right"><input type="checkbox" class="switchery" id="defaultTags" {{defaultTagsChecked}} /></span>
+                <br>
+                <p class="small hint-text m-t-10">
+                  Questions students ask on the platform can be tagged. Tags make searching, filtering and answering easier for students and instructor.
+                  (Leave custom tags field blank if you want to disable tags for this course)
+                </p>
+              </div>
+              {{#if areTagsDefault}}
+              <div class="form-group form-group-default m-t-20" id="defaultTagsForCourse">
+                <label>Default tags</label>
+                <div class="bootstrap-tagsinput">
+                  <span class="tag label label-info">wk1</span>
+                  <span class="tag label label-info">wk2</span>
+                  <span class="tag label label-info">wk3</span>
+                  <span class="tag label label-info">wk4</span>
+                  <span class="tag label label-info">wk5</span>
+                  <span class="tag label label-info">wk6</span>
+                  <span class="tag label label-info">wk7</span>
+                  <span class="tag label label-info">wk8</span>
+                  <span class="tag label label-info">wk9</span>
+                  <span class="tag label label-info">wk10</span>
+                  <span class="tag label label-info">wk11</span>
+                  <span class="tag label label-info">logistics</span>
+                  <span class="tag label label-info">exam</span>
+                  <span class="tag label label-info">other</span>
+                </div>
+              </div>
+              {{else}}
+              {{loadCustomTags}}
+              {{/if}}
+
+              <div class="form-group form-group-default m-t-20" id="customTagsForCourse" hidden>
+                <label>Custom Tags</label>
+                <input class="tagsinput custom-tag-input" type="text" />
+              </div>
+
+              <div class="m-t-20" style="width: 100%;">
+                <span style="font-size: 19px;margin-top: 4px;" class="pull-left"> Instructors </span>
+                <br>
+                <p class="small hint-text m-t-10">
+                  Here you can add the teaching staff and course organisers for the course.
+                </p>
+              </div>
+
+              <div class="form-group form-group-default m-t-20" >
+                <label>Instructors</label>
+                <input class="tagsinput" id="instructorsInput" type="text" />
+              </div>
+
+            </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
   {{/with}}
-
-</template>
-
-<template name="answer">
-  <div class="answer" id="{{_id}}">
-    <div class="postInfo">
-      <div class="thumbnail-wrapper bordered circular" >
-        <img width="40" height="40" alt="" src="{{identicon userIdenticon}}">
-      </div>
-      <div class="nameLabel">
-        {{#if isInstructor}}
-        <span class="bold">{{theAuthor.profile.name}} {{theAuthor.profile.surname}}</span> <span class="m-l-5 small label label-warning bold">instr</span>
-        {{else}}
-
-        <span class="bold">
-          {{#if isAnonymous}}
-          Anonymous
-          {{else}}
-          {{theAuthor.profile.name}}
-          {{theAuthor.profile.surname}}
-          {{/if}}
-          {{#if posterIsOwner}}
-          <span class="m-l-5 small label label-complete bold">OP</span>
-          {{/if}}
-        </span>
-        {{/if}}
-      </div>
-      <div class="datetime timeLabel">
-        {{#if currentUserIsOwner}}
-        <button class="editAnswerBtn btn btn-default btn-rounded btn-xs edit" data-answer-id="{{_id}}"><i class="fa fa-pencil"></i></button>
-        <button class="btn btn-default btn-rounded btn-xs m-r-10 delete" id="openDeleteAnswerModal" data-id="{{_id}}" data-target="#modalDeleteAnswer" data-toggle="modal" ><i class="fa fa-trash-o"></i></button>
-        {{/if}}
-        {{dateFromNow}}
-      </div>
-    </div>
-    <div class="votingContainer" data-answer-id="{{_id}}">
-      <button class="btn btn-sm btn-rounded {{isAnswerUpvoted}}" id="upvoteAnswer" {{disabledVoteForOwner}}><i class="fa fa-thumbs-up"></i><br>{{voteCount}}</button>
-      <!-- <div id="answerVoteCount">{{voteCount }}</div> -->
-      <!-- <button class="btn btn-sm btn-rounded {{downvote}}"  id="downvoteAnswer" {{disabledVoteForOwner}}><i class="fa fa-angle-down"></i></button> -->
-      {{#if isInstructorUpvoted}}
-      <div style="display:block;" class="check text-success simptip-position-right simptip-smooth simptip-movable" data-tooltip="An instructor upvoted this answer" ><i class="fa fa-check-circle"></i></div>
-      {{/if}}
-    </div>
-    <div class="answerBodyContainer">
-      <div class="answerBody" data-answer-id="{{_id}}">
-        {{#if isThereMathJax}}
-          {{#mathjax}}
-          {{#autolink}}
-          {{{body}}}
-          {{/autolink}}
-          {{/mathjax}}
-        {{else}}
-          {{#autolink}}
-          {{{body}}}
-          {{/autolink}}
-        {{/if}}
-      </div>
-      <div class="editAnswerTinyMCE-wrapper" data-answer-id="{{_id}}" hidden>
-        <label class="error"></label>
-        <textarea id="editAnswerTinyMCE-{{_id}}" name="content">{{{body}}}</textarea>
-        <div class="m-t-10">
-          {{#unless isUserInstructor}}
-          <div class="checkbox inline simptip-position-top simptip-smooth simptip-movable simptip-multiline" data-tooltip="Post as anonymous to instructors and coursemates.">
-            <input type="checkbox" value="1" id="isAnswerAnonymous-edit-{{_id}}" {{isAnonymousChecked}}>
-            <label for="isAnswerAnonymous-edit-{{_id}}" class="hint-text">Post as anonymous</label>
-          </div>
-          {{/unless}}
-          <button type="submit" data-answer-id="{{_id}}" class="updateAnswerBtn btn btn-complete btn-cons m-l-5">Update</button>
-          <button type="submit" data-answer-id="{{_id}}" class="cancelUpdateBtn btn btn-default btn-cons m-l-5">Cancel</button>
-        </div>
-      </div>
-    </div>
-    <div class="comments">
-      {{#each comments}}
-      <hr>
-      <span style="float:left;" class="simptip-position-right simptip-smooth simptip-movable" data-tooltip="{{#if isAnonymous}} Anonymous {{else}}{{theAuthor.profile.name}} {{theAuthor.profile.surname}} {{/if}} {{#if isInstructor}} - instructor {{else}}{{#if posterIsOwner}} - OP{{/if}}{{/if}} ({{dateFromNow}})">
-        <div class="thumbnail-wrapper circular {{#unless isInstructor}}{{#if posterIsOwner}} b-complete b-thick {{/if}}{{/unless}}">
-          <img width="40" height="40" alt="" src="{{identicon this.userIdenticon}}">
-        </div>
-      </span>
-      <div class="commentBody">
-        {{#if isThereMathJax}}
-          {{#mathjax}}
-          {{#autolink}}
-          {{{body}}}
-          {{/autolink}}
-          {{/mathjax}}
-        {{else}}
-          {{#autolink}}
-          {{{body}}}
-          {{/autolink}}
-        {{/if}}
-      </div>
-      {{/each}}
-
-      <button id="addCommentBtn" class="btn btn-default btn-xs m-t-10 pull-right">Add a comment</button>
-      <div class="commentTinyMCE-wrapper pull-right m-t-10" data-answer-id="{{_id}}" style="width:100%" hidden>
-        <label class="error"></label>
-        <textarea id="commentTinyMCE-{{_id}}" name="content"></textarea>
-        <div class="m-t-10">
-          {{#unless isUserInstructor}}
-          <div class="checkbox inline m-l-10 simptip-position-top simptip-smooth simptip-movable simptip-multiline" data-tooltip="Post as anonymous to instructors and coursemates.">
-            <input type="checkbox" value="1" id="isCommentAnon-{{_id}}">
-            <label for="isCommentAnon-{{_id}}" class="hint-text">Post as anonymous</label>
-          </div>
-          {{/unless}}
-          <button type="submit" id="sendCommentBtn" data-answer-id="{{_id}}" class="btn btn-complete btn-sm m-l-5">Comment</button>
-          <button data-target="#previewModal" data-toggle="modal" class="comment-preview btn btn-default btn-sm m-l-5">Preview</button>
-
-        </div>
-      </div>
-    </div>
-
-  </div>
-  <hr>
-</template>
-
-
-<template name="courseSettingsModal">
-  {{#with course}}
-  <div class="modal fade slide-right" id="courseSettingsModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-md" style="width: 420px">
-      <div class="modal-content-wrapper">
-        <div class="modal-content table-block" style="height:100%;overflow:auto;">
-          <button type="button" class="close" data-dismiss="modal" aria-hidden="true"><i class="pg-close fs-14"></i></button>
-          <div class="modal-body">
-            <div class="p-l-10 p-r-10">
-              <h2 class="semi-bold">
-                Course Settings
-              </h2>
-              <!-- <p class=" hint-text no-margin">
-              Color makes it different
-            </p>-->
-            <p class="small hint-text m-b-20">
-              Control and customize this course.
-            </p>
-            <div class="m-t-20" style="width: 100%;">
-              <span style="font-size: 19px;margin-top: 4px;" class="pull-left"> Lecture mode </span>
-              <span class="pull-right"><input type="checkbox" class="switchery" id="lectureMode" /></span>
-              <br>
-              <p class="small hint-text m-t-10">
-                When lecture mode is activated, students will be redirected to a special interface where they can ask question during lectures. Instructors will have their own interface to keep track of the questions that students have and manage them as they want during the lecture.
-              </p>
-            </div>
-            <div class="m-t-20" style="width: 100%;">
-              <span style="font-size: 19px;margin-top: 4px;" class="pull-left"> Use default tags </span>
-              <span class="pull-right"><input type="checkbox" class="switchery" id="defaultTags" {{defaultTagsChecked}} /></span>
-              <br>
-              <p class="small hint-text m-t-10">
-                Questions students ask on the platform can be tagged. Tags make searching, filtering and answering easier for students and instructor.
-                (Leave custom tags field blank if you want to disable tags for this course)
-              </p>
-            </div>
-            {{#if areTagsDefault}}
-            <div class="form-group form-group-default m-t-20" id="defaultTagsForCourse">
-              <label>Default tags</label>
-              <div class="bootstrap-tagsinput">
-                <span class="tag label label-info">wk1</span>
-                <span class="tag label label-info">wk2</span>
-                <span class="tag label label-info">wk3</span>
-                <span class="tag label label-info">wk4</span>
-                <span class="tag label label-info">wk5</span>
-                <span class="tag label label-info">wk6</span>
-                <span class="tag label label-info">wk7</span>
-                <span class="tag label label-info">wk8</span>
-                <span class="tag label label-info">wk9</span>
-                <span class="tag label label-info">wk10</span>
-                <span class="tag label label-info">wk11</span>
-                <span class="tag label label-info">logistics</span>
-                <span class="tag label label-info">exam</span>
-                <span class="tag label label-info">other</span>
-              </div>
-            </div>
-            {{else}}
-            {{loadCustomTags}}
-            {{/if}}
-
-            <div class="form-group form-group-default m-t-20" id="customTagsForCourse" hidden>
-              <label>Custom Tags</label>
-              <input class="tagsinput custom-tag-input" type="text" />
-            </div>
-
-            <div class="m-t-20" style="width: 100%;">
-              <span style="font-size: 19px;margin-top: 4px;" class="pull-left"> Instructors </span>
-              <br>
-              <p class="small hint-text m-t-10">
-                Here you can add the teaching staff and course organisers for the course.
-              </p>
-            </div>
-
-            <div class="form-group form-group-default m-t-20" >
-              <label>Instructors</label>
-              <input class="tagsinput" id="instructorsInput" type="text" />
-            </div>
-
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-{{/with}}
 </template>

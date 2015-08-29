@@ -648,6 +648,7 @@ Template.postContent.onRendered(function () {
 
 Template.answer.helpers({
   currentUserIsOwner: function() {
+    //works for both answer and comment
     if(this.isAnonymous) {
       return this.userIdenticon == Package.sha.SHA256(this.postId + Meteor.user()._id)
     } else {

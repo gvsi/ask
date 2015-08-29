@@ -235,6 +235,7 @@ Meteor.methods({
     var identiconHash = commentAttributes.isAnonymous ? answer.postId + user._id : user._id;
 
     comment = _.extend(commentAttributes, {
+      _id: new Meteor.Collection.ObjectID()._str,
       userId: user._id,
       userIdenticon: Package.sha.SHA256(identiconHash),
       //author: user.username,
