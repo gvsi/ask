@@ -208,6 +208,56 @@ Meteor.methods({
 
     return answerAttributes.answerId;
   },
+  commentUpdate: function(commentAttributes) {
+
+    var user = Meteor.user();
+
+    if (!user)
+    throw new Meteor.Error('invalid-user', 'You must be logged in to edit a comment');
+
+    check(commentAttributes, {
+      answerId: String,
+      commentId: String,
+      postId: String,
+      body: String,
+      isAnonymous: Boolean
+    });
+
+    var answer = Answers.findOne({_id: commentAttributes.answerId});
+    //check existance of post to update
+    if (answer) {
+      // set identiconHash
+      var identiconHash = commentAttributes.isAnonymous ? commentAttributes.postId + user._id : user._id;
+      var now = new Date();
+      Answers.update(
+        {
+          "_id": commentAttributes.answerId,
+          "comments._id": commentAttributes.commentId
+        },
+        {
+          $set: {
+            "comments.$.body": commentAttributes.body,
+            "comments.$.isAnonymous": commentAttributes.isAnonymous,
+            "comments.$.userIdenticon": Package.sha.SHA256(identiconHash),
+            "comments.$.updatedAt": now
+          }
+        }
+      )
+    } else {
+      throw new Meteor.Error('invalid-comment', 'The comment you\'re trying to edit does not exist');
+    }
+
+    // var commentNotifications = Notifications.find({"answerId": commentAttributes.answerId, "type": 'commentToAnswer'});
+    // var commentBodyWithoutTags = UniHTML.purify(commentAttributes.body, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
+    //
+    // commentNotifications.forEach(function(notification) {
+    //     Notifications.update({_id: notification._id}, {$set:{
+    //       postTitle: commentBodyWithoutTags
+    //     }});
+    //   });
+
+    return commentAttributes.commentId;
+  },
   commentInsert: function(commentAttributes) {
     //commentAttributes.body = UniHTML.purify(commentAttributes.body);
 
@@ -375,10 +425,54 @@ Meteor.methods({
         "isDeleted": true
       }});
 
-      Notifications.remove({answerId: answerId, postId: post._id, postCourseId: post.courseId});
-
     } else {
       throw new Meteor.Error('invalid-delete-permission', 'You don\'t have permission to delete this answer!');
+    }
+  },
+  commentDelete: function(answerId, commentId) {
+    var userId = Meteor.user()._id;
+    var answer = Answers.findOne(answerId);
+
+    var hasPermission;
+    var post = Posts.findOne(answer.postId);
+
+    if (answer) {
+      var comment = _.find(answer.comments, function(comment){
+        if (comment._id == commentId) return true;
+      });
+
+      if (comment) {
+        if(comment.isAnonymous) {
+          if (post) {
+            hasPermission = comment.userIdenticon == Package.sha.SHA256(post._id + userId)
+          } else {
+            throw new Meteor.Error('invalid-post', 'The comment you\'re trying to delete must belong to a post');
+          }
+        } else {
+          hasPermission = comment.userId == userId;
+        }
+      } else {
+        throw new Meteor.Error('invalid-comment', 'The comment you\'re trying to delete does not exist');
+      }
+    } else {
+      throw new Meteor.Error('invalid-answer', 'The comment you\'re trying to delete does not belong to a post');
+    }
+
+    if(hasPermission){
+
+      Answers.update(
+        {
+          "_id": answerId,
+          "comments._id": commentId
+        },
+        {
+          $pull: {comments: {
+            _id: commentId
+          }}
+        }
+      )
+    } else {
+      throw new Meteor.Error('invalid-delete-permission', 'You don\'t have permission to delete this comment!');
     }
   }
 });

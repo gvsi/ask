@@ -42,6 +42,24 @@
     </div>
   </div>
 
+  <div class="modal fade slide-up disable-scroll" id="modalDeleteComment" tabindex="-1" role="dialog" aria-labelledby="modalSlideUpLabel" aria-hidden="false">
+    <div class="modal-dialog " style="width:40%; text-align:center;">
+      <div class="modal-content-wrapper">
+        <div class="modal-content">
+          <div class="modal-header clearfix" style="margin-bottom: 30px;">
+            <h5><strong>Are you sure you want to delete this comment?</strong></h5>
+            Did you consider making making it anonymous, instead?
+          </div>
+          <div class="modal-footer" style="margin-top: 16px;text-align: center;">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" id="deleteComment" class="btn btn-danger">Delete</button>
+          </div>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+  </div>
+
   {{#with post}}
   <div class="post-content-wrapper" style="display:none">
     <div class="actions-wrapper menuclipper bg-master-lightest" id="postTopbar">
@@ -220,10 +238,10 @@
 
           <span class="bold">
             {{#if isAnonymous}}
-            Anonymous
+              Anonymous
             {{else}}
-            {{theAuthor.profile.name}}
-            {{theAuthor.profile.surname}}
+              {{theAuthor.profile.name}}
+              {{theAuthor.profile.surname}}
             {{/if}}
             {{#if posterIsOwner}}
             <span class="m-l-5 small label label-complete bold">OP</span>
@@ -250,15 +268,15 @@
       <div class="answerBodyContainer">
         <div class="answerBody" data-answer-id="{{_id}}">
           {{#if isThereMathJax}}
-          {{#mathjax}}
-          {{#autolink}}
-          {{{body}}}
-          {{/autolink}}
-          {{/mathjax}}
+            {{#mathjax}}
+            {{#autolink}}
+              {{{body}}}
+            {{/autolink}}
+            {{/mathjax}}
           {{else}}
-          {{#autolink}}
-          {{{body}}}
-          {{/autolink}}
+            {{#autolink}}
+              {{{body}}}
+            {{/autolink}}
           {{/if}}
         </div>
         <div class="editAnswerTinyMCE-wrapper" data-answer-id="{{_id}}" hidden>
@@ -285,23 +303,39 @@
               <img width="40" height="40" alt="" src="{{identicon this.userIdenticon}}">
             </div>
           </span>
-          <div class="commentBody">
-            {{#if isThereMathJax}}
-            {{#mathjax}}
-            {{#autolink}}
-            {{{body}}}
-            {{/autolink}}
-            {{/mathjax}}
-            {{else}}
-            {{#autolink}}
-            {{{body}}}
-            {{/autolink}}
-            {{/if}}
+          <div class="commentBodyContainer">
+            <div class="commentBody" data-comment-id="{{_id}}">
+              {{#if isThereMathJax}}
+                {{#mathjax}}
+                {{#autolink}}
+                  {{{body}}}
+                {{/autolink}}
+                {{/mathjax}}
+              {{else}}
+                {{#autolink}}
+                  {{{body}}}
+                {{/autolink}}
+              {{/if}}
+            </div>
             {{#if currentUserIsOwner}}
-            <div class="commentCtrlBtns pull-left">
-              <span id="editCommentBtn" class="label small">Edit</span> <span id="deleteCommentBtn" class="label small">Delete</span>
+            <div class="commentCtrlBtns pull-left" data-comment-id="{{_id}}">
+              <span id="editCommentBtn" class="label small">Edit</span> <span id="deleteCommentBtn" class="label small" data-id="{{_id}}" data-target="#modalDeleteComment" data-toggle="modal">Delete</span>
               <!-- <button class="editCommentBtn btn btn-default btn-rounded btn-xs edit" data-answer-id="{{_id}}"><i class="fa fa-pencil"></i></button>
               <button class="btn btn-default btn-rounded btn-xs m-r-10 delete" id="openDeleteAnswerModal" data-id="{{_id}}" data-target="#modalDeleteAnswer" data-toggle="modal" ><i class="fa fa-trash-o"></i></button> -->
+            </div>
+            <div class="editCommentTinyMCE-wrapper" data-comment-id="{{_id}}" hidden>
+              <label class="error"></label>
+              <textarea id="editCommentTinyMCE-{{_id}}" name="content">{{{body}}}</textarea>
+              <div class="m-t-10">
+                {{#unless isUserInstructor}}
+                <div class="checkbox inline simptip-position-top simptip-smooth simptip-movable simptip-multiline" data-tooltip="Post as anonymous to instructors and coursemates.">
+                  <input type="checkbox" value="1" id="isCommentAnonymous-edit-{{_id}}" {{isAnonymousChecked}}>
+                  <label for="isCommentAnonymous-edit-{{_id}}" class="hint-text">Post as anonymous</label>
+                </div>
+                {{/unless}}
+                <button type="submit" data-comment-id="{{_id}}" class="updateCommentBtn btn btn-complete btn-cons m-l-5">Update</button>
+                <button type="submit" data-comment-id="{{_id}}" class="cancelUpdateBtn btn btn-default btn-cons m-l-5">Cancel</button>
+              </div>
             </div>
             <div class="clearfix"></div>
             {{/if}}

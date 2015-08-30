@@ -441,50 +441,42 @@
         border-style: solid;
         color: #C3C3C3;
       }
-      .commentBody {
+      .commentBodyContainer {
         display:table;
-        min-height: 25px;
-        p {
-          font-size: 12.5px;
-          line-height: 18px;
-          margin: 0;
+        .commentBody {
+          min-height: 25px;
+          p {
+            font-size: 12.5px;
+            line-height: 18px;
+            margin: 0;
+          }
+        }
+        .commentCtrlBtns {
+          margin-top: 10px;
+          .label {
+            border-style: solid;
+            border-width: 1px;
+            border-radius: 5px;
+            background-color: #fff;
+            border-color: #f0f0f0;
+            font-weight: 100;
+          }
+          #editCommentBtn:hover {
+            font-weight: 600;
+            border-width: 0px;
+            cursor: pointer;
+            background-color: @color-complete;
+            color: #fff;
+          }
+          #deleteCommentBtn:hover {
+            font-weight: 600;
+            border-width: 0px;
+            cursor: pointer;
+            background-color: @color-danger;
+            color: #fff;
+          }
         }
       }
-      .commentCtrlBtns {
-        // margin-top: 40px;
-        // position: absolute;
-        // left: 10px;
-        // opacity: 0;
-        // visibility: hidden;
-        margin-top: 10px;
-        .label {
-          border-style: solid;
-          border-width: 1px;
-          border-radius: 5px;
-          background-color: #fff;
-          border-color: #f0f0f0;
-          font-weight: 100;
-        }
-        #editCommentBtn:hover {
-          font-weight: 600;
-          border-width: 0px;
-          cursor: pointer;
-          background-color: @color-complete;
-          color: #fff;
-        }
-        #deleteCommentBtn:hover {
-          font-weight: 600;
-          border-width: 0px;
-          cursor: pointer;
-          background-color: @color-danger;
-          color: #fff;
-        }
-      }
-      // .commentCtrlBtns {
-      //   // visibility: visible;
-      //   // opacity: 1;
-      //   // display: block;
-      // }
       #addCommentBtn {
         float:right;
       }
