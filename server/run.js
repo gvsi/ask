@@ -17,7 +17,7 @@ Meteor.methods({
 					profile : {
 						name : toTitleCase(students[i].STU_FUSD),
 						surname: toTitleCase(students[i].STU_SURN),
-						emailPreferences: ''
+						emailPreferences: '',
 					}
 				}});
 			}

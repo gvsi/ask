@@ -71,6 +71,22 @@ Template.postPage.rendered = function () {
   }
 }
 
+Template.registerHelper("hasAvatar", function(argument){
+    if(Meteor.user().profile.image){
+      return true;
+    }else{
+      return false;
+    }
+});
+
+Template.registerHelper("avatar", function(argument){
+  if(Meteor.user().profile.image){
+    return Meteor.user().profile.image;
+  }else{
+    return "";
+  }  
+});
+
 Template.registerHelper("isUserInstructor", function(){
   var currentCourse = Courses.findOne(Router.current().params.courseId);
   var un = Meteor.user().username.toLowerCase();
@@ -440,7 +456,6 @@ Template.postContent.helpers({
       return "";
     }
   }
-
 });
 
 Template.postContent.events({

@@ -40,7 +40,7 @@ Router.route('/home', function () {
 Router.route('/settings', function () {
   this.render('settings');
 },{
- layoutTemplate:"dashboardLayout",
+ layoutTemplate:"defaultLayout",
  name:'settings',
 });
 
@@ -102,7 +102,7 @@ Router.route('/login', function() {
 });
 
 Router.route('/settings/unsubscribe', function () {
-    Meteor.call("setEmailPreferences", "never", function(error, result){ 
+    Meteor.call("setEmailPreferences", "never", function(error, result){
       if(error){
         console.log("error", error);
       }
