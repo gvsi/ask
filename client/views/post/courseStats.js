@@ -54,7 +54,7 @@ Template.courseStats.helpers({
   unansweredQuestionsText: function() {
     var count = Counts.get('unansweredQuestions');
     if (count == 0) {
-      return "Sweet! There are no answered questions"
+      return "Sweet! There are no unanswered questions"
     } else if (count == 1) {
       return "<strong>1</strong> question &nbsp; &nbsp;<span data-filter='unanswered' class='changeFilterBtn label font-montserrat'><a href='#'>view</a></span>"
     } else if (count > 1) {

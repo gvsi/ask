@@ -72,10 +72,11 @@
   </div>
 
       <div id="no-post-error" style="margin-top: 50%; text-align:center">
-        <h4>No questions in this room</h4>
+        <h3>No questions in this room</h3>
+        <h5>Be the first to ask a question</h5>
         {{#if courseId}}
           <a href="{{pathFor 'compose' courseId=courseId }}">
-            <button class="askQuestion composeBtn btn btn-default btn-rounded m-r-10">Ask a question</button>
+            <button class="askQuestion composeBtn btn btn-default btn-rounded m-r-10">Ask</button>
           </a>
         {{/if}}
       </div>

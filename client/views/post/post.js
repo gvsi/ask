@@ -1,4 +1,7 @@
 Template.postPage.rendered = function () {
+  // close sidebar for mobile
+  $("body").removeClass("sidebar-open")
+
   //number of users per day
   for (var i = 0; i < 10; i++) {
     var date = moment().subtract(i, 'days').format("L");
@@ -69,6 +72,7 @@ Template.postPage.rendered = function () {
     Session.set('customTags', undefined)
     $('#customTagsForCourse').show();
   }
+
 }
 
 Template.registerHelper("hasAvatar", function(argument){
@@ -84,7 +88,7 @@ Template.registerHelper("avatar", function(argument){
     return Meteor.user().profile.image;
   }else{
     return "";
-  }  
+  }
 });
 
 Template.registerHelper("isUserInstructor", function(){

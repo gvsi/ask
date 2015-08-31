@@ -1,4 +1,7 @@
 Template.notifications.rendered = function(){
+		// close sidebar for mobile
+	  $("body").removeClass("sidebar-open")
+
 		//Set Title
 		Session.set("DocumentTitle","Notifications | Ask");
 

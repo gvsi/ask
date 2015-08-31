@@ -1,5 +1,8 @@
 Template.home.rendered = function(){
-  	Session.set("DocumentTitle","Home | Ask");
+  // close sidebar for mobile
+  $("body").removeClass("sidebar-open")
+
+  Session.set("DocumentTitle","Home | Ask");
 }
 
 Template.home.helpers({
