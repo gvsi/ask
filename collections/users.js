@@ -16,3 +16,9 @@ UserStatus.events.on("connectionLogin", function(fields) {
     }
   }
 });
+
+Meteor.methods({
+  deleteProfilePicture:function(){
+     Meteor.users.update({_id: Meteor.userId()}, {$unset: {"profile.image": 1 } });
+  }
+});

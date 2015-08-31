@@ -936,6 +936,24 @@ Template.answer.events({
       hljs.highlightBlock(block);
     });
   },
+  'click .updateAnswerPreview': function(e){
+    e.preventDefault();
+    $("#previewTitle").text("Update answer preview: ");
+    $("#previewContent").html(tinyMCE.get('editAnswerTinyMCE-'+this._id).getContent());
+
+    $('#previewContent pre code').each(function(i, block) {
+      hljs.highlightBlock(block);
+    });
+  },
+  'click .updateCommentPreview': function(e){
+    e.preventDefault();
+    $("#previewTitle").text("Update comment preview: ");
+    $("#previewContent").html(tinyMCE.get('editCommentTinyMCE-'+this._id).getContent());
+
+    $('#previewContent pre code').each(function(i, block) {
+      hljs.highlightBlock(block);
+    });
+  },
   'click a[data-post-id]': function(e) {
     e.preventDefault();
     var postId = $(e.currentTarget).attr('data-post-id');

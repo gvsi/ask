@@ -75,7 +75,7 @@
       <div class="q-footer">
         <div style="float:left">
           <div class="thumbnail-wrapper bordered circular" >
-            <img width="40" height="40" alt="" src="{{#if hasAvatar}} {{avatar}} {{else}} {{identicon userIdenticon}} {{/if}}">
+            <img width="40" height="40" alt="" src="{{#if hasAvatar}} {{#if isAnonymous}} {{identicon userIdenticon}} {{else}} {{avatar}} {{/if}} {{else}} {{identicon userIdenticon}} {{/if}}">
           </div>
           <div class="sender inline m-l-10">
             <p class="name no-margin">
@@ -229,7 +229,7 @@
     <div class="answer" id="{{_id}}">
       <div class="postInfo">
         <div class="thumbnail-wrapper bordered circular" >
-          <img width="40" height="40" alt="" src="{{#if hasAvatar}} {{avatar}} {{else}} {{identicon userIdenticon}} {{/if}}">
+          <img width="40" height="40" alt="" src="{{#if hasAvatar}} {{#if isAnonymous}} {{identicon userIdenticon}} {{else}} {{avatar}} {{/if}} {{else}} {{identicon userIdenticon}} {{/if}}">
         </div>
         <div class="nameLabel">
           {{#if isInstructor}}
@@ -291,6 +291,7 @@
             {{/unless}}
             <button type="submit" data-answer-id="{{_id}}" class="updateAnswerBtn btn btn-complete btn-cons m-l-5">Update</button>
             <button type="submit" data-answer-id="{{_id}}" class="cancelUpdateBtn btn btn-default btn-cons m-l-5">Cancel</button>
+            <button data-target="#previewModal" data-toggle="modal" class="updateAnswerPreview btn btn-default btn-cons m-l-5">Preview</button>
           </div>
         </div>
       </div>
@@ -300,7 +301,7 @@
         <div class="comment">
           <span style="float:left;" class="simptip-position-right simptip-smooth simptip-movable" data-tooltip="{{#if isAnonymous}} Anonymous {{else}}{{theAuthor.profile.name}} {{theAuthor.profile.surname}} {{/if}} {{#if isInstructor}} - instructor {{else}}{{#if posterIsOwner}} - OP{{/if}}{{/if}} ({{dateFromNow}})">
             <div class="thumbnail-wrapper circular {{#unless isInstructor}}{{#if posterIsOwner}} b-complete b-thick {{/if}}{{/unless}}">
-              <img width="40" height="40" alt="" src="{{#if hasAvatar}} {{avatar}} {{else}} {{identicon userIdenticon}} {{/if}}">
+              <img width="40" height="40" alt="" src="{{#if hasAvatar}} {{#if isAnonymous}} {{identicon userIdenticon}} {{else}} {{avatar}} {{/if}} {{else}} {{identicon userIdenticon}} {{/if}}">
             </div>
           </span>
           <div class="commentBodyContainer">
@@ -335,6 +336,7 @@
                 {{/unless}}
                 <button type="submit" data-comment-id="{{_id}}" class="updateCommentBtn btn btn-complete btn-cons m-l-5">Update</button>
                 <button type="submit" data-comment-id="{{_id}}" class="cancelUpdateBtn btn btn-default btn-cons m-l-5">Cancel</button>
+                <button data-target="#previewModal" data-toggle="modal" class="updateCommentPreview btn btn-default btn-cons m-l-5">Preview</button>
               </div>
             </div>
             <div class="clearfix"></div>

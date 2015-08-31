@@ -17,6 +17,14 @@ Template.settings.events({
     },
   'click button.inc': function () {
     $('#editYourAvatarModal').modal();
+  },
+  'click #modalDeleteImage': function(){
+    Meteor.call("deleteProfilePicture", function(error, result){
+      if(error){
+        console.log("error", error);
+      }
+    });
+    $("#modalDeleteImage").modal('hide');
   }
 });
 
