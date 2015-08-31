@@ -1,21 +1,21 @@
 Router.configure({
-    loadingTemplate: 'loading',
+  loadingTemplate: 'loading',
 });
 
 var OnBeforeActions;
 
 OnBeforeActions = {
-    loginRequired: function(pause) {
-      if (!Meteor.userId()) {
-        Router.go('login');
-       }else{
-        this.next();
-      }
+  loginRequired: function(pause) {
+    if (!Meteor.userId()) {
+      Router.go('login');
+    }else{
+      this.next();
     }
+  }
 };
 
 Router.onBeforeAction(OnBeforeActions.loginRequired, {
-    except: ['login']
+  except: ['login']
 });
 
 Router.route('/', function () {
@@ -33,39 +33,39 @@ Router.route('/', function () {
 Router.route('/home', function () {
   this.render('home');
 },{
- layoutTemplate:"dashboardLayout",
- name:'home',
+  layoutTemplate:"dashboardLayout",
+  name:'home',
 });
 
 Router.route('/settings', function () {
   this.render('settings');
 },{
- layoutTemplate:"defaultLayout",
- name:'settings',
+  layoutTemplate:"defaultLayout",
+  name:'settings',
 });
 
 
 Router.route('/feedback', function () {
   this.render('feedback');
 },{
- layoutTemplate:"defaultLayout",
- name:"feedback",
- loadingTemplate: 'loading',
+  layoutTemplate:"defaultLayout",
+  name:"feedback",
+  loadingTemplate: 'loading',
 });
 
 Router.route('/room/:courseId', function () {
   this.render('postPage');
 },{
- layoutTemplate:"postLayout",
- name:"room",
- loadingTemplate: 'loading',
- waitOn: function() {
-    $(".toggle-post-sidebar").remove();
-    //$(".header-inner").prepend("<a href=\"#\" class=\"toggle-email-sidebar\">Room <span class=\"text-info\">(12)</span> <span class=\"caret\"></span></a>");
-    return [
-      Meteor.subscribe('posts', this.params.courseId),
-      Meteor.subscribe('courseStats', this.params.courseId)
-    ];
+  layoutTemplate:"postLayout",
+  name:"room",
+  loadingTemplate: 'loading',
+  waitOn: function() {
+    if (Meteor.userId()) {
+      return [
+        Meteor.subscribe('posts', this.params.courseId),
+        Meteor.subscribe('courseStats', this.params.courseId)
+      ];
+    }
   }
 });
 
@@ -73,13 +73,15 @@ Router.route('/room/:courseId', function () {
 Router.route('room/:courseId/compose', function () {
   this.render('postCompose');
 },{
- layoutTemplate:"composePostLayout" ,
+  layoutTemplate:"composePostLayout" ,
   loadingTemplate: 'loading',
   name: 'compose',
   waitOn: function() {
-    return [
-      Meteor.subscribe('posts', this.params.courseId),
-    ];
+    if (Meteor.userId()) {
+      return [
+        Meteor.subscribe('posts', this.params.courseId),
+      ];
+    }
   }
 });
 
@@ -102,26 +104,26 @@ Router.route('/login', function() {
 });
 
 Router.route('/settings/unsubscribe', function () {
-    Meteor.call("setEmailPreferences", "never", function(error, result){
-      if(error){
-        console.log("error", error);
-      }
-      if(result){
+  Meteor.call("setEmailPreferences", "never", function(error, result){
+    if(error){
+      console.log("error", error);
+    }
+    if(result){
 
-      }
-    });
-    Router.go('/settings');
+    }
+  });
+  Router.go('/settings');
 },{
- layoutTemplate:"defaultLayout"
+  layoutTemplate:"defaultLayout"
 });
 
 Router.route('/logout', function () {
   Meteor.logout(function() {
-      // Redirect to login
-      Object.keys(Session.keys).forEach(function(key){ Session.set(key, undefined); })
-      Session.set("areNotificationsObserved", true);
-      Router.go('/login');
-    });
+    // Redirect to login
+    Object.keys(Session.keys).forEach(function(key){ Session.set(key, undefined); })
+    Session.set("areNotificationsObserved", true);
+    Router.go('/login');
+  });
 },{
- layoutTemplate:"defaultLayout"
+  layoutTemplate:"defaultLayout"
 });

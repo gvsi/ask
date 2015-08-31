@@ -170,7 +170,7 @@ Template.courseSettingsModal.events({
   "itemAdded .custom-tag-input": function(event){
     var tagAttributes = {
       courseId: Router.current().params.courseId,
-      isAdd: 1,
+      isAdd: true,
       tag: event.item
     };
 
@@ -179,7 +179,7 @@ Template.courseSettingsModal.events({
   "itemRemoved .custom-tag-input": function(event){
     var tagAttributes = {
       courseId: Router.current().params.courseId,
-      isAdd: 0,
+      isAdd: false,
       tag: event.item
     };
 
@@ -188,7 +188,7 @@ Template.courseSettingsModal.events({
   "itemAdded #instructorsInput": function(event){
     var instructorAttributes = {
       courseId: Router.current().params.courseId,
-      isAdd: 1,
+      isAdd: true,
       instructor: event.item
     };
 
@@ -197,7 +197,7 @@ Template.courseSettingsModal.events({
   "itemRemoved #instructorsInput": function(event){
     var instructorAttributes = {
       courseId: Router.current().params.courseId,
-      isAdd: 0,
+      isAdd: false,
       instructor: event.item
     };
 

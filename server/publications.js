@@ -1,7 +1,7 @@
-Meteor.publish('posts', function(id) {
-	if(Meteor.users.findOne(this.userId).profile.courses.indexOf(id) != -1){
+Meteor.publish('posts', function(courseId) {
+	if (this.userId) {
 		var self = this;
-		var cursor = Posts.find({courseId: id, isDeleted: { $ne: true}},{fields: {revisionHistory: 0, type: 0, updatedAt: 0, isDeleted: 0}},{sort: {createdAt: -1}});
+		var cursor = Posts.find({courseId: courseId, isDeleted: { $ne: true}},{fields: {revisionHistory: 0, type: 0, updatedAt: 0, isDeleted: 0}},{sort: {createdAt: -1}});
 
 		var handle = cursor.observeChanges({
 			added: function (id, doc) {
@@ -66,14 +66,21 @@ Meteor.publish('posts', function(id) {
 		self.onStop(function () {
 			handle.stop();
 		});
-
+	} else {
+		throw new Meteor.Error('invalid-permission', 'You should be logged in to see this');
 	}
 });
 
 Meteor.publish('singlePost', function(id) {
-	var post = Posts.find({_id: id, isDeleted: { $ne: true}},{fields: {userId: 0, upvoters: 0, followers: 0, viewers: 0, usersLiveAnswering: 0, revisionHistory: 0}});
-	if(post && (Meteor.users.findOne(this.userId).profile.courses.indexOf(post.courseId) != 1)){
-		return post;
+	if (this.userId) {
+		var post = Posts.find({_id: id, isDeleted: {$ne: true}},{fields: {userId: 0, upvoters: 0, followers: 0, viewers: 0, usersLiveAnswering: 0, revisionHistory: 0}});
+		if (post) {
+			return post;
+		} else {
+			throw new Meteor.Error('invalid-post', 'This post does not exist');
+		}
+	} else {
+		throw new Meteor.Error('invalid-permission', 'You should be logged in to see this');
 	}
 });
 
@@ -86,70 +93,80 @@ Meteor.publish('coursesForStudent', function () {
 			throw new Meteor.Error("No courses for this student");
 		}
 		return Courses.find({'_id': {$in: courses}});
+	} else {
+		throw new Meteor.Error('invalid-user', 'This user does not exist');
 	}
 });
 
 Meteor.publish('singleUser', function(id) {
-	return Meteor.users.find({_id: id},{fields: {'profile.name': 1, 'profile.surname': 1}});
-});
-
-Meteor.publish('answers', function (postId) {
-	var post = Posts.find({_id: postId, isDeleted: { $ne: true}});
-	if(post && (Meteor.users.findOne(this.userId).profile.courses.indexOf(post.courseId) != 1)){
-
-		var self = this;
-		var cursor = Answers.find({'postId': postId, isDeleted: {$ne: true}},{fields: {revisionHistory: 0}},{sort: {isInstructor: -1, isInstructorUpvoted: -1, voteCount: -1, createdAt: 1}});
-
-		var handle = cursor.observeChanges({
-			added: function (id, doc) {
-				var d = checkFields(doc);
-				self.added("answers", id, d);
-			},
-			changed: function(id, doc) {
-				var d = checkFields(doc);
-				self.changed("answers", id, d);
-			},
-			removed: function (id) {
-				self.removed("answers", id);
-			}
-		});
-
-		function checkFields(doc) {
-			//Upvoters
-			if (doc.upvoters) {
-				if (doc.upvoters.indexOf(self.userId) != -1) {
-					doc.upvoters = [self.userId];
-				} else {
-					doc.upvoters = [];
-				}
-			}
-
-			// Anonymity
-			if (doc.isAnonymous) {
-				delete doc.userId;
-			}
-
-			if (doc.comments) {
-				doc.comments.forEach(function(comment){
-		      if (comment.isAnonymous) {
-		        delete comment.userId;
-		      }
-		    });
-			}
-
-			return doc;
-		}
-
-		self.ready();
-
-		self.onStop(function () {
-			handle.stop();
-		});
-
+	if (this.userId) {
+		return Meteor.users.find({_id: id},{fields: {'profile.name': 1, 'profile.surname': 1}});
+	} else {
+		throw new Meteor.Error('invalid-permission', 'You should be logged in to see this');
 	}
 });
 
-Meteor.publish("notifications", function(){
+Meteor.publish('answers', function (postId) {
+	if (this.userId) {
+		var post = Posts.find({_id: postId, isDeleted: { $ne: true}});
+		if(post){
+			var self = this;
+			var cursor = Answers.find({'postId': postId, isDeleted: {$ne: true}},{fields: {revisionHistory: 0}},{sort: {isInstructor: -1, isInstructorUpvoted: -1, voteCount: -1, createdAt: 1}});
+
+			var handle = cursor.observeChanges({
+				added: function (id, doc) {
+					var d = checkFields(doc);
+					self.added("answers", id, d);
+				},
+				changed: function(id, doc) {
+					var d = checkFields(doc);
+					self.changed("answers", id, d);
+				},
+				removed: function (id) {
+					self.removed("answers", id);
+				}
+			});
+
+			function checkFields(doc) {
+				//Upvoters
+				if (doc.upvoters) {
+					if (doc.upvoters.indexOf(self.userId) != -1) {
+						doc.upvoters = [self.userId];
+					} else {
+						doc.upvoters = [];
+					}
+				}
+
+				// Anonymity
+				if (doc.isAnonymous) {
+					delete doc.userId;
+				}
+
+				if (doc.comments) {
+					doc.comments.forEach(function(comment){
+						if (comment.isAnonymous) {
+							delete comment.userId;
+						}
+					});
+				}
+
+				return doc;
+			}
+
+			self.ready();
+
+			self.onStop(function () {
+				handle.stop();
+			});
+		} else {
+			throw new Meteor.Error('invalid-post', 'This post does not exist');
+		}
+	} else {
+		throw new Meteor.Error('invalid-permission', 'You should be logged in to see this');
+	}
+});
+
+Meteor.publish("notifications", function() {
 	var userNotifications = Notifications.find({"userId": this.userId});
 	if(userNotifications){
 		return userNotifications;
@@ -161,107 +178,107 @@ Meteor.publish("notifications", function(){
 Meteor.publish("courseStats", function(courseId) {
 	// online users
 	Counts.publish(this, "onlineUsers",
-		Meteor.users.find({
-			'status.online':true,
-			'profile.courses': courseId
-		})
-	);
+	Meteor.users.find({
+		'status.online':true,
+		'profile.courses': courseId
+	})
+);
 
-	// online instructors
-	Counts.publish(this, "onlineInstructors",
-		Meteor.users.find({
-			'status.online':true,
-			'username': {
-				$in: Courses.findOne({'_id': courseId}).instructors
-			}
-		})
-	);
-
-	// posts unread by user
-	Counts.publish(this, "unreadPosts",
-		Posts.find({
-			'courseId': courseId,
-			'viewers': {$ne: this.userId},
-			'isDeleted': false
-		})
-	);
-
-	// unanswered questions
-	Counts.publish(this, "unansweredQuestions",
-		Posts.find({
-			'courseId': courseId,
-			'answersCount': 0,
-			'isDeleted': false,
-			'isInstructorPost': {$exists: false}
-		})
-	);
-
-	// total questions (excludes posts)
-	Counts.publish(this, "totalQuestions",
-		Posts.find({
-			'courseId': courseId,
-			'isDeleted': false,
-			'isInstructorPost': {$exists: false}
-		})
-	);
-
-	var allCoursePosts = Posts.find({
-		'courseId': courseId,
-		'isDeleted': false
-	});
-
-	// all posts
-	Counts.publish(this, "totalPosts", allCoursePosts);
-
-	// contributions (answers)
-	Counts.publish(this, "answers", allCoursePosts, { countFromField: 'answersCount' });
-
-	//instructor answers
-	Counts.publish(this, "instructorResponses",
-		Answers.find({
-			'postId': {
-				$in: allCoursePosts.fetch().map( function(u) { return u._id ; } )
-			},
-			'isInstructor': true,
-			'isDeleted': false
-		})
-	);
-
-	// total response time in minutes (minutes)
-	Counts.publish(this, "totalResponseTime",
-		Posts.find({
-			'courseId': courseId,
-			'isDeleted': false,
-			'isInstructorPost': {$exists: false},
-			'responseTime': {$exists: true}
-		}),
-		{ countFromField: 'responseTime' }
-	);
-
-	Counts.publish(this, "thisWeekVisits",
-		Visits.find({
-			'date': {
-				$gte: moment().startOf('isoweek').toDate(),
-				$lt: moment().toDate()
-			}
-		},
-		{
-			sort: {createdAt: -1}
-		}
-		)
-	);
-
-	for (var i = 0; i < 10; i++) {
-		var date = moment().startOf("day").subtract(i, 'days');
-		Counts.publish(this, "visitsOn-"+date.format("L"),
-			 Visits.find({date: date.toDate()})
-		);
+// online instructors
+Counts.publish(this, "onlineInstructors",
+Meteor.users.find({
+	'status.online':true,
+	'username': {
+		$in: Courses.findOne({'_id': courseId}).instructors
 	}
+})
+);
 
-	var instructors = Courses.findOne({'_id':courseId}).instructors;
-	var users = Meteor.users.find({'username': {$in: instructors}, 'status.online':true},{fields: {'username': 1, 'profile.name': 1, 'profile.surname': 1, 'status.online': 1}});
-	//console.log(users);
-	return users;
+// posts unread by user
+Counts.publish(this, "unreadPosts",
+Posts.find({
+	'courseId': courseId,
+	'viewers': {$ne: this.userId},
+	'isDeleted': false
+})
+);
+
+// unanswered questions
+Counts.publish(this, "unansweredQuestions",
+Posts.find({
+	'courseId': courseId,
+	'answersCount': 0,
+	'isDeleted': false,
+	'isInstructorPost': {$exists: false}
+})
+);
+
+// total questions (excludes posts)
+Counts.publish(this, "totalQuestions",
+Posts.find({
+	'courseId': courseId,
+	'isDeleted': false,
+	'isInstructorPost': {$exists: false}
+})
+);
+
+var allCoursePosts = Posts.find({
+	'courseId': courseId,
+	'isDeleted': false
+});
+
+// all posts
+Counts.publish(this, "totalPosts", allCoursePosts);
+
+// contributions (answers)
+Counts.publish(this, "answers", allCoursePosts, { countFromField: 'answersCount' });
+
+//instructor answers
+Counts.publish(this, "instructorResponses",
+Answers.find({
+	'postId': {
+		$in: allCoursePosts.fetch().map( function(u) { return u._id ; } )
+	},
+	'isInstructor': true,
+	'isDeleted': false
+})
+);
+
+// total response time in minutes (minutes)
+Counts.publish(this, "totalResponseTime",
+Posts.find({
+	'courseId': courseId,
+	'isDeleted': false,
+	'isInstructorPost': {$exists: false},
+	'responseTime': {$exists: true}
+}),
+{ countFromField: 'responseTime' }
+);
+
+Counts.publish(this, "thisWeekVisits",
+Visits.find({
+	'date': {
+		$gte: moment().startOf('isoweek').toDate(),
+		$lt: moment().toDate()
+	}
+},
+{
+	sort: {createdAt: -1}
+}
+)
+);
+
+for (var i = 0; i < 10; i++) {
+	var date = moment().startOf("day").subtract(i, 'days');
+	Counts.publish(this, "visitsOn-"+date.format("L"),
+	Visits.find({date: date.toDate()})
+);
+}
+
+var instructors = Courses.findOne({'_id':courseId}).instructors;
+var users = Meteor.users.find({'username': {$in: instructors}, 'status.online':true},{fields: {'username': 1, 'profile.name': 1, 'profile.surname': 1, 'status.online': 1}});
+//console.log(users);
+return users;
 
 })
 
