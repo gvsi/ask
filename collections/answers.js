@@ -6,9 +6,9 @@ Meteor.methods({
     //UniHTML.addNewAllowedTag("code", false);
     //answerAttributes.body = UniHTML.purify(answerAttributes.body);
 
-  //   UniHTML.addNewAllowedTag('code', false);
-  //  answerAttributes.body =  UniHTML.purify(answerAttributes.body, {withoutTags: ['em', 'blockquote', 'h1-h7', 'table']});
-   console.log(answerAttributes.body);
+    //   UniHTML.addNewAllowedTag('code', false);
+    //  answerAttributes.body =  UniHTML.purify(answerAttributes.body, {withoutTags: ['em', 'blockquote', 'h1-h7', 'table']});
+    console.log(answerAttributes.body);
 
     check(answerAttributes, {
       postId: String,
@@ -16,23 +16,25 @@ Meteor.methods({
       isAnonymous: Boolean
     });
 
+    answerAttributes.body = purifyHTML(answerAttributes.body);
+
     var user = Meteor.user();
     var now = new Date();
 
     if (!user)
-      throw new Meteor.Error('invalid-user', 'You must be logged in to post an answer');
+    throw new Meteor.Error('invalid-user', 'You must be logged in to post an answer');
 
     var post = Posts.findOne(answerAttributes.postId);
     if (!post)
-      throw new Meteor.Error('invalid-answer', 'You must answer on a post');
+    throw new Meteor.Error('invalid-answer', 'You must answer on a post');
 
     var course = Courses.findOne(post.courseId);
     if (!course)
-      throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
+    throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
 
     //Checks if enrolled
     if(Meteor.users.findOne(user._id).profile.courses.indexOf(course._id) == -1)
-      throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
+    throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
 
     // UniHTML.addNewAllowedTag('code', false);
     // answerAttributes.body =  UniHTML.purify(answerAttributes.body, {withoutTags: ['em', 'blockquote', 'h1-h7', 'table']});
@@ -125,7 +127,7 @@ Meteor.methods({
 
 
           var emailBody = '<table width="600" cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"><td height="33" style="border-collapse:collapse;padding:0">&nbsp;</td></tr></table><table width="600" cellpadding="0" cellspacing="0" class="invert" bgcolor="#353535" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"> <tr style="padding:0"><td height="10" colspan="3" style="border-collapse:collapse;padding:0"></td></tr> <tr style="padding:0"> <td height="40" width="10" style="border-collapse:collapse;padding:0">&nbsp;</td> <td valign="middle" align="left" style="border-collapse:collapse;padding:0"> <!-- CONTENT start --> <div class="h" style="color:#FAFAFA;background-color:#353535;line-height:1;margin:0;height:20px"><div style="color:#FAFAFA;background-color:#353535;line-height:1;font-family:Helvetica,Arial,sans-serif;font-size:24px;font-weight:bold;letter-spacing:0px;margin-bottom:6px;margin-top:10px;margin:0;height:20px"><a href="'+tempUrl+'" style="text-decoration:none;color:inherit;">'+ post.title +'</a></div></div> <!-- CONTENT end --> </td> <td width="10" style="border-collapse:collapse;padding:0">&nbsp;</td> </tr> <tr style="padding:0"><td height="10" colspan="3" style="border-collapse:collapse;padding:0"></td></tr> </table>';
-              emailBody += '<table width="600" cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"><td height="30" align="right" valign="top" class="small" style="border-collapse:collapse;padding:0"><div style="color:#787878;line-height:15px;font-size:10px;text-transform:uppercase;word-spacing:-1px;margin-bottom:4px;margin-top:6px"></div></td></tr></table> <!-- 1/3 Image on the Left start --><table width="600" cellpadding="0" cellspacing="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"> <td valign="top" style="border-collapse:collapse;padding:0"> <table width="600" cellpadding="0" cellspacing="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"> <td width="20" style="border-collapse:collapse;padding:0">&nbsp;</td> <td width="393" valign="top" align="left" style="border-collapse:collapse;padding:0"> <div class="h" style="color:#787878;line-height:20px"><div style="color:#444444;line-height:24px;font-family:Helvetica,Arial,sans-serif;font-size:24px;font-weight:bold;letter-spacing:-2px;margin-bottom:6px;margin-top:10px"><a href="'+answerUrl +'" style="color: inherit;text-decoration:none;letter-spacing:-1px;">Answer<span style="margin-left: 10px;letter-spacing: -1px;font-weight:300;font-size:70%; color: #888"> '+ moment(now).format('MMMM Do YYYY, H:mm:ss') +' </span></a></div></div> <div style="color:#787878;line-height:20px">'+answerBodyWithoutTags+'</div> </td> <!-- CONTENT end --> </tr></table> </td> </tr></table> <!-- 1/3 Image on the Left end -->';
+          emailBody += '<table width="600" cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"><td height="30" align="right" valign="top" class="small" style="border-collapse:collapse;padding:0"><div style="color:#787878;line-height:15px;font-size:10px;text-transform:uppercase;word-spacing:-1px;margin-bottom:4px;margin-top:6px"></div></td></tr></table> <!-- 1/3 Image on the Left start --><table width="600" cellpadding="0" cellspacing="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"> <td valign="top" style="border-collapse:collapse;padding:0"> <table width="600" cellpadding="0" cellspacing="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"> <td width="20" style="border-collapse:collapse;padding:0">&nbsp;</td> <td width="393" valign="top" align="left" style="border-collapse:collapse;padding:0"> <div class="h" style="color:#787878;line-height:20px"><div style="color:#444444;line-height:24px;font-family:Helvetica,Arial,sans-serif;font-size:24px;font-weight:bold;letter-spacing:-2px;margin-bottom:6px;margin-top:10px"><a href="'+answerUrl +'" style="color: inherit;text-decoration:none;letter-spacing:-1px;">Answer<span style="margin-left: 10px;letter-spacing: -1px;font-weight:300;font-size:70%; color: #888"> '+ moment(now).format('MMMM Do YYYY, H:mm:ss') +' </span></a></div></div> <div style="color:#787878;line-height:20px">'+answerBodyWithoutTags+'</div> </td> <!-- CONTENT end --> </tr></table> </td> </tr></table> <!-- 1/3 Image on the Left end -->';
 
           var emailAttributes = {"emailBody": emailBody, "recipient": "martingeorgiev1995@gmail.com", "subject": '"' +post.title + '" has been answered'  };
 
@@ -145,22 +147,56 @@ Meteor.methods({
     return answer._id;
   },
   saveAnswerDraft: function(answerAttributes) {
+    check(answerAttributes, {
+        body: String,
+        postId: String
+    });
+
     var userId = Meteor.userId();
-    answerDraft = Drafts.findOne({postId: answerAttributes.postId, userId: userId, type: "answer"});
-    if (answerDraft) {
-      Drafts.update({postId: answerAttributes.postId, userId: userId, type: "answer"}, {$set: {body: answerAttributes.body}});
-    } else {
-      Drafts.insert({postId: answerAttributes.postId, userId: userId, type: "answer", body: answerAttributes.body});
-    }
+    if (!userId)
+      throw new Meteor.Error('invalid-user', 'You must be logged in to edit an answer');
+
+    var post = Posts.findOne(answerAttributes.postId);
+    if (!post)
+      throw new Meteor.Error('invalid-answer', 'The post does not exist');
+
+    var course = Courses.findOne(post.courseId);
+    if (!course)
+      throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
+
+    //Checks if enrolled
+    if(Meteor.users.findOne(userId).profile.courses.indexOf(course._id) == -1)
+      throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
+
+
+    Drafts.update({postId: answerAttributes.postId, userId: userId, type: "answer"}, {$set: {body: purifyHTML(answerAttributes.body)}}, {upsert: true});
+
     return true;
   },
   answerUpdate: function(answerAttributes) {
-    //answerAttributes.body = UniHTML.purify(answerAttributes.body);
-
     var user = Meteor.user();
 
     if (!user)
-    throw new Meteor.Error('invalid-user', 'You must be logged in to edit an answer');
+      throw new Meteor.Error('invalid-user', 'You must be logged in to edit an answer');
+
+    var post = Posts.findOne(answerAttributes.postId);
+    if (!post)
+      throw new Meteor.Error('invalid-answer', 'You must answer on a post');
+
+    var answer = Answers.findOne({_id: answerAttributes.answerId});
+    if (!answer)
+      throw new Meteor.Error('invalid-answer', 'The answer you\'re trying to edit does not exist');
+
+    if (answer.userId != Meteor.userId())
+      throw new Meteor.Error('invalid-permission', 'You need to be the owner of an answer you want to edit');
+
+    var course = Courses.findOne(post.courseId);
+    if (!course)
+      throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
+
+    //Checks if enrolled
+    if(Meteor.users.findOne(user._id).profile.courses.indexOf(course._id) == -1)
+      throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
 
     check(answerAttributes, {
       answerId: String,
@@ -169,62 +205,51 @@ Meteor.methods({
       isAnonymous: Boolean
     });
 
-    var answer = Answers.findOne({_id: answerAttributes.answerId});
-    //check existance of post to update
-    if (answer) {
-      // set identiconHash
-      var identiconHash = answerAttributes.isAnonymous ? answerAttributes.postId + user._id : user._id;
-      var now = new Date();
-      Answers.update(
-        {_id: answerAttributes.answerId},
-        {
-          $set: {
+
+    // set identiconHash
+    var identiconHash = answerAttributes.isAnonymous ? answerAttributes.postId + user._id : user._id;
+    var now = new Date();
+    Answers.update(
+      {_id: answerAttributes.answerId},
+      {
+        $set: {
+          body: answerAttributes.body,
+          isAnonymous: answerAttributes.isAnonymous,
+          userIdenticon: Package.sha.SHA256(identiconHash),
+          updatedAt: now
+        },
+        // adds to revision history
+        $addToSet: {
+          revisionHistory: {
+            revisionDate: now,
             body: answerAttributes.body,
             isAnonymous: answerAttributes.isAnonymous,
-            userIdenticon: Package.sha.SHA256(identiconHash),
-            updatedAt: now
-          },
-          // adds to revision history
-          $addToSet: {
-            revisionHistory: {
-              revisionDate: now,
-              body: answerAttributes.body,
-              isAnonymous: answerAttributes.isAnonymous,
-            }
           }
         }
-      )
-    } else {
-      throw new Meteor.Error('invalid-answer', 'The answer you\'re trying to edit does not exist');
-    }
+      }
+    );
 
     var answerNotifications = Notifications.find({"answerId": answerAttributes.answerId, "type": 'answerToPost'});
     var commentNotifications = Notifications.find({"answerId": answerAttributes.answerId, "type": 'commentToAnswer'});
-    var answerBodyWithoutTags = UniHTML.purify(answerAttributes.body, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
+    var answerBodyWithoutTags = purifyHTML(answerAttributes.body);
     var post = Posts.findOne(answerAttributes.postId);
 
     answerNotifications.forEach(function(notification) {
-        Notifications.update({_id: notification._id}, {$set:{
-          postTitle: post.title,
-          text: answerBodyWithoutTags,
-        }});
-      });
+      Notifications.update({_id: notification._id}, {$set:{
+        postTitle: post.title,
+        text: answerBodyWithoutTags,
+      }});
+    });
 
     commentNotifications.forEach(function(notification) {
-        Notifications.update({_id: notification._id}, {$set:{
-          postTitle: answerBodyWithoutTags
-        }});
-      });
+      Notifications.update({_id: notification._id}, {$set:{
+        postTitle: answerBodyWithoutTags
+      }});
+    });
 
     return answerAttributes.answerId;
   },
   commentUpdate: function(commentAttributes) {
-
-    var user = Meteor.user();
-
-    if (!user)
-    throw new Meteor.Error('invalid-user', 'You must be logged in to edit a comment');
-
     check(commentAttributes, {
       answerId: String,
       commentId: String,
@@ -233,9 +258,26 @@ Meteor.methods({
       isAnonymous: Boolean
     });
 
+    var user = Meteor.user();
+    if (!user)
+      throw new Meteor.Error('invalid-user', 'You must be logged in to edit a comment');
+
+    var post = Posts.findOne(commentAttributes.postId);
+    if (!post)
+      throw new Meteor.Error('invalid-answer', 'You must answer on a post');
+
+    var course = Courses.findOne(post.courseId);
+    if (!course)
+      throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
+
+    //Checks if enrolled
+    if(Meteor.users.findOne(user._id).profile.courses.indexOf(course._id) == -1)
+      throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
+
     var answer = Answers.findOne({_id: commentAttributes.answerId});
-    //check existance of post to update
-    if (answer) {
+    if (!answer)
+      throw new Meteor.Error('invalid-answer', "The comment should belong to an answer");
+
       // set identiconHash
       var identiconHash = commentAttributes.isAnonymous ? commentAttributes.postId + user._id : user._id;
       var now = new Date();
@@ -246,16 +288,13 @@ Meteor.methods({
         },
         {
           $set: {
-            "comments.$.body": commentAttributes.body,
+            "comments.$.body": purifyHTML(commentAttributes.body),
             "comments.$.isAnonymous": commentAttributes.isAnonymous,
             "comments.$.userIdenticon": Package.sha.SHA256(identiconHash),
             "comments.$.updatedAt": now
           }
         }
-      )
-    } else {
-      throw new Meteor.Error('invalid-comment', 'The comment you\'re trying to edit does not exist');
-    }
+      );
 
     // var commentNotifications = Notifications.find({"answerId": commentAttributes.answerId, "type": 'commentToAnswer'});
     // var commentBodyWithoutTags = UniHTML.purify(commentAttributes.body, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
@@ -269,27 +308,34 @@ Meteor.methods({
     return commentAttributes.commentId;
   },
   commentInsert: function(commentAttributes) {
-    //commentAttributes.body = UniHTML.purify(commentAttributes.body);
-
     check(commentAttributes, {
       answerId: String,
       body: String,
       isAnonymous: Boolean
     });
 
+    commentAttributes.body = purifyHTML(commentAttributes.body);
+
     var user = Meteor.user();
+    if(!user)
+        throw new Meteor.Error('invalid-user', 'You must be logged in to insert a comment');
+
     var answer = Answers.findOne(commentAttributes.answerId);
 
     if (!answer)
-    throw new Meteor.Error('invalid-comment', 'You must comment on an answer');
+      throw new Meteor.Error('invalid-comment', 'You must comment on an answer');
 
     var post = Posts.findOne(answer.postId);
     if (!post)
-    throw new Meteor.Error('invalid-post', 'You comment must belong to answer in a post');
+      throw new Meteor.Error('invalid-post', 'You comment must belong to answer in a post');
 
     var course = Courses.findOne(post.courseId);
     if (!course)
-    throw new Meteor.Error('invalid-course', 'You comment must belong to answer in a post in a course');
+      throw new Meteor.Error('invalid-course', 'You comment must belong to answer in a post in a course');
+
+    //Checks if enrolled
+    if(Meteor.users.findOne(user._id).profile.courses.indexOf(course._id) == -1)
+      throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
 
     // set identiconHash
     var identiconHash = commentAttributes.isAnonymous ? answer.postId + user._id : user._id;
@@ -311,8 +357,9 @@ Meteor.methods({
     }});
 
     if(answer.userId && (answer.userId != user._id)){
-      var commentBodyWithoutTags = UniHTML.purify(commentAttributes.body, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
-      var answerBodyWithoutTags = UniHTML.purify(answer.body, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
+      var commentBodyWithoutTags = sanitizeHtml(commentAttributes.body, {allowedTags: []});
+      var answerBodyWithoutTags =  sanitizeHtml(answer.body, {allowedTags: []});
+
       var notificationAttributes = {
         intend: 'New comment to answer: ',
         postTitle: answerBodyWithoutTags,
@@ -334,10 +381,17 @@ Meteor.methods({
     check(answerId, String);
 
     var userId = Meteor.userId();
+    if(!userId)
+        throw new Meteor.Error('invalid-user', 'You must be logged in to upvote an answer');
+
     var answer = Answers.findOne(answerId);
 
+    if(userId == answer.userId){
+      throw new Meteor.Error('invalid-permission', 'You cannot upvote your answer');
+    }
+
     if (!answer) {
-      throw new Meteor.Error('invalid-answer', 'You must answer on a post');
+      throw new Meteor.Error('invalid-answer', 'You must vote on an answer');
     }
 
     var post = Posts.findOne(answer.postId);
@@ -346,45 +400,49 @@ Meteor.methods({
     if (post) {
       course = Courses.findOne(post.courseId);
       if(!course)
-      throw new Meteor.Error('invalid-course', 'The post must belong to a course');
+        throw new Meteor.Error('invalid-course', 'The post must belong to a course');
     } else {
-      throw new Meteor.Error('invalid-post', 'The answer must belong to a post');
+        throw new Meteor.Error('invalid-post', 'The answer must belong to a post');
     }
 
     if(answer.upvoters){
-        var upVoters = answer.upvoters;
+      var upVoters = answer.upvoters;
 
-        if (upVoters.indexOf(userId) != -1) { //It was already upvoted by the user
+      if (upVoters.indexOf(userId) != -1) { //It was already upvoted by the user
+        Answers.update({_id: answerId},{
+          $inc: {voteCount: -1},
+          $pull : {"upvoters": userId}
+        });
+
+        if (course.instructors.indexOf(Meteor.user().username) != -1) {
           Answers.update({_id: answerId},{
-            $inc: {voteCount: -1},
-            $pull : {"upvoters": userId}
+            $set: {
+              isInstructorUpvoted: false
+            }
           });
-
-          if (course.instructors.indexOf(Meteor.user().username) != -1) {
-            Answers.update({_id: answerId},{
-              $set: {
-                isInstructorUpvoted: false
-              }
-            });
-          }
-        } else {
-          Answers.update({_id: answerId},{
-            $inc: {voteCount: 1},
-            $addToSet : {"upvoters": userId}
-          });
-
-          if (course.instructors.indexOf(Meteor.user().username) != -1) {
-            Answers.update({_id: answerId},{
-              $set: {
-                isInstructorUpvoted: true
-              }
-            });
-          }
         }
+      } else {
+        Answers.update({_id: answerId},{
+          $inc: {voteCount: 1},
+          $addToSet : {"upvoters": userId}
+        });
+
+        if (course.instructors.indexOf(Meteor.user().username) != -1) {
+          Answers.update({_id: answerId},{
+            $set: {
+              isInstructorUpvoted: true
+            }
+          });
+        }
+      }
     }
   },
   answerDelete: function(answerId) {
-    var userId = Meteor.user()._id;
+
+    var userId = Meteor.userId();
+    if(!userId)
+        throw new Meteor.Error('invalid-user', 'You must be logged in to delete an answer');
+
     var answer = Answers.findOne(answerId);
 
     var hasPermission;
@@ -393,7 +451,7 @@ Meteor.methods({
     if (answer) {
       if(answer.isAnonymous) {
         if (post) {
-          hasPermission = answer.userIdenticon == Package.sha.SHA256(post._id + userId)
+          hasPermission = answer.userIdenticon == Package.sha.SHA256(post._id + userId);
         } else {
           throw new Meteor.Error('invalid-post', 'The answer you\'re trying to delete must belong to a post');
         }
@@ -452,7 +510,10 @@ Meteor.methods({
     }
   },
   commentDelete: function(answerId, commentId) {
-    var userId = Meteor.user()._id;
+    var userId = Meteor.userId();
+    if(!userId)
+      throw new Meteor.Error('invalid-user', 'You must be logged in to delete a comment');
+
     var answer = Answers.findOne(answerId);
 
     var hasPermission;

@@ -377,3 +377,17 @@ EasySearch.createSearchIndex('courseSearch', {
     return query;
   }
 });
+
+purifyHTML = function(text){
+  return sanitizeHtml(text, {
+    allowedTags: [ 'strong', 'em', 'span', 'a', 'p', 'ul', 'ol', 'li', 'img', 'code', 'pre' ],
+    allowedAttributes: {
+      'a': [ 'title' ,'href' ],
+      'span': ['style'],
+      'p': ['style'],
+      'img': ['src', 'alt', 'width', 'height'],
+      'code': ['contenteditable', 'class'],
+      'pre': ['contenteditable']
+    }
+  });
+}
