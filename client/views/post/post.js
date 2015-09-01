@@ -56,13 +56,17 @@ Template.postPage.rendered = function () {
 
   $('.custom-tag-input').tagsinput({});
   $('#instructorsInput').tagsinput({});
-  var instructors = Courses.findOne(Router.current().params.courseId).instructors;
 
-  instructors.forEach(function(instructor){
-    if(instructor != Meteor.user().username.toLowerCase()){
-      $('#instructorsInput').tagsinput('add', instructor);
-    }
-  })
+  var course = Courses.findOne(Router.current().params.courseId);
+  if (course) {
+    var instructors = course.instructors;
+
+    instructors.forEach(function(instructor){
+      if(instructor != Meteor.user().username.toLowerCase()){
+        $('#instructorsInput').tagsinput('add', instructor);
+      }
+    });
+  }
 
   var cts = Session.get('customTags');
   if (cts) {
@@ -535,9 +539,9 @@ Template.postContent.events({
   },
   'click #upvoteQuestion': function(e) {
     var id = Router.current().params.query.p;
-    Meteor.call('upvote', id, function(error) {
+    Meteor.call('upvotePost', id, function(error) {
       if (error){
-        throw new Meteor.error(error.reason);
+        throw new Meteor.Error(error.reason);
       } else {
         //upvotes post's syntax highlighting
         $('.post-content-body pre code').each(function(i, block) {
@@ -550,7 +554,7 @@ Template.postContent.events({
     var id = Router.current().params.query.p;
     Meteor.call('followQuestion', id, function(error) {
       if (error){
-        throw new Meteor.error(error.reason);
+        throw new Meteor.Error(error.reason);
       } else {
         //upvotes post's syntax highlighting
         $('.post-content-body pre code').each(function(i, block) {
@@ -567,6 +571,7 @@ Template.postContent.events({
     $('#previewContent pre code').each(function(i, block) {
       hljs.highlightBlock(block);
     });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
   },
   "click .post-list-toggle": function(event) {
     $('.postListContainer').toggleClass('slideLeft');
@@ -952,6 +957,7 @@ Template.answer.events({
     $('#previewContent pre code').each(function(i, block) {
       hljs.highlightBlock(block);
     });
+    MathJax.Hub.Queue(["Typeset",MathJax.Hub]);
   },
   'click a[data-post-id]': function(e) {
     e.preventDefault();

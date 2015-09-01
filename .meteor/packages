@@ -15,7 +15,6 @@ fortawesome:fontawesome
 revox:pages-core
 iron:router
 cwaring:modernizr
-mrt:bootstrap3-wysihtml5
 themeteorchef:jquery-validation
 check
 accounts-password

@@ -1,22 +1,16 @@
 Answers = new Mongo.Collection('answers');
-Drafts = new Mongo.Collection('drafts');
 
 Meteor.methods({
   answerInsert: function(answerAttributes) {
-    //UniHTML.addNewAllowedTag("code", false);
-    //answerAttributes.body = UniHTML.purify(answerAttributes.body);
-
-    //   UniHTML.addNewAllowedTag('code', false);
-    //  answerAttributes.body =  UniHTML.purify(answerAttributes.body, {withoutTags: ['em', 'blockquote', 'h1-h7', 'table']});
-    console.log(answerAttributes.body);
-
     check(answerAttributes, {
       postId: String,
       body: String,
       isAnonymous: Boolean
     });
 
-    answerAttributes.body = purifyHTML(answerAttributes.body);
+    if(Meteor.isServer){
+      answerAttributes.body = purifyHTML(answerAttributes.body);
+    }
 
     var user = Meteor.user();
     var now = new Date();
@@ -148,56 +142,34 @@ Meteor.methods({
   },
   saveAnswerDraft: function(answerAttributes) {
     check(answerAttributes, {
-        body: String,
-        postId: String
+      body: String,
+      postId: String
     });
 
     var userId = Meteor.userId();
     if (!userId)
-      throw new Meteor.Error('invalid-user', 'You must be logged in to edit an answer');
+    throw new Meteor.Error('invalid-user', 'You must be logged in to edit an answer');
 
     var post = Posts.findOne(answerAttributes.postId);
     if (!post)
-      throw new Meteor.Error('invalid-answer', 'The post does not exist');
+    throw new Meteor.Error('invalid-answer', 'The post does not exist');
 
     var course = Courses.findOne(post.courseId);
     if (!course)
-      throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
+    throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
 
     //Checks if enrolled
     if(Meteor.users.findOne(userId).profile.courses.indexOf(course._id) == -1)
-      throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
+    throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
 
-
-    Drafts.update({postId: answerAttributes.postId, userId: userId, type: "answer"}, {$set: {body: purifyHTML(answerAttributes.body)}}, {upsert: true});
+    if(Meteor.isServer){
+      answerAttributes.body = purifyHTML(answerAttributes.body);
+    }
+    Drafts.update({postId: answerAttributes.postId, userId: userId, type: "answer"}, {$set: {body: answerAttributes.body}}, {upsert: true});
 
     return true;
   },
   answerUpdate: function(answerAttributes) {
-    var user = Meteor.user();
-
-    if (!user)
-      throw new Meteor.Error('invalid-user', 'You must be logged in to edit an answer');
-
-    var post = Posts.findOne(answerAttributes.postId);
-    if (!post)
-      throw new Meteor.Error('invalid-answer', 'You must answer on a post');
-
-    var answer = Answers.findOne({_id: answerAttributes.answerId});
-    if (!answer)
-      throw new Meteor.Error('invalid-answer', 'The answer you\'re trying to edit does not exist');
-
-    if (answer.userId != Meteor.userId())
-      throw new Meteor.Error('invalid-permission', 'You need to be the owner of an answer you want to edit');
-
-    var course = Courses.findOne(post.courseId);
-    if (!course)
-      throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
-
-    //Checks if enrolled
-    if(Meteor.users.findOne(user._id).profile.courses.indexOf(course._id) == -1)
-      throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
-
     check(answerAttributes, {
       answerId: String,
       postId: String,
@@ -205,6 +177,29 @@ Meteor.methods({
       isAnonymous: Boolean
     });
 
+    var user = Meteor.user();
+
+    if (!user)
+    throw new Meteor.Error('invalid-user', 'You must be logged in to edit an answer');
+
+    var post = Posts.findOne(answerAttributes.postId);
+    if (!post)
+    throw new Meteor.Error('invalid-answer', 'You must answer on a post');
+
+    var answer = Answers.findOne({_id: answerAttributes.answerId});
+    if (!answer)
+    throw new Meteor.Error('invalid-answer', 'The answer you\'re trying to edit does not exist');
+
+    if (answer.userId != Meteor.userId())
+    throw new Meteor.Error('invalid-permission', 'You need to be the owner of an answer you want to edit');
+
+    var course = Courses.findOne(post.courseId);
+    if (!course)
+    throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
+
+    //Checks if enrolled
+    if(Meteor.users.findOne(user._id).profile.courses.indexOf(course._id) == -1)
+    throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
 
     // set identiconHash
     var identiconHash = answerAttributes.isAnonymous ? answerAttributes.postId + user._id : user._id;
@@ -231,7 +226,9 @@ Meteor.methods({
 
     var answerNotifications = Notifications.find({"answerId": answerAttributes.answerId, "type": 'answerToPost'});
     var commentNotifications = Notifications.find({"answerId": answerAttributes.answerId, "type": 'commentToAnswer'});
-    var answerBodyWithoutTags = purifyHTML(answerAttributes.body);
+    if(Meteor.isServer){
+      var answerBodyWithoutTags = purifyHTML(answerAttributes.body);
+    }
     var post = Posts.findOne(answerAttributes.postId);
 
     answerNotifications.forEach(function(notification) {
@@ -260,41 +257,44 @@ Meteor.methods({
 
     var user = Meteor.user();
     if (!user)
-      throw new Meteor.Error('invalid-user', 'You must be logged in to edit a comment');
+    throw new Meteor.Error('invalid-user', 'You must be logged in to edit a comment');
 
     var post = Posts.findOne(commentAttributes.postId);
     if (!post)
-      throw new Meteor.Error('invalid-answer', 'You must answer on a post');
+    throw new Meteor.Error('invalid-answer', 'You must answer on a post');
 
     var course = Courses.findOne(post.courseId);
     if (!course)
-      throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
+    throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
 
     //Checks if enrolled
     if(Meteor.users.findOne(user._id).profile.courses.indexOf(course._id) == -1)
-      throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
+    throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
 
     var answer = Answers.findOne({_id: commentAttributes.answerId});
     if (!answer)
-      throw new Meteor.Error('invalid-answer', "The comment should belong to an answer");
+    throw new Meteor.Error('invalid-answer', "The comment should belong to an answer");
 
-      // set identiconHash
-      var identiconHash = commentAttributes.isAnonymous ? commentAttributes.postId + user._id : user._id;
-      var now = new Date();
-      Answers.update(
-        {
-          "_id": commentAttributes.answerId,
-          "comments._id": commentAttributes.commentId
-        },
-        {
-          $set: {
-            "comments.$.body": purifyHTML(commentAttributes.body),
-            "comments.$.isAnonymous": commentAttributes.isAnonymous,
-            "comments.$.userIdenticon": Package.sha.SHA256(identiconHash),
-            "comments.$.updatedAt": now
-          }
+    // set identiconHash
+    var identiconHash = commentAttributes.isAnonymous ? commentAttributes.postId + user._id : user._id;
+    var now = new Date();
+    if(Meteor.isServer){
+      commentAttributes.body = purifyHTML(commentAttributes.body);
+    }
+    Answers.update(
+      {
+        "_id": commentAttributes.answerId,
+        "comments._id": commentAttributes.commentId
+      },
+      {
+        $set: {
+          "comments.$.body": commentAttributes.body,
+          "comments.$.isAnonymous": commentAttributes.isAnonymous,
+          "comments.$.userIdenticon": Package.sha.SHA256(identiconHash),
+          "comments.$.updatedAt": now
         }
-      );
+      }
+    );
 
     // var commentNotifications = Notifications.find({"answerId": commentAttributes.answerId, "type": 'commentToAnswer'});
     // var commentBodyWithoutTags = UniHTML.purify(commentAttributes.body, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
@@ -314,28 +314,30 @@ Meteor.methods({
       isAnonymous: Boolean
     });
 
-    commentAttributes.body = purifyHTML(commentAttributes.body);
+    if(Meteor.isServer){
+      commentAttributes.body = purifyHTML(commentAttributes.body);
+    }
 
     var user = Meteor.user();
     if(!user)
-        throw new Meteor.Error('invalid-user', 'You must be logged in to insert a comment');
+    throw new Meteor.Error('invalid-user', 'You must be logged in to insert a comment');
 
     var answer = Answers.findOne(commentAttributes.answerId);
 
     if (!answer)
-      throw new Meteor.Error('invalid-comment', 'You must comment on an answer');
+    throw new Meteor.Error('invalid-comment', 'You must comment on an answer');
 
     var post = Posts.findOne(answer.postId);
     if (!post)
-      throw new Meteor.Error('invalid-post', 'You comment must belong to answer in a post');
+    throw new Meteor.Error('invalid-post', 'You comment must belong to answer in a post');
 
     var course = Courses.findOne(post.courseId);
     if (!course)
-      throw new Meteor.Error('invalid-course', 'You comment must belong to answer in a post in a course');
+    throw new Meteor.Error('invalid-course', 'You comment must belong to answer in a post in a course');
 
     //Checks if enrolled
     if(Meteor.users.findOne(user._id).profile.courses.indexOf(course._id) == -1)
-      throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
+    throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
 
     // set identiconHash
     var identiconHash = commentAttributes.isAnonymous ? answer.postId + user._id : user._id;
@@ -357,8 +359,10 @@ Meteor.methods({
     }});
 
     if(answer.userId && (answer.userId != user._id)){
-      var commentBodyWithoutTags = sanitizeHtml(commentAttributes.body, {allowedTags: []});
-      var answerBodyWithoutTags =  sanitizeHtml(answer.body, {allowedTags: []});
+      if(Meteor.isServer){
+        var commentBodyWithoutTags = sanitizeHtml(commentAttributes.body, {allowedTags: []});
+        var answerBodyWithoutTags =  sanitizeHtml(answer.body, {allowedTags: []});
+      }
 
       var notificationAttributes = {
         intend: 'New comment to answer: ',
@@ -382,7 +386,7 @@ Meteor.methods({
 
     var userId = Meteor.userId();
     if(!userId)
-        throw new Meteor.Error('invalid-user', 'You must be logged in to upvote an answer');
+    throw new Meteor.Error('invalid-user', 'You must be logged in to upvote an answer');
 
     var answer = Answers.findOne(answerId);
 
@@ -400,9 +404,9 @@ Meteor.methods({
     if (post) {
       course = Courses.findOne(post.courseId);
       if(!course)
-        throw new Meteor.Error('invalid-course', 'The post must belong to a course');
+      throw new Meteor.Error('invalid-course', 'The post must belong to a course');
     } else {
-        throw new Meteor.Error('invalid-post', 'The answer must belong to a post');
+      throw new Meteor.Error('invalid-post', 'The answer must belong to a post');
     }
 
     if(answer.upvoters){
@@ -438,10 +442,11 @@ Meteor.methods({
     }
   },
   answerDelete: function(answerId) {
+    check(answerId, String);
 
     var userId = Meteor.userId();
     if(!userId)
-        throw new Meteor.Error('invalid-user', 'You must be logged in to delete an answer');
+    throw new Meteor.Error('invalid-user', 'You must be logged in to delete an answer');
 
     var answer = Answers.findOne(answerId);
 
@@ -510,9 +515,12 @@ Meteor.methods({
     }
   },
   commentDelete: function(answerId, commentId) {
+    check(answerId, String);
+    check(commentId, String);
+
     var userId = Meteor.userId();
     if(!userId)
-      throw new Meteor.Error('invalid-user', 'You must be logged in to delete a comment');
+    throw new Meteor.Error('invalid-user', 'You must be logged in to delete a comment');
 
     var answer = Answers.findOne(answerId);
 
