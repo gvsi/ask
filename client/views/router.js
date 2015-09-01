@@ -59,6 +59,7 @@ Router.route('/room/:courseId', function () {
   layoutTemplate:"postLayout",
   name:"room",
   loadingTemplate: 'loading',
+  fastRender: true,
   waitOn: function() {
     if (Meteor.userId()) {
       return [
