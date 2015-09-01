@@ -20,16 +20,22 @@ Meteor.methods({
     var now = new Date();
 
     if (!user)
-    throw new Meteor.Error('invalid-user', 'You must be logged in to post an answer');
+      throw new Meteor.Error('invalid-user', 'You must be logged in to post an answer');
 
     var post = Posts.findOne(answerAttributes.postId);
     if (!post)
-    throw new Meteor.Error('invalid-answer', 'You must answer on a post');
+      throw new Meteor.Error('invalid-answer', 'You must answer on a post');
 
     var course = Courses.findOne(post.courseId);
     if (!course)
-    throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
+      throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
 
+    //Checks if enrolled
+    if(Meteor.users.findOne(user._id).profile.courses.indexOf(course._id) == -1)
+      throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
+
+    // UniHTML.addNewAllowedTag('code', false);
+    // answerAttributes.body =  UniHTML.purify(answerAttributes.body, {withoutTags: ['em', 'blockquote', 'h1-h7', 'table']});
 
     // set identiconHash
     var identiconHash = answerAttributes.isAnonymous ? answerAttributes.postId + user._id : user._id;
@@ -37,7 +43,6 @@ Meteor.methods({
     answer = _.extend(answerAttributes, {
       userId: user._id,
       userIdenticon: Package.sha.SHA256(identiconHash),
-      //author: user.username,
       upvoters: [],
       createdAt: now,
       updatedAt: now,
@@ -96,7 +101,7 @@ Meteor.methods({
     // create the answer, save the id
     answer._id = Answers.insert(answer);
 
-    if(post.followers && (course.instructors.indexOf(post.userId) == -1)){
+    if(post.followers){
       post.followers.forEach(function(followerId) {
         if(followerId != Meteor.userId()){
           var answerBodyWithoutTags = UniHTML.purify(answerAttributes.body, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
@@ -421,6 +426,18 @@ Meteor.methods({
             $set: {responseTime: diff}
           })
         }
+      }
+
+      if(Answers.find({postId: answer.postId, isDeleted: false, isInstructor: true}).count() == 1){
+        Posts.update({_id: answer.postId}, {
+          $unset: {'badges.hasInstructorAnswer': true}
+        });
+      }
+
+      if(Answers.find({postId: answer.postId, isDeleted: false, isInstructor: {$ne: true}}).count() == 1){
+        Posts.update({_id: answer.postId}, {
+          $unset: {'badges.hasStudentAnswer': true}
+        });
       }
 
       Posts.update({_id: answer.postId}, postUpdateOptions);

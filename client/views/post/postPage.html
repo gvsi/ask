@@ -300,7 +300,7 @@
         <hr>
         <div class="comment">
           <span style="float:left;" class="simptip-position-right simptip-smooth simptip-movable" data-tooltip="{{#if isAnonymous}} Anonymous {{else}}{{theAuthor.profile.name}} {{theAuthor.profile.surname}} {{/if}} {{#if isInstructor}} - instructor {{else}}{{#if posterIsOwner}} - OP{{/if}}{{/if}} ({{dateFromNow}})">
-            <div class="thumbnail-wrapper circular {{#unless isInstructor}}{{#if posterIsOwner}} b-complete b-thick {{/if}}{{/unless}}">
+            <div class="thumbnail-wrapper circular">
               <img width="40" height="40" alt="" src="{{#if hasAvatar}} {{#if isAnonymous}} {{identicon userIdenticon}} {{else}} {{avatar}} {{/if}} {{else}} {{identicon userIdenticon}} {{/if}}">
             </div>
           </span>
