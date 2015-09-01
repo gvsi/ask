@@ -6,6 +6,10 @@ Meteor.methods({
     //UniHTML.addNewAllowedTag("code", false);
     //answerAttributes.body = UniHTML.purify(answerAttributes.body);
 
+  //   UniHTML.addNewAllowedTag('code', false);
+  //  answerAttributes.body =  UniHTML.purify(answerAttributes.body, {withoutTags: ['em', 'blockquote', 'h1-h7', 'table']});
+   console.log(answerAttributes.body);
+
     check(answerAttributes, {
       postId: String,
       body: String,
@@ -67,10 +71,9 @@ Meteor.methods({
       }
     }
 
-    //increments answers counts, pulls user from users answering live
+    //increments answers counts
     var postUpdateOptions = {
       $inc: {answersCount: 1},
-      $pull: {usersLiveAnswering: user._id}
     }
 
     // if first answer, add response time to post
@@ -84,6 +87,8 @@ Meteor.methods({
 
     Posts.update({_id: answerAttributes.postId}, postUpdateOptions);
 
+    //pulls user from users answering live
+    LiveAnswers.update({postId: answerAttributes.postId}, {$pull: {usersLiveAnswering: user._id}});
 
     //delete any answer drafts
     Drafts.remove({postId: answerAttributes.postId, userId: user._id, type: "answer"});

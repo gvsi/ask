@@ -71,7 +71,8 @@ Template.sideBar.helpers({
 		var date = new Date();
 		var year;
 
-		if(moment(date).month() < 8){
+    //TODO
+		if(moment(date).month() < 9){
 			year = (moment(date).year()-1) + "/" + (moment(date).year()%10);
 			semester = "SEM2";
 		}else{

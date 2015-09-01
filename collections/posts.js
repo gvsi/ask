@@ -1,4 +1,5 @@
 Posts = new Mongo.Collection('posts');
+LiveAnswers = new Mongo.Collection('liveAnswers');
 
 Meteor.methods({
     postInsert: function(postAttributes) {
@@ -318,14 +319,16 @@ Meteor.methods({
     liveAnswer: function(postId) {
     	if (Meteor.isServer) {
         var userId = Meteor.userId();
-        Posts.update({_id: postId}, {
+
+        LiveAnswers.update({postId: postId}, {
           $push: {
             usersLiveAnswering: userId
           }
-        });
+        }, { upsert: true }
+        );
 
         Meteor.setTimeout(function(){
-      		 Posts.update({_id: postId},{
+      		 LiveAnswers.update({postId: postId},{
              $pop: {
                usersLiveAnswering: userId
              }

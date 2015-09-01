@@ -45,14 +45,6 @@ Meteor.publish('posts', function(courseId) {
 				}
 			}
 
-			// Users Live Answering
-			if (doc.usersLiveAnswering) {
-				doc.usersLiveAnsweringCount = _.uniq(doc.usersLiveAnswering).length;
-				if (doc.usersLiveAnswering.indexOf(self.userId) != -1) {
-					doc.usersLiveAnsweringCount--;
-				}
-			}
-
 			// Anonymity
 			if (doc.isAnonymous) {
 				delete doc.userId;
@@ -161,6 +153,48 @@ Meteor.publish('answers', function (postId) {
 		} else {
 			throw new Meteor.Error('invalid-post', 'This post does not exist');
 		}
+	} else {
+		throw new Meteor.Error('invalid-permission', 'You should be logged in to see this');
+	}
+});
+
+Meteor.publish('liveAnswers', function (postId) {
+	if (this.userId) {
+		var self = this;
+
+		var cursor = LiveAnswers.find({postId: postId});;
+
+		var handle = cursor.observeChanges({
+			added: function (id, doc) {
+				var d = checkFields(doc);
+				self.added("liveAnswers", id, d);
+			},
+			changed: function(id, doc) {
+				var d = checkFields(doc);
+				self.changed("liveAnswers", id, d);
+			},
+			removed: function (id) {
+				self.removed("liveAnswers", id);
+			}
+		});
+
+		function checkFields(doc) {
+			//usersLiveAnswering
+			if (doc.usersLiveAnswering) {
+				doc.usersLiveAnsweringCount = _.uniq(doc.usersLiveAnswering).length;
+				if (doc.usersLiveAnswering.indexOf(self.userId) != -1) {
+					doc.usersLiveAnsweringCount--;
+				}
+				doc.usersLiveAnswering = _.reject(doc.usersLiveAnswering, function(userId){ return userId != self.userId; });
+			}
+			return doc;
+		}
+
+		self.ready();
+
+		self.onStop(function () {
+			handle.stop();
+		});
 	} else {
 		throw new Meteor.Error('invalid-permission', 'You should be logged in to see this');
 	}
