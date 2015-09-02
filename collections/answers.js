@@ -116,8 +116,8 @@ Meteor.methods({
 
           Meteor.call("addNotification", notificationAttributes);
 
-          var answerUrl = 'http://localhost:3000/room/' + course._id +'?p=' + post._id +"#"+ answer._id;
-          var tempUrl = 'http://localhost:3000/room/' + course._id +'?p=' + post._id;
+          var answerUrl = 'https://test-ask.giovannialcantara.com/room/' + course._id +'?p=' + post._id +"#"+ answer._id;
+          var tempUrl = 'https://test-ask.giovannialcantara.com/room/' + course._id +'?p=' + post._id;
 
 
           var emailBody = '<table width="600" cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"><td height="33" style="border-collapse:collapse;padding:0">&nbsp;</td></tr></table><table width="600" cellpadding="0" cellspacing="0" class="invert" bgcolor="#353535" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"> <tr style="padding:0"><td height="10" colspan="3" style="border-collapse:collapse;padding:0"></td></tr> <tr style="padding:0"> <td height="40" width="10" style="border-collapse:collapse;padding:0">&nbsp;</td> <td valign="middle" align="left" style="border-collapse:collapse;padding:0"> <!-- CONTENT start --> <div class="h" style="color:#FAFAFA;background-color:#353535;line-height:1;margin:0;height:20px"><div style="color:#FAFAFA;background-color:#353535;line-height:1;font-family:Helvetica,Arial,sans-serif;font-size:24px;font-weight:bold;letter-spacing:0px;margin-bottom:6px;margin-top:10px;margin:0;height:20px"><a href="'+tempUrl+'" style="text-decoration:none;color:inherit;">'+ post.title +'</a></div></div> <!-- CONTENT end --> </td> <td width="10" style="border-collapse:collapse;padding:0">&nbsp;</td> </tr> <tr style="padding:0"><td height="10" colspan="3" style="border-collapse:collapse;padding:0"></td></tr> </table>';
