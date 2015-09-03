@@ -278,9 +278,21 @@ Meteor.methods({
     // set identiconHash
     var identiconHash = commentAttributes.isAnonymous ? commentAttributes.postId + user._id : user._id;
     var now = new Date();
+    var commentBodyWithoutTags="";
     if(Meteor.isServer){
-      commentAttributes.body = purifyHTML(commentAttributes.body);
+      commentAttributes.body = sanitizeHtml(commentAttributes.body, {allowedTags: []});
+      answer.comments.forEach(function(comment){
+        if(comment._id == commentAttributes.commentId){
+          commentBodyWithoutTags = sanitizeHtml(comment.body, {allowedTags: []});
+        }
+      });
     }
+
+      Notifications.update({"answerId": commentAttributes.answerId, "type": 'commentToAnswer', "text": commentBodyWithoutTags}, {$set:{
+        text: commentAttributes.body,
+      }});
+
+
     Answers.update(
       {
         "_id": commentAttributes.answerId,
@@ -295,15 +307,6 @@ Meteor.methods({
         }
       }
     );
-
-    // var commentNotifications = Notifications.find({"answerId": commentAttributes.answerId, "type": 'commentToAnswer'});
-    // var commentBodyWithoutTags = UniHTML.purify(commentAttributes.body, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
-    //
-    // commentNotifications.forEach(function(notification) {
-    //     Notifications.update({_id: notification._id}, {$set:{
-    //       postTitle: commentBodyWithoutTags
-    //     }});
-    //   });
 
     return commentAttributes.commentId;
   },
