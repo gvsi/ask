@@ -18,7 +18,7 @@ Template.settings.events({
   'click button.inc': function () {
     $('#editYourAvatarModal').modal();
   },
-  'click #modalDeleteImage': function(){
+  'click #deleteImage': function(){
     Meteor.call("deleteProfilePicture", function(error, result){
       if(error){
         console.log("error", error);
@@ -31,5 +31,21 @@ Template.settings.events({
 Template.settings.helpers({
   identiconHash: function() {
     return Package.sha.SHA256(Meteor.user()._id);
+  },
+  currentUserHasAvatar: function(){
+    var user = Meteor.user();
+    if(user && user.profile.image){
+      return true;
+    }else{
+      return false;
+    }
+  },
+  currentUserAvatar: function(){
+    var user = Meteor.user();
+    if(user && user.profile.image){
+      return user.profile.image;
+    }else{
+      return "";
+    }
   }
 });

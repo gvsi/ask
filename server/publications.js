@@ -92,7 +92,7 @@ Meteor.publish('coursesForStudent', function () {
 
 Meteor.publish('singleUser', function(id) {
 	if (this.userId) {
-		return Meteor.users.find({_id: id},{fields: {'profile.name': 1, 'profile.surname': 1}});
+		return Meteor.users.find({_id: id},{fields: {'profile.name': 1, 'profile.surname': 1, 'profile.image': 1}});
 	} else {
 		throw new Meteor.Error('invalid-permission', 'You should be logged in to see this');
 	}
@@ -310,7 +310,7 @@ for (var i = 0; i < 10; i++) {
 }
 
 var instructors = Courses.findOne({'_id':courseId}).instructors;
-var users = Meteor.users.find({'username': {$in: instructors}, 'status.online':true},{fields: {'username': 1, 'profile.name': 1, 'profile.surname': 1, 'status.online': 1}});
+var users = Meteor.users.find({'username': {$in: instructors}, 'status.online':true},{fields: {'username': 1, 'profile.name': 1, 'profile.surname': 1,'profile.image':1, 'status.online': 1}});
 //console.log(users);
 return users;
 

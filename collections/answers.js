@@ -359,9 +359,10 @@ Meteor.methods({
     }});
 
     if(answer.userId && (answer.userId != user._id)){
+      var commentBodyWithoutTags="",answerBodyWithoutTags="";
       if(Meteor.isServer){
-        var commentBodyWithoutTags = sanitizeHtml(commentAttributes.body, {allowedTags: []});
-        var answerBodyWithoutTags =  sanitizeHtml(answer.body, {allowedTags: []});
+        commentBodyWithoutTags = sanitizeHtml(commentAttributes.body, {allowedTags: []});
+        answerBodyWithoutTags =  sanitizeHtml(answer.body, {allowedTags: []});
       }
 
       var notificationAttributes = {
@@ -491,16 +492,18 @@ Meteor.methods({
         }
       }
 
-      if(Answers.find({postId: answer.postId, isDeleted: false, isInstructor: true}).count() == 1){
-        Posts.update({_id: answer.postId}, {
-          $unset: {'badges.hasInstructorAnswer': true}
-        });
-      }
-
-      if(Answers.find({postId: answer.postId, isDeleted: false, isInstructor: {$ne: true}}).count() == 1){
-        Posts.update({_id: answer.postId}, {
-          $unset: {'badges.hasStudentAnswer': true}
-        });
+      if(answer.isInstructor){
+        if(Answers.find({postId: answer.postId, isDeleted: false, isInstructor: true}).count() == 1){
+          Posts.update({_id: answer.postId}, {
+            $unset: {'badges.hasInstructorAnswer': true}
+          });
+        }
+      }else{
+        if(Answers.find({postId: answer.postId, isDeleted: false, isInstructor: {$ne: true}}).count() == 1){
+          Posts.update({_id: answer.postId}, {
+            $unset: {'badges.hasStudentAnswer': true}
+          });
+        }
       }
 
       Posts.update({_id: answer.postId}, postUpdateOptions);
