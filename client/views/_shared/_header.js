@@ -63,7 +63,23 @@ Template.header.helpers({
 			iconType = 'fa fa-comment';
 		}
 		 return iconType;
-	}
+	},
+  currentUserHasAvatar: function(){
+    var user = Meteor.user();
+    if(user && user.profile.image){
+      return true;
+    }else{
+      return false;
+    }
+  },
+  currentUserAvatar: function(){
+    var user = Meteor.user();
+    if(user && user.profile.image){
+      return user.profile.image;
+    }else{
+      return "";
+    }
+  }
 });
 
 Template.header.events({
@@ -108,6 +124,20 @@ Template.header.events({
 			loadPage(postId, true);
 			Router.go('room', {courseId: postCourseId}, {query: 'p='+postId, hash: answerId});
 		}
+	},
+	"click #markNotificationsRead": function(event, template){
+		var notifications = Notifications.find({seen: false}).fetch();
+		notifications.forEach(function (notification) {
+				 Meteor.call("seeNotification", notification._id , function(error, result){
+					if(error){
+						console.log("error", error);
+					}
+					if(result){
+
+					}
+				 });
+		 });
+		 event.stopPropagation();		
 	},
 	"click .see-all-notifications": function(event, template){
 		  Router.go('notifications');

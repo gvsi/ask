@@ -26,16 +26,16 @@ Template.notifications.rendered = function(){
 		}, 500);
 
 		var notifications = Notifications.find({seen: false}).fetch();
-			notifications.forEach(function (notification) {
-					 Meteor.call("seeNotification", notification._id , function(error, result){
-						if(error){
-							console.log("error", error);
-						}
-						if(result){
+		notifications.forEach(function (notification) {
+				 Meteor.call("seeNotification", notification._id , function(error, result){
+					if(error){
+						console.log("error", error);
+					}
+					if(result){
 
-						}
-					 });
-			 });
+					}
+				 });
+		 });
 }
 
 Template.notifications.events({

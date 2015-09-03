@@ -82,7 +82,8 @@ Template.postPage.rendered = function () {
 }
 
 Template.registerHelper("hasAvatar", function(argument){
-    if(Meteor.user().profile.image){
+    var user = Meteor.users.findOne(this.userId);
+    if(user && user.profile.image){
       return true;
     }else{
       return false;
@@ -90,8 +91,9 @@ Template.registerHelper("hasAvatar", function(argument){
 });
 
 Template.registerHelper("avatar", function(argument){
-  if(Meteor.user().profile.image){
-    return Meteor.user().profile.image;
+  var user = Meteor.users.findOne(this.userId);
+  if(user && user.profile.image){
+    return user.profile.image;
   }else{
     return "";
   }

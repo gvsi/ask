@@ -32,13 +32,13 @@
                         <label for="never">Never</label>
                       </div>
                       <h4 style="margin-top: 22px;">Profile picture: </h4>
-                      {{#if hasAvatar}}
+                      {{#if currentUserHasAvatar}}
                         <button class="btn btn-danger btn-cons " data-target="#modalDeleteImage" data-toggle="modal"  style="margin-top: 30px;margin-left: 10px;">Remove</button>
                       {{else}}
                         <button class="btn btn-complete btn-cons inc" style="margin-top: 30px;margin-left: 30px;">Update image</button>
                       {{/if}}
                       <div class="thumbnail-wrapper bordered circular" style="width:100px;border:0;">
-                        <img width="50" height="50" alt="" src="{{#if hasAvatar}} {{avatar}} {{else}} {{identicon identiconHash}} {{/if}}">
+                        <img width="50" height="50" alt="" src="{{#if currentUserHasAvatar}} {{currentUserAvatar}} {{else}} {{identicon identiconHash}} {{/if}}">
                       </div>
                     </div>
                   </div>
@@ -48,7 +48,9 @@
       </div>
     </div>
   </div>
-  {{#if hasAvatar}}
+  {{#unless currentUserHasAvatar}}
+    {{> editYourAvatarModal}}
+  {{else}}
     <div class="modal fade slide-up disable-scroll" id="modalDeleteImage" tabindex="-1" role="dialog" aria-labelledby="modalSlideUpLabel" aria-hidden="false">
       <div class="modal-dialog " style="width:40%; text-align:center;">
         <div class="modal-content-wrapper">
@@ -65,7 +67,5 @@
         <!-- /.modal-content -->
       </div>
     </div>
-  {{else}}
-    {{> editYourAvatarModal}}
-  {{/if}}
+  {{/unless}}
 </template>

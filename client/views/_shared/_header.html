@@ -89,7 +89,10 @@
                   <!-- START Notification Footer-->
                   {{#if notifications.count }}
                   <div style="cursor: pointer;" class="see-all-notifications notification-footer text-center">
-                      <a href=# class="">See all notifications</a>
+                      <a class="">See all notifications</a>
+                      <a class="portlet-refresh text-black pull-right simptip-position-left simptip-smooth simptip-movable" data-tooltip="Mark all as read" id="markNotificationsRead">
+                        <i class="pg-refresh_new"></i>
+                      </a>
                   </div>
                   {{else}}
                   <div style="cursor: pointer;" class="notification-footer text-center">
@@ -126,7 +129,7 @@
         <div class="dropdown pull-right">
           <button class="profile-dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             <span class="thumbnail-wrapper d32 circular inline m-t-5">
-            <img src="{{#if hasAvatar}} {{avatar}} {{else}} {{identicon identiconHash}} {{/if}}" alt="" width="32" height="32">
+            <img src="{{#if currentUserHasAvatar}} {{currentUserAvatar}} {{else}} {{identicon identiconHash}} {{/if}}" alt="" width="32" height="32">
         </span>
           </button>
           <ul class="dropdown-menu profile-dropdown" role="menu">

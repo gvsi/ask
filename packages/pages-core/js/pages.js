@@ -1003,9 +1003,9 @@
     table += '</div>';
 
     if (self.options.showClose) {
-      table += '<button type="button" class="close" data-dismiss="alert">';
-      table += '<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>';
-      table += '</button>';
+      // table += '<button type="button" class="close" data-dismiss="alert"';
+      // table += '<span aria-hidden="true">&times;</span><span class="sr-only">Close</span>';
+      // table += '</button>';
     }
 
 
