@@ -216,9 +216,31 @@
             {{/unless}}
             <button type="submit" id="sendAnswerBtn" class="btn btn-complete btn-cons m-l-5">Send answer</button>
             <button id="previewButton" data-target="#previewModal" data-toggle="modal" class="btn btn-default btn-cons m-l-5">Preview</button>
-            <button type="submit" id="saveDraftBtn" class="pull-right btn btn-default btn-cons" style="margin-top:3px">Save draft</button>
+            <button type="submit" id="saveDraftBtn" class="pull-right btn btn-default btn-cons simptip-position-bottom simptip-smooth simptip-movable" data-tooltip="Save a draft" style="margin-top:3px;font-size: 16px;min-width: 0px;"><i class="fa fa-floppy-o"></i></button>
           </div>
         </div>
+
+        <div id="howToAnswerPortlet" class="panel panel-default panel-collapsed m-l-20 m-r-20">
+            <div class="panel-heading">
+                <div class="panel-title portlet-collapse" data-toggle="collapse" style="cursor:pointer">How to write a good answer
+                </div>
+                <div class="panel-controls">
+                    <ul>
+                        <li><a href="#" class="portlet-collapse" data-toggle="collapse"><i class="portlet-icon portlet-icon-collapse"></i></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="panel-body" style="display: none">
+              <hr style="margin-top: 8px;">
+              <p><span class="fs-18 font-heading" style="font-weight: 300; color: #2c2c2c;">Don't be that guy:</span> Try to be polite, helpful, and friendly!</p>
+              <p><span class="fs-18 font-heading" style="font-weight: 300; color: #2c2c2c;">Code editor:</span> Use the code editor to insert code in your answer. This greatly improves code readability!</p>
+              <p><span class="fs-18 font-heading" style="font-weight: 300; color: #2c2c2c;">Formula editor:</span> Want to insert a formula? Use the formula editor to easily add them as LaTeX.</p>
+              <p><span class="fs-18 font-heading" style="font-weight: 300; color: #2c2c2c;">Draft:</span> You can save the draft of your answer so you can finish writing it later.</p>
+              <p><span class="fs-18 font-heading" style="font-weight: 300; color: #2c2c2c;">Link:</span> You can link another question on Ask by writing #</p>
+            </div>
+        </div>
+
       </div>
     </div>
     {{/with}}

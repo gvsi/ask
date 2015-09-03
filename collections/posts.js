@@ -25,7 +25,7 @@ Meteor.methods({
 
     //Checks if enrolled
     if(Meteor.users.findOne(userId).profile.courses.indexOf(course._id) == -1)
-    throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
+    throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course to ask a question');
 
     var post = _.extend(postAttributes, {
       userId: userId,
@@ -225,7 +225,7 @@ Meteor.methods({
 
     //Checks if enrolled
     if(Meteor.users.findOne(userId).profile.courses.indexOf(course._id) == -1)
-    throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
+    throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course to save a draft');
 
     Drafts.update({courseId: postAttributes.courseId, userId: userId, type: "post"}, {$set: {body: postAttributes.body, title: postAttributes.title}}, {upsert: true});
 
