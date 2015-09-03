@@ -1,8 +1,6 @@
 Template.courseStats.rendered = function(){
   $(".widget-2 .metro").liveTile();
-
-  builtArea();
-
+  builtArea()
 }
 
 Template.courseStats.helpers({
@@ -14,7 +12,22 @@ Template.courseStats.helpers({
     return Math.round(Counts.get('totalResponseTime') / (Counts.get('totalQuestions') - Counts.get('unansweredQuestions')));
   },
   course: function() {
-    var course = Courses.findOne({_id: Router.current().params.courseId});
+    var courseId = Router.current().params.courseId;
+    var currentUser = Meteor.users.findOne(Meteor.userId());
+
+    // if current user not enrolled subscribe to course
+    if (currentUser) {
+      if(currentUser.profile.courses.indexOf(courseId) == -1) {
+        Meteor.subscribe("singleCourse", courseId, {onReady: function(){
+          setTimeout(function () {
+            builtArea();
+          }, 500);
+        }
+      });
+      }
+    }
+
+    var course = Courses.findOne({_id: courseId});
     return course;
   },
   studentsOnlineText: function() {
@@ -93,7 +106,6 @@ Template.courseStats.events({
     Session.set('postFilter', filter);
   },
   "click .composeBtn": function(e) {
-    console.log(123);
     Router.go('compose', {courseId: Router.current().params.courseId});
   }
 });

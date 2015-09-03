@@ -77,6 +77,9 @@ Template.postPage.rendered = function () {
     $('#customTagsForCourse').show();
   }
 
+  $("#howToAnswerPortlet").portlet();
+
+
 }
 
 Template.registerHelper("hasAvatar", function(argument){
@@ -531,7 +534,7 @@ Template.postContent.events({
           $("#saveDraftBtn").html("Saved!");
           $("#saveDraftBtn").removeClass('btn-default').addClass('btn-success');
           setTimeout(function () {
-            $("#saveDraftBtn").html("Save draft");
+            $("#saveDraftBtn").html("<i class=\"fa fa-floppy-o\"></i>");
             $("#saveDraftBtn").removeClass('btn-success').addClass('btn-default');
           }, 2000);
         }

@@ -38,6 +38,8 @@ Template.postCompose.rendered = function(){
       }, 500);
     }
   });
+
+  $("#howToQuestionPortlet").portlet();
 }
 
 Template.postCompose.helpers({
@@ -170,7 +172,7 @@ Template.postCompose.events({
     $("#previewTitle").text($('#postTitleInput').val());
     $("#previewContent").html(tinyMCE.get('composeTinyMCE').getContent());
     $("#postTags>.active").each(function() {
-       $("#previewTags").append('<button class="btn btn-tag btn-tag-light m-r-5">' + $( this ).text().trim() + '</button>');
+       $("#previewTags").append('<button type="button" class="btn btn-tag btn-tag-light m-r-5">' + $( this ).text().trim() + '</button>');
     });
 
     $('#previewContent pre code').each(function(i, block) {
@@ -204,7 +206,7 @@ Template.postCompose.events({
           $("#saveDraftBtn").html("Saved!");
           $("#saveDraftBtn").removeClass('btn-default').addClass('btn-success');
           setTimeout(function () {
-            $("#saveDraftBtn").html("Save draft");
+            $("#saveDraftBtn").html("<i class=\"fa fa-floppy-o\"></i>");
             $("#saveDraftBtn").removeClass('btn-success').addClass('btn-default');
           }, 2000);
         }

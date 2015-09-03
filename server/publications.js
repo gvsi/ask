@@ -90,6 +90,10 @@ Meteor.publish('coursesForStudent', function () {
 	}
 });
 
+Meteor.publish('singleCourse', function (courseId) {
+	return Courses.find({_id: courseId}, {fields: {courseCode: 1, name: 1, year: 1, semester: 1, instructors: 1}})
+});
+
 Meteor.publish('singleUser', function(id) {
 	if (this.userId) {
 		return Meteor.users.find({_id: id},{fields: {'profile.name': 1, 'profile.surname': 1, 'profile.image': 1}});
