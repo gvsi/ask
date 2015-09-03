@@ -252,7 +252,7 @@ Meteor.methods({
 
     //Checks if enrolled
     if(Meteor.users.findOne(userId).profile.courses.indexOf(course._id) == -1)
-    throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course to follow the question');
+    throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course to upvote the question');
 
     if(post.upvoters){
 

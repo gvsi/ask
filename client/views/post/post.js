@@ -76,10 +76,9 @@ Template.postPage.rendered = function () {
     Session.set('customTags', undefined)
     $('#customTagsForCourse').show();
   }
-
-  $("#howToAnswerPortlet").portlet();
-
-
+  setTimeout(function () {
+    $("#howToAnswerPortlet").portlet();
+  }, 500);
 }
 
 Template.registerHelper("hasAvatar", function(argument){
@@ -106,6 +105,10 @@ Template.registerHelper("isUserInstructor", function(){
   }else{
     return false;
   }
+});
+
+Template.registerHelper("isUserEnrolled", function(){
+  return Meteor.users.findOne(Meteor.userId()).profile.courses.indexOf(Router.current().params.courseId) != -1
 });
 
 Template.registerHelper("posterIsOwner", function(){

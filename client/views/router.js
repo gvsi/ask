@@ -1,5 +1,7 @@
 Router.configure({
+  layoutTemplate: 'defaultLayout',
   loadingTemplate: 'loading',
+  notFoundTemplate: '404'
 });
 
 var OnBeforeActions;
@@ -66,6 +68,11 @@ Router.route('/room/:courseId', function () {
         Meteor.subscribe('posts', this.params.courseId),
         Meteor.subscribe('courseStats', this.params.courseId)
       ];
+    }
+  },
+  data: function() {
+    if (!Courses.findOne(this.params.courseId) || (this.params.query.p && !Posts.findOne(this.params.query.p))) {
+      this.render('404');
     }
   }
 });

@@ -12,11 +12,13 @@
                   <br>
                   <h3 class="text-white">{{name}}</h3>
                   <span class="font-montserrat text-white fs-13">Academic year {{year}} ({{semester}})</span>
-                  <hr>
-                  {{#if isUserInstructor}}
-                    <button class="composeBtn btn btn-default btn-rounded m-r-10">Post new note</button><span class="text-white fs-14">or &nbsp;</span><button class="openCourseSettingsBtn btn btn-default btn-rounded m-r-10" data-target="#courseSettingsModal" data-toggle="modal">Edit Course Settings</button>
-                  {{else}}
-                    <button class="composeBtn btn btn-default btn-rounded m-r-10">Ask question</button><span class="text-white fs-14">or browse questions in the sidebar</span>
+                  {{#if isUserEnrolled}}
+                    <hr>
+                    {{#if isUserInstructor}}
+                      <button class="composeBtn btn btn-default btn-rounded m-r-10">Post new note</button><span class="text-white fs-14">or &nbsp;</span><button class="openCourseSettingsBtn btn btn-default btn-rounded m-r-10" data-target="#courseSettingsModal" data-toggle="modal">Edit Course Settings</button>
+                    {{else}}
+                      <button class="composeBtn btn btn-default btn-rounded m-r-10">Ask question</button><span class="text-white fs-14">or browse questions in the sidebar</span>
+                    {{/if}}
                   {{/if}}
                 </div>
               </div>

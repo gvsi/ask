@@ -409,6 +409,10 @@ Meteor.methods({
       throw new Meteor.Error('invalid-post', 'The answer must belong to a post');
     }
 
+    //Checks if enrolled
+    if(Meteor.users.findOne(userId).profile.courses.indexOf(course._id) == -1)
+    throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course to upvote');
+
     if(answer.upvoters){
       var upVoters = answer.upvoters;
 
