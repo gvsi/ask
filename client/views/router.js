@@ -47,6 +47,13 @@ Router.route('/settings', function () {
   name:'settings',
 });
 
+Router.route('/courses', function () {
+  this.render('courses');
+},{
+  layoutTemplate:"defaultLayout",
+  name:'courses',
+});
+
 
 Router.route('/feedback', function () {
   this.render('feedback');

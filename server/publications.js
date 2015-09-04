@@ -90,6 +90,15 @@ Meteor.publish('coursesForStudent', function () {
 	}
 });
 
+Meteor.publish('allCourses', function () {
+	var user = Meteor.users.findOne({_id: this.userId}, {fields: {'profile.courses': 1}});
+	if (user) {
+		return Courses.find({},{fields: {'areTagsDefault': 0, 'tags': 0, 'instructors': 0}});
+	} else {
+		throw new Meteor.Error('invalid-user', 'This user does not exist');
+	}
+});
+
 Meteor.publish('singleCourse', function (courseId) {
 	return Courses.find({_id: courseId}, {fields: {courseCode: 1, name: 1, year: 1, semester: 1, instructors: 1}})
 });
