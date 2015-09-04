@@ -1,4 +1,5 @@
 Router.configure({
+  layoutTemplate: 'defaultLayout',
   loadingTemplate: 'loading',
   notFoundTemplate: 'page404'
 });
@@ -67,13 +68,15 @@ Router.route('/room/:courseId', function () {
   waitOn: function() {
     if (Meteor.userId()) {
       return [
-        Meteor.subscribe('posts', this.params.courseId),
+        Meteor.subscribe('posts', this.params.courseId, {onReady: function() {
+          Session.set("courseIsReady", true)
+        }}),
         Meteor.subscribe('courseStats', this.params.courseId)
       ];
     }
   },
   data: function() {
-    if (!Courses.findOne(this.params.courseId) || (this.params.query.p && !Posts.findOne(this.params.query.p))) {
+    if (Session.get("courseIsReady") && (!Courses.findOne(this.params.courseId) || (this.params.query.p && !Posts.findOne(this.params.query.p)))) {
       this.render('page404');
     }
   }
