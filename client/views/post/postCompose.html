@@ -49,17 +49,17 @@
          {{/unless}}
          {{#if isEditingPost}}
            <button type="submit" id="composeSubmitBtn" data-type-form="postUpdate" class="btn btn-complete btn-cons m-l-10">Update</button>
-           <button id="cancelUpdateBtn" class="btn btn-default btn-cons m-l-5">Cancel</button>
          {{else}}
-              <button type="submit" id="composeSubmitBtn" data-type-form="postInsert" class="btn btn-complete btn-cons m-l-10">
-                {{#if isUserInstructor}}
-                  Post
-                {{else}}
-                  Ask
-                {{/if}}
-              </button>
+           <button type="submit" id="composeSubmitBtn" data-type-form="postInsert" class="btn btn-complete btn-cons m-l-10">
+             {{#if isUserInstructor}}
+               Post
+             {{else}}
+               Ask
+             {{/if}}
+           </button>
          {{/if}}
          <button id="previewButton" data-target="#previewModal" data-toggle="modal" class="btn btn-default btn-cons m-l-5">Preview</button>
+         <button id="cancelUpdateBtn" class="btn btn-default btn-cons m-l-5">Cancel</button>
 
          {{#unless isEditingPost}}
           <button type="submit" id="saveDraftBtn" class="pull-right btn btn-default btn-cons simptip-position-bottom simptip-smooth simptip-movable" data-tooltip="Save a draft" style="margin-top:3px;font-size: 16px;min-width: 0px;"><i class="fa fa-floppy-o"></i></button>

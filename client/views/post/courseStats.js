@@ -1,6 +1,6 @@
 Template.courseStats.rendered = function(){
   $(".widget-2 .metro").liveTile();
-  builtArea()
+  builtArea();
 }
 
 Template.courseStats.helpers({

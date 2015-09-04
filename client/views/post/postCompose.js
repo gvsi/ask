@@ -165,7 +165,12 @@ Template.postCompose.events({
   },
   'click #cancelUpdateBtn': function(e) {
     e.preventDefault();
-    Router.go('room', {courseId: Router.current().params.courseId}, {query: "p="+Router.current().params.query.p});
+    var postId = Router.current().params.query.p;
+    if (postId != "" && Posts.findOne(postId)) {
+      Router.go('room', {courseId: Router.current().params.courseId}, {query: "p="+postId});
+    } else {
+      Router.go('room', {courseId: Router.current().params.courseId});
+    }
   },
   'click #previewButton': function(e) {
     e.preventDefault();

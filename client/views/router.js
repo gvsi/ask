@@ -1,7 +1,7 @@
 Router.configure({
   layoutTemplate: 'defaultLayout',
   loadingTemplate: 'loading',
-  notFoundTemplate: '404'
+  notFoundTemplate: 'page404'
 });
 
 var OnBeforeActions;
@@ -72,7 +72,7 @@ Router.route('/room/:courseId', function () {
   },
   data: function() {
     if (!Courses.findOne(this.params.courseId) || (this.params.query.p && !Posts.findOne(this.params.query.p))) {
-      this.render('404');
+      this.render('page404');
     }
   }
 });
