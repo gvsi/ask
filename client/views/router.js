@@ -1,5 +1,4 @@
 Router.configure({
-  layoutTemplate: 'defaultLayout',
   loadingTemplate: 'loading',
   notFoundTemplate: 'page404'
 });
@@ -9,6 +8,9 @@ var OnBeforeActions;
 OnBeforeActions = {
   loginRequired: function(pause) {
     if (!Meteor.userId()) {
+      if(Iron.Location.get().path != '/login'){
+        Session.set("loginRedirect", Iron.Location.get().path);
+      }
       Router.go('login');
     }else{
       this.next();
