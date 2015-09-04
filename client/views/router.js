@@ -1,7 +1,5 @@
 Router.configure({
-  layoutTemplate: 'defaultLayout',
   loadingTemplate: 'loading',
-  notFoundTemplate: '404'
 });
 
 var OnBeforeActions;
@@ -9,6 +7,9 @@ var OnBeforeActions;
 OnBeforeActions = {
   loginRequired: function(pause) {
     if (!Meteor.userId()) {
+      if(Iron.Location.get().path != '/login'){
+        Session.set("loginRedirect", Iron.Location.get().path);
+      }
       Router.go('login');
     }else{
       this.next();
@@ -68,11 +69,6 @@ Router.route('/room/:courseId', function () {
         Meteor.subscribe('posts', this.params.courseId),
         Meteor.subscribe('courseStats', this.params.courseId)
       ];
-    }
-  },
-  data: function() {
-    if (!Courses.findOne(this.params.courseId) || (this.params.query.p && !Posts.findOne(this.params.query.p))) {
-      this.render('404');
     }
   }
 });

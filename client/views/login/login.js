@@ -42,7 +42,12 @@ Template.loginPage.events({
 						});
 					 }
 
-          Router.go('/');
+					if(Session.get("loginRedirect")){
+						Router.go(Session.get("loginRedirect"));
+					}else{
+						console.log("no session");
+	          Router.go('/');
+					}
         }
       });
          return false;
