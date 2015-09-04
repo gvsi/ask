@@ -1,5 +1,6 @@
 Router.configure({
   loadingTemplate: 'loading',
+  notFoundTemplate: 'page404'
 });
 
 var OnBeforeActions;
@@ -72,10 +73,24 @@ Router.route('/room/:courseId', function () {
   fastRender: true,
   waitOn: function() {
     if (Meteor.userId()) {
-      return [
+      //console.log("subscribing");
+      data = [
         Meteor.subscribe('posts', this.params.courseId),
         Meteor.subscribe('courseStats', this.params.courseId)
       ];
+      if (!Session.get("coursesAreReady")) {
+        data.push(Meteor.subscribe('coursesForStudent', {onReady: function() {
+          //console.log("COURSES ARE READY!!");
+          Session.set("coursesAreReady", true)
+        }}));
+      }
+      return data;
+    }
+  },
+  data: function() {
+    //console.log(Courses.findOne(this.params.courseId));
+    if (Session.get("coursesAreReady") && (!Courses.findOne(this.params.courseId) || (this.params.query.p && !Posts.findOne(this.params.query.p)))) {
+      this.render('page404');
     }
   }
 });
