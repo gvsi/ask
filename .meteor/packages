@@ -9,17 +9,14 @@ less
 mizzao:bootstrap-3
 jquery
 momentjs:moment
-gromo:jquery.scrollbar
 mrt:modernizr-meteor
 fortawesome:fontawesome
 revox:pages-core
 iron:router
-cwaring:modernizr
 themeteorchef:jquery-validation
 check
 accounts-password
 accounts-base
-vazco:universe-html-purifier
 hillmark:meteor-identicon
 matteodem:easy-search
 tomi:upload-server
@@ -41,3 +38,8 @@ risul:autocomplete
 mrt:mathjax
 particle4dev:upload-avatar
 djedi:sanitize-html
+meteorhacks:kadira
+abpetkov:switchery
+gromo:jquery.scrollbar
+dreamerslab:jquery.actual
+anti:fake

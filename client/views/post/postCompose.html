@@ -7,10 +7,6 @@
      <div class="row">
        <div class="col-sm-12 no-padding">
          <div class="form-group-attached">
-
-          {{#if errorMessage 'compose'}}
-           <label class="error m-t-10 m-l-10">{{{errorMessage 'compose'}}}</label>
-          {{/if}}
            <div class="row clearfix">
                 <div class="col-sm-12">
                <div class="form-group form-group-default" style="padding-top:4px;">
@@ -40,6 +36,9 @@
      </div>
      <div class="row p-b-20">
        <div class="col-sm-11 m-t-5">
+         {{#if errorMessage 'compose'}}
+          <div><label class="error m-l-10">{{{errorMessage 'compose'}}}</label></div>
+         {{/if}}
 
          {{#unless isUserInstructor}}
          <div class="checkbox inline m-l-20 simptip-position-top simptip-smooth simptip-movable simptip-multiline" data-tooltip="Post as anonymous to instructors and coursemates.">
