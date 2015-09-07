@@ -307,7 +307,8 @@ Visits.find({
 	'date': {
 		$gte: moment().startOf('isoweek').toDate(),
 		$lt: moment().toDate()
-	}
+	},
+	'course': courseId
 },
 {
 	sort: {createdAt: -1}
@@ -318,7 +319,7 @@ Visits.find({
 for (var i = 0; i < 10; i++) {
 	var date = moment().startOf("day").subtract(i, 'days');
 	Counts.publish(this, "visitsOn-"+date.format("L"),
-	Visits.find({date: date.toDate()})
+	Visits.find({'date': date.toDate(), 'course': courseId})
 );
 }
 

@@ -20,6 +20,12 @@ Template.postPage.rendered = function () {
     $('.postListContainer').removeAttr('id', 'slide-left');
   }
 
+  Meteor.call("visitCourse", Router.current().params.courseId , function(error, result){
+    if(error){
+      console.log("error", error);
+    }
+  });
+
   if (Router.current().params.query.p) {
     loadPage(Router.current().params.query.p, true);
   }else{
