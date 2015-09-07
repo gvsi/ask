@@ -90,6 +90,15 @@ Meteor.publish('coursesForStudent', function () {
 	}
 });
 
+Meteor.publish('allCourses', function () {
+	var user = Meteor.users.findOne({_id: this.userId}, {fields: {'profile.courses': 1}});
+	if (user) {
+		return Courses.find({},{fields: {'areTagsDefault': 0, 'tags': 0, 'instructors': 0}});
+	} else {
+		throw new Meteor.Error('invalid-user', 'This user does not exist');
+	}
+});
+
 Meteor.publish('singleCourse', function (courseId) {
 	return Courses.find({_id: courseId}, {fields: {courseCode: 1, name: 1, year: 1, semester: 1, instructors: 1}})
 });
@@ -298,7 +307,8 @@ Visits.find({
 	'date': {
 		$gte: moment().startOf('isoweek').toDate(),
 		$lt: moment().toDate()
-	}
+	},
+	'course': courseId
 },
 {
 	sort: {createdAt: -1}
@@ -309,7 +319,7 @@ Visits.find({
 for (var i = 0; i < 10; i++) {
 	var date = moment().startOf("day").subtract(i, 'days');
 	Counts.publish(this, "visitsOn-"+date.format("L"),
-	Visits.find({date: date.toDate()})
+	Visits.find({'date': date.toDate(), 'course': courseId})
 );
 }
 
