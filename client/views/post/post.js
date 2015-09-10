@@ -84,7 +84,7 @@ Template.postPage.rendered = function () {
   }
   setTimeout(function () {
     $("#howToAnswerPortlet").portlet();
-  }, 500);
+  }, 2000);
 }
 
 Template.registerHelper("hasAvatar", function(argument){
@@ -352,13 +352,8 @@ Template.postThumbnail.helpers({
 Template.postContent.helpers({
   post: function() {
     var postId = Router.current().params.query.p;
-    if (!postId) {
-      $('.no-post').show();
-      $('.post-content-wrapper').hide();
-      return false;
-    } else {
+    if (postId) {
       var post = Posts.findOne(postId);
-
       if (post) {
         //if not anonymous
         Meteor.subscribe('singleUser', post.userId);
@@ -985,8 +980,11 @@ Template.answer.events({
 
 
 loadPage = function(postId, needsScroll) {
+  console.log('hey');
   Session.set('answerSubmitErrors', {});
+  Session.set('isLoadingPost', true);
 
+  $(".post-content").hide();
   $('.item').removeClass('active');
   $("li[data-post-id="+ postId +"]").addClass('active');
 
@@ -994,50 +992,49 @@ loadPage = function(postId, needsScroll) {
     $('.list-view-wrapper').scrollTop($("li[data-post-id="+ postId +"]").offset().top-92);
   }
 
-  Meteor.subscribe('singlePost', postId, {
-    onReady: function() {
-      var postOpened = $('.post-opened');
+  var postOpened = $('.post-opened');
 
-      $('.no-post').hide();
-      $('.post-content-wrapper').show();
+  // $('.no-post').hide();
+  // $('.post-content-wrapper').show();
 
-      $(".post-content-wrapper").scrollTop(0);
+  $(".post-content-wrapper").scrollTop(0);
 
-      // Initialize post action menu
-      $('.menuclipper').menuclipper({
-        bufferWidth: 20
-      });
-
-      $('#slide-left').addClass('slideLeft');
-
-      setTimeout(function () {
-        $('pre code').each(function(i, block) {
-          hljs.highlightBlock(block);
-        });
-      }, 100);
-
-      var post = Posts.findOne({_id: postId});
-      if(post){
-        Session.set("DocumentTitle",  post.title + " | Ask");
-
-        if(post.viewers && post.viewers.indexOf(Meteor.userId()) == -1){
-          Meteor.call("viewPost", postId, function(error, result){
-            if(error){
-              console.log("error", error);
-            }
-            if(result){
-
-            }
-          });
-        }
-      }else {
-        Session.set("DocumentTitle", "Ask");
-      }
-
-    }
+  // Initialize post action menu
+  $('.menuclipper').menuclipper({
+    bufferWidth: 20
   });
 
-  Meteor.subscribe('answers', postId);
+  $('#slide-left').addClass('slideLeft');
+
+  setTimeout(function () {
+    $('pre code').each(function(i, block) {
+      hljs.highlightBlock(block);
+    });
+  }, 100);
+
+  var post = Posts.findOne({_id: postId});
+  if(post){
+    Session.set("DocumentTitle",  post.title + " | Ask");
+
+    if(post.viewers && post.viewers.indexOf(Meteor.userId()) == -1){
+      Meteor.call("viewPost", postId, function(error, result){
+        if(error){
+          console.log("error", error);
+        }
+        if(result){
+
+        }
+      });
+    }
+  }else {
+    Session.set("DocumentTitle", "Ask");
+  }
+
+  if (!Answers.find({postId: postId}).count()) {
+    console.log('subscribing');
+    Meteor.subscribe('answers', postId);
+  }
+
   Meteor.subscribe('liveAnswers', postId);
 
   Meteor.subscribe('draft', postId, "answer", {
@@ -1056,7 +1053,9 @@ loadPage = function(postId, needsScroll) {
   });
 
   setUserLastCourse();
-
+  setTimeout(function () {
+    $(".post-content").fadeIn("1500");
+  }, 200);
 }
 
 function setUserLastCourse(){
