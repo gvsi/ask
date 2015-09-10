@@ -3,7 +3,7 @@ Template.header.helpers({
 		return Package.sha.SHA256(Meteor.user()._id);
 	},
 	notifications: function(){
-		var notifications = Notifications.find({}, {sort: {createdAt: -1}, limit: 4});
+		var notifications = Notifications.find({}, {sort: {createdAt: -1}});
 		if(notifications){
 			return notifications;
 		}
@@ -137,7 +137,7 @@ Template.header.events({
 					}
 				 });
 		 });
-		 event.stopPropagation();		
+		 event.stopPropagation();
 	},
 	"click .see-all-notifications": function(event, template){
 		  Router.go('notifications');

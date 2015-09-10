@@ -30,9 +30,6 @@ Meteor.methods({
     if(Meteor.users.findOne(user._id).profile.courses.indexOf(course._id) == -1)
     throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
 
-    // UniHTML.addNewAllowedTag('code', false);
-    // answerAttributes.body =  UniHTML.purify(answerAttributes.body, {withoutTags: ['em', 'blockquote', 'h1-h7', 'table']});
-
     // set identiconHash
     var identiconHash = answerAttributes.isAnonymous ? answerAttributes.postId + user._id : user._id;
 
@@ -100,7 +97,10 @@ Meteor.methods({
     if(post.followers){
       post.followers.forEach(function(followerId) {
         if(followerId != Meteor.userId()){
-          var answerBodyWithoutTags = UniHTML.purify(answerAttributes.body, {withoutTags: ['b', 'img', 'i', 'u', 'br', 'pre', 'p', 'span', 'div', 'a', 'li', 'ul', 'ol', 'h1-h7']});
+          var answerBodyWithoutTags='';
+          if(Meteor.isServer){
+                answerBodyWithoutTags = sanitizeHtml(answerAttributes.body, {allowedTags: []});
+          }
 
           var notificationAttributes = {
             intend: 'New answer added to: ',

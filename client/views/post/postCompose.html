@@ -30,7 +30,13 @@
            </div>
          </div>
          <div class="tinymce-wrapper">
-         <textarea id="composeTinyMCE" name="content">{{#if isEditingPost}}{{{editingPost.text}}}{{else}}{{/if}}</textarea>
+           <textarea id="composeTinyMCE" name="content">{{#if isEditingPost}}{{{editingPost.text}}}{{else}}{{/if}}</textarea>
+
+           <!-- <iframe id="form_target" name="form_target" style="display:none"></iframe>
+
+           <div id="tinyUpload" >
+             {{> upload_bootstrap }}
+           </div> -->
          </div>
        </div>
      </div>
@@ -65,7 +71,7 @@
          {{/unless}}
 
          <div id="howToQuestionPortlet" class="panel panel-default panel-collapsed m-l-20 m-r-20 m-t-10">
-             <div class="panel-heading">
+             <div class="panel-heading" style="padding: 17px 20px 7px 20px;">
                  <div class="panel-title portlet-collapse" data-toggle="collapse" style="cursor:pointer">How to write a great question
                  </div>
                  <div class="panel-controls">

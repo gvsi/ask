@@ -93,7 +93,7 @@ setEmailPreferences: function(type){
 
 	var emailFrequency,hours;
 	if(type=='onceADay'){
-		emailFrequency = 'every 1 minutes'//'at 5:00 pm';
+		emailFrequency = 'at 5:00 pm';
 		hours = 24;
 	}else if (type=='once4hours') {
 		emailFrequency = 'every 4 hours';
