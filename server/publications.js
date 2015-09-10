@@ -1,7 +1,7 @@
 Meteor.publish('posts', function(courseId) {
 	if (this.userId) {
 		var self = this;
-		var cursor = Posts.find({courseId: courseId, isDeleted: { $ne: true}},{fields: {revisionHistory: 0, type: 0, updatedAt: 0, isDeleted: 0}},{sort: {createdAt: -1}});
+		var cursor = Posts.find({courseId: courseId, isDeleted: { $ne: true}},{fields: {revisionHistory: 0, type: 0, isDeleted: 0, responseTime: 0}},{sort: {createdAt: -1}});
 
 		var handle = cursor.observeChanges({
 			added: function (id, doc) {
@@ -62,21 +62,21 @@ Meteor.publish('posts', function(courseId) {
 		throw new Meteor.Error('invalid-permission', 'You should be logged in to see this');
 	}
 });
-
-Meteor.publish('singlePost', function(id) {
-	if (this.userId) {
-		var post = Posts.find({_id: id, isDeleted: {$ne: true}},{fields: {userId: 0, upvoters: 0, followers: 0, viewers: 0, usersLiveAnswering: 0, revisionHistory: 0}});
-		if (post) {
-			return post;
-		} else {
-			throw new Meteor.Error('invalid-post', 'This post does not exist');
-		}
-	} else {
-		throw new Meteor.Error('invalid-permission', 'You should be logged in to see this');
-	}
-});
-
-
+//
+// Meteor.publish('singlePost', function(id) {
+// 	if (this.userId) {
+// 		var post = Posts.find({_id: id, isDeleted: {$ne: true}},{fields: {updatedAt: 1, usersLiveAnswering: 1, tags: 1}});
+// 		if (post) {
+// 			return post;
+// 		} else {
+// 			throw new Meteor.Error('invalid-post', 'This post does not exist');
+// 		}
+// 	} else {
+// 		throw new Meteor.Error('invalid-permission', 'You should be logged in to see this');
+// 	}
+// });
+//
+//
 Meteor.publish('coursesForStudent', function () {
 	var user = Meteor.users.findOne({_id: this.userId}, {fields: {'profile.courses': 1}});
 	if (user) {

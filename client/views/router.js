@@ -92,6 +92,11 @@ Router.route('/room/:courseId', function () {
     if (Session.get("coursesAreReady") && (!Courses.findOne(this.params.courseId) || (this.params.query.p && !Posts.findOne(this.params.query.p)))) {
       this.render('page404');
     }
+    if (this.params.query.p) {
+      return {
+        isTherePost: true
+      }
+    }
   }
 });
 
