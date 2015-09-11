@@ -1101,16 +1101,21 @@ loadTinyMCE = function(selector, height) {
       preview_styles: false,
       elementpath: false,
       paste_as_text: true,
-      // file_browser_callback: function(field_name, url, type, win) {
-      //   if(type=='image'){
-      //      $('#tinyUpload .jqUploadclass').click();
-      //     //  $('.mce-textbox').val(
-      //     setTimeout(function () {
-      //       console.log('hi' + $('#tinyUpload .progress-label').text());
-      //     },1000);
-      //
-      //   }
-      // },
+      file_browser_callback: function(field_name, url, type, win) {
+        if(type=='image'){
+           $('#tinyUpload .jqUploadclass').click();
+          //  $('.mce-textbox').val(
+          $('#tinyUpload .jqUploadclass').change(function (){
+             var fileName = $(this).val();
+             var arr = fileName.split('\\');
+             var strFine = arr[arr.length-1];
+             $('#tinyUpload .start').click();
+             setTimeout(function () {
+               $('#'+field_name).val('/upload/' + strFine);
+             }, 500);
+           });
+        }
+      },
       setup: function(editor) {
         if (selector == "answerTinyMCE") {
           editor.on('focus', function(e) {
