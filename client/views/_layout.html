@@ -13,35 +13,33 @@
                 </div>
             </div>
         </div>
-        {{ >quickView }}
+        <!-- {{ >quickView }} -->
         {{ >overlaySearch }}
     </body>
 </template>
 
-
 <!-- DASHBOARD LAYOUT -->
-<template name="dashboardLayout">
-    <body class="fixed-header">
+<template name="homeLayout">
+    <body class="fixed-header no-header">
         {{ >sideBar }}
         <!-- START PAGE-CONTAINER -->
         <div class="page-container">
-            {{ >header }}
+            {{ >header type="home"}}
             <!-- START PAGE CONTENT WRAPPER -->
             <div class="page-content-wrapper full-height">
                 <!-- START PAGE CONTENT -->
-                <div class="content full-height">
+                <div class="content full-height landing is-loading">
                     {{>yield}}
                 </div>
-                {{ >footer }}
             </div>
         </div>
-        {{ >quickView }}
+        <!-- {{ >quickView }} -->
         {{ >overlaySearch }}
     </body>
 </template>
 
 
-<!-- DASHBOARD LAYOUT -->
+<!-- ALL NOTIFICATIONS LAYOUT -->
 <template name="notificationsLayout">
     <body class="fixed-header">
         {{ >sideBar }}
@@ -56,7 +54,7 @@
                 </div>
             </div>
         </div>
-        {{ >quickView }}
+        <!-- {{ >quickView }} -->
         {{ >overlaySearch }}
     </body>
 </template>
@@ -85,7 +83,7 @@
                 </div>
             </div>
         </div>
-        {{ >quickView }}
+        <!-- {{ >quickView }} -->
         {{ >overlaySearch }}
     </body>
 </template>
@@ -113,7 +111,7 @@
                 </div>
             </div>
         </div>
-        {{ >quickView }}
+        <!-- {{ >quickView }} -->
         {{ >overlaySearch }}
     </body>
 </template>

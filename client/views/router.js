@@ -37,7 +37,7 @@ Router.route('/', function () {
 Router.route('/home', function () {
   this.render('home');
 },{
-  layoutTemplate:"dashboardLayout",
+  layoutTemplate:"homeLayout",
   name:'home',
 });
 

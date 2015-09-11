@@ -3,7 +3,23 @@ Template.home.rendered = function(){
   $("body").removeClass("sidebar-open")
 
   Session.set("DocumentTitle","Home | Ask");
+
+  // Scrolly.
+    $('.scrolly')
+      .scrolly({
+        speed: 1500,
+        offset: -10
+      });
+
+      setTimeout(function () {
+        $(".landing").removeClass('is-loading');
+      }, 200);
+
+      setTimeout(function () {
+        $('.more').show(500);
+      }, 4000);
 }
+
 
 Template.home.helpers({
   coursesCount: function(){

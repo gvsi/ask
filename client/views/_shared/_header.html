@@ -1,22 +1,12 @@
 <template name="header">
-  <div class="header ">
+  <div class="header {{#if equals type 'home'}}transparent{{/if}}">
     <!-- START MOBILE CONTROLS -->
     <!-- LEFT SIDE -->
     <div class="pull-left full-height visible-sm visible-xs">
       <!-- START ACTION BAR -->
       <div class="sm-action-bar">
         <a href="#" class="btn-link toggle-sidebar" data-toggle="sidebar">
-          <span class="icon-set menu-hambuger"></span>
-        </a>
-      </div>
-      <!-- END ACTION BAR -->
-    </div>
-    <!-- RIGHT SIDE -->
-    <div class="pull-right full-height visible-sm visible-xs">
-      <!-- START ACTION BAR -->
-      <div class="sm-action-bar">
-        <a href="#" class="btn-link" data-toggle="quickview" data-toggle-element="#quickview">
-          <span class="icon-set menu-hambuger-plus"></span>
+          <i class="fa fa-bars fs-17" style="{{#if equals type 'home'}}color:white;{{/if}}"></i>
         </a>
       </div>
       <!-- END ACTION BAR -->
@@ -27,14 +17,18 @@
         <!-- <a href="#" class="toggle-email-sidebar">Room <span class="text-info">(12)</span> <span class="caret"></span></a> -->
         <div class="brand inline">
           <a href="{{pathFor 'home'}}">
+            {{#if equals type 'home'}}
+            <img src="/img/ask_logo_white.png" alt="logo" data-src="/img/ask_logo_white.png" data-src-retina="/img/ask_logo_white_2x.png" height="40">
+            {{else}}
             <img src="/img/ask_logo.png" alt="logo" data-src="/img/ask_logo.png" data-src-retina="/img/ask_logo_2x.png" height="40">
+            {{/if}}
           </a>
         </div>
         <!-- BEGIN <NOTIFIC></NOTIFIC>ATION DROPDOWN -->
         <ul class="notification-list no-margin hidden-sm hidden-xs b-grey b-l b-r no-style p-l-30 p-r-30">
           <li class="inline">
             <div class="dropdown">
-              <a href="" id="notification-center" style="cursor:pointer; font-size:19px" class="fa fa-globe" data-toggle="dropdown">
+              <a href="" id="notification-center" style="cursor:pointer; font-size:19px; {{#if equals type 'home'}}color:white;{{/if}}" class="fa fa-globe" data-toggle="dropdown">
                 {{#if areThereUnseenNotifications}}
                   <span class="bubble"></span>
                 {{/if}}
@@ -108,7 +102,13 @@
           </li> -->
         </ul>
         <!-- END NOTIFICATION DROPDOWN -->
-        <a href="#" id="search-link" class="search-link" data-toggle="search"><i class="pg-search"></i>{{{searchBarText}}}</a>
+        <a href="#" id="search-link" class="search-link" data-toggle="search">
+          {{#if equals type 'home'}}
+            <span style="color:white"><i class="pg-search"></i>{{{searchBarText}}}</span>
+          {{else}}
+            <i class="pg-search"></i>{{{searchBarText}}}
+          {{/if}}
+        </a>
       </div>
     </div>
     <!-- CHAT -->
@@ -123,7 +123,7 @@
       <!-- START User Info-->
       <div class="visible-lg visible-md m-t-10">
         <div class="pull-left p-r-10 p-t-10 fs-16 font-heading">
-          <span class="semi-bold">{{currentUser.profile.name}} {{currentUser.profile.surname}}</span>
+          <span class="semi-bold" style="{{#if equals type 'home'}}color:white;{{/if}}">{{currentUser.profile.name}} {{currentUser.profile.surname}}</span>
           <!-- <span class="text-master">({{currentUser.username}})</span> -->
         </div>
         <div class="dropdown pull-right">

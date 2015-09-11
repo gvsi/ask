@@ -125,14 +125,14 @@ Meteor.methods({
 
           var emailAttributes = {"emailBody": emailBody, "recipient": "martingeorgiev1995@gmail.com", "subject": 'New answer to "' +post.title + '"'  };
 
-          Meteor.call("emailSend", emailAttributes, function(error, result){
-            if(error){
-              console.log("error", error);
-            }
-            if(result){
-
-            }
-          });
+          // Meteor.call("emailSend", emailAttributes, function(error, result){
+          //   if(error){
+          //     console.log("error", error);
+          //   }
+          //   if(result){
+          //
+          //   }
+          // });
         }
       });
     }

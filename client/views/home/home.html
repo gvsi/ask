@@ -1,55 +1,134 @@
 <template name="home">
-  <!-- START JUMBOTRON
-  <div class="jumbotron full-height no-padding" data-pages="parallax">
-    <div class="container-fluid container-fixed-lg sm-p-l-20 sm-p-r-20 full-height">
-      <div class="inner full-height">
-        <div class="container-xs-height full-height">
-          <div class="col-xs-height col-middle text-center">
-            <div class="col-md-6 col-md-offset-3 text-center">
-              {{#if Meteor.loggingIn}}
-                {{>loading}}
-              {{else}}
-                <center>
-                <h1><i class="fa fa-warning"></i></h1>
-                <h2>Under construction</h2>
-                <h4>Hold on tight – the dashboard is still under construction</h4>
-                </center>
-            {{/if}}
+  <!-- Page Wrapper -->
+    <div id="page-wrapper">
 
+
+      <!-- Banner -->
+        <section id="banner">
+          <div class="inner">
+            <h2><img src="/images/home_logo.png" alt="ask" height="55px" class="m-t-10"></h2>
+            <p class="font-montserrat">
+              A modern and intuitive<br>Q&amp;A platform for the<br>University of Edinburgh<br><br>
+              <span class="bold fs-20">Ask, Answer, Learn!</span>
+            </p>
           </div>
-        </div>
-      </div>
+          <a href="#one" class="more scrolly font-montserrat" hidden>Learn More</a>
+        </section>
+
+      <!-- One -->
+        <section id="one" class="wrapper style1 special">
+          <div class="inner">
+            <header class="major">
+              <h2>Arcu aliquet vel lobortis ata nisl<br />
+              eget augue amet aliquet nisl cep donec</h2>
+              <p>Aliquam ut ex ut augue consectetur interdum. Donec amet imperdiet eleifend<br />
+              fringilla tincidunt. Nullam dui leo Aenean mi ligula, rhoncus ullamcorper.</p>
+            </header>
+            <ul class="icons major">
+              <li><span class="icon fa-diamond major style1"><span class="label">Lorem</span></span></li>
+              <li><span class="icon fa-heart-o major style2"><span class="label">Ipsum</span></span></li>
+              <li><span class="icon fa-code major style3"><span class="label">Dolor</span></span></li>
+            </ul>
+          </div>
+        </section>
+
+      <!-- Two -->
+        <section id="two" class="wrapper alt style2">
+          <section class="spotlight">
+            <div class="image"><img src="/images/pic01.jpg" alt="" /></div><div class="content">
+              <h2>Magna primis lobortis<br />
+              sed ullamcorper</h2>
+              <p>Aliquam ut ex ut augue consectetur interdum. Donec hendrerit imperdiet. Mauris eleifend fringilla nullam aenean mi ligula.</p>
+            </div>
+          </section>
+          <section class="spotlight">
+            <div class="image"><img src="/images/pic02.jpg" alt="" /></div><div class="content">
+              <h2>Tortor dolore feugiat<br />
+              elementum magna</h2>
+              <p>Aliquam ut ex ut augue consectetur interdum. Donec hendrerit imperdiet. Mauris eleifend fringilla nullam aenean mi ligula.</p>
+            </div>
+          </section>
+          <section class="spotlight">
+            <div class="image"><img src="/images/pic03.jpg" alt="" /></div><div class="content">
+              <h2>Augue eleifend aliquet<br />
+              sed condimentum</h2>
+              <p>Aliquam ut ex ut augue consectetur interdum. Donec hendrerit imperdiet. Mauris eleifend fringilla nullam aenean mi ligula.</p>
+            </div>
+          </section>
+        </section>
+
+      <!-- Three -->
+        <section id="three" class="wrapper style3 special">
+          <div class="inner">
+            <header class="major">
+              <h2>Accumsan mus tortor nunc aliquet</h2>
+              <p>Aliquam ut ex ut augue consectetur interdum. Donec amet imperdiet eleifend<br />
+              fringilla tincidunt. Nullam dui leo Aenean mi ligula, rhoncus ullamcorper.</p>
+            </header>
+            <ul class="features">
+              <li class="icon fa-paper-plane-o">
+                <h3>Arcu accumsan</h3>
+                <p>Augue consectetur sed interdum imperdiet et ipsum. Mauris lorem tincidunt nullam amet leo Aenean ligula consequat consequat.</p>
+              </li>
+              <li class="icon fa-laptop">
+                <h3>Ac Augue Eget</h3>
+                <p>Augue consectetur sed interdum imperdiet et ipsum. Mauris lorem tincidunt nullam amet leo Aenean ligula consequat consequat.</p>
+              </li>
+              <li class="icon fa-code">
+                <h3>Mus Scelerisque</h3>
+                <p>Augue consectetur sed interdum imperdiet et ipsum. Mauris lorem tincidunt nullam amet leo Aenean ligula consequat consequat.</p>
+              </li>
+              <li class="icon fa-headphones">
+                <h3>Mauris Imperdiet</h3>
+                <p>Augue consectetur sed interdum imperdiet et ipsum. Mauris lorem tincidunt nullam amet leo Aenean ligula consequat consequat.</p>
+              </li>
+              <li class="icon fa-heart-o">
+                <h3>Aenean Primis</h3>
+                <p>Augue consectetur sed interdum imperdiet et ipsum. Mauris lorem tincidunt nullam amet leo Aenean ligula consequat consequat.</p>
+              </li>
+              <li class="icon fa-flag-o">
+                <h3>Tortor Ut</h3>
+                <p>Augue consectetur sed interdum imperdiet et ipsum. Mauris lorem tincidunt nullam amet leo Aenean ligula consequat consequat.</p>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+      <!-- CTA -->
+        <section id="cta" class="wrapper style4">
+          <div class="inner">
+            <header>
+              <h2>Arcue ut vel commodo</h2>
+              <p>Aliquam ut ex ut augue consectetur interdum endrerit imperdiet amet eleifend fringilla.</p>
+            </header>
+            <ul class="actions vertical">
+              <li><a href="#" class="button fit special">Activate</a></li>
+              <li><a href="#" class="button fit">Learn More</a></li>
+            </ul>
+          </div>
+        </section>
+
+      <!-- Footer -->
+        <footer id="footer">
+          <ul class="icons">
+            <li><a href="#" class="icon fa-twitter"><span class="label">Twitter</span></a></li>
+            <li><a href="#" class="icon fa-facebook"><span class="label">Facebook</span></a></li>
+            <li><a href="#" class="icon fa-instagram"><span class="label">Instagram</span></a></li>
+            <li><a href="#" class="icon fa-dribbble"><span class="label">Dribbble</span></a></li>
+            <li><a href="#" class="icon fa-envelope-o"><span class="label">Email</span></a></li>
+          </ul>
+          <ul class="copyright">
+            <li>&copy; Untitled</li><li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+          </ul>
+        </footer>
+
     </div>
-  </div>
-</div> END JUMBOTRON -->
-<div style="background-color: #6d5cae;height:80%;z-index: 1;position:relative;">
-  <div style="width:100%; height:100%; text-align:center; display:table;">
-      <div style="position:absolute;background-image:url('/img/edinburgh.jpg');width:100%;height:100%;opacity: 0.4;z-index: -1;">
 
-      </div>
-      <div style="display: table-cell;vertical-align: middle; opacity:1;position:relative;color:white">
-            <h1 style="margin:0;color:white;">Ask, Answer, Learn!</h1>
-            <p class="intro">Introducing "Ask". A modern and intuitive question and answer platform for the University of Edinburgh.</p>
-      </div>
-  </div>
-</div>
-<div style="height:21%;">
-  {{#each courses}}
-      <a href="{{pathFor 'room' courseId=this._id }}">
-        <div class="course-{{coursesCount}} courseThumb">
-          <div style="display: table-cell;vertical-align: middle; color:#626262">
-            {{name}}
-          </div>
-        </div>
-      </a>
-  {{/each}}
-
-</div>
-
-<!-- START CONTAINER FLUID -->
-<div class="container-fluid container-fixed-lg">
-  <!-- BEGIN PlACE PAGE CONTENT HERE -->
-  <!-- END PLACE PAGE CONTENT HERE -->
-</div>
-<!-- END CONTAINER FLUID -->
+  <!-- Scripts -->
+    <script src="assets/js/jquery.scrollex.min.js"></script>
+    <script src="assets/js/jquery.scrolly.min.js"></script>
+    <script src="assets/js/skel.min.js"></script>
+    <script src="assets/js/util.js"></script>
+    <!--[if lte IE 8]><script src="assets/js/ie/respond.min.js"></script><![endif]-->
+    <script src="assets/js/main.js"></script>
 </template>
