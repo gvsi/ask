@@ -1,8 +1,3 @@
-Template.courses.rendered = function(){
-
-}
-
-
 Template.courses.helpers({
   allCourses: function(){
     Meteor.subscribe("allCourses");

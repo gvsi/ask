@@ -92,6 +92,8 @@ Meteor.publish('coursesForStudent', function () {
 
 Meteor.publish('allCourses', function () {
 	var user = Meteor.users.findOne({_id: this.userId}, {fields: {'profile.courses': 1}});
+
+	//check if logged in
 	if (user) {
 		return Courses.find({},{fields: {'areTagsDefault': 0, 'tags': 0, 'instructors': 0}});
 	} else {
