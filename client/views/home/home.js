@@ -22,20 +22,6 @@ Template.home.rendered = function(){
 
 
 Template.home.helpers({
-  coursesCount: function(){
-    var date = new Date();
-    var year;
-
-    if(moment(date).month() < 9){
-      year = (moment(date).year()-1) + "/" + (moment(date).year()%10);
-      semester = "SEM2";
-    }else{
-      year = (moment(date).year()) + "/" + ((moment(date).year()%10)+1);
-      semester = "SEM1";
-    }
-
-    return Courses.find({'year': year, $or: [{'semester': semester}, {'semester':'YR'}]}).count();
-  },
   courses: function(){
     var date = new Date();
     var year;

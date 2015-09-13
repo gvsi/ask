@@ -1,7 +1,6 @@
 Template.courses.helpers({
   allCourses: function(){
     Meteor.subscribe("allCourses");
-
     return Courses.find({}, {sort: {year: -1, semester: -1}}).fetch();
   }
 });
