@@ -1,13 +1,3 @@
-// Meteor.startup(function(){
-//   if(Meteor.userId()) {
-//     Meteor.subscribe('coursesForStudent', {reactive:false,
-//     onReady: function(){
-//        Session.set('coursesLoaded', true);
-//     }});
-//   }
-// });
-
-
 Template.sideBar.rendered = function (){
   //Initialize Pages Side Bar
   $('[data-pages="sidebar"]').each(function() {
