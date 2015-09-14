@@ -31,10 +31,7 @@
          </div>
          <div class="tinymce-wrapper">
            <textarea id="composeTinyMCE" name="content">{{#if isEditingPost}}{{{editingPost.text}}}{{else}}{{/if}}</textarea>
-
-           <iframe id="form_target" name="form_target" style="display:none"></iframe>
-
-           <div id="tinyUpload" syle="display:none;">
+           <div id="tinyUpload" style="display:none;">
              {{> upload_bootstrap }}
            </div>
          </div>

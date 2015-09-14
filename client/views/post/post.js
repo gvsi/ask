@@ -1102,10 +1102,12 @@ loadTinyMCE = function(selector, height) {
       elementpath: false,
       paste_as_text: true,
       browser_spellcheck: true,
+      file_browser_callback_types: "image",
       file_browser_callback: function(field_name, url, type, win) {
         if(type=='image'){
-           $('#tinyUpload .jqUploadclass').click();
-          //  $('.mce-textbox').val(
+          $('#tinyUpload .done').click();
+          $('#tinyUpload .jqUploadclass').click();
+          console.log(field_name);
           $('#tinyUpload .jqUploadclass').change(function (){
              var fileName = $(this).val();
              var arr = fileName.split('\\');
