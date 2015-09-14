@@ -56,8 +56,9 @@ Template.home.events({
 
       return false;
     },
-
-
+    'click .courseFront' : function(e, t){
+       Router.go('room', {courseId: this._id});
+    },
     'submit #login-form' : function(e, t){
       e.preventDefault();
       // retrieve the input field values
