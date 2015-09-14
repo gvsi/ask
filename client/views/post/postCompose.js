@@ -43,6 +43,13 @@ Template.postCompose.rendered = function(){
 }
 
 Template.postCompose.helpers({
+  tinymceCallbacks: function() {
+     return {
+         finished: function(index, fileInfo, context) {
+           $('#picName').text(fileInfo.name);
+         }
+     }
+  },
   posts: function () {
     return Posts.find({'courseId': Router.current().params.courseId}, {sort: {createdAt: -1}});
   },

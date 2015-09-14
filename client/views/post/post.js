@@ -350,6 +350,13 @@ Template.postThumbnail.helpers({
 });
 
 Template.postContent.helpers({
+  tinymceCallbacks: function() {
+     return {
+         finished: function(index, fileInfo, context) {
+           $('#picName').text(fileInfo.name);
+         }
+     }
+  },
   post: function() {
     var postId = Router.current().params.query.p;
     if (postId) {
@@ -1107,15 +1114,12 @@ loadTinyMCE = function(selector, height) {
         if(type=='image'){
           $('#tinyUpload .done').click();
           $('#tinyUpload .jqUploadclass').click();
-          console.log(field_name);
           $('#tinyUpload .jqUploadclass').change(function (){
-             var fileName = $(this).val();
-             var arr = fileName.split('\\');
-             var strFine = arr[arr.length-1];
-             $('#tinyUpload .start').click();
-             setTimeout(function () {
-               $('#'+field_name).val('/upload/' + strFine);
-             }, 500);
+                $('#tinyUpload .start').click();
+                setTimeout(function () {
+                  var name = $('#picName').text();
+                  $('#'+field_name).val('/upload/' + name);
+                }, 500);
            });
         }
       },

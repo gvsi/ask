@@ -65,7 +65,8 @@
   {{#with post}}
   <!-- tinyMce image upload -->
   <div id="tinyUpload" style="display:none;">
-    {{> upload_bootstrap }}
+    {{> upload_bootstrap callbacks=tinymceCallbacks }}
+    <div id="picName"></div>
   </div>
 
   <div class="post-content-wrapper">
