@@ -1101,6 +1101,7 @@ loadTinyMCE = function(selector, height) {
       preview_styles: false,
       elementpath: false,
       paste_as_text: true,
+      browser_spellcheck: true,
       file_browser_callback: function(field_name, url, type, win) {
         if(type=='image'){
            $('#tinyUpload .jqUploadclass').click();
