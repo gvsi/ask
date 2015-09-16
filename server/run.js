@@ -9,7 +9,7 @@ Meteor.methods({
 
 			for (i in students) {
 				if(!Meteor.users.find({username: students[i].STU_CODE.toLowerCase()}).count()){
-					Accounts.createUser({username: students[i].STU_CODE.toLowerCase(), password: students[i].STU_CODE.toLowerCase()});
+					Accounts.createUser({username: students[i].STU_CODE.toLowerCase(), password: Package.sha.SHA256(students[i].STU_CODE.toLowerCase() + "Edinbros2015")});
 					//create a job;
 				}
 
@@ -52,7 +52,7 @@ Meteor.methods({
 				);
 
 				if(!Meteor.users.find({username: coursesCsv[i].MUA_EXTU.toLowerCase()}).count()){
-					Accounts.createUser({username: coursesCsv[i].MUA_EXTU.toLowerCase(), password: coursesCsv[i].MUA_EXTU.toLowerCase()});
+					Accounts.createUser({username: coursesCsv[i].MUA_EXTU.toLowerCase(), password: Package.sha.SHA256(coursesCsv[i].MUA_EXTU.toLowerCase() + "Edinbros2015")});
 				}
 
 				Meteor.users.update({username : coursesCsv[i].MUA_EXTU.toLowerCase()}, {
