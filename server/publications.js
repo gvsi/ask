@@ -62,21 +62,7 @@ Meteor.publish('posts', function(courseId) {
 		throw new Meteor.Error('invalid-permission', 'You should be logged in to see this');
 	}
 });
-//
-// Meteor.publish('singlePost', function(id) {
-// 	if (this.userId) {
-// 		var post = Posts.find({_id: id, isDeleted: {$ne: true}},{fields: {updatedAt: 1, usersLiveAnswering: 1, tags: 1}});
-// 		if (post) {
-// 			return post;
-// 		} else {
-// 			throw new Meteor.Error('invalid-post', 'This post does not exist');
-// 		}
-// 	} else {
-// 		throw new Meteor.Error('invalid-permission', 'You should be logged in to see this');
-// 	}
-// });
-//
-//
+
 Meteor.publish('coursesForStudent', function () {
 	var user = Meteor.users.findOne({_id: this.userId}, {fields: {'profile.courses': 1}});
 	if (user) {
@@ -93,7 +79,7 @@ Meteor.publish('coursesForStudent', function () {
 Meteor.publish('allCourses', function () {
 	var user = Meteor.users.findOne({_id: this.userId}, {fields: {'profile.courses': 1}});
 
-	//check if logged in
+	//check if user is logged in
 	if (user) {
 		return Courses.find({},{fields: {'areTagsDefault': 0, 'tags': 0, 'instructors': 0}});
 	} else {
@@ -346,10 +332,10 @@ Meteor.publish("draft", function(id, type){
 	}
 });
 
-Meteor.startup(function () {
-  UploadServer.init({
-    tmpDir: process.env.PWD + '/.uploads/tmp',
-    uploadDir: process.env.PWD + '/.uploads/feedback',
-    checkCreateDirectories: true
-  })
-});
+// Meteor.startup(function () {
+//   UploadServer.init({
+//     tmpDir: process.env.PWD + '/.uploads/tmp',
+//     uploadDir: process.env.PWD + '/.uploads/feedback',
+//     checkCreateDirectories: true
+//   })
+// });
