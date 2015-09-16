@@ -153,7 +153,9 @@ Router.route('/logout', function () {
     // Redirect to login
     Object.keys(Session.keys).forEach(function(key){ Session.set(key, undefined); })
     Session.set("areNotificationsObserved", true);
-    Router.go('/login');
+    Cookie.set("cosign-eucsCosigndev-dev.ask.sli.is.ed.ac.uk",null);
+    window.location.replace("https://www-dev.ease.ed.ac.uk/logout.cgi");
+    //Router.go('/login');
   });
 },{
   layoutTemplate:"defaultLayout"

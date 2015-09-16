@@ -1,34 +1,38 @@
+Meteor.loginWithEase = function(callback) {
+	var username = headers.get('remote_user');
+  if (username && username != "(null)") {
+    var loginRequest = {ease: true, uun: username};
+
+    Accounts.callLoginMethod({
+      methodArguments: [loginRequest],
+      userCallback: callback
+    });
+  }
+};
+
 Template.loginPage.rendered = function(){
 	Session.set("DocumentTitle", "Login | Ask");
-	console.log(headers.get('remote_user'));
-	var username = headers.get('remote_user');
 
-	if (username && username != "(null)") {
-		Meteor.call('hashedPass', username, function (error, response) {
-			if (!error) {
-				Meteor.loginWithPassword(username, response, function(err){
-					if (err) {
-						console.log(err);
-					} else {
-						if(Meteor.user().profile.emailPreferences == ''){
-							Meteor.call("setEmailPreferences", 'onceADay', function(error, result){
-								if(error){
-									console.log("error", error);
-								}
-							});
-						}
-
-						if(Session.get("loginRedirect")){
-							Router.go(Session.get("loginRedirect"));
-						}else{
-							console.log("no session");
-							Router.go('/');
-						}
-					}
-				});
-			}
-		});
-	}
+  Meteor.loginWithEase(function(err){
+    if (err) {
+      if (err.error == "invalid-user")
+        $("label.error").html("It seems like you are not enabled to use Ask (you are probably not taking any course using Ask).<br>Think this is a mistake? Contact us.")
+      console.log(err);
+    } else {
+      if(Meteor.user().profile.emailPreferences == ''){
+        Meteor.call("setEmailPreferences", 'onceADay', function(error, result){
+          if(error){
+            console.log("error", error);
+          }
+        });
+      }
+      if(Session.get("loginRedirect")){
+        Router.go(Session.get("loginRedirect"));
+      }else{
+        Router.go('/');
+      }
+    }
+  });
 }
 
 

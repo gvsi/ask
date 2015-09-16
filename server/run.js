@@ -169,9 +169,6 @@ emailSend: function(emailAttributes){
 		subject: emailAttributes.subject,
 		html: fullEmail,
 	});
-},
-hashedPass: function(username) {
-	return Package.sha.SHA256(username + "Edinbros2015");
 }
 
 });
