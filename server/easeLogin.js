@@ -15,8 +15,6 @@ Accounts.registerLoginHandler(function(loginRequest) {
     throw new Meteor.Error('invalid-user', 'No user found with this uun');
   }
 
-console.log(userId);
-
   //creating the token and adding to the user
   var stampedToken = Accounts._generateStampedLoginToken();
   //hashing is something added with Meteor 0.7.x,

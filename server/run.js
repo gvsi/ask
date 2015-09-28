@@ -13,22 +13,34 @@ Meteor.methods({
 		for (i in students) {
 			if(!Meteor.users.find({username: students[i].STU_CODE.toLowerCase()}).count()){
 				Accounts.createUser({username: students[i].STU_CODE.toLowerCase(), password: "temp"});
+
+				Meteor.users.update({username : students[i].STU_CODE.toLowerCase()}, {
+						$set : {
+							profile : {
+								name : toTitleCase(students[i].STU_FUSD),
+								surname: toTitleCase(students[i].STU_SURN),
+								emailPreferences: '',
+								email: students[i].STU_CODE.toLowerCase() + '@sms.ed.ac.uk'
+							}
+						},
+						$unset : {
+							'services.password': true
+						}
+					}
+				);
+			}else{
+				Meteor.users.update({username : students[i].STU_CODE.toLowerCase()}, {
+					$set : {
+						profile : {
+							name : toTitleCase(students[i].STU_FUSD),
+							surname: toTitleCase(students[i].STU_SURN),
+						}
+					}
+				}
+			);
 			}
 
-			Meteor.users.update({username : students[i].STU_CODE.toLowerCase()}, {
-				$set : {
-					profile : {
-						name : toTitleCase(students[i].STU_FUSD),
-						surname: toTitleCase(students[i].STU_SURN),
-						emailPreferences: '',
-						email: students[i].STU_CODE.toLowerCase() + '@sms.ed.ac.uk'
-					}
-				},
-				$unset : {
-					'services.password': true
-				}
-			}
-		);
+
 	}
 
 	var coursesCsv = CoursesCsv.find().fetch();

@@ -313,7 +313,6 @@ for (var i = 0; i < 10; i++) {
 
 var instructors = Courses.findOne({'_id':courseId}).instructors;
 var users = Meteor.users.find({'username': {$in: instructors}, 'status.online':true},{fields: {'username': 1, 'profile.name': 1, 'profile.surname': 1,'profile.image':1, 'status.online': 1}});
-//console.log(users);
 return users;
 
 })

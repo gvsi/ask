@@ -1127,7 +1127,6 @@ strip_tags = function(input, allowed) {
 }
 
 loadTinyMCE = function(selector, height) {
-  //console.log('loadTinyMCE: ' + selector);
   try {
     tinyMCE.remove()
   } catch(e) {}

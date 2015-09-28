@@ -97,7 +97,7 @@ Meteor.methods({
         	//temp
         	emailAttributes.recipient = courseUser.profile.email;
 
-          if(Meteor.isServer){
+          if(Meteor.isServer && emailAttributes.recipient){
           	Email.send({
           		from: "no-reply@ask.sli.is.ed.ac.uk",
           		to: emailAttributes.recipient,
