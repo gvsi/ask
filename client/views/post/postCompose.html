@@ -31,10 +31,6 @@
          </div>
          <div class="tinymce-wrapper">
            <textarea id="composeTinyMCE" name="content">{{#if isEditingPost}}{{{editingPost.text}}}{{else}}{{/if}}</textarea>
-           <div id="tinyUpload" style="display:none;">
-             {{> upload_bootstrap callbacks=tinymceCallbacks }}
-             <div id="picName"></div>
-           </div>
          </div>
        </div>
      </div>

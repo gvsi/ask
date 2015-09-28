@@ -62,6 +62,24 @@
     </div>
   </div>
 
+  <div class="modal fade slide-up disable-scroll" id="modalReportQuestion" tabindex="-1" role="dialog" aria-labelledby="modalSlideUpLabel" aria-hidden="false">
+    <div class="modal-dialog " style="width:40%; text-align:center;">
+      <div class="modal-content-wrapper">
+        <div class="modal-content">
+          <div class="modal-header clearfix" style="margin-bottom: 30px;">
+            <h5><strong>This question will be sent for review to the University</strong></h5>
+            Are you sure you want to do this?
+          </div>
+          <div class="modal-footer" style="margin-top: 16px;text-align: center;">
+            <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            <button type="button" id="reportQuestion" class="btn btn-danger">Yes</button>
+          </div>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+  </div>
+
   <div class="modal fade slide-up disable-scroll" id="modalDeleteComment" tabindex="-1" role="dialog" aria-labelledby="modalSlideUpLabel" aria-hidden="false">
     <div class="modal-dialog " style="width:40%; text-align:center;">
       <div class="modal-content-wrapper">
@@ -82,11 +100,6 @@
 
   {{#with post}}
   <!-- tinyMce image upload -->
-  <div id="tinyUpload" style="display:none;">
-    {{> upload_bootstrap callbacks=tinymceCallbacks }}
-    <div id="picName"></div>
-  </div>
-
   <div class="post-content-wrapper">
     <div class="actions-wrapper menuclipper bg-master-lightest" id="postTopbar">
       <ul class="actions menuclipper-menu no-margin p-l-20" >
@@ -160,6 +173,9 @@
             {{else}}
             <button class="btn btn-lg btn-default btn-rounded simptip-position-bottom simptip-smooth simptip-movable simptip-multiline" id="followQuestion" data-tooltip="Follow this question to receive notifications for new answers">Follow</button>
             {{/if}}
+            {{#unless isInstructor}}
+              <button class="btn btn-lg btn-rounded btn-xs m-r-10 report simptip-position-bottom simptip-smooth simptip-movable" style="padding: 9px 18px" id="openReportQuestionModal" data-id="{{post._id}}" data-target="#modalReportQuestion" data-tooltip="Report abuse" data-toggle="modal" ><i class="fa fa-exclamation"></i></button>
+            {{/unless}}
           </div>
           {{/if}}
         {{/if}}
@@ -308,11 +324,9 @@
           <button class="editAnswerBtn btn btn-default btn-rounded btn-xs edit" data-answer-id="{{_id}}"><i class="fa fa-pencil"></i></button>
           <button class="btn btn-default btn-rounded btn-xs delete" id="openDeleteAnswerModal" data-id="{{_id}}" data-target="#modalDeleteAnswer" data-toggle="modal" ><i class="fa fa-trash-o"></i></button>
           {{else}}
-          {{#unless isInstructor}}
-          <button class="btn btn-default btn-rounded btn-xs m-r-10 report simptip-position-bottom simptip-smooth simptip-movable" id="openReportAnswerModal" data-id="{{_id}}" data-target="#modalReportAnswer" data-tooltip="Report abuse" data-toggle="modal" ><i class="fa fa-exclamation"></i></button>
-
-
-          {{/unless}}
+            {{#unless isInstructor}}
+            <button class="btn btn-default btn-rounded btn-xs m-r-10 report simptip-position-bottom simptip-smooth simptip-movable" id="openReportAnswerModal" data-id="{{_id}}" data-target="#modalReportAnswer" data-tooltip="Report abuse" data-toggle="modal" ><i class="fa fa-exclamation"></i></button>
+            {{/unless}}
           {{/if}}
           {{dateFromNow}}
         </div>

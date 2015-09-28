@@ -24,7 +24,7 @@ Template.loginPage.rendered = function(){
       console.log(err);
     } else {
       if(Meteor.user().profile.emailPreferences == ''){
-        Meteor.call("setEmailPreferences", 'onceADay', function(error, result){
+        Meteor.call("setEmailPreferences", 'realTime', function(error, result){
           if(error){
             console.log("error", error);
           }
@@ -56,7 +56,7 @@ Template.loginPage.events({
 			} else {
 
 				if(Meteor.user().profile.emailPreferences == ''){
-					Meteor.call("setEmailPreferences", 'onceADay', function(error, result){
+					Meteor.call("setEmailPreferences", 'realTime', function(error, result){
 						if(error){
 							console.log("error", error);
 						}

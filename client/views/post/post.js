@@ -600,6 +600,9 @@ Template.postContent.events({
   "click #openReportAnswerModal": function(event){
     Session.set("reportAnswerId", $(event.currentTarget).data("id"));
   },
+  "click #openReportQuestionModal": function(event){
+    Session.set("reportQuestionId", $(event.currentTarget).data("id"));
+  },
   "click #deleteCommentBtn": function(event){
     Session.set("deleteCommentId", {answerId: $(event.currentTarget).closest(".answer").attr('id'), commentId: $(event.currentTarget).data("id")});
   },
@@ -619,9 +622,28 @@ Template.postContent.events({
   "click #reportAnswer": function(){
     var id = Session.get("reportAnswerId");
 
-    //TODO
+    var reportAttributes = {id: id, type: "answer"}
 
-    $("#modalDeleteAnswer").modal('hide');
+    Meteor.call("reportAbuse", reportAttributes, function(error, result){
+      if(error){
+        console.log("error", error);
+      }
+    });
+
+    $("#modalReportAnswer").modal('hide');
+  },
+  "click #reportQuestion": function(){
+    var id = Session.get("reportQuestionId");
+
+    var reportAttributes = {id: id, type: "question"}
+
+    Meteor.call("reportAbuse", reportAttributes, function(error, result){
+      if(error){
+        console.log("error", error);
+      }
+    });
+
+    $("#modalReportQuestion").modal('hide');
   },
   "click #deleteComment": function(){
     var attr = Session.get("deleteCommentId");
@@ -1123,20 +1145,6 @@ loadTinyMCE = function(selector, height) {
       elementpath: false,
       paste_as_text: true,
       browser_spellcheck: true,
-      file_browser_callback_types: "image",
-      file_browser_callback: function(field_name, url, type, win) {
-        if(type=='image'){
-          $('#tinyUpload .done').click();
-          $('#tinyUpload .jqUploadclass').click();
-          $('#tinyUpload .jqUploadclass').change(function (){
-                $('#tinyUpload .start').click();
-                setTimeout(function () {
-                  var name = $('#picName').text();
-                  $('#'+field_name).val('/upload/' + name);
-                }, 500);
-           });
-        }
-      },
       setup: function(editor) {
         if (selector == "answerTinyMCE") {
           editor.on('focus', function(e) {
