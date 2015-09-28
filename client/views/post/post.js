@@ -86,9 +86,6 @@ Template.postPage.rendered = function () {
     Session.set('customTags', undefined)
     $('#customTagsForCourse').show();
   }
-  setTimeout(function () {
-    $("#howToAnswerPortlet").portlet();
-  }, 2000);
 }
 
 Template.registerHelper("hasAvatar", function(argument){
@@ -1032,6 +1029,10 @@ loadPage = function(postId, needsScroll) {
   $("li[data-post-id="+ postId +"]").addClass('active');
   $(".widget-2 .metro").liveTile("destroy");
 
+  setTimeout(function () {
+    $("#howToAnswerPortlet").portlet();
+  }, 2000);
+  
   if(needsScroll && !$("li[data-post-id="+ postId +"]").visible() && $("li[data-post-id="+ postId +"]").offset()){
     $('.list-view-wrapper').scrollTop($("li[data-post-id="+ postId +"]").offset().top-92);
   }

@@ -1,6 +1,5 @@
 Template.settings.rendered = function(){
   	Session.set("DocumentTitle","Settings | Ask");
-    $('#'+Meteor.user().profile.emailPreferences).prop('checked',true);
 }
 
 Template.settings.events({
@@ -29,7 +28,13 @@ Template.settings.events({
 
 Template.settings.helpers({
   identiconHash: function() {
-    return Package.sha.SHA256(Meteor.user()._id);
+    var user = Meteor.user();
+    if (user) {
+      setTimeout(function () {
+        $('#'+user.profile.emailPreferences).prop('checked',true);
+      }, 500);
+      return Package.sha.SHA256(user._id);
+    }
   },
   currentUserHasAvatar: function(){
     var user = Meteor.user();
