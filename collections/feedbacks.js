@@ -23,8 +23,8 @@ Meteor.methods({
 
       if (Meteor.isServer) {
         Email.send({
-          from: "martingeorgiev1995@gmail.com",
-          to: "martingeorgiev1995@gmail.com",
+          from: "no-reply@ask.sli.is.ed.ac.uk",
+          to: ["s1432492@sms.ed.ac.uk", "s1448512@sms.ed.ac.uk"],
           subject: "Ask Feedback",
           html: 'From: '+ Meteor.user().profile.name +' '+ Meteor.user().profile.surname +' <br> Subject: '+ feedbackAttributes.subject +' <br> Body: '+ feedbackAttributes.text + attachment
         });
