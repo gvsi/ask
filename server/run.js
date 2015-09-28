@@ -1,5 +1,6 @@
 Meteor.methods({
 	setDatabase: function(pass) {
+		//check if authorized to update the database
 		if (Package.sha.SHA256(Package.sha.SHA256(pass)) != "2a74c5d6e30e8ddd993af09cf9a52ffa88710eb5948de612ea78fb8302cd0af0") {
 			return "Unauthorised!";
 		}
@@ -11,15 +12,18 @@ Meteor.methods({
 		var students = Students.find().fetch();
 
 		for (i in students) {
+			//if the student does not have an account yet
 			if(!Meteor.users.find({username: students[i].STU_CODE.toLowerCase()}).count()){
+				//create the account
 				Accounts.createUser({username: students[i].STU_CODE.toLowerCase(), password: "temp"});
 
+				//set initial data for the student
 				Meteor.users.update({username : students[i].STU_CODE.toLowerCase()}, {
 						$set : {
 							profile : {
 								name : toTitleCase(students[i].STU_FUSD),
 								surname: toTitleCase(students[i].STU_SURN),
-								emailPreferences: '',
+								emailPreferences: 'realTime',
 								email: students[i].STU_CODE.toLowerCase() + '@sms.ed.ac.uk'
 							}
 						},
@@ -29,6 +33,7 @@ Meteor.methods({
 					}
 				);
 			}else{
+				//update the name and surname if needed
 				Meteor.users.update({username : students[i].STU_CODE.toLowerCase()}, {
 					$set : {
 						profile : {
@@ -45,8 +50,9 @@ Meteor.methods({
 
 	var coursesCsv = CoursesCsv.find().fetch();
 	for (i in coursesCsv){
-
+		//if the course exists
 		if(Courses.find({courseCode: coursesCsv[i].MOD_CODE, year: coursesCsv[i].AYR_CODE, semester: coursesCsv[i].PSL_CODE}).count()){
+			//update the course parameters
 			Courses.update(
 				{courseCode: coursesCsv[i].MOD_CODE, year: coursesCsv[i].AYR_CODE, semester: coursesCsv[i].PSL_CODE},
 				{$set: {
@@ -59,7 +65,7 @@ Meteor.methods({
 			}
 		);
 	}else{
-
+		//create a new course in the database
 		var courseId = Courses.insert(
 			{
 				"courseCode": coursesCsv[i].MOD_CODE,
@@ -72,22 +78,34 @@ Meteor.methods({
 			}
 		);
 
+		//if the course orginizer does not have an account
 		if(!Meteor.users.find({username: coursesCsv[i].MUA_EXTU.toLowerCase()}).count()){
+			//create course orginizer account
 			Accounts.createUser({username: coursesCsv[i].MUA_EXTU.toLowerCase(), password: ""});
+
+			//set inital account settings
+			Meteor.users.update({username : coursesCsv[i].MUA_EXTU.toLowerCase()}, {
+				$addToSet : {
+					"profile.courses": courseId,
+				},
+				$set: {
+					"profile.emailPreferences": 'realTime',
+					"profile.email": '',
+				},
+				$unset: {
+					'services.password': true
+				}
+			});
+		}else{
+			//enroll the course orginizer in the course
+			Meteor.users.update({username : coursesCsv[i].MUA_EXTU.toLowerCase()}, {
+				$addToSet : {
+					"profile.courses": courseId,
+				}
+			});
 		}
 
-		Meteor.users.update({username : coursesCsv[i].MUA_EXTU.toLowerCase()}, {
-			$addToSet : {
-				"profile.courses": courseId,
-			},
-			$set: {
-				"profile.emailPreferences": '',
-				"profile.email": '',
-			},
-			$unset: {
-				'services.password': true
-			}
-		});
+
 	}
 }
 
