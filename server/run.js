@@ -1,91 +1,100 @@
 Meteor.methods({
-	runCode: function() {
+	setDatabase: function(pass) {
+		if (Package.sha.SHA256(Package.sha.SHA256(pass)) != "2a74c5d6e30e8ddd993af09cf9a52ffa88710eb5948de612ea78fb8302cd0af0") {
+			return "Unauthorised!";
+		}
 
-			function toTitleCase(str) {
-				return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+		function toTitleCase(str) {
+			return str.replace(/\w\S*/g, function(txt){return txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase();});
+		}
+
+		var students = Students.find().fetch();
+
+		for (i in students) {
+			if(!Meteor.users.find({username: students[i].STU_CODE.toLowerCase()}).count()){
+				Accounts.createUser({username: students[i].STU_CODE.toLowerCase(), password: "temp"});
 			}
 
-			var students = Students.find().fetch();
-
-			for (i in students) {
-				if(!Meteor.users.find({username: students[i].STU_CODE.toLowerCase()}).count()){
-					Accounts.createUser({username: students[i].STU_CODE.toLowerCase(), password: Package.sha.SHA256(students[i].STU_CODE.toLowerCase() + "Edinbros2015")});
-					//create a job;
-				}
-
-				Meteor.users.update({username : students[i].STU_CODE.toLowerCase()}, {$set : {
+			Meteor.users.update({username : students[i].STU_CODE.toLowerCase()}, {
+				$set : {
 					profile : {
 						name : toTitleCase(students[i].STU_FUSD),
 						surname: toTitleCase(students[i].STU_SURN),
 						emailPreferences: '',
 					}
-				}});
-			}
-
-			var coursesCsv = CoursesCsv.find().fetch();
-			for (i in coursesCsv){
-
-				if(Courses.find({courseCode: coursesCsv[i].MOD_CODE, year: coursesCsv[i].AYR_CODE, semester: coursesCsv[i].PSL_CODE}).count()){
-					Courses.update(
-						{courseCode: coursesCsv[i].MOD_CODE, year: coursesCsv[i].AYR_CODE, semester: coursesCsv[i].PSL_CODE},
-						{$set: {
-							"courseCode": coursesCsv[i].MOD_CODE,
-							"name": coursesCsv[i].MOD_NAME,
-							"year": coursesCsv[i].AYR_CODE,
-							"semester": coursesCsv[i].PSL_CODE,
-						},
-						$addToSet: {"instructors": coursesCsv[i].MUA_EXTU.toLowerCase() }
-					}
-				);
-			}else{
-
-				var courseId = Courses.insert(
-					{
-						"courseCode": coursesCsv[i].MOD_CODE,
-						"name": coursesCsv[i].MOD_NAME,
-						"year": coursesCsv[i].AYR_CODE,
-						"semester": coursesCsv[i].PSL_CODE,
-						"areTagsDefault": true,
-						"tags": ['wk1', 'wk2', 'wk3', 'wk4', 'wk5','wk6', 'wk7','wk8','wk9','wk10','wk11','logistics','exam','other' ],
-						"instructors": [coursesCsv[i].MUA_EXTU.toLowerCase()]
-					}
-				);
-
-				if(!Meteor.users.find({username: coursesCsv[i].MUA_EXTU.toLowerCase()}).count()){
-					Accounts.createUser({username: coursesCsv[i].MUA_EXTU.toLowerCase(), password: Package.sha.SHA256(coursesCsv[i].MUA_EXTU.toLowerCase() + "Edinbros2015")});
-				}
-
-				Meteor.users.update({username : coursesCsv[i].MUA_EXTU.toLowerCase()}, {
-				$addToSet : {
-					"profile.courses": courseId,
 				},
-				$set: {
-					"profile.emailPreferences": '',
+				$unset : {
+					'services.password': true
 				}
-				});
 			}
+		);
+	}
+
+	var coursesCsv = CoursesCsv.find().fetch();
+	for (i in coursesCsv){
+
+		if(Courses.find({courseCode: coursesCsv[i].MOD_CODE, year: coursesCsv[i].AYR_CODE, semester: coursesCsv[i].PSL_CODE}).count()){
+			Courses.update(
+				{courseCode: coursesCsv[i].MOD_CODE, year: coursesCsv[i].AYR_CODE, semester: coursesCsv[i].PSL_CODE},
+				{$set: {
+					"courseCode": coursesCsv[i].MOD_CODE,
+					"name": coursesCsv[i].MOD_NAME,
+					"year": coursesCsv[i].AYR_CODE,
+					"semester": coursesCsv[i].PSL_CODE,
+				},
+				$addToSet: {"instructors": coursesCsv[i].MUA_EXTU.toLowerCase() }
+			}
+		);
+	}else{
+
+		var courseId = Courses.insert(
+			{
+				"courseCode": coursesCsv[i].MOD_CODE,
+				"name": coursesCsv[i].MOD_NAME,
+				"year": coursesCsv[i].AYR_CODE,
+				"semester": coursesCsv[i].PSL_CODE,
+				"areTagsDefault": true,
+				"tags": ['wk1', 'wk2', 'wk3', 'wk4', 'wk5','wk6', 'wk7','wk8','wk9','wk10','wk11','logistics','exam','other' ],
+				"instructors": [coursesCsv[i].MUA_EXTU.toLowerCase()]
+			}
+		);
+
+		if(!Meteor.users.find({username: coursesCsv[i].MUA_EXTU.toLowerCase()}).count()){
+			Accounts.createUser({username: coursesCsv[i].MUA_EXTU.toLowerCase(), password: ""});
 		}
 
-		var enrolments = Enrolments.find().fetch();
-		for (i in enrolments) {
-			// find if there's a student with that UUN
-			if (Meteor.users.findOne({username: enrolments[i].STU_CODE.toLowerCase()})) {
-
-				// find if there's a course from the enrolment
-				var course = Courses.findOne({courseCode: enrolments[i].MOD_CODE, year: enrolments[i].AYR_CODE, semester: enrolments[i].PSL_CODE});
-				if (course) {
-					Meteor.users.update({username : enrolments[i].STU_CODE.toLowerCase()}, {$addToSet : {
-						"profile.courses": course._id
-					}});
-				}
-
-			} else {
-				//error
+		Meteor.users.update({username : coursesCsv[i].MUA_EXTU.toLowerCase()}, {
+			$addToSet : {
+				"profile.courses": courseId,
+			},
+			$set: {
+				"profile.emailPreferences": '',
+			},
+			$unset: {
+				'services.password': true
 			}
+		});
+	}
+}
 
+var enrolments = Enrolments.find().fetch();
+for (i in enrolments) {
+	// find if there's a student with that UUN
+	if (Meteor.users.findOne({username: enrolments[i].STU_CODE.toLowerCase()})) {
+
+		// find if there's a course from the enrolment
+		var course = Courses.findOne({courseCode: enrolments[i].MOD_CODE, year: enrolments[i].AYR_CODE, semester: enrolments[i].PSL_CODE});
+		if (course) {
+			Meteor.users.update({username : enrolments[i].STU_CODE.toLowerCase()}, {$addToSet : {
+				"profile.courses": course._id
+			}});
 		}
 
-		return true;
+	}
+
+}
+
+return "Database setup correctly";
 },
 setEmailPreferences: function(type){
 	var currentUser =  Meteor.userId();
@@ -100,7 +109,7 @@ setEmailPreferences: function(type){
 		hours = 4;
 	}
 
-  if(type!='never' && type!='realTime'){
+	if(type!='never' && type!='realTime'){
 		SyncedCron.add({
 			name: 'email-'+currentUser,
 			schedule: function(parser) {
@@ -155,7 +164,7 @@ setEmailPreferences: function(type){
 	}});
 },
 emailSend: function(emailAttributes){
-  var unsubscribeUrl = 'https://test-ask.giovannialcantara.com/settings/unsubscribe';
+	var unsubscribeUrl = 'https://test-ask.giovannialcantara.com/settings/unsubscribe';
 	var fullEmail = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html xmlns="http://www.w3.org/1999/xhtml"> <head> <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> <meta name="viewport" content="width=device-width"> <title>Ask newsletter</title> <!-- Shared on MafiaShare.net --><!-- Shared on MafiaShare.net --></head> <body style="width:100% !important;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;margin:0;padding:0;background-color:#FAFAFA"> <table class="bodytbl" width="100%" cellspacing="0" cellpadding="0" style="margin:0;padding:0;width:100% !important;border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;background-color:#FAFAFA;color:#787878;-webkit-text-size-adjust:none;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"> <td align="center" style="border-collapse:collapse;padding:0"> <table width="600" cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr height="20" style="padding:0"> <td align="left" valign="bottom" style="border-collapse:collapse;padding:0"> <div class="preheader" style="color:#787878;line-height:0px;font-size:0px;height:0px;display:none !important;visibility:hidden;text-indent:-9999px"><!-- PREHEADER --></div> <div class="small" style="color:#787878;line-height:20px"> </div> </td> </tr></table> <table width="600" cellspacing="0" cellpadding="0" class="line" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;border-bottom:1px solid #AAAAAA;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"></tr></table> <table width="600" cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"><td height="13" align="right" style="border-collapse:collapse;padding:0"><table cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"></tr></table></td></tr></table> <table width="600" cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr height="80" style="padding:0"> <td align="left" valign="bottom" style="border-collapse:collapse;padding:0; text-align:center;"> <table width="600" cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"> <img src="http://drive.google.com/uc?export=view&id=0BwFPOKemAxp2XzZjQWJCMVM1WHc"  width="250px"> </table> </td> </tr></table>';
 	fullEmail += emailAttributes.emailBody;
 	fullEmail += '<!-- Footer start --><table width="600" cellspacing="0" cellpadding="0" class="line" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;border-bottom:1px solid #AAAAAA;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"><td height="39" style="border-collapse:collapse;padding:0">&nbsp;</td></tr></table> <table width="600" cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"> <td class="small" align="left" valign="top" style="border-collapse:collapse;padding:0"> <div style="color:#787878;line-height:15px;font-size:10px;text-transform:uppercase;word-spacing:-1px;margin-bottom:4px;margin-top:6px">If you no longer wish to receive emails please <a href="'+ unsubscribeUrl +'" style="color:#00A9E0;text-decoration:none;padding:2px 0px">unsubscribe</a> </div> <div style="color:#787878;line-height:15px;font-size:10px;text-transform:uppercase;word-spacing:-1px;margin-bottom:4px;margin-top:6px">&copy; 2015 The University of Edinburgh, All rights reserved</div> </td> <td width="20" style="border-collapse:collapse;padding:0">&nbsp;</td> </tr></table> <!-- Footer end --> </td> </tr></table> </body> </html>';
@@ -172,10 +181,3 @@ emailSend: function(emailAttributes){
 }
 
 });
-
-
-
-
-/*Meteor.call('runCode', function (err, response) {
-console.log(response);
-});*/

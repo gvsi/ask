@@ -371,7 +371,6 @@
         padding: 0 10px 10px 10px;
         text-overflow: ellipsis;
         white-space: nowrap;
-        overflow: hidden;
         .nameLabel{
           float: left;
           margin-top: 13px;
@@ -617,7 +616,15 @@
             border-color: #f55753;
           }
         }
-
+        .report{
+          padding-left: 11px;
+          padding-right: 11px;
+          &:hover{
+            color: #ffffff;
+            background-color: @color-warning;
+            border-color: @color-warning;
+          }
+        }
         .post-content-header{
           .sender{
             .name{

@@ -26,16 +26,18 @@ Template.postPage.rendered = function () {
     }
   });
 
-  if (Router.current().params.query.p) {
-    loadPage(Router.current().params.query.p, true);
+  var postId = Router.current().params.query.p;
+  if (postId) {
+    if (!Posts.findOne(postId)) {
+      Router.go('page404');
+    }
+    loadPage(postId, true);
   }else{
     var course = Courses.findOne(Router.current().params.courseId);
     if(course){
       Session.set("DocumentTitle",  course.name + " | Ask");
-    }else{
-      Session.set("DocumentTitle", "Ask");
+      setUserLastCourse();
     }
-    setUserLastCourse();
   }
 
   $(window).resize(function() {
@@ -595,6 +597,9 @@ Template.postContent.events({
   "click #openDeleteAnswerModal": function(event){
     Session.set("deleteAnswerId", $(event.currentTarget).data("id"));
   },
+  "click #openReportAnswerModal": function(event){
+    Session.set("reportAnswerId", $(event.currentTarget).data("id"));
+  },
   "click #deleteCommentBtn": function(event){
     Session.set("deleteCommentId", {answerId: $(event.currentTarget).closest(".answer").attr('id'), commentId: $(event.currentTarget).data("id")});
   },
@@ -608,6 +613,13 @@ Template.postContent.events({
 
       }
     });
+
+    $("#modalDeleteAnswer").modal('hide');
+  },
+  "click #reportAnswer": function(){
+    var id = Session.get("reportAnswerId");
+
+    //TODO
 
     $("#modalDeleteAnswer").modal('hide');
   },
@@ -802,8 +814,9 @@ Template.answer.events({
         throw new Meteor.Error(error.reason);
       } else {
         $(".commentTinyMCE-wrapper[data-answer-id="+answerId+"]").hide(700);
-        tinyMCE.get(selector).setContent("");
-
+        if (tinyMCE.get(selector)) {
+          tinyMCE.get(selector).setContent("");
+        }
         setTimeout(function () {
           //upvotes answer's syntax highlighting
           $(".answerBody[data-answer-id='"+answerId+"'] pre code").each(function(i, block) {
@@ -987,13 +1000,13 @@ Template.answer.events({
 
 
 loadPage = function(postId, needsScroll) {
-  console.log('hey');
   Session.set('answerSubmitErrors', {});
   Session.set('isLoadingPost', true);
 
   $(".post-content").hide();
   $('.item').removeClass('active');
   $("li[data-post-id="+ postId +"]").addClass('active');
+  $(".widget-2 .metro").liveTile("destroy");
 
   if(needsScroll && !$("li[data-post-id="+ postId +"]").visible() && $("li[data-post-id="+ postId +"]").offset()){
     $('.list-view-wrapper').scrollTop($("li[data-post-id="+ postId +"]").offset().top-92);
@@ -1038,7 +1051,6 @@ loadPage = function(postId, needsScroll) {
   }
 
   if (!Answers.find({postId: postId}).count()) {
-    console.log('subscribing');
     Meteor.subscribe('answers', postId);
   }
 
@@ -1050,10 +1062,12 @@ loadPage = function(postId, needsScroll) {
 
       setTimeout(function(){
         var draft = Drafts.findOne({postId: postId, userId: Meteor.userId(), type: "answer"});
-        if (draft && tinyMCE.get('answerTinyMCE')) {
-          tinyMCE.get('answerTinyMCE').setContent(draft.body);
-        } else {
-          tinyMCE.get('answerTinyMCE').setContent("");
+        if (tinyMCE.get('answerTinyMCE')) {
+          if (draft) {
+            tinyMCE.get('answerTinyMCE').setContent(draft.body);
+          } else {
+            tinyMCE.get('answerTinyMCE').setContent("");
+          }
         }
       }, 500);
     }

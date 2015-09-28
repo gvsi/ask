@@ -1,6 +1,6 @@
 Template.postCompose.rendered = function(){
   Session.set("DocumentTitle", "Compose | Ask");
-
+  $(".widget-2 .metro").liveTile("destroy");
   mathquill();
 
   if ($(window).width() < 1024) {
@@ -28,7 +28,7 @@ Template.postCompose.rendered = function(){
       setTimeout(function () {
         var draft = Drafts.findOne({courseId: Router.current().params.courseId, userId: Meteor.userId(), type: "post"});
 
-        if (!isEditing) {
+        if (!isEditing && tinyMCE.get('composeTinyMCE')) {
           if (draft) {
             tinyMCE.get('composeTinyMCE').setContent(draft.body);
           } else {

@@ -10,6 +10,10 @@ Meteor.loginWithEase = function(callback) {
   }
 };
 
+// Meteor.loginWithPassword = function(callback) {
+// 	return undefined;
+// }
+
 Template.loginPage.rendered = function(){
 	Session.set("DocumentTitle", "Login | Ask");
 
@@ -42,35 +46,27 @@ Template.loginPage.events({
 		// retrieve the input field values
 		var username = t.find('#login-username').value.trim();
 
-		// Trim and validate your fields here....
+			// Trim and validate your fields here....
 
-		// If validation passes, supply the appropriate fields to the
-		// Meteor.loginWithPassword() function.
+			// If validation passes, supply the appropriate fields to the
+			// Meteor.loginWithPassword() function.
+			Meteor.loginWithPassword(username, username, function(err){
+			if (err) {
+				console.log(err);
+			} else {
 
-		Meteor.call('hashedPass', username, function (error, response) {
-			if (!error) {
-				Meteor.loginWithPassword(username, response, function(err){
-					if (err) {
-						console.log(err);
-					} else {
-						if(Meteor.user().profile.emailPreferences == ''){
-							Meteor.call("setEmailPreferences", 'onceADay', function(error, result){
-								if(error){
-									console.log("error", error);
-								}
-							});
+				if(Meteor.user().profile.emailPreferences == ''){
+					Meteor.call("setEmailPreferences", 'onceADay', function(error, result){
+						if(error){
+							console.log("error", error);
 						}
+					});
+				 }
 
-						if(Session.get("loginRedirect")){
-							Router.go(Session.get("loginRedirect"));
-						}else{
-							console.log("no session");
-							Router.go('/');
-						}
-					}
-				});
+				Router.go('/');
 			}
 		});
+			 return false;
+		}
 
-	}
 })

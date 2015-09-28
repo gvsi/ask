@@ -1,5 +1,4 @@
 Accounts.registerLoginHandler(function(loginRequest) {
-  console.log(loginRequest.uun);
   if(!loginRequest.ease) {
     return undefined;
   }
@@ -10,7 +9,6 @@ Accounts.registerLoginHandler(function(loginRequest) {
 
   var userId = null;
   var user = Meteor.users.findOne({username: loginRequest.uun});
-  console.log(user);
   if(user) {
     userId = user._id;
   } else {

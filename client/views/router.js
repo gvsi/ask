@@ -1,6 +1,5 @@
 Router.configure({
-  loadingTemplate: 'loading',
-  notFoundTemplate: 'page404'
+  loadingTemplate: 'loading'
 });
 
 var OnBeforeActions;
@@ -23,9 +22,9 @@ Router.onBeforeAction(OnBeforeActions.loginRequired, {
 });
 
 Router.route('/', function () {
-  var course = Meteor.users.findOne({_id: Meteor.userId()});
-  if(course){
-    var lastCourse = course.profile.lastCourse;
+  var user = Meteor.user();
+  if(user){
+    var lastCourse = user.profile.lastCourse;
     if(lastCourse){
       Router.go('room', {courseId: lastCourse});
     }else{
@@ -73,14 +72,12 @@ Router.route('/room/:courseId', function () {
   fastRender: true,
   waitOn: function() {
     if (Meteor.userId()) {
-      //console.log("subscribing");
       data = [
         Meteor.subscribe('posts', this.params.courseId),
         Meteor.subscribe('courseStats', this.params.courseId)
       ];
       if (!Session.get("coursesAreReady")) {
         data.push(Meteor.subscribe('coursesForStudent', {onReady: function() {
-          //console.log("COURSES ARE READY!!");
           Session.set("coursesAreReady", true)
         }}));
       }
@@ -88,10 +85,8 @@ Router.route('/room/:courseId', function () {
     }
   },
   data: function() {
-    //console.log(Courses.findOne(this.params.courseId));
-    if (Session.get("coursesAreReady") && (!Courses.findOne(this.params.courseId) || (this.params.query.p && !Posts.findOne(this.params.query.p)))) {
-      this.render('page404');
-    }
+    if (Session.get("coursesAreReady") && !Courses.findOne(this.params.courseId))
+      Router.go('page404');
     if (this.params.query.p) {
       return {
         isTherePost: true
@@ -134,6 +129,15 @@ Router.route('/login', function() {
   name: 'login',
 });
 
+Router.route('/error', function() {
+  this.render('page404');
+}, {
+  layoutTemplate:"defaultLayout",
+  loadingTemplate: 'loading',
+  name: 'page404'
+});
+
+
 Router.route('/settings/unsubscribe', function () {
   Meteor.call("setEmailPreferences", "never", function(error, result){
     if(error){
@@ -154,7 +158,7 @@ Router.route('/logout', function () {
     Object.keys(Session.keys).forEach(function(key){ Session.set(key, undefined); })
     Session.set("areNotificationsObserved", true);
     Cookie.set("cosign-eucsCosigndev-dev.ask.sli.is.ed.ac.uk",null);
-    window.location.replace("https://www-dev.ease.ed.ac.uk/logout.cgi");
+    window.location.replace("https://www.ease.ed.ac.uk/logout.cgi");
     //Router.go('/login');
   });
 },{

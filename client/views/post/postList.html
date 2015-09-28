@@ -89,9 +89,6 @@
 </template>
 <template name="postThumbnail">
   <li class="item padding-15" data-post-id="{{_id}}">
-    <!--<div class="thumbnail-wrapper d32 circular bordered b-complete">
-      <img width="40" height="40" alt="" data-src-retina="/img/profiles/avatar2x.jpg" data-src="/img/profiles/avatar.jpg" src="/img/profiles/avatar2x.jpg">
-    </div> -->
     <div class="checkbox  no-margin p-l-10">
       <input type="checkbox" value="1" id="postcheckbox-0-0">
       <label for="postcheckbox-0-0"></label>
@@ -102,11 +99,6 @@
     </div>
     <div class="datetime">{{dateFromNow}}</div>
     <div class="badge-wrapper">
-      <!-- {{#if badges.isInstructorPost}}
-          <div class="badge-icon instructorPost simptip-position-left simptip-smooth simptip-movable" data-tooltip="Instructor Note" >
-            <i class="fa  fa-file-o" style="font-weight: 700;"></i>
-          </div>
-      {{else}} -->
       {{#unless badges.isInstructorPost}}
         {{#if badges.hasInstructorAnswer}}<div class="badge-icon answeredInstructor simptip-position-left simptip-smooth simptip-movable" data-tooltip="Instructor Answer" > IA </div>{{/if}}
         {{#if badges.hasStudentAnswer}}<div class="badge-icon answered simptip-position-left simptip-smooth simptip-movable" data-tooltip="Student Answer" > SA </div>{{/if}}

@@ -9,5 +9,4 @@ Meteor.startup(function() {
   });
 
   SyncedCron.start();
-  Kadira.connect('64y4kmecnXbtEtDyB', 'f19c03c0-0bd7-4139-8fa0-8958fab4fcd9');
 });

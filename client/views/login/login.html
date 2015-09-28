@@ -1,15 +1,15 @@
 <template name="loginPage">
 
-<div class="login-wrapper ">
-      <!-- START Login Background Pic Wrapper-->
-      <div class="bg-pic">
-        <!-- START Background Pic-->
-        <img src="https://eeesummit.files.wordpress.com/2014/06/edinburgh_-_calton_hill_nov_12_0.jpg" data-src-retina="https://eeesummit.files.wordpress.com/2014/06/edinburgh_-_calton_hill_nov_12_0.jpg" alt="" class="lazy">
-        <!-- END Background Pic-->
-        <!-- START Background Caption-->
-        <div class="bg-caption pull-bottom sm-pull-bottom text-white p-l-20 m-b-20">
-          <h2 class="semi-bold text-white">
-					Ask.<br>Enhancing your university experience by creating a collaborative discussion platform.</h2>
+  <div class="login-wrapper ">
+    <!-- START Login Background Pic Wrapper-->
+    <div class="bg-pic">
+      <!-- START Background Pic-->
+      <img src="https://eeesummit.files.wordpress.com/2014/06/edinburgh_-_calton_hill_nov_12_0.jpg" data-src-retina="https://eeesummit.files.wordpress.com/2014/06/edinburgh_-_calton_hill_nov_12_0.jpg" alt="" class="lazy">
+      <!-- END Background Pic-->
+      <!-- START Background Caption-->
+      <div class="bg-caption pull-bottom sm-pull-bottom text-white p-l-20 m-b-20">
+        <h2 class="semi-bold text-white">
+          Ask.<br>Enhancing your university experience by creating a collaborative discussion platform.</h2>
           <p class="small">
             © 2015 The University of Edinburgh
           </p>
@@ -23,20 +23,59 @@
           <img src="img/ask_logo.png" alt="logo" data-src="img/ask_logo.png" data-src-retina="img/ask_logo_2x.png" height="70">
           <div class="m-t-30">
             <p class="m-b-5"><h5>Sign into Ask with <strong>EASE</strong>:</h5></p>
-            <a href="https://www-dev.ease.ed.ac.uk/cosign.cgi?cosign-eucsCosigndev-dev.ask.sli.is.ed.ac.uk&https://dev.ask.sli.is.ed.ac.uk/login"><button class="btn btn-danger btn-cons m-t-10" type="submit">Login with EASE</button></a>
+            <a href="https://www.ease.ed.ac.uk/cosign.cgi?cosign-eucsCosigndev-dev.ask.sli.is.ed.ac.uk&https://dev.ask.sli.is.ed.ac.uk/login"><button class="btn btn-danger btn-cons m-t-10" type="submit">Login with EASE</button></a>
             <label class="error m-t-20"></label>
             <p class="m-b-5 m-t-30"><small><strong>Need help?</strong> Contact us.</small></p>
           </div>
-          <div class="pull-bottom sm-pull-bottom">
-            <div class="m-b-30 p-r-80 sm-m-t-20 sm-p-r-15 sm-p-b-20 clearfix">
-              <p><small>
-              &copy; 2015 - The University of Edinburgh
-            </small></p>
+
+          <form id="form-login" class="p-t-15" role="form" action="/" method="post">
+            <!-- START Form Control-->
+            <div class="form-group form-group-default">
+              <label>Login</label>
+              <div class="controls">
+                <input type="text" name="username" id="login-username" placeholder="Your UUN" class="form-control" required>
+              </div>
             </div>
+            <!-- END Form Control-->
+            <!-- START Form Control-->
+
+            <!--
+            <div class="form-group form-group-default">
+            <label>Password</label>
+            <div class="controls">
+            <input type="password" class="form-control" name="password" placeholder="Your password" required>
+          </div>
+        </div>
+      -->
+
+      <!-- START Form Control-->
+      <div class="row">
+        <div class="col-md-6 no-padding">
+          <div class="checkbox ">
+            <input type="checkbox" value="1" id="checkbox1">
+            <label for="checkbox1">Keep me signed in</label>
           </div>
         </div>
       </div>
-      <!-- END Login Right Container-->
+      <!-- END Form Control-->
+      <button class="btn btn-primary btn-cons m-t-10" type="submit">Sign in</button>
+
+      or
+
+      &nbsp; <button class="btn btn-danger btn-cons m-t-10" type="submit">Sign in with EASE</button>
+    </form>
+
+
+    <div class="pull-bottom sm-pull-bottom">
+      <div class="m-b-30 p-r-80 sm-m-t-20 sm-p-r-15 sm-p-b-20 clearfix">
+        <p><small>
+          &copy; 2015 - The University of Edinburgh
+        </small></p>
+      </div>
     </div>
-    <!-- END PAGE CONTAINER -->
+  </div>
+</div>
+<!-- END Login Right Container-->
+</div>
+<!-- END PAGE CONTAINER -->
 </template>

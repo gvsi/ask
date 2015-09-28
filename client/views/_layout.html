@@ -13,12 +13,11 @@
                 </div>
             </div>
         </div>
-        <!-- {{ >quickView }} -->
         {{ >overlaySearch }}
     </body>
 </template>
 
-<!-- DASHBOARD LAYOUT -->
+<!-- HOME LAYOUT -->
 <template name="homeLayout">
     <body class="fixed-header no-header">
         {{ >sideBar }}
@@ -28,12 +27,12 @@
             <!-- START PAGE CONTENT WRAPPER -->
             <div class="page-content-wrapper full-height">
                 <!-- START PAGE CONTENT -->
+                {{>welcomeModal}}
                 <div class="content full-height landing is-loading">
                     {{>yield}}
                 </div>
             </div>
         </div>
-        <!-- {{ >quickView }} -->
         {{ >overlaySearch }}
     </body>
 </template>
@@ -54,7 +53,6 @@
                 </div>
             </div>
         </div>
-        <!-- {{ >quickView }} -->
         {{ >overlaySearch }}
     </body>
 </template>
@@ -72,7 +70,6 @@
                 <div class="content full-height">
                     <div class="post-wrapper">
                         <!-- START POST SIDEBAR MENU-->
-                        <!-- {{>postSidebar}} -->
                         {{>yield}}
                         <!-- START COMPOSE BUTTON FOR TABS -->
                         <div class="compose-wrapper visible-xs">
@@ -83,7 +80,6 @@
                 </div>
             </div>
         </div>
-        <!-- {{ >quickView }} -->
         {{ >overlaySearch }}
     </body>
 </template>
@@ -100,22 +96,16 @@
                 <div class="content full-height">
                     <div class="post-wrapper">
                         <!-- START POST SIDEBAR MENU-->
-                        <!-- {{>postSidebar}} -->
                         {{>yield}}
                         <!-- START COMPOSE BUTTON FOR TABS -->
-                        <!-- <div class="compose-wrapper visible-xs">
-                          <a class="compose-post text-info pull-right m-r-10 m-t-10" href="{{pathFor 'room/compose'}}"><i class="fa fa-pencil-square-o"></i></a>
-                        </div> -->
                         <!-- END COMPOSE BUTTON -->
                     </div>
                 </div>
             </div>
         </div>
-        <!-- {{ >quickView }} -->
         {{ >overlaySearch }}
     </body>
 </template>
-
 <template name="loginLayout">
     <body class="fixed-header">
         {{>yield}}

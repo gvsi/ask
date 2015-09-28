@@ -14,7 +14,6 @@
     <!-- END MOBILE CONTROLS -->
     <div class=" pull-left sm-table">
       <div class="header-inner">
-        <!-- <a href="#" class="toggle-email-sidebar">Room <span class="text-info">(12)</span> <span class="caret"></span></a> -->
         <div class="brand inline">
           <a href="{{pathFor 'home'}}">
             {{#if equals type 'home'}}
@@ -24,7 +23,7 @@
             {{/if}}
           </a>
         </div>
-        <!-- BEGIN <NOTIFIC></NOTIFIC>ATION DROPDOWN -->
+        <!-- BEGIN NOTIFICATION DROPDOWN -->
         <ul class="notification-list no-margin hidden-sm hidden-xs b-grey b-l b-r no-style p-l-30 p-r-30">
           <li class="inline">
             <div class="dropdown">
@@ -67,9 +66,6 @@
                                   {{textWithoutTags}}
 
                                 </h5>
-                                <!-- <p class="small hint-text">
-                                  to your question "<a href="#" style="color:#48B0F7">Key constraint vs Many-to-one</a>"
-                                </p> -->
                               </div>
                             </div>
                           </div>
@@ -97,9 +93,6 @@
               </div>
             </div>
           </li>
-          <!-- <li class="p-r-15 inline">
-            <a href="{{pathFor 'home'}}" style="font-size:19px" class="fa fa-tachometer"></a>
-          </li> -->
         </ul>
         <!-- END NOTIFICATION DROPDOWN -->
         <a href="#" id="search-link" class="search-link" data-toggle="search">
@@ -111,20 +104,12 @@
         </a>
       </div>
     </div>
-    <!-- CHAT -->
-      <!-- <div class=" pull-right">
-        <div class="header-inner">
-          <a href="#" class="btn-link icon-set menu-hambuger-plus m-l-20 sm-no-margin hidden-sm hidden-xs" data-toggle="quickview" data-toggle-element="#quickview"></a>
-        </div>
-      </div> -->
-    <!-- END CHAT -->
     <div class=" pull-right">
     {{#if currentUser}}
       <!-- START User Info-->
       <div class="visible-lg visible-md m-t-10">
         <div class="pull-left p-r-10 p-t-10 fs-16 font-heading">
           <span class="semi-bold" style="{{#if equals type 'home'}}color:white;{{/if}}">{{currentUser.profile.name}} {{currentUser.profile.surname}}</span>
-          <!-- <span class="text-master">({{currentUser.username}})</span> -->
         </div>
         <div class="dropdown pull-right">
           <button class="profile-dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -137,8 +122,6 @@
             </li>
             <li><a href="{{pathFor 'feedback'}}"><i class="pg-outdent"></i> Feedback</a>
             </li>
-            <!-- <li><a href="#"><i class="pg-signals"></i> Help</a>
-            </li> -->
             <li class="bg-master-lighter">
               <a href="{{pathFor 'logout'}}" class="clearfix">
                 <span class="pull-left" id="logout-button">Logout</span>
