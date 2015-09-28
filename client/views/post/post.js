@@ -1,3 +1,5 @@
+LIVE_URL = "https://ask.sli.is.ed.ac.uk/";
+
 Template.postPage.rendered = function () {
   // close sidebar for mobile
   $("body").removeClass("sidebar-open")

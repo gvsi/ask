@@ -74,19 +74,13 @@ Router.route('/room/:courseId', function () {
     if (Meteor.userId()) {
       data = [
         Meteor.subscribe('posts', this.params.courseId),
-        Meteor.subscribe('courseStats', this.params.courseId)
+        Meteor.subscribe('courseStats', this.params.courseId),
+        Meteor.subscribe('coursesForStudent')
       ];
-      if (!Session.get("coursesAreReady")) {
-        data.push(Meteor.subscribe('coursesForStudent', {onReady: function() {
-          Session.set("coursesAreReady", true)
-        }}));
-      }
       return data;
     }
   },
   data: function() {
-    if (Session.get("coursesAreReady") && !Courses.findOne(this.params.courseId))
-      Router.go('page404');
     if (this.params.query.p) {
       return {
         isTherePost: true
