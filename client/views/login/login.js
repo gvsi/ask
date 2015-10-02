@@ -20,7 +20,7 @@ Template.loginPage.rendered = function(){
   Meteor.loginWithEase(function(err){
     if (err) {
       if (err.error == "invalid-user")
-        $("label.error").html("It seems like you are not enabled to use Ask (you are probably not taking any course using Ask).<br>Think this is a mistake? Contact us.")
+        $("label.error").html("It seems like you are not enabled to use Ask (you are probably not taking any course using Ask).<br>Think this is a mistake? <a href=\"mailto:studentsystems@ed.ac.uk\">Contact us</a>.");
       console.log(err);
     } else {
       if(Meteor.user().profile.emailPreferences == ''){
@@ -37,7 +37,7 @@ Template.loginPage.rendered = function(){
       }
     }
   });
-}
+};
 
 
 Template.loginPage.events({
@@ -69,4 +69,4 @@ Template.loginPage.events({
 			 return false;
 		}
 
-})
+});
