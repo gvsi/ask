@@ -1,6 +1,6 @@
 Template.home.rendered = function(){
   // close sidebar for mobile
-  $("body").removeClass("sidebar-open")
+  $("body").removeClass("sidebar-open");
 
   Session.set("DocumentTitle","Home | Ask");
 
@@ -28,7 +28,7 @@ Template.home.rendered = function(){
       }, 5000);
     }
   }
-}
+};
 
 
 Template.home.helpers({
@@ -49,26 +49,7 @@ Template.home.helpers({
 });
 
 Template.home.events({
-  'submit #login-form' : function(e, t){
-    e.preventDefault();
-    // retrieve the input field values
-    var username = t.find('#login-username').value;
-
-    // Trim and validate your fields here....
-
-    // If validation passes, supply the appropriate fields to the
-    // Meteor.loginWithPassword() function.
-    Meteor.loginWithPassword(username, username, function(err){
-      if (err) {
-        console.log(err);
-      } else
-      console.log('success');
-    });
-    return false;
-  },
-
-  'click #logout' : function(e, t){
-    Meteor.logout();
-  }
-
+  'click .courseFront' : function(e, t){
+     Router.go('room', {courseId: this._id});
+   },
 });
