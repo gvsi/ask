@@ -387,8 +387,8 @@ Meteor.methods({
       if(reportAttributes.type == "question"){
         var post = Posts.findOne({_id: reportAttributes.id});
         if(post){
-          emailText += "Question title: " + post.title;
-          emailText += "\nQuestion body: " + post.text;
+          emailText += "<b>Question title:</b><br>" + post.title;
+          emailText += "<br><b>Question body:</b> " + post.text;
           emailText += 'Link: <a href="' + LIVE_URL + 'room/' + post.courseId +'?p=' + post._id + '"> Reported Link </a>' ;
         }else{
           throw new Meteor.Error('invalid-report', 'This post you are trying to report does not exist');
@@ -397,8 +397,8 @@ Meteor.methods({
         var answer = Answers.findOne({_id: reportAttributes.id});
         if(answer){
           var post = Posts.findOne({_id: answer.postId});
-          emailText += "\nAnswer body: " + answer.body;
-          emailText += 'Link: <a href="' + LIVE_URL + 'room/' + post.courseId +'?p=' + post._id + '#'+ answer._id + '"> Reported Link </a>' ;
+          emailText += "<br><b>Answer body:</b> " + answer.body;
+          emailText += '<b>Link:</b> <a href="' + LIVE_URL + 'room/' + post.courseId +'?p=' + post._id + '#'+ answer._id + '"> Reported Link </a>' ;
         }else{
           throw new Meteor.Error('invalid-report', 'This question you are trying to report does not exist');
         }
@@ -408,7 +408,7 @@ Meteor.methods({
 
       if(Meteor.isServer){
         Email.send({
-          from: "no-reply@ask.sli.is.ed.ac.uk",
+          from: "ask@ask.sli.is.ed.ac.uk",
           to: ["s1432492@sms.ed.ac.uk", "s1448512@sms.ed.ac.uk"],
           subject: "Ask Abuse Report",
           html: emailText,
