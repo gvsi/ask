@@ -22,7 +22,7 @@ Template.home.rendered = function(){
   var user = Meteor.user();
   if(user){
     var lastCourse = user.profile.lastCourse;
-    if(!lastCourse){
+    if(lastCourse){
       setTimeout(function () {
         $("#welcomeModal").modal();
       }, 5000);
