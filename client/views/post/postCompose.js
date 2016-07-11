@@ -129,8 +129,8 @@ Template.postCompose.events({
       errors.compose = "Add a title to your question (at least 5 characters)";
       tinymce.execCommand('mceFocus',false,'composeTinyMCE');
       return Session.set('postSubmitError', errors);
-    } else if (titleLength < 5 || titleLength > 60) {
-      errors.compose = "The title cannot be shorter than 5 characters or longer than 60 characters (you have <strong>" + titleLength + "</strong> now)";
+    } else if (titleLength < 2 || titleLength > 60) {
+      errors.compose = "The title cannot be shorter than 2 characters or longer than 60 characters (you have <strong>" + titleLength + "</strong> now)";
       tinymce.execCommand('mceFocus',false,'composeTinyMCE');
       return Session.set('postSubmitError', errors);
     } else if (textLength == 0) {
@@ -138,8 +138,8 @@ Template.postCompose.events({
       tinyMCE.get('composeTinyMCE').setContent("");
       tinymce.execCommand('mceFocus',false,'composeTinyMCE');
       return Session.set('postSubmitError', errors);
-    } else if (textLength < 10 || textLength > 50000) {
-      errors.compose = "The description cannot be shorter than 10 characters (you have <strong>" + textLength + "</strong> now)";
+    } else if (textLength < 2 || textLength > 50000) {
+      errors.compose = "The description cannot be shorter than 2 characters (you have <strong>" + textLength + "</strong> now)";
       tinymce.execCommand('mceFocus',false,'composeTinyMCE');
       return Session.set('postSubmitError', errors);
     } else {
