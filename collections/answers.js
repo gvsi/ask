@@ -72,7 +72,7 @@ Meteor.methods({
     //increments answers counts
     var postUpdateOptions = {
       $inc: {answersCount: 1},
-    }
+    };
 
     // if first answer, add response time to post
     if (post.answersCount == 0) {
@@ -95,6 +95,9 @@ Meteor.methods({
     answer._id = Answers.insert(answer);
 
     if(post.followers){
+
+      var subject = answerAttributes.isAnonymous ? "Someone" : user.profile.name;
+
       post.followers.forEach(function(followerId) {
         if(followerId != Meteor.userId()){
           var answerBodyWithoutTags='';
@@ -103,7 +106,7 @@ Meteor.methods({
           }
 
           var notificationAttributes = {
-            intend: 'New answer added to: ',
+            intend: subject + ' answered a post:',
             postTitle: post.title,
             text: answerBodyWithoutTags,
             type: 'answerToPost',
@@ -380,8 +383,9 @@ Meteor.methods({
         answerBodyWithoutTags =  sanitizeHtml(answer.body, {allowedTags: []});
       }
 
+      var subject = commentAttributes.isAnonymous ? "Someone" : user.profile.name;
       var notificationAttributes = {
-        intend: 'New comment to answer: ',
+        intend: subject + ' posted a comment: ',
         postTitle: answerBodyWithoutTags,
         text: commentBodyWithoutTags,
         type: 'commentToAnswer',

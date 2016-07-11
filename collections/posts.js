@@ -67,7 +67,7 @@ Meteor.methods({
         if(course.instructors.indexOf(un) != -1){
 
           var notificationAttributes = {
-            intend: 'New instructor\'s note: ',
+            intend: Meteor.users.findOne(userId).profile.name + ' posted a new note: ',
             postTitle: postAttributes.title,
             text: notificationText,
             type: 'instructorNote',
