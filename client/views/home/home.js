@@ -44,7 +44,7 @@ Template.home.helpers({
       semester = "SEM1";
     }
 
-    return Courses.find({'year': year, $or: [{'semester': semester}, {'semester':'YR'}]}).fetch();
+    return Courses.find().fetch();
   }
 });
 
