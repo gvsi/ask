@@ -1,118 +1,118 @@
 <template name="overlaySearch">
-  <!-- START OVERLAY -->
-  <div class="overlay" style="display: none; overflow-x: hidden" data-pages="search">
-    <!-- BEGIN Overlay Content !-->
-    <div class="overlay-content has-results m-t-20">
-      <!-- BEGIN Overlay Header !-->
-      <div class="container-fluid p-l-75">
-        <!-- BEGIN Overlay Logo !-->
-        <img class="overlay-brand" src="
+    <!-- START OVERLAY -->
+    <div class="overlay" style="display: none; overflow-x: hidden" data-pages="search">
+        <!-- BEGIN Overlay Content !-->
+        <div class="overlay-content has-results m-t-20">
+            <!-- BEGIN Overlay Header !-->
+            <div class="container-fluid p-l-75">
+                <!-- BEGIN Overlay Logo !-->
+                <img class="overlay-brand" src="
         /img/ask_logo.png" alt="logo" data-src="
         /img/ask_logo.png" data-src-retina="
         /img/ask_logo_2x.png" height="40">
-        <!-- END Overlay Logo !-->
-        <!-- BEGIN Overlay Close !-->
-        <a href="#" class="close-icon-light overlay-close text-black fs-16">
-          <i class="pg-close"></i>
-        </a>
-        <!-- END Overlay Close !-->
-      </div>
-      <!-- END Overlay Header !-->
-      <div class="container-fluid p-l-85">
-        <!-- BEGIN Overlay Controls !-->
-        {{#if equals searchType 'courseSearch'}}
-        <div class="m-t-20"><h5>Searching in <span class="bold">{{courseName}}</span>:</h5></div>
-        {{> esInput id="overlay-search" class="no-border overlay-search bg-transparent" index="courseSearch" placeholder="Search..."}}
-        {{else}}
-        {{> esInput id="overlay-search" class="no-border overlay-search bg-transparent" index="defaultSearch" placeholder="Search..."}}
-        {{/if}}
-
-        <br>
-        <div class="inline-block">
-          <div class="checkbox right">
-            {{#if equals searchType 'courseSearch'}}
-            <input id="defaultSearchCkbx" type="checkbox" value="1">
-            {{else}}
-            <input id="defaultSearchCkbx" type="checkbox" value="1" checked="checked">
-            {{/if}}
-            <label for="defaultSearchCkbx"><i class="fa fa-search"></i> Search all courses</label>
-          </div>
-        </div>
-        <div class="inline-block m-l-10">
-          <p class="fs-13">Press enter to search</p>
-        </div>
-        <!-- END Overlay Controls !-->
-      </div>
-      <!-- BEGIN Overlay Search Results, This part is for demo purpose, you can add anything you like !-->
-      <div class="container-fluid" style="padding:0;">
-        <div class="search-results m-t-40">
-          {{#ifEsIsSearching index=searchType id="overlay-search" logic="OR" }}
-          <div class="progress-circle-indeterminate-base" style="margin-left: auto;margin-right: auto;"></div>
-          {{/ifEsIsSearching}}
-          <div>
-            {{#esEach index=searchType id="overlay-search"}}
-            {{>resultCard}}
-            {{/esEach}}
-
-            <div style="text-align:center;">
-              {{> esLoadMoreButton index=searchType id="overlay-search" class="btn btn-complete m-t-10 m-b-40"}}
+                <!-- END Overlay Logo !-->
+                <!-- BEGIN Overlay Close !-->
+                <a href="#" class="close-icon-light overlay-close text-black fs-16">
+                    <i class="pg-close"></i>
+                </a>
+                <!-- END Overlay Close !-->
             </div>
+            <!-- END Overlay Header !-->
+            <div class="container-fluid p-l-85">
+                <!-- BEGIN Overlay Controls !-->
+                {{#if equals searchType 'courseSearch'}}
+                    <div class="m-t-20"><h5>Searching in <span class="bold">{{courseName}}</span>:</h5></div>
+                    {{> esInput id="overlay-search" class="no-border overlay-search bg-transparent" index="courseSearch" placeholder="Search..."}}
+                {{else}}
+                    {{> esInput id="overlay-search" class="no-border overlay-search bg-transparent" index="defaultSearch" placeholder="Search..."}}
+                {{/if}}
 
-            {{#ifEsHasNoResults index=searchType id="overlay-search"}}
-            <div class="no-results" style="text-align:center;"><h3 class="bold m-l-30" style="color: #3B4752">No results found!</h3></div>
-            {{/ifEsHasNoResults}}
+                <br>
+                <div class="inline-block">
+                    <div class="checkbox right">
+                        {{#if equals searchType 'courseSearch'}}
+                            <input id="defaultSearchCkbx" type="checkbox" value="1">
+                        {{else}}
+                            <input id="defaultSearchCkbx" type="checkbox" value="1" checked="checked">
+                        {{/if}}
+                        <label for="defaultSearchCkbx"><i class="fa fa-search"></i> Search all courses</label>
+                    </div>
+                </div>
+                <div class="inline-block m-l-10">
+                    <p class="fs-13">Press enter to search</p>
+                </div>
+                <!-- END Overlay Controls !-->
+            </div>
+            <!-- BEGIN Overlay Search Results, This part is for demo purpose, you can add anything you like !-->
+            <div class="container-fluid" style="padding:0;">
+                <div class="search-results m-t-40">
+                    {{#ifEsIsSearching index=searchType id="overlay-search" logic="OR" }}
+                        <div class="progress-circle-indeterminate-base" style="margin-left: auto;margin-right: auto;"></div>
+                    {{/ifEsIsSearching}}
+                    <div>
+                        {{#esEach index=searchType id="overlay-search"}}
+                            {{>resultCard}}
+                        {{/esEach}}
 
-          </div>
+                        <div style="text-align:center;">
+                            {{> esLoadMoreButton index=searchType id="overlay-search" class="btn btn-complete m-t-10 m-b-40"}}
+                        </div>
+
+                        {{#ifEsHasNoResults index=searchType id="overlay-search"}}
+                            <div class="no-results" style="text-align:center;"><h3 class="bold m-l-30" style="color: #3B4752">No results found!</h3></div>
+                        {{/ifEsHasNoResults}}
+
+                    </div>
+                </div>
+            </div>
+            <!-- END Overlay Search Results !-->
         </div>
-      </div>
-      <!-- END Overlay Search Results !-->
+        <!-- END Overlay Content !-->
     </div>
-    <!-- END Overlay Content !-->
-  </div>
-  <!-- END OVERLAY -->
+    <!-- END OVERLAY -->
 </template>
 
 <template name="resultCard">
-  <hr style="margin:0;">
-  <div class="row searchTile">
-    <div class="col-lg-2 col-md-2"></div>
-    <div class="search-card share share-self col-lg-8 col-md-8" data-social="item">
-      <div class="search-card-header clearfix">
-        <div class="pull-left" style="width: 300px">
-          <div class="user-pic">
-            <img alt="Profile Image" width="33" height="33" src="{{identicon userIdenticon}}">
-          </div>
-          <h5>{{userName}}{{#if isInstructorPost}}<span class="small hint-text"> - instructor</span>{{/if}}</h5>
-          <h6>posted
-            <span class="semi-bold">{{dateFromNow}}</span>
-          </h6>
+    <hr style="margin:0;">
+    <div class="row searchTile">
+        <div class="col-lg-2 col-md-2"></div>
+        <div class="search-card share share-self col-lg-8 col-md-8" data-social="item">
+            <div class="search-card-header clearfix">
+                <div class="pull-left" style="width: 300px">
+                    <div class="user-pic">
+                        <img alt="Profile Image" width="33" height="33" src="{{identicon userIdenticon}}">
+                    </div>
+                    <h5>{{userName}}{{#if isInstructorPost}}<span class="small hint-text"> - instructor</span>{{/if}}</h5>
+                    <h6>posted
+                        <span class="semi-bold">{{dateFromNow}}</span>
+                    </h6>
+                </div>
+                <div class="pull-right hint-text m-t-10">
+                    <div class="viewCountLabel badge-icon simptip-position-top simptip-smooth simptip-movable" data-tooltip="Views">
+                        <i class="fa fa-eye"></i> {{viewCount}}   &nbsp; &nbsp;
+                    </div>
+
+                    <div class="upvoteCountLabel badge-icon simptip-position-top simptip-smooth simptip-movable" data-tooltip="Upvotes">
+                        <i class="fa fa-thumbs-up"></i> {{upvotesCount}} &nbsp; &nbsp;
+                    </div>
+
+                    <div class="answerCountLabel badge-icon simptip-position-top simptip-smooth simptip-movable" data-tooltip="Answers">
+                        <i class="fa fa-comment"></i> {{answersCount}}
+                    </div>
+
+                </div>
+                <div class="clearfix"></div>
+            </div>
+            <div class="search-card-description">
+                <h5>{{{formattedTitle}}}</h5>
+                {{#if isDefaultSearch}}
+                    <h6>posted in <span class="bold"> {{courseName}}</span></h6>
+                {{/if}}
+            </div>
+            <div class="search-card-footer clearfix">
+                {{{formattedText}}}
+            </div>
         </div>
-        <div class="pull-right hint-text m-t-10">
-          <div class="viewCountLabel badge-icon simptip-position-top simptip-smooth simptip-movable" data-tooltip="Views">
-            <i class="fa fa-eye"></i> {{viewCount}}   &nbsp; &nbsp;
-          </div>
-
-          <div class="upvoteCountLabel badge-icon simptip-position-top simptip-smooth simptip-movable" data-tooltip="Upvotes">
-            <i class="fa fa-thumbs-up"></i> {{upvotesCount}} &nbsp; &nbsp;
-          </div>
-
-          <div class="answerCountLabel badge-icon simptip-position-top simptip-smooth simptip-movable" data-tooltip="Answers">
-            <i class="fa fa-comment"></i> {{answersCount}}
-          </div>
-
-        </div>
-        <div class="clearfix"></div>
-      </div>
-      <div class="search-card-description">
-        <h5>{{{formattedTitle}}}</h5>
-        {{#if isDefaultSearch}}
-        <h6>posted in <span class="bold"> {{courseName}}</span></h6>
-        {{/if}}
-      </div>
-      <div class="search-card-footer clearfix">
-        {{{formattedText}}}
-      </div>
+        <div class="col-lg-2 col-md-2"></div>
     </div>
-    <div class="col-lg-2 col-md-2"></div>
-  </div>
 </template>

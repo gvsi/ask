@@ -84,9 +84,9 @@ Template.postCompose.helpers({
   errorMessage: function(field) {
     var e = Session.get('postSubmitError');
     if (e)
-    return Session.get('postSubmitError')[field];
+      return Session.get('postSubmitError')[field];
     else
-    return false;
+      return false;
   },
   draftTitle: function() {
     var draft = Drafts.findOne({courseId: Router.current().params.courseId, userId: Meteor.userId(), type: "post"});
@@ -177,7 +177,7 @@ Template.postCompose.events({
     $("#previewTitle").text($('#postTitleInput').val());
     $("#previewContent").html(tinyMCE.get('composeTinyMCE').getContent());
     $("#postTags>.active").each(function() {
-       $("#previewTags").append('<button type="button" class="btn btn-tag btn-tag-light m-r-5">' + $( this ).text().trim() + '</button>');
+      $("#previewTags").append('<button type="button" class="btn btn-tag btn-tag-light m-r-5">' + $( this ).text().trim() + '</button>');
     });
 
     $('#previewContent pre code').each(function(i, block) {

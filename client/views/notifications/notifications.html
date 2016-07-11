@@ -1,57 +1,57 @@
 <template name="notifications">
-          {{#if hasNotifications}}
-          <div class="container-fluid container-fixed-lg sm-p-l-5" style="background-color:#F5F8FA;">
+    {{#if hasNotifications}}
+        <div class="container-fluid container-fixed-lg sm-p-l-5" style="background-color:#F5F8FA;">
             <div class="timeline-container top-circle">
-              <section class="timeline">
+                <section class="timeline">
 
-                {{#each notifications}}
-                <div class="timeline-block">
-                  {{{iconType}}}
-                  <div class="timeline-content">
-                  <div class="card share full-width">
-                          <div class="card-header clearfix notification-card-link">
-                            <h5>{{intend}}</h5>
-                            <span style="font-size: 14px;margin-top:3px;margin-bottom: 7px;display: block;" class="location semi-bold">{{postTitle}}</span>
-                            <h6>
-                                <span> {{postedIn}} </span>
-                            </h6>
+                    {{#each notifications}}
+                        <div class="timeline-block">
+                            {{{iconType}}}
+                            <div class="timeline-content">
+                                <div class="card share full-width">
+                                    <div class="card-header clearfix notification-card-link">
+                                        <h5>{{intend}}</h5>
+                                        <span style="font-size: 14px;margin-top:3px;margin-bottom: 7px;display: block;" class="location semi-bold">{{postTitle}}</span>
+                                        <h6>
+                                            <span> {{postedIn}} </span>
+                                        </h6>
 
-                          </div>
+                                    </div>
 
-                      <div class="card-description">
-                        <p>{{textWithoutTags}}</p>
-                      </div>
-                    </div>
+                                    <div class="card-description">
+                                        <p>{{textWithoutTags}}</p>
+                                    </div>
+                                </div>
 
-                    <div class="event-date">
-                      <small class="fs-12 hint-text">{{dateFromNow}}</small>
-                    </div>
-                  </div>
-                </div>
-                {{/each}}
-              </section>
-              <!-- timeline -->
+                                <div class="event-date">
+                                    <small class="fs-12 hint-text">{{dateFromNow}}</small>
+                                </div>
+                            </div>
+                        </div>
+                    {{/each}}
+                </section>
+                <!-- timeline -->
             </div>
             <!-- -->
-          </div>
-          <!-- END CONTAINER FLUID -->
-          {{else}}
-              <div class="jumbotron full-height no-padding" data-pages="parallax">
-                <div class="container-fluid container-fixed-lg sm-p-l-20 sm-p-r-20 full-height">
-                  <div class="inner full-height">
+        </div>
+        <!-- END CONTAINER FLUID -->
+    {{else}}
+        <div class="jumbotron full-height no-padding" data-pages="parallax">
+            <div class="container-fluid container-fixed-lg sm-p-l-20 sm-p-r-20 full-height">
+                <div class="inner full-height">
                     <div class="container-xs-height full-height">
-                      <div class="col-xs-height col-middle text-center">
-                        <div class="col-md-6 col-md-offset-3 text-center">
-                            <center>
-                            <h1><i class="fa fa-frown-o"></i></h1>
-                            <h2>No notifications yet</h2>
-                            <h4>Ask and follow questions to receive new notifications.</h4>
-                            </center>
-                      </div>
+                        <div class="col-xs-height col-middle text-center">
+                            <div class="col-md-6 col-md-offset-3 text-center">
+                                <center>
+                                    <h1><i class="fa fa-frown-o"></i></h1>
+                                    <h2>No notifications yet</h2>
+                                    <h4>Ask and follow questions to receive new notifications.</h4>
+                                </center>
+                            </div>
+                        </div>
                     </div>
-                  </div>
                 </div>
-              </div>
-            </div><!-- END JUMBOTRON -->
-          {{/if}}
-  </template>
+            </div>
+        </div><!-- END JUMBOTRON -->
+    {{/if}}
+</template>

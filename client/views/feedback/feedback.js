@@ -1,6 +1,6 @@
 Template.feedbackForm.rendered = function (){
-   $('#form-personal').validate();
-   Session.set("DocumentTitle","Feedback | Ask");
+  $('#form-personal').validate();
+  Session.set("DocumentTitle","Feedback | Ask");
 };
 
 Template.feedbackForm.events({
@@ -8,8 +8,8 @@ Template.feedbackForm.events({
     e.preventDefault();
 
     var feedbackAttributes = {
-       subject: $("#subject").val(),
-       text: $("#feedback").val()
+      subject: $("#subject").val(),
+      text: $("#feedback").val()
     };
 
     Meteor.call("addFeedback", feedbackAttributes, function(error, result){

@@ -1,109 +1,109 @@
 <template name="postList">
-  <div class="postListContainer b-r b-grey">
-  {{#if filterName}}
-    <div class="filterContainer">
-      Filtered by: <span class="bold all-caps font-montserrat">{{filterName}}</span>
-      <i class="closeFilter pull-right fa fa-times"></i>
-    </div>
-  {{/if}}
-  <div class="post-list b-r b-grey">
-    {{#if courseId}}
-
-      {{#if isUserInstructor}}
-          <a href="{{pathFor 'compose' courseId=courseId }}" style="opacity: 1;" class="course-settings">
-            <span id="newQuestion" style="padding-left:22px;"><i class="fa fa-pencil-square-o" style="margin-right: 3px;"></i> New Note </span>
-          </a>
-          <a class="course-settings" id="cogsModal" data-target="#courseSettingsModal" data-toggle="modal">
-            <i class="fa fa-cog"></i>
-          </a>
-      {{else}}
-        {{#if isUserEnrolled}}
-          <a href="{{pathFor 'compose' courseId=courseId }}" style="opacity: 1;" class="course-settings">
-            <span id="newQuestion" style="right: -11px;"><i class="fa fa-pencil-square-o" style="margin-right: 3px;"></i> New Question </span>
-          </a>
+    <div class="postListContainer b-r b-grey">
+        {{#if filterName}}
+            <div class="filterContainer">
+                Filtered by: <span class="bold all-caps font-montserrat">{{filterName}}</span>
+                <i class="closeFilter pull-right fa fa-times"></i>
+            </div>
         {{/if}}
-      {{/if}}
-    {{/if}}
-    <div id="postList">
-      <!-- START POST LIST SORTED BY DATE -->
-      <!-- END POST LIST SORTED BY DATE -->
+        <div class="post-list b-r b-grey">
+            {{#if courseId}}
 
-      {{#if equals filterName 'unanswered'}}
-        {{>thumbnailList}}
-      {{else}}
-        {{#if equals filterName 'unread'}}
-          {{>thumbnailList}}
-        {{else}}
-          {{#if equals isTagFilter 1}}
-            {{>thumbnailList}}
-          {{else}}
-            {{#if equals isTagFilter 2}}
-              {{>thumbnailList}}
-            {{else}}
-              {{>thumbnailList}}
+                {{#if isUserInstructor}}
+                    <a href="{{pathFor 'compose' courseId=courseId }}" style="opacity: 1;" class="course-settings">
+                        <span id="newQuestion" style="padding-left:22px;"><i class="fa fa-pencil-square-o" style="margin-right: 3px;"></i> New Note </span>
+                    </a>
+                    <a class="course-settings" id="cogsModal" data-target="#courseSettingsModal" data-toggle="modal">
+                        <i class="fa fa-cog"></i>
+                    </a>
+                {{else}}
+                    {{#if isUserEnrolled}}
+                        <a href="{{pathFor 'compose' courseId=courseId }}" style="opacity: 1;" class="course-settings">
+                            <span id="newQuestion" style="right: -11px;"><i class="fa fa-pencil-square-o" style="margin-right: 3px;"></i> New Question </span>
+                        </a>
+                    {{/if}}
+                {{/if}}
             {{/if}}
-          {{/if}}
-        {{/if}}
-      {{/if}}
+            <div id="postList">
+                <!-- START POST LIST SORTED BY DATE -->
+                <!-- END POST LIST SORTED BY DATE -->
+
+                {{#if equals filterName 'unanswered'}}
+                    {{>thumbnailList}}
+                {{else}}
+                    {{#if equals filterName 'unread'}}
+                        {{>thumbnailList}}
+                    {{else}}
+                        {{#if equals isTagFilter 1}}
+                            {{>thumbnailList}}
+                        {{else}}
+                            {{#if equals isTagFilter 2}}
+                                {{>thumbnailList}}
+                            {{else}}
+                                {{>thumbnailList}}
+                            {{/if}}
+                        {{/if}}
+                    {{/if}}
+                {{/if}}
+            </div>
+        </div>
     </div>
-  </div>
-</div>
 </template>
 
 <template name="thumbnailList">
-  {{#if areTherePosts}}
-    {{#each dateGroups}}
-      {{#if postsByDate.count}}
-      <div class="list-view-group-container">
-        <div class="list-view-group-header">
-          <span id="date">{{title}}</span>
+    {{#if areTherePosts}}
+        {{#each dateGroups}}
+            {{#if postsByDate.count}}
+                <div class="list-view-group-container">
+                    <div class="list-view-group-header">
+                        <span id="date">{{title}}</span>
+                    </div>
+                    <ul class="no-padding">
+                        {{#each postsByDate}}
+                            {{> postThumbnail}}
+                        {{/each}}
+                    </ul>
+                </div>
+            {{/if}}
+        {{/each}}
+    {{else}}
+        <div class="list-view-group-container" style="padding-top: 30px;">
+            <div class="list-view-group-header">
+                <span id="date">  </span>
+            </div>
         </div>
-        <ul class="no-padding">
-            {{#each postsByDate}}
-            {{> postThumbnail}}
-            {{/each}}
-        </ul>
-      </div>
-      {{/if}}
-    {{/each}}
-  {{else}}
-  <div class="list-view-group-container" style="padding-top: 30px;">
-    <div class="list-view-group-header">
-      <span id="date">  </span>
-    </div>
-  </div>
 
-      <div id="no-post-error" style="margin-top: 50%; text-align:center">
-        <h3>No questions in this room</h3>
-        {{#if userIsEnrolled}}
-          <h5>Be the first to ask a question</h5>
-          {{#if courseId}}
-            <a href="{{pathFor 'compose' courseId=courseId }}">
-              <button class="askQuestion composeBtn btn btn-default btn-rounded m-r-10">Ask</button>
-            </a>
-          {{/if}}
-        {{/if}}
-      </div>
+        <div id="no-post-error" style="margin-top: 50%; text-align:center">
+            <h3>No questions in this room</h3>
+            {{#if userIsEnrolled}}
+                <h5>Be the first to ask a question</h5>
+                {{#if courseId}}
+                    <a href="{{pathFor 'compose' courseId=courseId }}">
+                        <button class="askQuestion composeBtn btn btn-default btn-rounded m-r-10">Ask</button>
+                    </a>
+                {{/if}}
+            {{/if}}
+        </div>
 
-  {{/if}}
+    {{/if}}
 </template>
 <template name="postThumbnail">
-  <li class="item padding-15" data-post-id="{{_id}}">
-    <div class="checkbox  no-margin p-l-10">
-      <input type="checkbox" value="1" id="postcheckbox-0-0">
-      <label for="postcheckbox-0-0"></label>
-    </div>
-    <div class="inline m-l-15">
-      <p class="subject {{isPostViewed}} no-margin">{{#if badges.isInstructorPost}}<span class="label label-warning small" style="padding: 2px 5px">instr</span> {{/if}}{{title}}</p>
-      <p class="body no-margin">{{textWithoutTags}}</p>
-    </div>
-    <div class="datetime">{{dateFromNow}}</div>
-    <div class="badge-wrapper">
-      {{#unless badges.isInstructorPost}}
-        {{#if badges.hasInstructorAnswer}}<div class="badge-icon answeredInstructor simptip-position-left simptip-smooth simptip-movable" data-tooltip="Instructor Answer" > IA </div>{{/if}}
-        {{#if badges.hasStudentAnswer}}<div class="badge-icon answered simptip-position-left simptip-smooth simptip-movable" data-tooltip="Student Answer" > SA </div>{{/if}}
-      {{/unless}}
-    </div>
-    <div class="clearfix"></div>
-  </li>
+    <li class="item padding-15" data-post-id="{{_id}}">
+        <div class="checkbox  no-margin p-l-10">
+            <input type="checkbox" value="1" id="postcheckbox-0-0">
+            <label for="postcheckbox-0-0"></label>
+        </div>
+        <div class="inline m-l-15">
+            <p class="subject {{isPostViewed}} no-margin">{{#if badges.isInstructorPost}}<span class="label label-warning small" style="padding: 2px 5px">instr</span> {{/if}}{{title}}</p>
+            <p class="body no-margin">{{textWithoutTags}}</p>
+        </div>
+        <div class="datetime">{{dateFromNow}}</div>
+        <div class="badge-wrapper">
+            {{#unless badges.isInstructorPost}}
+                {{#if badges.hasInstructorAnswer}}<div class="badge-icon answeredInstructor simptip-position-left simptip-smooth simptip-movable" data-tooltip="Instructor Answer" > IA </div>{{/if}}
+                {{#if badges.hasStudentAnswer}}<div class="badge-icon answered simptip-position-left simptip-smooth simptip-movable" data-tooltip="Student Answer" > SA </div>{{/if}}
+            {{/unless}}
+        </div>
+        <div class="clearfix"></div>
+    </li>
 </template>
