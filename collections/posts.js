@@ -3,6 +3,18 @@ Drafts = new Mongo.Collection('drafts');
 LiveAnswers = new Mongo.Collection('liveAnswers');
 
 Meteor.methods({
+  /**
+   * @summary Inserts a new post in the database and creates appropriate notifications.
+   * @isMethod true
+   * @memberOf Posts
+   * @locus Server
+   * @param {Object} [postAttributes]
+   * @param {String} postAttributes.title The title of the post
+   * @param {String} postAttributes.text The text of the post
+   * @param {Array} postAttributes.tags The tags of the post
+   * @param {Boolean} postAttributes.isAnonymous Flags whether the post is anonymous or not
+   * @param {String} postAttributes.courseId The id of the course to which the post belongs
+   */
   postInsert: function(postAttributes) {
     check(postAttributes, {
       title: String,
@@ -131,6 +143,14 @@ Meteor.methods({
       _id: postId
     };
   },
+
+  /**
+   * @summary Updates a post in the database and updates all related notifications.
+   * @isMethod true
+   * @memberOf Posts
+   * @locus Server
+   * @param  {Object} postAttributes The attributes of the post to update.
+   */
   postUpdate: function(postAttributes) {
     check(postAttributes, {
       postId: String,
@@ -216,6 +236,14 @@ Meteor.methods({
     };
 
   },
+
+  /**
+   * @summary Saves a draft of a post in the database.
+   * @isMethod true
+   * @memberOf Posts
+   * @locus Server
+   * @param  {Object} postAttributes The attributes of the draft of the post.
+   */
   savePostDraft: function(postAttributes) {
     check(postAttributes, {
       title: String,
@@ -239,6 +267,14 @@ Meteor.methods({
 
     return true;
   },
+
+  /**
+   * @summary Upvotes a post in the database.
+   * @isMethod true
+   * @memberOf Posts
+   * @locus Server
+   * @param  {String} postId The id of the post to update.
+   */
   upvotePost: function(postId){
     check(postId, String);
 
@@ -294,6 +330,14 @@ Meteor.methods({
       Posts.update({_id: postId},options);
     }
   },
+
+  /**
+   * @summary Follows a question for the user, so that they can receive notifications.
+   * @isMethod true
+   * @memberOf Posts
+   * @locus Server
+   * @param  {String} postId The id of the post to follow.
+   */
   followQuestion: function(postId){
     check(postId, String);
 
@@ -329,6 +373,14 @@ Meteor.methods({
       }});
     }
   },
+
+  /**
+   * @summary Deletes a post from the database.
+   * @isMethod true
+   * @memberOf Posts
+   * @locus Server
+   * @param  {String} postId The id of the post to delete.
+   */
   postDelete: function(postId){
     check(postId, String);
 
@@ -358,6 +410,14 @@ Meteor.methods({
       throw new Meteor.Error('invalid-delete-permission', 'You don\'t have permission to delete this post!');
     }
   },
+
+  /**
+   * @summary Sets a post as viewed by the user.
+   * @isMethod true
+   * @memberOf Posts
+   * @locus Server
+   * @param  {String} postId The id of the post that has been viewed.
+   */
   viewPost: function(postId){
     check(postId, String);
 
@@ -381,6 +441,15 @@ Meteor.methods({
       throw new Meteor.Error('invalid-post', 'The post you are trying to view does not exist');
     }
   },
+
+  /**
+   * @summary Reports an abuse to the University (email and in-platform system).
+   * @todo
+   * @isMethod true
+   * @memberOf Posts
+   * @locus Server
+   * @param  {Object} reportAttributes The attributes of the post that has been reported.
+   */
   reportAbuse: function(reportAttributes) {
     var emailText = "";
 
@@ -417,6 +486,14 @@ Meteor.methods({
 
 
   },
+
+  /**
+   * @summary Flags a post as having a answer that is being typed. This is done by creating temporary records on the Liveanswers table that are removed after 60 seconds.
+   * @isMethod true
+   * @memberOf Posts
+   * @locus Server
+   * @param  {String} postId The id of the post with live answers.
+   */
   liveAnswer: function(postId) {
     check(postId, String);
 
@@ -496,6 +573,12 @@ EasySearch.createSearchIndex('courseSearch', {
     return query;
   }
 });
+
+/**
+ * @summary Sanitizes text before database insertion by removing malicious and not permitted tags.
+ * @static
+ * @param {String} text Text to sanitize
+ */
 
 purifyHTML = function(text){
   return sanitizeHtml(text, {

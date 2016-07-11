@@ -1,6 +1,15 @@
 Feedbacks = new Mongo.Collection('feedbacks');
 
 Meteor.methods({
+  /**
+   * @summary Processes a user feedback and emails it to the administrators.
+   * @isMethod true
+   * @memberOf Feedback
+   * @locus Server
+   * @param  {Object} [feedbackAttributes]
+   * @param  {String} feedbackAttributes.subject The subject of the feedback
+   * @param  {String} feedbackAttributes.text The content of the feedback
+   */
   addFeedback:function(feedbackAttributes){
     if (Meteor.user()) {
       check(feedbackAttributes, {
