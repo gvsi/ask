@@ -1,6 +1,14 @@
 Answers = new Mongo.Collection('answers');
 
 Meteor.methods({
+  /**
+   * @name answerInsert
+   * @summary Inserts an answer into the database, creates in-platform notifications, creates email notifications.
+   * @isMethod true
+   * @memberOf Answers
+   * @locus Server
+   * @param  {Object} answerAttributes The attributes of the answer to insert.
+   */
   answerInsert: function(answerAttributes) {
     check(answerAttributes, {
       postId: String,
@@ -152,6 +160,14 @@ Meteor.methods({
 
     return answer._id;
   },
+
+  /**
+   * @summary Saves an answer draft into the database.
+   * @isMethod true
+   * @memberOf Answers
+   * @locus Server
+   * @param  {Object} answerAttributes The attributes of the draft of the answer.
+   */
   saveAnswerDraft: function(answerAttributes) {
     check(answerAttributes, {
       body: String,
@@ -181,6 +197,14 @@ Meteor.methods({
 
     return true;
   },
+
+  /**
+   * @summary Updates an answer in the database, updates all notifications relating to the answer.
+   * @isMethod true
+   * @memberOf Answers
+   * @locus Server
+   * @param  {Object} answerAttributes The attributes of the answer to update.
+   */
   answerUpdate: function(answerAttributes) {
     check(answerAttributes, {
       answerId: String,
@@ -258,6 +282,13 @@ Meteor.methods({
 
     return answerAttributes.answerId;
   },
+  /**
+   * @summary Updates in the comment the database, updates all notifications related to the comment.
+   * @isMethod true
+   * @memberOf Answers
+   * @locus Server
+   * @param  {Object} commentAttributes The attributes of the comment to update.
+   */
   commentUpdate: function(commentAttributes) {
     check(commentAttributes, {
       answerId: String,
@@ -322,6 +353,13 @@ Meteor.methods({
 
     return commentAttributes.commentId;
   },
+  /**
+   * @summary Inserts a comment into the database, creates in-platform notifications, creates email notifications.
+   * @isMethod true
+   * @memberOf Answers
+   * @locus Server
+   * @param  {Object} answerAttributes The attributes of the answer to insert (including the answerId, to which the comment is associated).
+   */
   commentInsert: function(commentAttributes) {
     check(commentAttributes, {
       answerId: String,
@@ -397,6 +435,14 @@ Meteor.methods({
 
     return true;
   },
+
+  /**
+   * @summary Registers an upvote to an answer in the database.
+   * @isMethod true
+   * @memberOf Answers
+   * @locus Server
+   * @param  {String} answerId The id of the answer that is being upvoted.
+   */
   answerVote: function(answerId) {
     check(answerId, String);
 
@@ -461,6 +507,14 @@ Meteor.methods({
       }
     }
   },
+
+  /**
+   * @summary Deletes an answer from the database.
+   * @isMethod true
+   * @memberOf Answers
+   * @locus Server
+   * @param  {String} answerId The id of the answer that is being deleted.
+   */
   answerDelete: function(answerId) {
     check(answerId, String);
 
@@ -536,6 +590,14 @@ Meteor.methods({
       throw new Meteor.Error('invalid-delete-permission', 'You don\'t have permission to delete this answer!');
     }
   },
+  /**
+   * @summary Deletes a comment from the database.
+   * @isMethod true
+   * @memberOf Answers
+   * @locus Server
+   * @param  {String} answerId The id of the answer which contains the comment.
+   * @param  {String} commentId The id of the comment to delete.
+   */
   commentDelete: function(answerId, commentId) {
     check(answerId, String);
     check(commentId, String);
