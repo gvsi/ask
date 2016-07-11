@@ -43,7 +43,6 @@ dreamerslab:jquery.actual
 anti:fake
 gadicohen:headers
 chuangbo:cookie
-standard-minifiers
 meteor-base
 mobile-experience
 mongo
@@ -55,3 +54,5 @@ reload
 random
 ejson
 spacebars
+standard-minifier-css
+standard-minifier-js
