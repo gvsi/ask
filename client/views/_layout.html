@@ -1,39 +1,39 @@
 <!-- GLOBAL LAYOUT -->
 <template name="defaultLayout">
     <body class="fixed-header">
-        {{ >sideBar }}
-        <!-- START PAGE-CONTAINER -->
-        <div class="page-container">
-            {{ >header }}
-            <!-- START PAGE CONTENT WRAPPER -->
-            <div class="page-content-wrapper full-height">
-                <!-- START PAGE CONTENT -->
-                <div class="content full-height">
-                    {{>yield}}
-                </div>
+    {{ >sideBar }}
+    <!-- START PAGE-CONTAINER -->
+    <div class="page-container">
+        {{ >header }}
+        <!-- START PAGE CONTENT WRAPPER -->
+        <div class="page-content-wrapper full-height">
+            <!-- START PAGE CONTENT -->
+            <div class="content full-height">
+                {{>yield}}
             </div>
         </div>
-        {{ >overlaySearch }}
+    </div>
+    {{ >overlaySearch }}
     </body>
 </template>
 
 <!-- HOME LAYOUT -->
 <template name="homeLayout">
     <body class="fixed-header no-header">
-        {{ >sideBar }}
-        <!-- START PAGE-CONTAINER -->
-        <div class="page-container">
-            {{ >header type="home"}}
-            <!-- START PAGE CONTENT WRAPPER -->
-            <div class="page-content-wrapper full-height">
-                <!-- START PAGE CONTENT -->
-                {{>welcomeModal}}
-                <div class="content full-height landing is-loading">
-                    {{>yield}}
-                </div>
+    {{ >sideBar }}
+    <!-- START PAGE-CONTAINER -->
+    <div class="page-container">
+        {{ >header type="home"}}
+        <!-- START PAGE CONTENT WRAPPER -->
+        <div class="page-content-wrapper full-height">
+            <!-- START PAGE CONTENT -->
+            {{>welcomeModal}}
+            <div class="content full-height landing is-loading">
+                {{>yield}}
             </div>
         </div>
-        {{ >overlaySearch }}
+    </div>
+    {{ >overlaySearch }}
     </body>
 </template>
 
@@ -41,73 +41,73 @@
 <!-- ALL NOTIFICATIONS LAYOUT -->
 <template name="notificationsLayout">
     <body class="fixed-header">
-        {{ >sideBar }}
-        <!-- START PAGE-CONTAINER -->
-        <div class="page-container">
-            {{ >header }}
-            <!-- START PAGE CONTENT WRAPPER -->
-            <div class="page-content-wrapper full-height">
-                <!-- START PAGE CONTENT -->
-                <div class="content full-height">
-                    {{>yield}}
-                </div>
+    {{ >sideBar }}
+    <!-- START PAGE-CONTAINER -->
+    <div class="page-container">
+        {{ >header }}
+        <!-- START PAGE CONTENT WRAPPER -->
+        <div class="page-content-wrapper full-height">
+            <!-- START PAGE CONTENT -->
+            <div class="content full-height">
+                {{>yield}}
             </div>
         </div>
-        {{ >overlaySearch }}
+    </div>
+    {{ >overlaySearch }}
     </body>
 </template>
 
 <!-- POST LAYOUT -->
 <template name="postLayout">
     <body class="fixed-header">
-        {{ >sideBar }}
-        <!-- START PAGE-CONTAINER -->
-        <div class="page-container">
-            {{ >header }}
-            <!-- START PAGE CONTENT WRAPPER -->
-            <div class="page-content-wrapper full-height">
-                <!-- START PAGE CONTENT -->
-                <div class="content full-height">
-                    <div class="post-wrapper">
-                        <!-- START POST SIDEBAR MENU-->
-                        {{>yield}}
-                        <!-- START COMPOSE BUTTON FOR TABS -->
-                        <div class="compose-wrapper visible-xs">
-                          <a class="compose-post text-info pull-right m-r-10 m-t-10" href="{{pathFor 'compose' courseId=courseId }}"><i class="fa fa-pencil-square-o"></i></a>
-                        </div>
-                        <!-- END COMPOSE BUTTON -->
+    {{ >sideBar }}
+    <!-- START PAGE-CONTAINER -->
+    <div class="page-container">
+        {{ >header }}
+        <!-- START PAGE CONTENT WRAPPER -->
+        <div class="page-content-wrapper full-height">
+            <!-- START PAGE CONTENT -->
+            <div class="content full-height">
+                <div class="post-wrapper">
+                    <!-- START POST SIDEBAR MENU-->
+                    {{>yield}}
+                    <!-- START COMPOSE BUTTON FOR TABS -->
+                    <div class="compose-wrapper visible-xs">
+                        <a class="compose-post text-info pull-right m-r-10 m-t-10" href="{{pathFor 'compose' courseId=courseId }}"><i class="fa fa-pencil-square-o"></i></a>
                     </div>
+                    <!-- END COMPOSE BUTTON -->
                 </div>
             </div>
         </div>
-        {{ >overlaySearch }}
+    </div>
+    {{ >overlaySearch }}
     </body>
 </template>
 
 <template name="composePostLayout">
     <body class="fixed-header">
-        {{ >sideBar }}
-        <!-- START PAGE-CONTAINER -->
-        <div class="page-container">
-            {{ >header }}
-            <!-- START PAGE CONTENT WRAPPER -->
-            <div class="page-content-wrapper full-height">
-                <!-- START PAGE CONTENT -->
-                <div class="content full-height">
-                    <div class="post-wrapper">
-                        <!-- START POST SIDEBAR MENU-->
-                        {{>yield}}
-                        <!-- START COMPOSE BUTTON FOR TABS -->
-                        <!-- END COMPOSE BUTTON -->
-                    </div>
+    {{ >sideBar }}
+    <!-- START PAGE-CONTAINER -->
+    <div class="page-container">
+        {{ >header }}
+        <!-- START PAGE CONTENT WRAPPER -->
+        <div class="page-content-wrapper full-height">
+            <!-- START PAGE CONTENT -->
+            <div class="content full-height">
+                <div class="post-wrapper">
+                    <!-- START POST SIDEBAR MENU-->
+                    {{>yield}}
+                    <!-- START COMPOSE BUTTON FOR TABS -->
+                    <!-- END COMPOSE BUTTON -->
                 </div>
             </div>
         </div>
-        {{ >overlaySearch }}
+    </div>
+    {{ >overlaySearch }}
     </body>
 </template>
 <template name="loginLayout">
     <body class="fixed-header">
-        {{>yield}}
+    {{>yield}}
     </body>
 </template>

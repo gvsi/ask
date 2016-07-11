@@ -84,9 +84,9 @@ Template.postCompose.helpers({
   errorMessage: function(field) {
     var e = Session.get('postSubmitError');
     if (e)
-    return Session.get('postSubmitError')[field];
+      return Session.get('postSubmitError')[field];
     else
-    return false;
+      return false;
   },
   draftTitle: function() {
     var draft = Drafts.findOne({courseId: Router.current().params.courseId, userId: Meteor.userId(), type: "post"});
@@ -129,8 +129,8 @@ Template.postCompose.events({
       errors.compose = "Add a title to your question (at least 5 characters)";
       tinymce.execCommand('mceFocus',false,'composeTinyMCE');
       return Session.set('postSubmitError', errors);
-    } else if (titleLength < 5 || titleLength > 60) {
-      errors.compose = "The title cannot be shorter than 5 characters or longer than 60 characters (you have <strong>" + titleLength + "</strong> now)";
+    } else if (titleLength < 2 || titleLength > 60) {
+      errors.compose = "The title cannot be shorter than 2 characters or longer than 60 characters (you have <strong>" + titleLength + "</strong> now)";
       tinymce.execCommand('mceFocus',false,'composeTinyMCE');
       return Session.set('postSubmitError', errors);
     } else if (textLength == 0) {
@@ -138,8 +138,8 @@ Template.postCompose.events({
       tinyMCE.get('composeTinyMCE').setContent("");
       tinymce.execCommand('mceFocus',false,'composeTinyMCE');
       return Session.set('postSubmitError', errors);
-    } else if (textLength < 10 || textLength > 50000) {
-      errors.compose = "The description cannot be shorter than 10 characters (you have <strong>" + textLength + "</strong> now)";
+    } else if (textLength < 2 || textLength > 50000) {
+      errors.compose = "The description cannot be shorter than 2 characters (you have <strong>" + textLength + "</strong> now)";
       tinymce.execCommand('mceFocus',false,'composeTinyMCE');
       return Session.set('postSubmitError', errors);
     } else {
@@ -177,7 +177,7 @@ Template.postCompose.events({
     $("#previewTitle").text($('#postTitleInput').val());
     $("#previewContent").html(tinyMCE.get('composeTinyMCE').getContent());
     $("#postTags>.active").each(function() {
-       $("#previewTags").append('<button type="button" class="btn btn-tag btn-tag-light m-r-5">' + $( this ).text().trim() + '</button>');
+      $("#previewTags").append('<button type="button" class="btn btn-tag btn-tag-light m-r-5">' + $( this ).text().trim() + '</button>');
     });
 
     $('#previewContent pre code').each(function(i, block) {

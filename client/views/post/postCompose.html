@@ -1,131 +1,131 @@
 <template name="postCompose">
-  {{>postList posts=posts courseId=courseId}}
-  <div class="compose-container">
-  <form id="form-compose" role="form" autocomplete="off">
-   <!-- START COMPOSE POST -->
-   <div class="post-composer container-fluid">
-     <div class="row">
-       <div class="col-sm-12 no-padding">
-         <div class="form-group-attached">
-           <div class="row clearfix">
-                <div class="col-sm-12">
-               <div class="form-group form-group-default" style="padding-top:4px;">
-                 <span id="tag"> Choose Tags </span>
-                 <div class="btn-group" id="postTags" data-toggle="buttons">
-                   {{#each course.tags}}
-                   <label class="btn btn-complete {{#if isEditingPost}}{{isTagActive}}{{/if}}"><input type="checkbox">{{this}}</label>
-                   {{/each}}
-                 </div>
-               </div>
-             </div>
+    {{>postList posts=posts courseId=courseId}}
+    <div class="compose-container">
+        <form id="form-compose" role="form" autocomplete="off">
+            <!-- START COMPOSE POST -->
+            <div class="post-composer container-fluid">
+                <div class="row">
+                    <div class="col-sm-12 no-padding">
+                        <div class="form-group-attached">
+                            <div class="row clearfix">
+                                <div class="col-sm-12">
+                                    <div class="form-group form-group-default" style="padding-top:4px;">
+                                        <span id="tag"> Choose Tags </span>
+                                        <div class="btn-group" id="postTags" data-toggle="buttons">
+                                            {{#each course.tags}}
+                                                <label class="btn btn-complete {{#if isEditingPost}}{{isTagActive}}{{/if}}"><input type="checkbox">{{this}}</label>
+                                            {{/each}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <div class="form-group form-group-default">
+                                        <label>Title</label>
+                                        <input type="text" class="form-control" name="postTitle" id="postTitleInput" placeholder="What's your question?" value="{{#if isEditingPost}}{{editingPost.title}}{{else}}{{#if draftTitle}}{{draftTitle}}{{/if}}{{/if}}">
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <div class="tinymce-wrapper">
+                            <textarea id="composeTinyMCE" name="content">{{#if isEditingPost}}{{{editingPost.text}}}{{else}}{{/if}}</textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="row p-b-20">
+                    <div class="col-sm-11 m-t-5">
+                        {{#if errorMessage 'compose'}}
+                            <div><label class="error m-l-10">{{{errorMessage 'compose'}}}</label></div>
+                        {{/if}}
+
+                        {{#unless isUserInstructor}}
+                            <div class="checkbox inline m-l-20 simptip-position-top simptip-smooth simptip-movable simptip-multiline" data-tooltip="Post as anonymous to instructors and coursemates.">
+                                <input type="checkbox" value="1" id="anonymous" {{isAnonymousChecked}}>
+                                <label for="anonymous" class="hint-text">Post as anonymous</label>
+                            </div>
+                        {{/unless}}
+                        {{#if isEditingPost}}
+                            <button type="submit" id="composeSubmitBtn" data-type-form="postUpdate" class="btn btn-complete btn-cons m-l-10">Update</button>
+                        {{else}}
+                            <button type="submit" id="composeSubmitBtn" data-type-form="postInsert" class="btn btn-complete btn-cons m-l-10">
+                                {{#if isUserInstructor}}
+                                    Post
+                                {{else}}
+                                    Ask
+                                {{/if}}
+                            </button>
+                        {{/if}}
+                        <button id="previewButton" data-target="#previewModal" data-toggle="modal" class="btn btn-default btn-cons m-l-5">Preview</button>
+                        <button id="cancelUpdateBtn" class="btn btn-default btn-cons m-l-5">Cancel</button>
+
+                        {{#unless isEditingPost}}
+                            <button type="submit" id="saveDraftBtn" class="pull-right btn btn-default btn-cons simptip-position-bottom simptip-smooth simptip-movable" data-tooltip="Save a draft" style="margin-top:3px;font-size: 16px;min-width: 0px;"><i class="fa fa-floppy-o"></i></button>
+                        {{/unless}}
+
+                        <div id="howToQuestionPortlet" class="panel panel-default panel-collapsed m-l-20 m-r-20 m-t-10">
+                            <div class="panel-heading" style="padding: 17px 20px 7px 20px;">
+                                <div class="panel-title portlet-collapse" data-toggle="collapse" style="cursor:pointer">How to write a great question
+                                </div>
+                                <div class="panel-controls">
+                                    <ul>
+                                        <li><a href="#" class="portlet-collapse" data-toggle="collapse"><i class="portlet-icon portlet-icon-collapse"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="panel-body" style="display: none">
+                                <hr style="margin-top: 8px;">
+                                <p><span class="fs-18 font-heading" style="font-weight: 300; color: #2c2c2c;">Don't be that guy:</span> Try to be polite and friendly!</p>
+                                <p><span class="fs-18 font-heading" style="font-weight: 300; color: #2c2c2c;">Be specific:</span> Do ask specific, practical questions about the assignment or course topic.</p>
+                                <p><span class="fs-18 font-heading" style="font-weight: 300; color: #2c2c2c;">Don't go off topic:</span> Don’t ask opinion-based questions or questions unrelated to the course.</p>
+                                <p><span class="fs-18 font-heading" style="font-weight: 300; color: #2c2c2c;">Anonymity:</span> Ticking the anonymity checkbox will make anonymous to classmates and instructors. However, if you violate University regulations, instructors can report you and can still trace you back.</p>
+                                <p><span class="fs-18 font-heading" style="font-weight: 300; color: #2c2c2c;">Code editor:</span> Use the code editor to insert code in your question. This greatly improves code readability!</p>
+                                <p><span class="fs-18 font-heading" style="font-weight: 300; color: #2c2c2c;">Formula editor:</span> Want to insert a formula? Use the formula editor to easily add them as LaTeX.</p>
+                                <p><span class="fs-18 font-heading" style="font-weight: 300; color: #2c2c2c;">Draft:</span> You can save the draft of your question so you can finish writing it later.</p>
+                                <p><span class="fs-18 font-heading" style="font-weight: 300; color: #2c2c2c;">Link:</span> You can link another question on Ask by writing #</p>
+                            </div>
+                        </div>
+
+                        {{>previewModal}}
+
+                    </div>
+                </div>
             </div>
-            <div class="row">
-             <div class="col-sm-12">
-              <div class="form-group form-group-default">
-                <label>Title</label>
-                <input type="text" class="form-control" name="postTitle" id="postTitleInput" placeholder="What's your question?" value="{{#if isEditingPost}}{{editingPost.title}}{{else}}{{#if draftTitle}}{{draftTitle}}{{/if}}{{/if}}">
-              </div>
-            </div>
-
-           </div>
-         </div>
-         <div class="tinymce-wrapper">
-           <textarea id="composeTinyMCE" name="content">{{#if isEditingPost}}{{{editingPost.text}}}{{else}}{{/if}}</textarea>
-         </div>
-       </div>
-     </div>
-     <div class="row p-b-20">
-       <div class="col-sm-11 m-t-5">
-         {{#if errorMessage 'compose'}}
-          <div><label class="error m-l-10">{{{errorMessage 'compose'}}}</label></div>
-         {{/if}}
-
-         {{#unless isUserInstructor}}
-         <div class="checkbox inline m-l-20 simptip-position-top simptip-smooth simptip-movable simptip-multiline" data-tooltip="Post as anonymous to instructors and coursemates.">
-           <input type="checkbox" value="1" id="anonymous" {{isAnonymousChecked}}>
-           <label for="anonymous" class="hint-text">Post as anonymous</label>
-         </div>
-         {{/unless}}
-         {{#if isEditingPost}}
-           <button type="submit" id="composeSubmitBtn" data-type-form="postUpdate" class="btn btn-complete btn-cons m-l-10">Update</button>
-         {{else}}
-           <button type="submit" id="composeSubmitBtn" data-type-form="postInsert" class="btn btn-complete btn-cons m-l-10">
-             {{#if isUserInstructor}}
-               Post
-             {{else}}
-               Ask
-             {{/if}}
-           </button>
-         {{/if}}
-         <button id="previewButton" data-target="#previewModal" data-toggle="modal" class="btn btn-default btn-cons m-l-5">Preview</button>
-         <button id="cancelUpdateBtn" class="btn btn-default btn-cons m-l-5">Cancel</button>
-
-         {{#unless isEditingPost}}
-          <button type="submit" id="saveDraftBtn" class="pull-right btn btn-default btn-cons simptip-position-bottom simptip-smooth simptip-movable" data-tooltip="Save a draft" style="margin-top:3px;font-size: 16px;min-width: 0px;"><i class="fa fa-floppy-o"></i></button>
-         {{/unless}}
-
-         <div id="howToQuestionPortlet" class="panel panel-default panel-collapsed m-l-20 m-r-20 m-t-10">
-             <div class="panel-heading" style="padding: 17px 20px 7px 20px;">
-                 <div class="panel-title portlet-collapse" data-toggle="collapse" style="cursor:pointer">How to write a great question
-                 </div>
-                 <div class="panel-controls">
-                     <ul>
-                         <li><a href="#" class="portlet-collapse" data-toggle="collapse"><i class="portlet-icon portlet-icon-collapse"></i></a>
-                         </li>
-                     </ul>
-                 </div>
-             </div>
-             <div class="panel-body" style="display: none">
-               <hr style="margin-top: 8px;">
-               <p><span class="fs-18 font-heading" style="font-weight: 300; color: #2c2c2c;">Don't be that guy:</span> Try to be polite and friendly!</p>
-               <p><span class="fs-18 font-heading" style="font-weight: 300; color: #2c2c2c;">Be specific:</span> Do ask specific, practical questions about the assignment or course topic.</p>
-               <p><span class="fs-18 font-heading" style="font-weight: 300; color: #2c2c2c;">Don't go off topic:</span> Don’t ask opinion-based questions or questions unrelated to the course.</p>
-               <p><span class="fs-18 font-heading" style="font-weight: 300; color: #2c2c2c;">Anonymity:</span> Ticking the anonymity checkbox will make anonymous to classmates and instructors. However, if you violate University regulations, instructors can report you and can still trace you back.</p>
-               <p><span class="fs-18 font-heading" style="font-weight: 300; color: #2c2c2c;">Code editor:</span> Use the code editor to insert code in your question. This greatly improves code readability!</p>
-               <p><span class="fs-18 font-heading" style="font-weight: 300; color: #2c2c2c;">Formula editor:</span> Want to insert a formula? Use the formula editor to easily add them as LaTeX.</p>
-               <p><span class="fs-18 font-heading" style="font-weight: 300; color: #2c2c2c;">Draft:</span> You can save the draft of your question so you can finish writing it later.</p>
-               <p><span class="fs-18 font-heading" style="font-weight: 300; color: #2c2c2c;">Link:</span> You can link another question on Ask by writing #</p>
-             </div>
-         </div>
-
-         {{>previewModal}}
-
-       </div>
-     </div>
-   </div>
- </form>
- </div>
- <!-- END COMPOSE POST -->
+        </form>
+    </div>
+    <!-- END COMPOSE POST -->
 </template>
 
 <template name="previewModal">
-  <div class="modal fade slide-up disable-scroll" id="previewModal" tabindex="-1" role="dialog"  aria-labelledby="modalSlideUpLabel" aria-hidden="false">
-    <div class="modal-dialog" style="width: 60%;">
-      <div class="modal-content-wrapper">
-        <div class="modal-content" style="max-height:100%;overflow:auto;">
-          <button type="button" class="close m-r-10" data-dismiss="modal" aria-hidden="true"><i class="pg-close fs-14"></i></button>
-          <div class="modal-header clearfix text-left" style="padding-top:15px;">
-            <div class="post-content-header" style="margin-bottom:15px">
-              <h2><strong id="previewTitle"></strong></h2>
-            </div>
-            <div class="post-content-body m-t-10">
-              {{#mathjax}}
-              {{#autolink}}
-              <span id="previewContent"> </span>
-              {{/autolink}}
-              {{/mathjax}}
-            </div>
+    <div class="modal fade slide-up disable-scroll" id="previewModal" tabindex="-1" role="dialog"  aria-labelledby="modalSlideUpLabel" aria-hidden="false">
+        <div class="modal-dialog" style="width: 60%;">
+            <div class="modal-content-wrapper">
+                <div class="modal-content" style="max-height:100%;overflow:auto;">
+                    <button type="button" class="close m-r-10" data-dismiss="modal" aria-hidden="true"><i class="pg-close fs-14"></i></button>
+                    <div class="modal-header clearfix text-left" style="padding-top:15px;">
+                        <div class="post-content-header" style="margin-bottom:15px">
+                            <h2><strong id="previewTitle"></strong></h2>
+                        </div>
+                        <div class="post-content-body m-t-10">
+                            {{#mathjax}}
+                                {{#autolink}}
+                                    <span id="previewContent"> </span>
+                                {{/autolink}}
+                            {{/mathjax}}
+                        </div>
 
-            <div class="q-footer" id="previewTags" style="margin: 15px 0 -5px 0px;">
+                        <div class="q-footer" id="previewTags" style="margin: 15px 0 -5px 0px;">
 
+                        </div>
+                    </div>
+                    <div class="modal-footer" style="margin-top: 16px;text-align: center;">
+                        <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="modal-footer" style="margin-top: 16px;text-align: center;">
-            <button type="button" class="btn btn-default pull-right" data-dismiss="modal">Close</button>
-          </div>
+            <!-- /.modal-content -->
         </div>
-      </div>
-      <!-- /.modal-content -->
     </div>
-  </div>
 </template>

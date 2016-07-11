@@ -89,12 +89,12 @@ Template.postPage.rendered = function () {
 }
 
 Template.registerHelper("hasAvatar", function(argument){
-    var user = Meteor.users.findOne(this.userId);
-    if(user && user.profile.image){
-      return true;
-    }else{
-      return false;
-    }
+  var user = Meteor.users.findOne(this.userId);
+  if(user && user.profile.image){
+    return true;
+  }else{
+    return false;
+  }
 });
 
 Template.registerHelper("avatar", function(argument){
@@ -338,7 +338,7 @@ Template.postThumbnail.helpers({
   },
   textWithoutTags: function() {
     var dummyNode = document.createElement('div'),
-    resultText = '';
+        resultText = '';
     dummyNode.innerHTML = this.text;
     resultText = dummyNode.innerText || dummyNode.textContent
     return resultText;
@@ -352,11 +352,11 @@ Template.postThumbnail.helpers({
 
 Template.postContent.helpers({
   tinymceCallbacks: function() {
-     return {
-         finished: function(index, fileInfo, context) {
-           $('#picName').text(fileInfo.name);
-         }
-     }
+    return {
+      finished: function(index, fileInfo, context) {
+        $('#picName').text(fileInfo.name);
+      }
+    }
   },
   post: function() {
     var postId = Router.current().params.query.p;
@@ -380,11 +380,11 @@ Template.postContent.helpers({
     var postId = Router.current().params.query.p;
     var post = Posts.findOne(postId);
     if (post)
-    if(post.isAnonymous) {
-      return post.userIdenticon == Package.sha.SHA256(post._id + Meteor.user()._id)
-    } else {
-      return post.userId == Meteor.user()._id;
-    }
+      if(post.isAnonymous) {
+        return post.userIdenticon == Package.sha.SHA256(post._id + Meteor.user()._id)
+      } else {
+        return post.userId == Meteor.user()._id;
+      }
   },
   dateFromNow: function() {
     var post = Posts.findOne(Router.current().params.query.p);
@@ -403,9 +403,9 @@ Template.postContent.helpers({
   errorMessage: function(field) {
     var e = Session.get('answerSubmitErrors');
     if (e)
-    return Session.get('answerSubmitErrors')[field];
+      return Session.get('answerSubmitErrors')[field];
     else
-    return false;
+      return false;
   },
   isUserFollowing: function(){
     var postId = Router.current().params.query.p;
@@ -469,7 +469,7 @@ Template.postContent.helpers({
       return "VIEWED 1 TIME";
     } else {
       if (post)
-      return "VIEWED " + post.viewCount + " TIMES";
+        return "VIEWED " + post.viewCount + " TIMES";
     }
   },
   draft: function() {
@@ -686,9 +686,9 @@ Template.postContent.onRendered(function () {
     this.find('.answers-wrapper')._uihooks = {
       insertElement: function (node, next) {
         $(node)
-        .hide()
-        .insertBefore(next)
-        .fadeIn();
+            .hide()
+            .insertBefore(next)
+            .fadeIn();
       },
       moveElement: function (node, next) {
         var $node = $(node), $next = $(next);
@@ -698,7 +698,7 @@ Template.postContent.onRendered(function () {
         // find all the elements between next and node
         var $inBetween = $(next).nextUntil(node);
         if ($inBetween.length === 0)
-        $inBetween = $(node).nextUntil(next);
+          $inBetween = $(node).nextUntil(next);
 
         // now put node in place
         $(node).insertBefore(next);
@@ -708,13 +708,13 @@ Template.postContent.onRendered(function () {
 
         // move node *back* to where it was before
         $(node)
-        .removeClass('animate')
-        .css('top', oldTop - newTop);
+            .removeClass('animate')
+            .css('top', oldTop - newTop);
 
         // push every other element down (or up) to put them back
         $inBetween
-        .removeClass('animate')
-        .css('top', oldTop < newTop ? height : -1 * height)
+            .removeClass('animate')
+            .css('top', oldTop < newTop ? height : -1 * height)
 
 
         // force a redraw
@@ -1032,7 +1032,7 @@ loadPage = function(postId, needsScroll) {
   setTimeout(function () {
     $("#howToAnswerPortlet").portlet();
   }, 2000);
-  
+
   if(needsScroll && !$("li[data-post-id="+ postId +"]").visible() && $("li[data-post-id="+ postId +"]").offset()){
     $('.list-view-wrapper').scrollTop($("li[data-post-id="+ postId +"]").offset().top-92);
   }
@@ -1118,15 +1118,15 @@ function setUserLastCourse(){
 //removes all tags and whitespaces (&nbsp;)
 strip_tags = function(input, allowed) {
   allowed = (((allowed || '') + '')
-  .toLowerCase()
-  .match(/<[a-z][a-z0-9]*>/g) || [])
-  .join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
+      .toLowerCase()
+      .match(/<[a-z][a-z0-9]*>/g) || [])
+      .join(''); // making sure the allowed arg is a string containing only tags in lowercase (<a><b><c>)
   var tags = /<\/?([a-z][a-z0-9]*)\b[^>]*>/gi,
-  commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
+      commentsAndPhpTags = /<!--[\s\S]*?-->|<\?(?:php)?[\s\S]*?\?>/gi;
   return input.replace(commentsAndPhpTags, '')
-  .replace(tags, function($0, $1) {
-    return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
-  }).replace(/&nbsp;/gi,'').replace(/\s+/g, ''); // removes spaces and &nbsp;
+      .replace(tags, function($0, $1) {
+        return allowed.indexOf('<' + $1.toLowerCase() + '>') > -1 ? $0 : '';
+      }).replace(/&nbsp;/gi,'').replace(/\s+/g, ''); // removes spaces and &nbsp;
 }
 
 loadTinyMCE = function(selector, height) {
@@ -1173,7 +1173,7 @@ loadTinyMCE = function(selector, height) {
         posts.forEach(function(post) {
           // stripping tags
           var dummyNode = document.createElement('div'),
-          resultText = '';
+              resultText = '';
           dummyNode.innerHTML = post.text;
           resultText = dummyNode.innerText || dummyNode.textContent
           if(resultText.length > 40){

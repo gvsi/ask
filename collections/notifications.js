@@ -24,7 +24,7 @@ Meteor.methods({
     check(notificationId, String);
 
     Notifications.update({_id: notificationId}, {$set:{
-          seen: true
+      seen: true
     }});
   }
 });
