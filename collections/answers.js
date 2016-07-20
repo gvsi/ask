@@ -1,6 +1,14 @@
 Answers = new Mongo.Collection('answers');
 
 Meteor.methods({
+  /**
+   * @name answerInsert
+   * @summary Inserts an answer into the database, creates in-platform notifications, creates email notifications.
+   * @isMethod true
+   * @memberOf Answers
+   * @locus Server
+   * @param  {Object} answerAttributes The attributes of the answer to insert.
+   */
   answerInsert: function(answerAttributes) {
     check(answerAttributes, {
       postId: String,
@@ -16,19 +24,19 @@ Meteor.methods({
     var now = new Date();
 
     if (!user)
-    throw new Meteor.Error('invalid-user', 'You must be logged in to post an answer');
+      throw new Meteor.Error('invalid-user', 'You must be logged in to post an answer');
 
     var post = Posts.findOne(answerAttributes.postId);
     if (!post)
-    throw new Meteor.Error('invalid-answer', 'You must answer on a post');
+      throw new Meteor.Error('invalid-answer', 'You must answer on a post');
 
     var course = Courses.findOne(post.courseId);
     if (!course)
-    throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
+      throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
 
     //Checks if enrolled
     if(Meteor.users.findOne(user._id).profile.courses.indexOf(course._id) == -1)
-    throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
+      throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
 
     // set identiconHash
     var identiconHash = answerAttributes.isAnonymous ? answerAttributes.postId + user._id : user._id;
@@ -72,7 +80,7 @@ Meteor.methods({
     //increments answers counts
     var postUpdateOptions = {
       $inc: {answersCount: 1},
-    }
+    };
 
     // if first answer, add response time to post
     if (post.answersCount == 0) {
@@ -95,15 +103,18 @@ Meteor.methods({
     answer._id = Answers.insert(answer);
 
     if(post.followers){
+
+      var subject = answerAttributes.isAnonymous ? "Someone" : user.profile.name;
+
       post.followers.forEach(function(followerId) {
         if(followerId != Meteor.userId()){
           var answerBodyWithoutTags='';
           if(Meteor.isServer){
-                answerBodyWithoutTags = sanitizeHtml(answerAttributes.body, {allowedTags: []});
+            answerBodyWithoutTags = sanitizeHtml(answerAttributes.body, {allowedTags: []});
           }
 
           var notificationAttributes = {
-            intend: 'New answer added to: ',
+            intend: subject + ' answered a post:',
             postTitle: post.title,
             text: answerBodyWithoutTags,
             type: 'answerToPost',
@@ -126,21 +137,21 @@ Meteor.methods({
           var emailAttributes = {"emailBody": emailBody, "recipient": "", "subject": 'New answer to "' +post.title + '"'  };
 
           var unsubscribeUrl = LIVE_URL + 'settings/unsubscribe';
-        	var fullEmail = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html xmlns="http://www.w3.org/1999/xhtml"> <head> <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> <meta name="viewport" content="width=device-width"> <title>Ask newsletter</title> <!-- Shared on MafiaShare.net --><!-- Shared on MafiaShare.net --></head> <body style="width:100% !important;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;margin:0;padding:0;background-color:#FAFAFA"> <table class="bodytbl" width="100%" cellspacing="0" cellpadding="0" style="margin:0;padding:0;width:100% !important;border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;background-color:#FAFAFA;color:#787878;-webkit-text-size-adjust:none;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"> <td align="center" style="border-collapse:collapse;padding:0"> <table width="600" cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr height="20" style="padding:0"> <td align="left" valign="bottom" style="border-collapse:collapse;padding:0"> <div class="preheader" style="color:#787878;line-height:0px;font-size:0px;height:0px;display:none !important;visibility:hidden;text-indent:-9999px"><!-- PREHEADER --></div> <div class="small" style="color:#787878;line-height:20px"> </div> </td> </tr></table> <table width="600" cellspacing="0" cellpadding="0" class="line" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;border-bottom:1px solid #AAAAAA;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"></tr></table> <table width="600" cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"><td height="13" align="right" style="border-collapse:collapse;padding:0"><table cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"></tr></table></td></tr></table> <table width="600" cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr height="80" style="padding:0"> <td align="left" valign="bottom" style="border-collapse:collapse;padding:0; text-align:center;"> <table width="600" cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"> <img src="http://drive.google.com/uc?export=view&id=0BwFPOKemAxp2XzZjQWJCMVM1WHc"  width="250px"> </table> </td> </tr></table>';
-        	fullEmail += emailAttributes.emailBody;
-        	fullEmail += '<!-- Footer start --><table width="600" cellspacing="0" cellpadding="0" class="line" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;border-bottom:1px solid #AAAAAA;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"><td height="39" style="border-collapse:collapse;padding:0">&nbsp;</td></tr></table> <table width="600" cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"> <td class="small" align="left" valign="top" style="border-collapse:collapse;padding:0"> <div style="color:#787878;line-height:15px;font-size:10px;text-transform:uppercase;word-spacing:-1px;margin-bottom:4px;margin-top:6px">Please do not reply directly to this email</div> <div style="color:#787878;line-height:15px;font-size:10px;text-transform:uppercase;word-spacing:-1px;margin-bottom:4px;margin-top:6px">&copy; 2015 The University of Edinburgh, All rights reserved</div> </td> <td width="20" style="border-collapse:collapse;padding:0">&nbsp;</td> </tr></table> <!-- Footer end --> </td> </tr></table> </body> </html>';
+          var fullEmail = '<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> <html xmlns="http://www.w3.org/1999/xhtml"> <head> <meta http-equiv="Content-Type" content="text/html; charset=utf-8"> <meta name="viewport" content="width=device-width"> <title>Ask newsletter</title> <!-- Shared on MafiaShare.net --><!-- Shared on MafiaShare.net --></head> <body style="width:100% !important;-webkit-text-size-adjust:100%;-ms-text-size-adjust:100%;margin:0;padding:0;background-color:#FAFAFA"> <table class="bodytbl" width="100%" cellspacing="0" cellpadding="0" style="margin:0;padding:0;width:100% !important;border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;background-color:#FAFAFA;color:#787878;-webkit-text-size-adjust:none;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"> <td align="center" style="border-collapse:collapse;padding:0"> <table width="600" cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr height="20" style="padding:0"> <td align="left" valign="bottom" style="border-collapse:collapse;padding:0"> <div class="preheader" style="color:#787878;line-height:0px;font-size:0px;height:0px;display:none !important;visibility:hidden;text-indent:-9999px"><!-- PREHEADER --></div> <div class="small" style="color:#787878;line-height:20px"> </div> </td> </tr></table> <table width="600" cellspacing="0" cellpadding="0" class="line" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;border-bottom:1px solid #AAAAAA;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"></tr></table> <table width="600" cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"><td height="13" align="right" style="border-collapse:collapse;padding:0"><table cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"></tr></table></td></tr></table> <table width="600" cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr height="80" style="padding:0"> <td align="left" valign="bottom" style="border-collapse:collapse;padding:0; text-align:center;"> <table width="600" cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"> <img src="http://drive.google.com/uc?export=view&id=0BwFPOKemAxp2XzZjQWJCMVM1WHc"  width="250px"> </table> </td> </tr></table>';
+          fullEmail += emailAttributes.emailBody;
+          fullEmail += '<!-- Footer start --><table width="600" cellspacing="0" cellpadding="0" class="line" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;border-bottom:1px solid #AAAAAA;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"><td height="39" style="border-collapse:collapse;padding:0">&nbsp;</td></tr></table> <table width="600" cellspacing="0" cellpadding="0" style="border-collapse:collapse;mso-table-lspace:0pt;mso-table-rspace:0pt;color:#787878;font-family:Helvetica,Arial,sans-serif;font-size:12px"><tr style="padding:0"> <td class="small" align="left" valign="top" style="border-collapse:collapse;padding:0"> <div style="color:#787878;line-height:15px;font-size:10px;text-transform:uppercase;word-spacing:-1px;margin-bottom:4px;margin-top:6px">Please do not reply directly to this email</div> <div style="color:#787878;line-height:15px;font-size:10px;text-transform:uppercase;word-spacing:-1px;margin-bottom:4px;margin-top:6px">&copy; 2015 The University of Edinburgh, All rights reserved</div> </td> <td width="20" style="border-collapse:collapse;padding:0">&nbsp;</td> </tr></table> <!-- Footer end --> </td> </tr></table> </body> </html>';
 
-        	//temp
-        	var emailUser = Meteor.users.findOne({_id: followerId});
+          //temp
+          var emailUser = Meteor.users.findOne({_id: followerId});
           if(emailUser){
-          	emailAttributes.recipient = emailUser.profile.email;
+            emailAttributes.recipient = emailUser.profile.email;
             if(Meteor.isServer){
-            	Email.send({
-            		from:  "Inf2C-CS on Ask <ask@ask.sli.is.ed.ac.uk>",
-            		to: emailAttributes.recipient,
-            		subject: emailAttributes.subject,
-            		html: fullEmail,
-            	});
+              Email.send({
+                from:  "Inf2C-CS on Ask <ask@ask.sli.is.ed.ac.uk>",
+                to: emailAttributes.recipient,
+                subject: emailAttributes.subject,
+                html: fullEmail,
+              });
             }
           }
 
@@ -152,6 +163,14 @@ Meteor.methods({
 
     return answer._id;
   },
+
+  /**
+   * @summary Saves an answer draft into the database.
+   * @isMethod true
+   * @memberOf Answers
+   * @locus Server
+   * @param  {Object} answerAttributes The attributes of the draft of the answer.
+   */
   saveAnswerDraft: function(answerAttributes) {
     check(answerAttributes, {
       body: String,
@@ -160,19 +179,19 @@ Meteor.methods({
 
     var userId = Meteor.userId();
     if (!userId)
-    throw new Meteor.Error('invalid-user', 'You must be logged in to edit an answer');
+      throw new Meteor.Error('invalid-user', 'You must be logged in to edit an answer');
 
     var post = Posts.findOne(answerAttributes.postId);
     if (!post)
-    throw new Meteor.Error('invalid-answer', 'The post does not exist');
+      throw new Meteor.Error('invalid-answer', 'The post does not exist');
 
     var course = Courses.findOne(post.courseId);
     if (!course)
-    throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
+      throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
 
     //Checks if enrolled
     if(Meteor.users.findOne(userId).profile.courses.indexOf(course._id) == -1)
-    throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
+      throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
 
     if(Meteor.isServer){
       answerAttributes.body = purifyHTML(answerAttributes.body);
@@ -181,6 +200,14 @@ Meteor.methods({
 
     return true;
   },
+
+  /**
+   * @summary Updates an answer in the database, updates all notifications relating to the answer.
+   * @isMethod true
+   * @memberOf Answers
+   * @locus Server
+   * @param  {Object} answerAttributes The attributes of the answer to update.
+   */
   answerUpdate: function(answerAttributes) {
     check(answerAttributes, {
       answerId: String,
@@ -192,48 +219,48 @@ Meteor.methods({
     var user = Meteor.user();
 
     if (!user)
-    throw new Meteor.Error('invalid-user', 'You must be logged in to edit an answer');
+      throw new Meteor.Error('invalid-user', 'You must be logged in to edit an answer');
 
     var post = Posts.findOne(answerAttributes.postId);
     if (!post)
-    throw new Meteor.Error('invalid-answer', 'You must answer on a post');
+      throw new Meteor.Error('invalid-answer', 'You must answer on a post');
 
     var answer = Answers.findOne({_id: answerAttributes.answerId});
     if (!answer)
-    throw new Meteor.Error('invalid-answer', 'The answer you\'re trying to edit does not exist');
+      throw new Meteor.Error('invalid-answer', 'The answer you\'re trying to edit does not exist');
 
     if (answer.userId != Meteor.userId())
-    throw new Meteor.Error('invalid-permission', 'You need to be the owner of an answer you want to edit');
+      throw new Meteor.Error('invalid-permission', 'You need to be the owner of an answer you want to edit');
 
     var course = Courses.findOne(post.courseId);
     if (!course)
-    throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
+      throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
 
     //Checks if enrolled
     if(Meteor.users.findOne(user._id).profile.courses.indexOf(course._id) == -1)
-    throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
+      throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
 
     // set identiconHash
     var identiconHash = answerAttributes.isAnonymous ? answerAttributes.postId + user._id : user._id;
     var now = new Date();
     Answers.update(
-      {_id: answerAttributes.answerId},
-      {
-        $set: {
-          body: answerAttributes.body,
-          isAnonymous: answerAttributes.isAnonymous,
-          userIdenticon: Package.sha.SHA256(identiconHash),
-          updatedAt: now
-        },
-        // adds to revision history
-        $addToSet: {
-          revisionHistory: {
-            revisionDate: now,
+        {_id: answerAttributes.answerId},
+        {
+          $set: {
             body: answerAttributes.body,
             isAnonymous: answerAttributes.isAnonymous,
+            userIdenticon: Package.sha.SHA256(identiconHash),
+            updatedAt: now
+          },
+          // adds to revision history
+          $addToSet: {
+            revisionHistory: {
+              revisionDate: now,
+              body: answerAttributes.body,
+              isAnonymous: answerAttributes.isAnonymous,
+            }
           }
         }
-      }
     );
 
     var answerNotifications = Notifications.find({"answerId": answerAttributes.answerId, "type": 'answerToPost'});
@@ -258,6 +285,13 @@ Meteor.methods({
 
     return answerAttributes.answerId;
   },
+  /**
+   * @summary Updates in the comment the database, updates all notifications related to the comment.
+   * @isMethod true
+   * @memberOf Answers
+   * @locus Server
+   * @param  {Object} commentAttributes The attributes of the comment to update.
+   */
   commentUpdate: function(commentAttributes) {
     check(commentAttributes, {
       answerId: String,
@@ -269,23 +303,23 @@ Meteor.methods({
 
     var user = Meteor.user();
     if (!user)
-    throw new Meteor.Error('invalid-user', 'You must be logged in to edit a comment');
+      throw new Meteor.Error('invalid-user', 'You must be logged in to edit a comment');
 
     var post = Posts.findOne(commentAttributes.postId);
     if (!post)
-    throw new Meteor.Error('invalid-answer', 'You must answer on a post');
+      throw new Meteor.Error('invalid-answer', 'You must answer on a post');
 
     var course = Courses.findOne(post.courseId);
     if (!course)
-    throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
+      throw new Meteor.Error('invalid-course', 'This post does not belong to any course');
 
     //Checks if enrolled
     if(Meteor.users.findOne(user._id).profile.courses.indexOf(course._id) == -1)
-    throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
+      throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
 
     var answer = Answers.findOne({_id: commentAttributes.answerId});
     if (!answer)
-    throw new Meteor.Error('invalid-answer', "The comment should belong to an answer");
+      throw new Meteor.Error('invalid-answer', "The comment should belong to an answer");
 
     // set identiconHash
     var identiconHash = commentAttributes.isAnonymous ? commentAttributes.postId + user._id : user._id;
@@ -300,28 +334,35 @@ Meteor.methods({
       });
     }
 
-      Notifications.update({"answerId": commentAttributes.answerId, "type": 'commentToAnswer', "text": commentBodyWithoutTags}, {$set:{
-        text: commentAttributes.body,
-      }});
+    Notifications.update({"answerId": commentAttributes.answerId, "type": 'commentToAnswer', "text": commentBodyWithoutTags}, {$set:{
+      text: commentAttributes.body,
+    }});
 
 
     Answers.update(
-      {
-        "_id": commentAttributes.answerId,
-        "comments._id": commentAttributes.commentId
-      },
-      {
-        $set: {
-          "comments.$.body": commentAttributes.body,
-          "comments.$.isAnonymous": commentAttributes.isAnonymous,
-          "comments.$.userIdenticon": Package.sha.SHA256(identiconHash),
-          "comments.$.updatedAt": now
+        {
+          "_id": commentAttributes.answerId,
+          "comments._id": commentAttributes.commentId
+        },
+        {
+          $set: {
+            "comments.$.body": commentAttributes.body,
+            "comments.$.isAnonymous": commentAttributes.isAnonymous,
+            "comments.$.userIdenticon": Package.sha.SHA256(identiconHash),
+            "comments.$.updatedAt": now
+          }
         }
-      }
     );
 
     return commentAttributes.commentId;
   },
+  /**
+   * @summary Inserts a comment into the database, creates in-platform notifications, creates email notifications.
+   * @isMethod true
+   * @memberOf Answers
+   * @locus Server
+   * @param  {Object} answerAttributes The attributes of the answer to insert (including the answerId, to which the comment is associated).
+   */
   commentInsert: function(commentAttributes) {
     check(commentAttributes, {
       answerId: String,
@@ -335,24 +376,24 @@ Meteor.methods({
 
     var user = Meteor.user();
     if(!user)
-    throw new Meteor.Error('invalid-user', 'You must be logged in to insert a comment');
+      throw new Meteor.Error('invalid-user', 'You must be logged in to insert a comment');
 
     var answer = Answers.findOne(commentAttributes.answerId);
 
     if (!answer)
-    throw new Meteor.Error('invalid-comment', 'You must comment on an answer');
+      throw new Meteor.Error('invalid-comment', 'You must comment on an answer');
 
     var post = Posts.findOne(answer.postId);
     if (!post)
-    throw new Meteor.Error('invalid-post', 'You comment must belong to answer in a post');
+      throw new Meteor.Error('invalid-post', 'You comment must belong to answer in a post');
 
     var course = Courses.findOne(post.courseId);
     if (!course)
-    throw new Meteor.Error('invalid-course', 'You comment must belong to answer in a post in a course');
+      throw new Meteor.Error('invalid-course', 'You comment must belong to answer in a post in a course');
 
     //Checks if enrolled
     if(Meteor.users.findOne(user._id).profile.courses.indexOf(course._id) == -1)
-    throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
+      throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course');
 
     // set identiconHash
     var identiconHash = commentAttributes.isAnonymous ? answer.postId + user._id : user._id;
@@ -380,8 +421,9 @@ Meteor.methods({
         answerBodyWithoutTags =  sanitizeHtml(answer.body, {allowedTags: []});
       }
 
+      var subject = commentAttributes.isAnonymous ? "Someone" : user.profile.name;
       var notificationAttributes = {
-        intend: 'New comment to answer: ',
+        intend: subject + ' posted a comment: ',
         postTitle: answerBodyWithoutTags,
         text: commentBodyWithoutTags,
         type: 'commentToAnswer',
@@ -397,12 +439,20 @@ Meteor.methods({
 
     return true;
   },
+
+  /**
+   * @summary Registers an upvote to an answer in the database.
+   * @isMethod true
+   * @memberOf Answers
+   * @locus Server
+   * @param  {String} answerId The id of the answer that is being upvoted.
+   */
   answerVote: function(answerId) {
     check(answerId, String);
 
     var userId = Meteor.userId();
     if(!userId)
-    throw new Meteor.Error('invalid-user', 'You must be logged in to upvote an answer');
+      throw new Meteor.Error('invalid-user', 'You must be logged in to upvote an answer');
 
     var answer = Answers.findOne(answerId);
 
@@ -420,14 +470,14 @@ Meteor.methods({
     if (post) {
       course = Courses.findOne(post.courseId);
       if(!course)
-      throw new Meteor.Error('invalid-course', 'The post must belong to a course');
+        throw new Meteor.Error('invalid-course', 'The post must belong to a course');
     } else {
       throw new Meteor.Error('invalid-post', 'The answer must belong to a post');
     }
 
     //Checks if enrolled
     if(Meteor.users.findOne(userId).profile.courses.indexOf(course._id) == -1)
-    throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course to upvote');
+      throw new Meteor.Error('invalid-permission', 'You need to be enrolled in the course to upvote');
 
     if(answer.upvoters){
       var upVoters = answer.upvoters;
@@ -461,12 +511,20 @@ Meteor.methods({
       }
     }
   },
+
+  /**
+   * @summary Deletes an answer from the database.
+   * @isMethod true
+   * @memberOf Answers
+   * @locus Server
+   * @param  {String} answerId The id of the answer that is being deleted.
+   */
   answerDelete: function(answerId) {
     check(answerId, String);
 
     var userId = Meteor.userId();
     if(!userId)
-    throw new Meteor.Error('invalid-user', 'You must be logged in to delete an answer');
+      throw new Meteor.Error('invalid-user', 'You must be logged in to delete an answer');
 
     var answer = Answers.findOne(answerId);
 
@@ -536,13 +594,21 @@ Meteor.methods({
       throw new Meteor.Error('invalid-delete-permission', 'You don\'t have permission to delete this answer!');
     }
   },
+  /**
+   * @summary Deletes a comment from the database.
+   * @isMethod true
+   * @memberOf Answers
+   * @locus Server
+   * @param  {String} answerId The id of the answer which contains the comment.
+   * @param  {String} commentId The id of the comment to delete.
+   */
   commentDelete: function(answerId, commentId) {
     check(answerId, String);
     check(commentId, String);
 
     var userId = Meteor.userId();
     if(!userId)
-    throw new Meteor.Error('invalid-user', 'You must be logged in to delete a comment');
+      throw new Meteor.Error('invalid-user', 'You must be logged in to delete a comment');
 
     var answer = Answers.findOne(answerId);
 
@@ -574,15 +640,15 @@ Meteor.methods({
     if(hasPermission){
 
       Answers.update(
-        {
-          "_id": answerId,
-          "comments._id": commentId
-        },
-        {
-          $pull: {comments: {
-            _id: commentId
-          }}
-        }
+          {
+            "_id": answerId,
+            "comments._id": commentId
+          },
+          {
+            $pull: {comments: {
+              _id: commentId
+            }}
+          }
       )
     } else {
       throw new Meteor.Error('invalid-delete-permission', 'You don\'t have permission to delete this comment!');

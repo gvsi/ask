@@ -23,7 +23,7 @@ Template.courseStats.helpers({
             builtArea();
           }, 500);
         }
-      });
+        });
       }
     }
 

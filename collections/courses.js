@@ -4,6 +4,13 @@ Enrolments = new Mongo.Collection('enrolments');
 CoursesCsv = new Mongo.Collection('courses.csv');
 
 Meteor.methods({
+  /**
+   * @summary Inserts or removes tag from a course.
+   * @isMethod true
+   * @memberOf Courses
+   * @locus Server
+   * @param  {Object} tagAttributes The attributes of the tag to inser.
+   */
   addOrRemoveTag: function(tagAttributes){
     check(tagAttributes, {
       courseId: String,
@@ -34,6 +41,13 @@ Meteor.methods({
       throw new Meteor.Error('invalid-course', 'This course does not exist');
     }
   },
+  /**
+   * @summary Add or removes an instructor from the course.
+   * @isMethod true
+   * @memberOf Courses
+   * @locus Server
+   * @param  {Object} instructorAttributes The attributes of the instructor to add or remove.
+   */
   addOrRemoveInstructor: function(instructorAttributes){
     check(instructorAttributes, {
       courseId: String,
@@ -63,6 +77,13 @@ Meteor.methods({
       throw new Meteor.Error('invalid-course', 'This course does not exist');
     }
   },
+  /**
+   * @summary Toggle the option to use the default tags for a particular course.
+   * @isMethod true
+   * @memberOf Courses
+   * @locus Server
+   * @param  {Object} tagAttributes The attributes of the new settings: course id and the toggle setting.
+   */
   setOrRemoveDefaultTags: function(tagAttributes){
     check(tagAttributes, {
       courseId: String,
@@ -93,6 +114,13 @@ Meteor.methods({
       throw new Meteor.Error('invalid-course', 'This course does not exist');
     }
   },
+  /**
+   * @summary Set a course to be the last visited by the user, so that it can be loaded immediately for future access.
+   * @isMethod true
+   * @memberOf Courses
+   * @locus Server
+   * @param  {String} courseId The id of the courses that has been last visited.
+   */
   setLastCourse: function(courseId){
     check(courseId, String);
     var userId = Meteor.userId();

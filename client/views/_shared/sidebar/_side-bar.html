@@ -1,88 +1,88 @@
 <template name="sideBar">
     <!-- BEGIN SIDEBAR -->
     <div class="page-sidebar" data-pages="sidebar">
-      <div id="appMenu" class="sidebar-overlay-slide from-top">
-      </div>
-      <!-- BEGIN SIDEBAR HEADER -->
-      <div class="sidebar-header">
-        <img src="/img/ask_logo_white.png" alt="logo" class="brand" data-src="/img/logo_white.png" data-src-retina="/img/ask_logo_white_2x.png" height="35">
-        <div class="sidebar-header-controls">
-          <button data-toggle-pin="sidebar" class="btn btn-link visible-lg-inline m-l-35" type="button"><i class="fa fs-12"></i>
-          </button>
+        <div id="appMenu" class="sidebar-overlay-slide from-top">
         </div>
-      </div>
-      <!-- END SIDEBAR HEADER -->
-      <!-- BEGIN SIDEBAR MENU -->
-      <div class="sidebar-menu">
-        <ul class="menu-items">
-          <li class="m-t-30 ">
-            <a href="{{pathFor 'home'}}">
-              <span class="title">Home</span>
-            </a>
-            <span class="icon-thumbnail"><i class="pg pg-home"></i></span>
-          </li>
-          <li class="" style="display:inline">
-            {{#if hasNewNotifications}}
-              <a href="{{pathFor 'notifications'}}" class="detailed">
-                <span class="title">Notifications</span>
-                <span class="details">{{newNotificationsCount}} new notifications</span>
-              </a>
-            {{else}}
-              <a href="{{pathFor 'notifications'}}">
-                <span class="title">Notifications</span>
-              </a>
-            {{/if}}
-            <span class="icon-thumbnail "><i class="fa fa-globe"></i></span>
-          </li>
-          <li class="">
-            <a href="{{pathFor 'feedback'}}">
-              <span class="title">Feedback</span>
-            </a>
-            <span class="icon-thumbnail"><i class="pg pg-outdent"></i></span>
-          </li>
-          <li class="open">
-            <a href="javascript:;"><span class="title">Courses</span>
-            <span class="arrow"></span></a>
-            <span class="icon-thumbnail"><i class="fa fa-book"></i></span>
-            <ul class="sub-menu" style="display:block;">
-                  {{#each currentCourses}}
-                  <li>
-                    <a href="{{pathFor 'room' courseId=this._id }}">{{name}}</a>
-                    <span class="icon-thumbnail">{{courseInitials}}</span>
-                  </li>
-                  {{/each}}
+        <!-- BEGIN SIDEBAR HEADER -->
+        <div class="sidebar-header">
+            <img src="/img/ask_logo_white.png" alt="logo" class="brand" data-src="/img/logo_white.png" data-src-retina="/img/ask_logo_white_2x.png" height="35">
+            <div class="sidebar-header-controls">
+                <button data-toggle-pin="sidebar" class="btn btn-link visible-lg-inline m-l-35" type="button"><i class="fa fs-12"></i>
+                </button>
+            </div>
+        </div>
+        <!-- END SIDEBAR HEADER -->
+        <!-- BEGIN SIDEBAR MENU -->
+        <div class="sidebar-menu">
+            <ul class="menu-items">
+                <li class="m-t-30 ">
+                    <a href="{{pathFor 'home'}}">
+                        <span class="title">Home</span>
+                    </a>
+                    <span class="icon-thumbnail"><i class="pg pg-home"></i></span>
+                </li>
+                <li class="" style="display:inline">
+                    {{#if hasNewNotifications}}
+                        <a href="{{pathFor 'notifications'}}" class="detailed">
+                            <span class="title">Notifications</span>
+                            <span class="details">{{newNotificationsCount}} new notifications</span>
+                        </a>
+                    {{else}}
+                        <a href="{{pathFor 'notifications'}}">
+                            <span class="title">Notifications</span>
+                        </a>
+                    {{/if}}
+                    <span class="icon-thumbnail "><i class="fa fa-globe"></i></span>
+                </li>
+                <li class="">
+                    <a href="{{pathFor 'feedback'}}">
+                        <span class="title">Feedback</span>
+                    </a>
+                    <span class="icon-thumbnail"><i class="pg pg-outdent"></i></span>
+                </li>
+                <li class="open">
+                    <a href="javascript:;"><span class="title">Courses</span>
+                        <span class="arrow"></span></a>
+                    <span class="icon-thumbnail"><i class="fa fa-book"></i></span>
+                    <ul class="sub-menu" style="display:block;">
+                        {{#each currentCourses}}
+                            <li>
+                                <a href="{{pathFor 'room' courseId=this._id }}">{{name}}</a>
+                                <span class="icon-thumbnail">{{courseInitials}}</span>
+                            </li>
+                        {{/each}}
+                    </ul>
+                </li>
+                {{#if arePastCourses}}
+                    <li class="">
+                        <a href="" style="pointer: cursor;">
+                            <span class="title">Past Courses</span>
+                            <span class="arrow"></span>
+                        </a>
+                        <span class="icon-thumbnail"><i class="fa fa-graduation-cap"></i></span>
+                        <ul class="sub-menu">
+                            {{#each pastCourses}}
+                                <li>
+                                    <a href="" style="cursor: pointer;"><span class="title">{{name}}</span>
+                                        <span class="arrow"></span></a>
+                                    <span class="icon-thumbnail" style="font-size: 11px;">{{yearThumbnail}}</span>
+                                    <ul class="sub-menu">
+                                        {{#each coursesArray}}
+                                            <li>
+                                                <a href="{{pathFor 'room' courseId=this._id }}">{{name}}</a>
+                                                <span class="icon-thumbnail">{{initials}}</span>
+                                            </li>
+                                        {{/each}}
+                                    </ul>
+                                </li>
+                            {{/each}}
+                        </ul>
+                    </li>
+                {{/if}}
             </ul>
-          </li>
-          {{#if arePastCourses}}
-          <li class="">
-             <a href="" style="pointer: cursor;">
-               <span class="title">Past Courses</span>
-               <span class="arrow"></span>
-             </a>
-             <span class="icon-thumbnail"><i class="fa fa-graduation-cap"></i></span>
-             <ul class="sub-menu">
-               {{#each pastCourses}}
-               <li>
-                <a href="" style="cursor: pointer;"><span class="title">{{name}}</span>
-                <span class="arrow"></span></a>
-                <span class="icon-thumbnail" style="font-size: 11px;">{{yearThumbnail}}</span>
-                <ul class="sub-menu">
-                  {{#each coursesArray}}
-                  <li>
-                    <a href="{{pathFor 'room' courseId=this._id }}">{{name}}</a>
-                    <span class="icon-thumbnail">{{initials}}</span>
-                  </li>
-                  {{/each}}
-                </ul>
-              </li>
-              {{/each}}
-             </ul>
-           </li>
-          {{/if}}
-        </ul>
-        <div class="clearfix"></div>
-      </div>
-      <!-- END SIDEBAR MENU -->
+            <div class="clearfix"></div>
+        </div>
+        <!-- END SIDEBAR MENU -->
     </div>
     <!-- END SIDEBAR -->
 </template>
