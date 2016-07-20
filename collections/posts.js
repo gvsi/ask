@@ -444,7 +444,6 @@ Meteor.methods({
 
   /**
    * @summary Reports an abuse to the University (email and in-platform system).
-   * @todo
    * @isMethod true
    * @memberOf Posts
    * @locus Server
