@@ -1,61 +1,61 @@
 <template name="feedback">
-  <!-- START CONTAINER FLUID -->
-  <div class="container-fluid container-fixed-lg">
-    <div class="row">
-      <div class="col-lg-5 col-md-6">
-        <!-- START PANEL -->
-        <div class="panel panel-transparent">
-          <div class="panel-heading">
-            <div class="panel-title">Feedback
+    <!-- START CONTAINER FLUID -->
+    <div class="container-fluid container-fixed-lg">
+        <div class="row">
+            <div class="col-lg-5 col-md-6">
+                <!-- START PANEL -->
+                <div class="panel panel-transparent">
+                    <div class="panel-heading">
+                        <div class="panel-title">Feedback
+                        </div>
+                    </div>
+                    <div class="panel-body">
+                        <h3>Tell us about your experience</h3>
+                        <p>We value your feedback greatly and where possible will look to use it to improve the plaform.<br>
+                            We aim at delivering a great user experience to the University's community of students and staff.
+                            That's why we appreciate your feedback on bugs, features and general user experience while using the platform.
+                            <br><br>Thanks,<br><i>The Ask team</i></p>
+                    </div>
+                </div>
+                <!-- END PANEL -->
             </div>
-          </div>
-          <div class="panel-body">
-            <h3>Tell us about your experience</h3>
-            <p>We value your feedback greatly and where possible will look to use it to improve the plaform.<br>
-              We aim at delivering a great user experience to the University's community of students and staff.
-              That's why we appreciate your feedback on bugs, features and general user experience while using the platform.
-              <br><br>Thanks,<br><i>The Ask team</i></p>
-            </div>
-          </div>
-          <!-- END PANEL -->
-        </div>
 
-        <div class="col-lg-6 col-md-5 m-t-40">
-          <!-- START PANEL -->
-          <div class="panel panel-transparent">
-            <div class="panel-body">
-              {{> feedbackForm }}
+            <div class="col-lg-6 col-md-5 m-t-40">
+                <!-- START PANEL -->
+                <div class="panel panel-transparent">
+                    <div class="panel-body">
+                        {{> feedbackForm }}
+                    </div>
+                </div>
+                <!-- END PANEL -->
             </div>
-          </div>
-          <!-- END PANEL -->
         </div>
-      </div>
     </div>
     <!-- END CONTAINER FLUID -->
-  </template>
+</template>
 
-  <template name="feedbackForm">
+<template name="feedbackForm">
     <form id="form-personal" role="form" enctype="multipart/form-data" autocomplete="off">
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="form-group form-group-default">
-            <label>Subject</label>
-            <input class="form-control" id="subject" name="subject" placeholder="What is your feedback about?" required>
-          </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group form-group-default">
+                    <label>Subject</label>
+                    <input class="form-control" id="subject" name="subject" placeholder="What is your feedback about?" required>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="col-sm-12">
-          <div class="form-group form-group-default">
-            <label>Your feedback</label>
-            <textarea class="form-control" id="feedback" name="feedback" placeholder="Write about your experience here..." aria-invalid="false" style="height:150px;margin-top:0px" required></textarea>
-          </div>
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="form-group form-group-default">
+                    <label>Your feedback</label>
+                    <textarea class="form-control" id="feedback" name="feedback" placeholder="Write about your experience here..." aria-invalid="false" style="height:150px;margin-top:0px" required></textarea>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="row">
-        <div class="clearfix"></div>
-        <button class="btn btn-primary m-t-20" id="submitFeedback">Submit feedback</button>
-      </div>
+        <div class="row">
+            <div class="clearfix"></div>
+            <button class="btn btn-primary m-t-20" id="submitFeedback">Submit feedback</button>
+        </div>
     </form>
 
-  </template>
+</template>

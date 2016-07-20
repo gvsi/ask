@@ -6,10 +6,10 @@ Template.home.rendered = function(){
 
   // Scrolly.
   $('.scrolly')
-  .scrolly({
-    speed: 1500,
-    offset: -10
-  });
+      .scrolly({
+        speed: 1500,
+        offset: -10
+      });
 
   setTimeout(function () {
     $(".landing").removeClass('is-loading');
@@ -50,6 +50,6 @@ Template.home.helpers({
 
 Template.home.events({
   'click .courseFront' : function(e, t){
-     Router.go('room', {courseId: this._id});
-   },
+    Router.go('room', {courseId: this._id});
+  },
 });

@@ -8,7 +8,7 @@ Template.defaultLayout.rendered = function (){
 		var $progress = $(this)
 		$progress.circularProgress($progress.data())
 	})
-}
+};
 
 Template.body.events({
 	"click .alert": function(e, template){
@@ -37,7 +37,7 @@ Template.body.events({
 
 Tracker.autorun(function(){
 	Session.setDefault('DocumentTitle', 'Ask')
-  document.title = Session.get("DocumentTitle");
+	document.title = Session.get("DocumentTitle");
 });
 
 Template.postLayout.helpers({
