@@ -1,4 +1,5 @@
 LIVE_URL = "https://ask.sli.is.ed.ac.uk/";
+ADMINS = ["s1432492"];
 
 Meteor.startup(function() {
   Houston.add_collection(Meteor.users);

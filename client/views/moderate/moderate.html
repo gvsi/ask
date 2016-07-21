@@ -1,0 +1,28 @@
+<template name="moderate">
+    <table class="table table-hover" cellspacing="0" style="width: 70%;margin-left: auto;margin-right: auto;">
+        <thead>
+        <tr>
+            <th>Content</th>
+            <th>Author</th>
+            <th>Reporter</th>
+            <th>Report date</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        {{#each activeReports}}
+            <tr class="courseLink" style="cursor:pointer;">
+                <td>{{type}} - {{link}}</td>
+                <td>{{author.username}}</td>
+                <td>{{reporter.username}}</td>
+                <td>{{dateFromNow}}</td>
+                <td>
+                    <button class="btn btn-danger btn-xs abuseBtn">Abuse</button>
+                    <button class="btn btn-success btn-xs m-t-5 notAbuseBtn">Not abuse</button>
+                    <!--<span id="violating_action" style="color: red"><a>Abuse</a></span> <br> <span id="not_violating_action" style="color: green"><a>Not Abuse</a></span>-->
+                </td>
+            </tr>
+        {{/each}}
+        </tbody>
+    </table>
+</template>

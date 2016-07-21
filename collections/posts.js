@@ -1,6 +1,7 @@
 Posts = new Mongo.Collection('posts');
 Drafts = new Mongo.Collection('drafts');
 LiveAnswers = new Mongo.Collection('liveAnswers');
+Reports = new Mongo.Collection('reports');
 
 Meteor.methods({
   /**
@@ -47,6 +48,7 @@ Meteor.methods({
       upvotesCount: 0,
       upvoters: [],
       isDeleted: false,
+      report: "",
       followers: [userId],
       viewers: [userId],
       viewCount: 1
@@ -451,36 +453,82 @@ Meteor.methods({
    * @param  {Object} reportAttributes The attributes of the post that has been reported.
    */
   reportAbuse: function(reportAttributes) {
-    var emailText = "";
+    check(reportAttributes, {
+      id: String,
+      type: String,
+    });
 
-    if(reportAttributes.type == "question"){
-      var post = Posts.findOne({_id: reportAttributes.id});
-      if(post){
-        emailText += "<b>Question title:</b><br>" + post.title;
-        emailText += "<br><b>Question body:</b> " + post.text;
-        emailText += 'Link: <a href="' + LIVE_URL + 'room/' + post.courseId +'?p=' + post._id + '"> Reported Link </a>' ;
-      }else{
-        throw new Meteor.Error('invalid-report', 'This post you are trying to report does not exist');
-      }
-    }else if(reportAttributes.type == "answer"){
-      var answer = Answers.findOne({_id: reportAttributes.id});
-      if(answer){
-        var post = Posts.findOne({_id: answer.postId});
-        emailText += "<br><b>Answer body:</b> " + answer.body;
-        emailText += '<b>Link:</b> <a href="' + LIVE_URL + 'room/' + post.courseId +'?p=' + post._id + '#'+ answer._id + '"> Reported Link </a>' ;
-      }else{
-        throw new Meteor.Error('invalid-report', 'This question you are trying to report does not exist');
-      }
-    }else{
-      throw new Meteor.Error('invalid-report', 'This type of report does not exist');
-    }
+    if (Meteor.isServer) {
+      var emailText = "";
+      var now = new Date();
 
-    if(Meteor.isServer){
+      var report = {
+        status: "in_review",
+        type: reportAttributes.type,
+        reporter: {
+          id: Meteor.userId(),
+          username: Meteor.user().username
+        },
+        createdAt: now,
+        updatedAt: now,
+      };
+
+      if (reportAttributes.type == "post") {
+        var post = Posts.findOne({_id: reportAttributes.id});
+        if (post) {
+          emailText += "<b>Question title:</b><br>" + post.title;
+          emailText += "<br><b>Question body:</b> " + post.text;
+          emailText += 'Link: <a href="' + LIVE_URL + 'room/' + post.courseId +'?p=' + post._id + '"> Reported Link </a>';
+
+          report = _.extend(report, {
+            postId: post._id,
+            content: post.title + " - " + post.body,
+            author: {
+              id : post.userId,
+              username: Meteor.users.findOne(post.userId).username
+            },
+            link: LIVE_URL + 'room/' + post.courseId +'?p=' + post._id
+          });
+
+          Posts.update({_id: post._id}, {$set: {report: "in_review" }})
+
+
+        } else {
+          throw new Meteor.Error('invalid-report', 'This post you are trying to report does not exist');
+        }
+
+      } else if (reportAttributes.type == "answer") {
+        var answer = Answers.findOne({_id: reportAttributes.id});
+        if (answer) {
+          var post = Posts.findOne({_id: answer.postId});
+          emailText += "<br><b>Answer body:</b> " + answer.body;
+          emailText += '<b>Link:</b> <a href="' + LIVE_URL + 'room/' + post.courseId +'?p=' + post._id + '#'+ answer._id + '"> Reported Link </a>' ;
+        } else {
+          throw new Meteor.Error('invalid-report', 'This question you are trying to report does not exist');
+        }
+
+        report = _.extend(report, {
+          content: answer.body,
+          postId: post._id,
+          answerId: answer._id,
+          author: answer.userId,
+          link: LIVE_URL + 'room/' + post.courseId +'?p=' + post._id + '#'+ answer._id
+        });
+
+        Answers.update({_id: answer._id}, {$set: {report: "in_review" }})
+
+      } else {
+        throw new Meteor.Error('invalid-report', 'This type of report does not exist');
+      }
+
+      var reportId = Reports.insert(report);
+      console.log(report);
+
       Email.send({
         from: "ask@ask.sli.is.ed.ac.uk",
         to: ["s1432492@sms.ed.ac.uk", "s1448512@sms.ed.ac.uk"],
         subject: "Ask Abuse Report",
-        html: emailText,
+        html: emailText
       });
     }
 

@@ -1,7 +1,22 @@
 Meteor.publish('posts', function(courseId) {
 	if (this.userId) {
 		var self = this;
-		var cursor = Posts.find({courseId: courseId, isDeleted: { $ne: true}},{fields: {revisionHistory: 0, type: 0, isDeleted: 0, responseTime: 0}},{sort: {createdAt: -1}});
+		var cursor = Posts.find(
+			{
+				courseId: courseId,
+				isDeleted: { $ne: true},
+				$and: [{report: {$ne: "violating"}}, {report: {$ne: "in_review"}}]
+			},
+			{
+				fields: {
+					revisionHistory: 0,
+					type: 0,
+					isDeleted: 0,
+					responseTime: 0
+				}
+			},
+			{sort: {createdAt: -1}}
+		);
 
 		var handle = cursor.observeChanges({
 			added: function (id, doc) {
@@ -63,6 +78,33 @@ Meteor.publish('posts', function(courseId) {
 	}
 });
 
+Meteor.publish('reportedPosts', function () {
+	var user = Meteor.users.findOne({_id: this.userId});
+	if (user) {
+		if (ADMINS.indexOf(user.username) != -1) {
+			return Posts.find({report: "in_review"});
+		} else {
+			return []
+		}
+	} else {
+		throw new Meteor.Error('invalid-user', 'This user does not exist');
+	}
+});
+
+Meteor.publish('allReports', function() {
+	var user = Meteor.users.findOne({_id: this.userId});
+	if (user) {
+		if (ADMINS.indexOf(user.username) != -1) {
+			return Reports.find({}, {sort: {createdAt: -1}});
+		} else {
+			return []
+		}
+	} else {
+		throw new Meteor.Error('invalid-user', 'This user does not exist');
+	}
+});
+
+
 Meteor.publish('coursesForStudent', function () {
 	var user = Meteor.users.findOne({_id: this.userId}, {fields: {'profile.courses': 1}});
 	if (user) {
@@ -104,7 +146,7 @@ Meteor.publish('answers', function (postId) {
 		var post = Posts.find({_id: postId, isDeleted: { $ne: true}});
 		if(post){
 			var self = this;
-			var cursor = Answers.find({'postId': postId, isDeleted: {$ne: true}},{fields: {revisionHistory: 0}},{sort: {isInstructor: -1, isInstructorUpvoted: -1, voteCount: -1, createdAt: 1}});
+			var cursor = Answers.find({'postId': postId, isDeleted: {$ne: true}, report: {$ne: "violating"}},{fields: {revisionHistory: 0}},{sort: {isInstructor: -1, isInstructorUpvoted: -1, voteCount: -1, createdAt: 1}});
 
 			var handle = cursor.observeChanges({
 				added: function (id, doc) {

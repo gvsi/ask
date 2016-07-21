@@ -1,6 +1,6 @@
 Meteor.loginWithEase = function(callback) {
     var username = headers.get('remote_user');
-    username = "bgrot"
+    username = "s1448512"
     if (username && username != "(null)") {
         var loginRequest = {ease: true, uun: username};
 

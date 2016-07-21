@@ -223,7 +223,11 @@
                     </div>
                     <hr style="margin-top:0px">
                     {{#each answers}}
-                        {{ >answer }}
+                        {{#if this.report}}
+                            {{ >reportedAnswer }}
+                        {{else}}
+                            {{ >answer }}
+                        {{/if}}
                     {{/each}}
                 </div>
 
@@ -449,6 +453,12 @@
     <hr>
 </template>
 
+<template name="reportedAnswer">
+    <div class="answer reportedAnswer" id="{{_id}}">
+        This answer has been reported as abusive and is awaiting review from the University.
+    </div>
+    <hr>
+</template>
 
 <template name="courseSettingsModal">
     {{#with course}}

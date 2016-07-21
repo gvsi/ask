@@ -634,7 +634,7 @@ Template.postContent.events({
   "click #reportQuestion": function(){
     var id = Session.get("reportQuestionId");
 
-    var reportAttributes = {id: id, type: "question"}
+    var reportAttributes = {id: id, type: "post"}
 
     Meteor.call("reportAbuse", reportAttributes, function(error, result){
       if(error){
