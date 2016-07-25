@@ -2,7 +2,7 @@ Reports = new Mongo.Collection('reports');
 
 Meteor.methods({
     /**
-     * @summary Reports an abuse to the University (email and in-platform system).
+     * @summary Reports an abuse to the University (email and in-platform system), creates in-platform report, notifies subjects.
      * @todo
      * @isMethod true
      * @memberOf Reports
@@ -121,6 +121,15 @@ Meteor.methods({
 
     },
 
+    /**
+     * @summary Handles a report (marks it as violating or not)
+     * @todo
+     * @isMethod true
+     * @memberOf Reports
+     * @locus Server
+     * @param {String} id The id of the report.
+     * @param {Boolean} isViolating The decision on the report (if it's violating or not)
+     */
     handleReport: function(id, isViolating) {
         check(id, String);
         check(isViolating, Boolean);

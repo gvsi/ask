@@ -38,6 +38,13 @@ Meteor.methods({
       Visits.insert(visitAttributes);
     }
   },
+
+  /**
+   * @summary Checks if a user is an admin or nit
+   * @isMethod true
+   * @memberOf Users
+   * @locus Server
+   */
   userIsAdmin: function() {
     if (Meteor.isServer) {
       return ADMINS.indexOf(Meteor.user().username) != -1;
