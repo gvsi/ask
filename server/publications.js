@@ -117,14 +117,18 @@ Meteor.publish('allAdmins', function() {
 	}
 });
 
-Meteor.publish('coursesForStudent', function () {
-	var user = Meteor.users.findOne({_id: this.userId}, {fields: {'profile.courses': 1}});
+Meteor.publish('coursesForUser', function () {
+	var user = Meteor.users.findOne({_id: this.userId});
 	if (user) {
-		courses = user.profile.courses;
-		if (!courses) {
-			throw new Meteor.Error("No courses for this student");
+		if (ADMINS.indexOf(user.username) != -1) {
+			return Courses.find({}); //TODO: only active courses
+		} else {
+			courses = user.profile.courses;
+			if (!courses) {
+				throw new Meteor.Error("No courses for this student");
+			}
+			return Courses.find({'_id': {$in: courses}});
 		}
-		return Courses.find({'_id': {$in: courses}});
 	} else {
 		throw new Meteor.Error('invalid-user', 'This user does not exist');
 	}

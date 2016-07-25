@@ -121,11 +121,8 @@ Template.registerHelper("isUserAdmin", function() {
 });
 
 Template.registerHelper("isUserEnrolled", function(){
-  return Meteor.users.findOne(Meteor.userId()).profile.courses.indexOf(Router.current().params.courseId) != -1
-});
-
-Template.registerHelper("isUserEnrolled", function(){
-  return Meteor.users.findOne(Meteor.userId()).profile.courses.indexOf(Router.current().params.courseId) != -1
+  var user = Meteor.users.findOne(Meteor.userId());
+  return user.profile.courses && user.profile.courses.indexOf(Router.current().params.courseId) != -1
 });
 
 Template.registerHelper("posterIsOwner", function(){

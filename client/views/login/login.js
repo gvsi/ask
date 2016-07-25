@@ -11,10 +11,6 @@ Meteor.loginWithEase = function(callback) {
     }
 };
 
-// Meteor.loginWithPassword = function(callback) {
-// 	return undefined;
-// }
-
 Template.loginPage.rendered = function(){
     Session.set("DocumentTitle", "Login | Ask");
 

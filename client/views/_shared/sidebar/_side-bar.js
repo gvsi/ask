@@ -53,7 +53,7 @@ Template.sideBar.rendered = function (){
 
 Template.sideBar.helpers({
   currentCourses: function () {
-    Meteor.subscribe('coursesForStudent');
+    Meteor.subscribe('coursesForUser');
     var date = new Date();
     var year;
 

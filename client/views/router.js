@@ -89,7 +89,7 @@ Router.route('/room/:courseId', function () {
         Meteor.subscribe('posts', this.params.courseId),
         Meteor.subscribe('reportedPosts'),
         Meteor.subscribe('courseStats', this.params.courseId),
-        Meteor.subscribe('coursesForStudent')
+        Meteor.subscribe('coursesForUser')
       ];
       return data;
     }
