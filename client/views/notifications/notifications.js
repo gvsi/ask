@@ -90,7 +90,9 @@ Template.notifications.helpers({
 		var iconType="";
 		if(this.type == "instructorNote"){
 			iconType = '  <div class="timeline-point warning"><i style="margin-left:-6px;" class="fa fa-file-o"></i></div>';
-		}else{
+		} else if (this.type == "reportedPost" || this.type == "reportAnswer") {
+			iconType = '  <div class="timeline-point warning"><i class="fa fa-exclamation-triangle"></i></div>';
+		} else {
 			iconType = '  <div class="timeline-point success"><i class="pg-comment"></i></div>';
 		}
 

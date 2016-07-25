@@ -174,7 +174,9 @@
                                     <button class="btn btn-lg btn-default btn-rounded simptip-position-bottom simptip-smooth simptip-movable simptip-multiline" id="followQuestion" data-tooltip="Follow this question to receive notifications for new answers">Follow</button>
                                 {{/if}}
                                 {{#unless isInstructorPost}}
-                                    <button class="btn btn-lg btn-rounded btn-xs m-r-10 report simptip-position-bottom simptip-smooth simptip-movable" style="padding: 9px 19px" id="openReportQuestionModal" data-id="{{post._id}}" data-target="#modalReportQuestion" data-tooltip="Report abuse" data-toggle="modal" ><i class="fa fa-exclamation"></i></button>
+                                    {{#unless isNotViolating}}
+                                        <button class="btn btn-lg btn-rounded m-r-10 report simptip-position-bottom simptip-smooth simptip-movable" style="padding: 9px 19px" id="openReportQuestionModal" data-id="{{post._id}}" data-target="#modalReportQuestion" data-tooltip="Report abuse" data-toggle="modal" ><i class="fa fa-exclamation"></i></button>
+                                    {{/unless}}
                                 {{/unless}}
                             </div>
                         {{/if}}
@@ -224,7 +226,11 @@
                     <hr style="margin-top:0px">
                     {{#each answers}}
                         {{#if this.report}}
-                            {{ >reportedAnswer }}
+                            {{#if isNotViolating}}
+                                {{ >answer }}
+                            {{else}}
+                                {{ >reportedAnswer }}
+                            {{/if}}
                         {{else}}
                             {{ >answer }}
                         {{/if}}

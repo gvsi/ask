@@ -34,6 +34,15 @@
                     {{/if}}
                     <span class="icon-thumbnail "><i class="fa fa-globe"></i></span>
                 </li>
+                {{#if isUserAdmin}}
+                <li class="" style="display:inline">
+                    <a href="{{pathFor 'violations'}}" class="detailed">
+                        <span class="title">Violations</span>
+                        <span class="details">{{reportsCount}} new report(s)</span>
+                    </a>
+                    <span class="icon-thumbnail "><i class="fa fa-exclamation-triangle"></i></span>
+                </li>
+                {{/if}}
                 <li class="">
                     <a href="{{pathFor 'feedback'}}">
                         <span class="title">Feedback</span>

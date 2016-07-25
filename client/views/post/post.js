@@ -116,6 +116,14 @@ Template.registerHelper("isUserInstructor", function(){
   }
 });
 
+Template.registerHelper("isUserAdmin", function() {
+  return Session.get('userIsAdmin');
+});
+
+Template.registerHelper("isUserEnrolled", function(){
+  return Meteor.users.findOne(Meteor.userId()).profile.courses.indexOf(Router.current().params.courseId) != -1
+});
+
 Template.registerHelper("isUserEnrolled", function(){
   return Meteor.users.findOne(Meteor.userId()).profile.courses.indexOf(Router.current().params.courseId) != -1
 });
@@ -386,6 +394,10 @@ Template.postContent.helpers({
         return post.userId == Meteor.user()._id;
       }
   },
+  isNotViolating: function() {
+    return this.report == "not_violating";
+  },
+
   dateFromNow: function() {
     var post = Posts.findOne(Router.current().params.query.p);
     if (post) {
@@ -742,6 +754,9 @@ Template.answer.helpers({
     } else {
       return this.userId == Meteor.user()._id;
     }
+  },
+  isNotViolating: function() {
+    return this.report == "not_violating";
   },
   isThereMathJax: function() {
     //works for both answer and comment

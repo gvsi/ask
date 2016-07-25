@@ -37,5 +37,10 @@ Meteor.methods({
 
       Visits.insert(visitAttributes);
     }
+  },
+  userIsAdmin: function() {
+    if (Meteor.isServer) {
+      return ADMINS.indexOf(Meteor.user().username) != -1;
+    }
   }
 });

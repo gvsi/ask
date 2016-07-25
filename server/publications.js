@@ -104,6 +104,18 @@ Meteor.publish('allReports', function() {
 	}
 });
 
+Meteor.publish('allAdmins', function() {
+	var user = Meteor.users.findOne({_id: this.userId});
+	if (user) {
+		if (ADMINS.indexOf(user.username) != -1) {
+			return Reports.find({}, {sort: {createdAt: -1}});
+		} else {
+			return []
+		}
+	} else {
+		throw new Meteor.Error('invalid-user', 'This user does not exist');
+	}
+});
 
 Meteor.publish('coursesForStudent', function () {
 	var user = Meteor.users.findOne({_id: this.userId}, {fields: {'profile.courses': 1}});

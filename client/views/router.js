@@ -12,6 +12,13 @@ OnBeforeActions = {
       }
       Router.go('login');
     }else{
+      Meteor.call("userIsAdmin", function(error, result) {
+            if (error) {
+              console.log("error", error);
+            }
+            return Session.set('userIsAdmin', result);
+          }
+      );
       this.next();
     }
   }
@@ -54,11 +61,11 @@ Router.route('/courses', function () {
   name:'courses',
 });
 
-Router.route('/moderate', function () {
-  this.render('moderate');
+Router.route('/violations', function () {
+  this.render('violations');
 },{
   layoutTemplate:"defaultLayout",
-  name:'moderate',
+  name:'violations',
 });
 
 Router.route('/feedback', function () {
