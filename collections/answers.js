@@ -147,7 +147,7 @@ Meteor.methods({
             emailAttributes.recipient = emailUser.profile.email;
             if(Meteor.isServer){
               Email.send({
-                from:  "Inf2C-CS on Ask <ask@ask.sli.is.ed.ac.uk>",
+                from:  "Ask <ask@ask.sli.is.ed.ac.uk>",
                 to: emailAttributes.recipient,
                 subject: emailAttributes.subject,
                 html: fullEmail,
