@@ -89,7 +89,6 @@ Router.route('/feedback', function () {
 Router.route('/room/:courseId', function () {
     this.render('postPage');
 },{
-<<<<<<< HEAD
     layoutTemplate:"postLayout",
     name:"room",
     loadingTemplate: 'loading',
@@ -99,7 +98,8 @@ Router.route('/room/:courseId', function () {
             data = [
                 Meteor.subscribe('posts', this.params.courseId),
                 Meteor.subscribe('courseStats', this.params.courseId),
-                Meteor.subscribe('coursesForStudent')
+                Meteor.subscribe('coursesForStudent'),
+                Meteor.subscribe('reportedPosts')
             ];
             return data;
         }
@@ -110,28 +110,6 @@ Router.route('/room/:courseId', function () {
                 isTherePost: true
             }
         }
-=======
-  layoutTemplate:"postLayout",
-  name:"room",
-  loadingTemplate: 'loading',
-  fastRender: true,
-  waitOn: function() {
-    if (Meteor.userId()) {
-      data = [
-        Meteor.subscribe('posts', this.params.courseId),
-        Meteor.subscribe('reportedPosts'),
-        Meteor.subscribe('courseStats', this.params.courseId),
-        Meteor.subscribe('coursesForUser')
-      ];
-      return data;
-    }
-  },
-  data: function() {
-    if (this.params.query.p) {
-      return {
-        isTherePost: true
-      }
->>>>>>> feature/moderation
     }
 });
 
