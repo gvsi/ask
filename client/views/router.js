@@ -25,7 +25,7 @@ OnBeforeActions = {
 };
 
 Router.onBeforeAction(OnBeforeActions.loginRequired, {
-    except: ['login']
+    except: ['login', 'healthcheck']
 });
 
 Router.route('/', function () {
@@ -69,6 +69,13 @@ Router.route('/courses', function () {
 },{
     layoutTemplate:"defaultLayout",
     name:'courses',
+});
+
+Router.route('/healthcheck', function () {
+    this.render('healthcheck');
+},{
+    layoutTemplate:"defaultLayout",
+    name:'healthcheck',
 });
 
 Router.route('/violations', function () {

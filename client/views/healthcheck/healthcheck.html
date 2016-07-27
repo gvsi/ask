@@ -1,0 +1,31 @@
+<template name="healthcheck">
+
+    <!-- START CONTAINER FLUID -->
+    <div class="container-fluid container-fixed-lg">
+
+        <ul class="breadcrumb">
+            <li>
+                <a href="#">Home</a>
+            </li>
+            <li><a href="#" class="active">Healthcheck</a></li>
+        </ul>
+
+        {{#with serverConnection}}
+        <div class="panel panel-default {{bg}} col-lg-6">
+            <div class="panel-heading ui-sortable-handle">
+                <div class="panel-title">
+                    {{title}}
+                </div>
+            </div>
+            <div class="panel-body" style="display: block;">
+                <h3 class="text-white">
+                    <span class="semi-bold">{{status}}</span>
+                </h3>
+                <p class="text-white">{{description}}</p>
+            </div>
+        </div>
+        {{/with}}
+    </div>
+    <!-- END CONTAINER FLUID -->
+
+</template>
