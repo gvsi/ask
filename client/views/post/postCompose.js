@@ -126,7 +126,7 @@ Template.postCompose.events({
     var textLength = strip_tags(post.text).length;
 
     if (titleLength == 0) {
-      errors.compose = "Add a title to your question (at least 5 characters)";
+      errors.compose = "Add a title to your question (at least 2 characters)";
       tinymce.execCommand('mceFocus',false,'composeTinyMCE');
       return Session.set('postSubmitError', errors);
     } else if (titleLength < 2 || titleLength > 60) {

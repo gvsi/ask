@@ -50,7 +50,12 @@
                 <div class="modal-content">
                     <div class="modal-header clearfix" style="margin-bottom: 30px;">
                         <h5><strong>This answer will be sent for review to the University</strong></h5>
-                        Are you sure you want to do this?
+                        <p>
+                            This report is not anonymous and your UUN will be included in the report, so please,
+                            do not misuse this feature and make sure there really might be a violation of
+                            <a href="http://www.ed.ac.uk/files/atoms/files/golden_computing_regulations_-_ay15-16_0.pdf">regulations</a>.
+                        </p>
+                        <p>Are you sure you want to do this?</p>
                     </div>
                     <div class="modal-footer" style="margin-top: 16px;text-align: center;">
                         <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
@@ -68,7 +73,12 @@
                 <div class="modal-content">
                     <div class="modal-header clearfix" style="margin-bottom: 30px;">
                         <h5><strong>This question will be sent for review to the University</strong></h5>
-                        Are you sure you want to do this?
+                        <p>
+                            This report is not anonymous and your UUN will be included in the report, so please,
+                            do not misuse this feature and make sure there really might be a violation of
+                            <a href="http://www.ed.ac.uk/files/atoms/files/golden_computing_regulations_-_ay15-16_0.pdf">regulations</a>.
+                        </p>
+                        <p>Are you sure you want to do this?</p>
                     </div>
                     <div class="modal-footer" style="margin-top: 16px;text-align: center;">
                         <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
@@ -328,14 +338,18 @@
                 {{/if}}
             </div>
             <div class="datetime timeLabel">
-                {{#if currentUserIsOwner}}
-                    <button class="editAnswerBtn btn btn-default btn-rounded btn-xs edit" data-answer-id="{{_id}}"><i class="fa fa-pencil"></i></button>
-                    <button class="btn btn-default btn-rounded btn-xs delete" id="openDeleteAnswerModal" data-id="{{_id}}" data-target="#modalDeleteAnswer" data-toggle="modal" ><i class="fa fa-trash-o"></i></button>
-                {{else}}
-                    {{#unless isInstructor}}
-                        <button class="btn btn-default btn-rounded btn-xs m-r-10 report simptip-position-bottom simptip-smooth simptip-movable" id="openReportAnswerModal" data-id="{{_id}}" data-target="#modalReportAnswer" data-tooltip="Report abuse" data-toggle="modal" ><i class="fa fa-exclamation"></i></button>
-                    {{/unless}}
-                {{/if}}
+                <span class="answerButtonsContainer">
+                    {{#if currentUserIsOwner}}
+                        <button class="editAnswerBtn btn btn-default btn-rounded btn-xs edit" data-answer-id="{{_id}}"><i class="fa fa-pencil"></i></button>
+                            <button class="btn btn-default btn-rounded btn-xs delete" id="openDeleteAnswerModal" data-id="{{_id}}" data-target="#modalDeleteAnswer" data-toggle="modal" ><i class="fa fa-trash-o"></i></button>
+                    {{else}}
+                        {{#unless isInstructor}}
+                            {{#unless isNotViolating}}
+                                <button class="btn btn-default btn-rounded btn-xs m-r-10 report simptip-position-bottom simptip-smooth simptip-movable" id="openReportAnswerModal" data-id="{{_id}}" data-target="#modalReportAnswer" data-tooltip="Report abuse" data-toggle="modal" ><i class="fa fa-exclamation"></i></button>
+                            {{/unless}}
+                        {{/unless}}
+                    {{/if}}
+                </span>
                 {{dateFromNow}}
             </div>
         </div>
@@ -388,7 +402,7 @@
         <div class="comments">
             {{#each comments}}
                 <hr>
-                <div class="comment">
+            <div class="comment">
           <span style="float:left;" class="simptip-position-right simptip-smooth simptip-movable" data-tooltip="{{#if isAnonymous}} Anonymous {{else}}{{theAuthor.profile.name}} {{theAuthor.profile.surname}} {{/if}} {{#if isInstructor}} - instructor {{else}}{{#if posterIsOwner}} - OP{{/if}}{{/if}} ({{dateFromNow}})">
             <div class="thumbnail-wrapper circular">
               <img width="40" height="40" alt="" src="{{#if hasAvatar}} {{#if isAnonymous}} {{identicon userIdenticon}} {{else}} {{avatar}} {{/if}} {{else}} {{identicon userIdenticon}} {{/if}}">
