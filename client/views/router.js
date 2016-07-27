@@ -98,7 +98,7 @@ Router.route('/room/:courseId', function () {
             data = [
                 Meteor.subscribe('posts', this.params.courseId),
                 Meteor.subscribe('courseStats', this.params.courseId),
-                Meteor.subscribe('coursesForStudent'),
+                Meteor.subscribe('coursesForUser'),
                 Meteor.subscribe('reportedPosts')
             ];
             return data;
@@ -117,7 +117,6 @@ Router.route('/room/:courseId', function () {
 Router.route('room/:courseId/compose', function () {
     this.render('postCompose');
 },{
-<<<<<<< HEAD
     layoutTemplate:"composePostLayout" ,
     loadingTemplate: 'loading',
     name: 'compose',
@@ -125,19 +124,9 @@ Router.route('room/:courseId/compose', function () {
         if (Meteor.userId()) {
             return [
                 Meteor.subscribe('posts', this.params.courseId),
+                Meteor.subscribe('reportedPosts')
             ];
         }
-=======
-  layoutTemplate:"composePostLayout" ,
-  loadingTemplate: 'loading',
-  name: 'compose',
-  waitOn: function() {
-    if (Meteor.userId()) {
-      return [
-        Meteor.subscribe('posts', this.params.courseId),
-        Meteor.subscribe('reportedPosts')
-      ];
->>>>>>> feature/moderation
     }
 });
 
