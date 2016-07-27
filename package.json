@@ -1,0 +1,9 @@
+{
+  "name": "ask",
+  "version": "1.0.0",
+  "description": "A comprehensive and modern platform aimed at creating a collaborative environment for students to ask and answer questions, get help and share ideas",
+  "scripts": {
+    "start": "meteor --settings settings-development.json",
+    "production": "modulus env set METEOR_SETTINGS \"$(cat settings-production.json)\" -p 'App - Production' && modulus deploy -f -p 'App - Production'"
+  }
+}
