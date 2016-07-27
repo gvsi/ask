@@ -56,11 +56,13 @@ Template.header.helpers({
 		return 'p=' + this.postId;
 	},
 	notificationIcon: function(){
-		var iconType="";
-		if(this.type == "instructorNote"){
+		var iconType = "";
+		if (this.type == "instructorNote") {
 			iconType = 'fa fa-file-o';
-		}else{
-			iconType = 'fa fa-comment';
+		} else if (this.type == "reportedPost") {
+			iconType = "fa fa-exclamation-triangle";
+		} else {
+			iconType = 'fa fa-comment'
 		}
 		return iconType;
 	},
@@ -116,10 +118,12 @@ Template.header.events({
 
 		$(".dropdown").removeClass("open");
 
-		if(type == "instructorNote"){
+		if (type == "instructorNote") {
 			loadPage(postId, true);
 			Router.go('room', {courseId: postCourseId}, {query: 'p='+postId});
-		}else if (type == "answerToPost" || type == "commentToAnswer") {
+		} else if (type == "reportedPost" || type == "reportedAnswer") {
+			Router.go('violations');
+		} else if (type == "answerToPost" || type == "commentToAnswer") {
 			var answerId = this.answerId;
 			loadPage(postId, true);
 			Router.go('room', {courseId: postCourseId}, {query: 'p='+postId, hash: answerId});

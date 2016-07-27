@@ -16,9 +16,11 @@ Template.sideBar.rendered = function (){
               if (!initial) {
 
                 var iconType="";
-                if(notification.type == "instructorNote"){
+                if (notification.type == "instructorNote") {
                   iconType = '<i style="margin-left:-6px;" class="fa fa-file-o"></i>';
-                }else{
+                } else if (notification.type == "reportedPost" || notification.type == "reportedAnswer") {
+                  iconType = '<i class="fa fa-exclamation-triangle"></i>';
+                } else {
                   iconType = '<i class="pg-comment"></i>';
                 }
 
@@ -51,7 +53,7 @@ Template.sideBar.rendered = function (){
 
 Template.sideBar.helpers({
   currentCourses: function () {
-    Meteor.subscribe('coursesForStudent');
+    Meteor.subscribe('coursesForUser');
     var date = new Date();
     var year;
 
@@ -160,5 +162,9 @@ Template.sideBar.helpers({
     if(notifications){
       return notifications.count();
     }
+  },
+  reportsCount: function(){
+    Meteor.subscribe('allReports');
+    return Reports.find({status: "in_review"}).count();
   }
 });

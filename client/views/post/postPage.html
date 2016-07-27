@@ -146,7 +146,6 @@
                                 <button class="btn btn-lg btn-rounded upvote" disabled><i class="fa fa-thumbs-up"></i><span class="m-l-10">{{upvotesCount}}</span></button>
                             </div>
 
-
                             <div class="modal fade slide-up disable-scroll" id="modalDeletePost" tabindex="-1" role="dialog" aria-labelledby="modalSlideUpLabel" aria-hidden="false">
                                 <div class="modal-dialog " style="width:40%">
                                     <div class="modal-content-wrapper">
@@ -161,7 +160,6 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <!-- /.modal-content -->
                                 </div>
                             </div>
 
@@ -174,7 +172,9 @@
                                     <button class="btn btn-lg btn-default btn-rounded simptip-position-bottom simptip-smooth simptip-movable simptip-multiline" id="followQuestion" data-tooltip="Follow this question to receive notifications for new answers">Follow</button>
                                 {{/if}}
                                 {{#unless isInstructorPost}}
-                                    <button class="btn btn-lg btn-rounded btn-xs m-r-10 report simptip-position-bottom simptip-smooth simptip-movable" style="padding: 9px 19px" id="openReportQuestionModal" data-id="{{post._id}}" data-target="#modalReportQuestion" data-tooltip="Report abuse" data-toggle="modal" ><i class="fa fa-exclamation"></i></button>
+                                    {{#unless isNotViolating}}
+                                        <button class="btn btn-lg btn-rounded m-r-10 report simptip-position-bottom simptip-smooth simptip-movable" style="padding: 9px 19px" id="openReportQuestionModal" data-id="{{post._id}}" data-target="#modalReportQuestion" data-tooltip="Report abuse" data-toggle="modal" ><i class="fa fa-exclamation"></i></button>
+                                    {{/unless}}
                                 {{/unless}}
                             </div>
                         {{/if}}
@@ -223,7 +223,15 @@
                     </div>
                     <hr style="margin-top:0px">
                     {{#each answers}}
-                        {{ >answer }}
+                        {{#if this.report}}
+                            {{#if isNotViolating}}
+                                {{ >answer }}
+                            {{else}}
+                                {{ >reportedAnswer }}
+                            {{/if}}
+                        {{else}}
+                            {{ >answer }}
+                        {{/if}}
                     {{/each}}
                 </div>
 
@@ -449,6 +457,12 @@
     <hr>
 </template>
 
+<template name="reportedAnswer">
+    <div class="answer reportedAnswer" id="{{_id}}">
+        This answer has been reported as abusive and is awaiting review from the University.
+    </div>
+    <hr>
+</template>
 
 <template name="courseSettingsModal">
     {{#with course}}

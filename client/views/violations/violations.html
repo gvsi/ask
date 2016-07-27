@@ -1,0 +1,172 @@
+<template name="violations">
+
+    <!-- START CONTAINER FLUID -->
+    <div class="container-fluid container-fixed-lg">
+
+    {{#if isUserAdmin}}
+        <h4>Violation reports to review</h4>
+        {{#if activeReports}}
+            <table class="table table-hover" cellspacing="0">
+                <thead>
+                <tr>
+                    <th>Content</th>
+                    <th>Author</th>
+                    <th>Reporter</th>
+                    <th>Report date</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each activeReports}}
+                    <tr class="courseLink">
+                        <td>{{content}}</td>
+                        <td>{{author.username}}</td>
+                        <td>{{reporter.username}}</td>
+                        <td>{{dateFromNow}}</td>
+                        <td>
+                            <div>
+                                <button class="btn btn-danger btn-xs abuseBtn">Abuse</button>
+                                <button class="btn btn-success btn-xs notAbuseBtn">Not abuse</button>
+                                <a href="{{link}}"><button class="btn btn-xs">Open</button></a>
+                            </div>
+                        </td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        {{else}}
+            Sweet, no violations reported!
+        {{/if}}
+
+        <h4>Marked as violating</h4>
+        {{#if violatingReports}}
+            <table class="table table-hover" cellspacing="0">
+                <thead>
+                <tr>
+                    <th>Content</th>
+                    <th>Author</th>
+                    <th>Reporter</th>
+                    <th>Report date</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each violatingReports}}
+                    <tr class="courseLink">
+                        <td>{{content}}</td>
+                        <td>{{author.username}}</td>
+                        <td>{{reporter.username}}</td>
+                        <td>{{dateFromNow}}</td>
+                        <td>
+                            <div>
+                                <button class="btn btn-danger btn-xs abuseBtn">Abuse</button>
+                                <button class="btn btn-success btn-xs notAbuseBtn">Not abuse</button>
+                                <a href="{{link}}"><button class="btn btn-xs">Open</button></a>
+                            </div>
+                        </td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        {{else}}
+            No violating posts found
+        {{/if}}
+
+        <h4>Marked as non-violating</h4>
+        {{#if nonViolatingReports}}
+            <table class="table table-hover" cellspacing="0">
+                <thead>
+                <tr>
+                    <th>Content</th>
+                    <th>Author</th>
+                    <th>Reporter</th>
+                    <th>Report date</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each nonViolatingReports}}
+                    <tr class="courseLink">
+                        <td>{{content}}</td>
+                        <td>{{author.username}}</td>
+                        <td>{{reporter.username}}</td>
+                        <td>{{dateFromNow}}</td>
+                        <td>
+                            <div>
+                                <button class="btn btn-danger btn-xs abuseBtn">Abuse</button>
+                                <button class="btn btn-success btn-xs notAbuseBtn">Not abuse</button>
+                                <a href="{{link}}"><button class="btn btn-xs">Open</button></a>
+                            </div>
+                        </td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        {{else}}
+            No violating posts found
+        {{/if}}
+    {{else}}
+        <!-- START CONTAINER FLUID -->
+            <div class="row">
+                <div class="col-lg-6 col-md-7">
+                    <!-- START PANEL -->
+                    <div class="panel panel-transparent">
+                        <div class="panel-heading">
+                            <div class="panel-title">Violations
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <h3>Violations of University regulations</h3>
+                            <p>If someone reports your question or answer as a violation of university regulations, your question or answer will be hidden while the University reviews the violation.<br>
+                                A member of the University will then review the content of the post and will act accordingly.
+                            </p>
+                            <p>If you have any question, please contact us through the <a href="/feedback">contact page.</a></p>
+                            <p>Feedback can also be submitted to <a href="mailto:studentsystems@ed.ac.uk">studentsystems@ed.ac.uk</a> </p>
+                                <br><br>Thanks,<br><i>The Ask team</i>
+                        </div>
+                    </div>
+                    <!-- END PANEL -->
+                </div>
+            </div>
+    {{/if}}
+    </div>
+    <!-- END CONTAINER FLUID -->
+
+</template>
+
+<template name="reportTable">
+    {{#with reports}}
+        {{#if reports}}
+            <table class="table table-hover" cellspacing="0">
+                <thead>
+                <tr>
+                    <th>Content</th>
+                    <th>Author</th>
+                    <th>Reporter</th>
+                    <th>Report date</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                {{#each reports}}
+                    <tr class="courseLink">
+                        <td>{{content}}</td>
+                        <td>{{author.username}}</td>
+                        <td>{{reporter.username}}</td>
+                        <td>{{dateFromNow}}</td>
+                        <td>
+                            <div>
+                                <button class="btn btn-danger btn-xs abuseBtn">Abuse</button>
+                                <button class="btn btn-success btn-xs notAbuseBtn">Not abuse</button>
+                                <a href="{{link}}"><button class="btn btn-xs">Open</button></a>
+                            </div>
+                        </td>
+                    </tr>
+                {{/each}}
+                </tbody>
+            </table>
+        {{else}}
+            Sweet, no violations reported!
+        {{/if}}
+    {{/with}}
+</template>

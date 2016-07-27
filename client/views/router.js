@@ -5,16 +5,23 @@ Router.configure({
 var OnBeforeActions;
 
 OnBeforeActions = {
-    loginRequired: function(pause) {
-        if (!Meteor.userId()) {
-            if(Iron.Location.get().path != '/login'){
-                Session.set("loginRedirect", Iron.Location.get().path);
-            }
-            Router.go('login');
-        }else{
-            this.next();
-        }
-    }
+  loginRequired: function(pause) {
+      if (!Meteor.userId()) {
+          if (Iron.Location.get().path != '/login') {
+              Session.set("loginRedirect", Iron.Location.get().path);
+          }
+          Router.go('login');
+      } else {
+          Meteor.call("userIsAdmin", function (error, result) {
+                  if (error) {
+                      console.log("error", error);
+                  }
+                  return Session.set('userIsAdmin', result);
+              }
+          );
+          this.next();
+      }
+  }
 };
 
 Router.onBeforeAction(OnBeforeActions.loginRequired, {
@@ -64,6 +71,12 @@ Router.route('/courses', function () {
     name:'courses',
 });
 
+Router.route('/violations', function () {
+  this.render('violations');
+},{
+  layoutTemplate:"defaultLayout",
+  name:'violations',
+});
 
 Router.route('/feedback', function () {
     this.render('feedback');
@@ -76,6 +89,7 @@ Router.route('/feedback', function () {
 Router.route('/room/:courseId', function () {
     this.render('postPage');
 },{
+<<<<<<< HEAD
     layoutTemplate:"postLayout",
     name:"room",
     loadingTemplate: 'loading',
@@ -96,6 +110,28 @@ Router.route('/room/:courseId', function () {
                 isTherePost: true
             }
         }
+=======
+  layoutTemplate:"postLayout",
+  name:"room",
+  loadingTemplate: 'loading',
+  fastRender: true,
+  waitOn: function() {
+    if (Meteor.userId()) {
+      data = [
+        Meteor.subscribe('posts', this.params.courseId),
+        Meteor.subscribe('reportedPosts'),
+        Meteor.subscribe('courseStats', this.params.courseId),
+        Meteor.subscribe('coursesForUser')
+      ];
+      return data;
+    }
+  },
+  data: function() {
+    if (this.params.query.p) {
+      return {
+        isTherePost: true
+      }
+>>>>>>> feature/moderation
     }
 });
 
@@ -103,6 +139,7 @@ Router.route('/room/:courseId', function () {
 Router.route('room/:courseId/compose', function () {
     this.render('postCompose');
 },{
+<<<<<<< HEAD
     layoutTemplate:"composePostLayout" ,
     loadingTemplate: 'loading',
     name: 'compose',
@@ -112,6 +149,17 @@ Router.route('room/:courseId/compose', function () {
                 Meteor.subscribe('posts', this.params.courseId),
             ];
         }
+=======
+  layoutTemplate:"composePostLayout" ,
+  loadingTemplate: 'loading',
+  name: 'compose',
+  waitOn: function() {
+    if (Meteor.userId()) {
+      return [
+        Meteor.subscribe('posts', this.params.courseId),
+        Meteor.subscribe('reportedPosts')
+      ];
+>>>>>>> feature/moderation
     }
 });
 

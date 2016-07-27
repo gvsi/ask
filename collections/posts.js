@@ -47,6 +47,7 @@ Meteor.methods({
       upvotesCount: 0,
       upvoters: [],
       isDeleted: false,
+      report: "",
       followers: [userId],
       viewers: [userId],
       viewCount: 1
@@ -440,51 +441,6 @@ Meteor.methods({
     } else {
       throw new Meteor.Error('invalid-post', 'The post you are trying to view does not exist');
     }
-  },
-
-  /**
-   * @summary Reports an abuse to the University (email and in-platform system).
-   * @todo
-   * @isMethod true
-   * @memberOf Posts
-   * @locus Server
-   * @param  {Object} reportAttributes The attributes of the post that has been reported.
-   */
-  reportAbuse: function(reportAttributes) {
-    var emailText = "";
-
-    if(reportAttributes.type == "question"){
-      var post = Posts.findOne({_id: reportAttributes.id});
-      if(post){
-        emailText += "<b>Question title:</b><br>" + post.title;
-        emailText += "<br><b>Question body:</b> " + post.text;
-        emailText += 'Link: <a href="' + LIVE_URL + 'room/' + post.courseId +'?p=' + post._id + '"> Reported Link </a>' ;
-      }else{
-        throw new Meteor.Error('invalid-report', 'This post you are trying to report does not exist');
-      }
-    }else if(reportAttributes.type == "answer"){
-      var answer = Answers.findOne({_id: reportAttributes.id});
-      if(answer){
-        var post = Posts.findOne({_id: answer.postId});
-        emailText += "<br><b>Answer body:</b> " + answer.body;
-        emailText += '<b>Link:</b> <a href="' + LIVE_URL + 'room/' + post.courseId +'?p=' + post._id + '#'+ answer._id + '"> Reported Link </a>' ;
-      }else{
-        throw new Meteor.Error('invalid-report', 'This question you are trying to report does not exist');
-      }
-    }else{
-      throw new Meteor.Error('invalid-report', 'This type of report does not exist');
-    }
-
-    if(Meteor.isServer){
-      Email.send({
-        from: "ask@ask.sli.is.ed.ac.uk",
-        to: ["s1432492@sms.ed.ac.uk", "s1448512@sms.ed.ac.uk"],
-        subject: "Ask Abuse Report",
-        html: emailText,
-      });
-    }
-
-
   },
 
   /**
