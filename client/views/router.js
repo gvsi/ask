@@ -5,23 +5,23 @@ Router.configure({
 var OnBeforeActions;
 
 OnBeforeActions = {
-  loginRequired: function(pause) {
-      if (!Meteor.userId()) {
-          if (Iron.Location.get().path != '/login') {
-              Session.set("loginRedirect", Iron.Location.get().path);
-          }
-          Router.go('login');
-      } else {
-          Meteor.call("userIsAdmin", function (error, result) {
-                  if (error) {
-                      console.log("error", error);
-                  }
-                  return Session.set('userIsAdmin', result);
-              }
-          );
-          this.next();
-      }
-  }
+    loginRequired: function(pause) {
+        if (!Meteor.userId()) {
+            if (Iron.Location.get().path != '/login') {
+                Session.set("loginRedirect", Iron.Location.get().path);
+            }
+            Router.go('login');
+        } else {
+            Meteor.call("userIsAdmin", function (error, result) {
+                    if (error) {
+                        console.log("error", error);
+                    }
+                    return Session.set('userIsAdmin', result);
+                }
+            );
+            this.next();
+        }
+    }
 };
 
 Router.onBeforeAction(OnBeforeActions.loginRequired, {
@@ -29,26 +29,31 @@ Router.onBeforeAction(OnBeforeActions.loginRequired, {
 });
 
 Router.route('/', function () {
-
     var user = Meteor.user();
-    if(user){
+    if (user) {
+        if (this.params.query.course) {
+            var courseCode = this.params.query.course;
+            Meteor.subscribe("coursesForUser", {
+                onReady: function() {
+                    var courseRedirect = Courses.findOne({courseCode : courseCode});
 
-        var courseRedirect = Courses.findOne({courseCode : this.params.query.course});
-        if(courseRedirect){
-            Router.go('room', {courseId: courseRedirect._id});
-        }else{
+                    if (courseRedirect) {
+                        Router.go('room', {courseId: courseRedirect._id});
+                    } else {
+                        Router.go('page404');
+                    }
+                }
+            });
+        } else {
             var lastCourse = user.profile.lastCourse;
-            if(lastCourse){
+            if (lastCourse) {
                 Router.go('room', {courseId: lastCourse});
-            }else{
+            } else {
                 Router.go('home');
             }
         }
     }
-}, {
-    waitOn: function () {
-        Meteor.subscribe('coursesForStudent');
-    }});
+});
 
 Router.route('/home', function () {
     this.render('home');
@@ -72,10 +77,10 @@ Router.route('/courses', function () {
 });
 
 Router.route('/violations', function () {
-  this.render('violations');
+    this.render('violations');
 },{
-  layoutTemplate:"defaultLayout",
-  name:'violations',
+    layoutTemplate:"defaultLayout",
+    name:'violations',
 });
 
 Router.route('/feedback', function () {
