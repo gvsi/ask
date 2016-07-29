@@ -1,5 +1,5 @@
 LIVE_URL = "https://ask.sli.is.ed.ac.uk/";
-ADMINS = ["s1432492"];
+ADMINS = [];
 
 SyncedCron.start();
 Meteor.startup(function() {
