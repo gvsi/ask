@@ -2,6 +2,12 @@ Students = new Mongo.Collection('students');
 Visits = new Mongo.Collection('visits');
 
 Meteor.methods({
+  /**
+   * @summary Removes the user's profile picture
+   * @isMethod true
+   * @memberOf Users
+   * @locus Server
+   */
   deleteProfilePicture: function() {
     var userId = Meteor.userId();
     if (userId) {
@@ -10,6 +16,13 @@ Meteor.methods({
       throw new Meteor.Error('invalid-permission', 'You should be logged in to do this');
     }
   },
+
+  /**
+   * @summary Logs the user's visit to a course
+   * @isMethod true
+   * @memberOf Users
+   * @locus Server
+   */
   visitCourse: function(courseId) {
     var userId = Meteor.userId();
     var currentDate = moment().startOf('day').toDate();
@@ -23,6 +36,18 @@ Meteor.methods({
       };
 
       Visits.insert(visitAttributes);
+    }
+  },
+
+  /**
+   * @summary Checks if a user is an admin or nit
+   * @isMethod true
+   * @memberOf Users
+   * @locus Server
+   */
+  userIsAdmin: function() {
+    if (Meteor.isServer) {
+      return ADMINS.indexOf(Meteor.user().username) != -1;
     }
   }
 });

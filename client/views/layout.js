@@ -8,7 +8,7 @@ Template.defaultLayout.rendered = function (){
 		var $progress = $(this)
 		$progress.circularProgress($progress.data())
 	})
-}
+};
 
 Template.body.events({
 	"click .alert": function(e, template){
@@ -23,10 +23,12 @@ Template.body.events({
 			}
 		});
 
-		if(type == "instructorNote"){
+		if (type == "instructorNote") {
 			loadPage(postId, true);
 			Router.go('room', {courseId: postCourseId}, {query: 'p='+postId});
-		}else if (type == "answerToPost" || type == "commentToAnswer") {
+		} else if (type == "reportedPost" || type == "reportedAnswer") {
+			Router.go('violations');
+		} else if (type == "answerToPost" || type == "commentToAnswer") {
 			var answerId = $(e.currentTarget).attr('data-answer-id');
 			loadPage(postId, true);
 			Router.go('room', {courseId: postCourseId}, {query: 'p='+postId, hash: answerId});
@@ -36,8 +38,8 @@ Template.body.events({
 });
 
 Tracker.autorun(function(){
-	Session.setDefault('DocumentTitle', 'Ask')
-  document.title = Session.get("DocumentTitle");
+	Session.setDefault('DocumentTitle', 'Ask');
+	document.title = Session.get("DocumentTitle");
 });
 
 Template.postLayout.helpers({

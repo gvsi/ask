@@ -1,74 +1,74 @@
 <template name="home">
-  <!-- Page Wrapper -->
+    <!-- Page Wrapper -->
     <div id="page-wrapper">
 
         <section id="banner">
-          <div class="inner">
-            <h2><img src="/images/home_logo.png" alt="ask" height="55px" class="m-t-10"></h2>
-            <p class="font-montserrat">
-              A modern and intuitive<br>Q&amp;A platform for the<br>University of Edinburgh<br><br>
-              <span class="bold fs-20">Ask, Answer, Learn!</span>
-            </p>
-          </div>
-          <a href="#one" class="more scrolly font-montserrat" hidden>Learn More</a>
+            <div class="inner">
+                <h2><img src="/images/home_logo.png" alt="ask" height="55px" class="m-t-10"></h2>
+                <p class="font-montserrat">
+                    A modern and intuitive<br>Q&amp;A platform for the<br>University of Edinburgh<br><br>
+                    <span class="bold fs-20">Ask, Answer, Learn!</span>
+                </p>
+            </div>
+            <a href="#one" class="more scrolly font-montserrat" hidden>Learn More</a>
         </section>
 
         <section id="one" class="wrapper style3 special font-montserrat">
-          <div class="inner">
-            <header class="major">
-              <h2>Your Courses</h2>
+            <div class="inner">
+                <header class="major">
+                    <h2>Your Courses</h2>
 
-            </header>
-            <ul class="features">
-              {{#each courses}}
-              <li class="courseFront">
-                <h3><span style="letter-spacing: 0; font-weight: 500;">{{name}}</span></h3>
-              </li>
-              {{/each}}
-            </ul>
-          </div>
+                </header>
+                <ul class="features">
+                    {{#each courses}}
+                        <li class="courseFront">
+                            <h3><span style="letter-spacing: 0; font-weight: 500;">{{name}}</span></h3>
+                        </li>
+                    {{/each}}
+                </ul>
+            </div>
         </section>
 
         <section id="cta" class="wrapper style4">
-          <div class="inner">
-            <header>
-              <h2 class="font-montserrat">Contact Ask</h2>
-              <p>We are always available for feedback, questions and suggestions. You can contact us using the feedback form provided.</p>
-            </header>
-            <ul class="actions vertical">
-              <li><a href="{{pathFor 'feedback'}}" class="button fit">Feedback</a></li>
-            </ul>
-          </div>
+            <div class="inner">
+                <header>
+                    <h2 class="font-montserrat">Contact Ask</h2>
+                    <p>We are always available for feedback, questions and suggestions. You can contact us using the feedback form provided.</p>
+                </header>
+                <ul class="actions vertical">
+                    <li><a href="{{pathFor 'feedback'}}" class="button fit">Feedback</a></li>
+                </ul>
+            </div>
         </section>
 
-      <!-- Footer -->
+        <!-- Footer -->
         <footer id="footer">
-          <ul class="copyright font-montserrat">
-            <li>&copy; 2015/16<br><br>The University of Edinburgh</li>
-          </ul>
+            <ul class="copyright font-montserrat">
+                <li>&copy; 2015/16<br><br>The University of Edinburgh</li>
+            </ul>
         </footer>
 
     </div>
 </template>
 
 <template name="welcomeModal">
-  <div class="modal fade slide-up disable-scroll" id="welcomeModal" tabindex="-1" role="dialog" aria-labelledby="modalSlideUpLabel" aria-hidden="false">
-    <div class="modal-dialog " style="width:50%">
-      <div class="modal-content-wrapper">
-        <div class="modal-content">
-          <div class="modal-header clearfix" style="margin-bottom: 30px; text-align: left">
-            <h5><strong>Welcome to Ask, a student led innovation piloting with Inf2C-CS.</strong></h5>
-            <p>Please keep in mind Ask enables anonymous posting for students who don't feel comfortable sharing their identity.
-               The University computing regulations can be viewed <a href="http://www.ed.ac.uk/files/atoms/files/golden_computing_regulations_-_ay15-16_0.pdf">here.</a> </p>
-            <p>A feedback form accessible from the top right menu is available to report bugs, request additional features or share your experience. </p>
-            <p> Feedback can also be submitted to <a href="mailto:studentsystems@ed.ac.uk">studentsystems@ed.ac.uk</a> </p>
-          </div>
-          <div class="modal-footer" style="margin-top: 16px;text-align: center;">
-            <button type="button" class="btn btn-default" data-dismiss="modal">Okay, thanks</button>
-          </div>
+    <div class="modal fade slide-up disable-scroll" id="welcomeModal" tabindex="-1" role="dialog" aria-labelledby="modalSlideUpLabel" aria-hidden="false">
+        <div class="modal-dialog " style="width:50%">
+            <div class="modal-content-wrapper">
+                <div class="modal-content">
+                    <div class="modal-header clearfix" style="margin-bottom: 30px; text-align: left">
+                        <h5><strong>Welcome to Ask, a student-led innovation piloting in 2016.</strong></h5>
+                        <p>Please keep in mind Ask enables anonymous posting for students who don't feel comfortable sharing their identity.
+                            The University computing regulations can be viewed <a href="http://www.ed.ac.uk/files/atoms/files/golden_computing_regulations_-_ay15-16_0.pdf">here.</a> </p>
+                        <p>A feedback form accessible from the top right menu is available to report bugs, request additional features or share your experience. </p>
+                        <p> Feedback can also be submitted to <a href="mailto:studentsystems@ed.ac.uk">studentsystems@ed.ac.uk</a> </p>
+                    </div>
+                    <div class="modal-footer" style="margin-top: 16px;text-align: center;">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Okay, thanks</button>
+                    </div>
+                </div>
+            </div>
+            <!-- /.modal-content -->
         </div>
-      </div>
-      <!-- /.modal-content -->
     </div>
-  </div>
 </template>

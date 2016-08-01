@@ -1,0 +1,110 @@
+*** Settings ***
+Library  Selenium2Library
+Suite setup  Open Browser  ${COURSE_PAGE}  ${BROWSER}
+Test setup  Setup before each test
+Suite teardown  Close All Browsers
+
+*** Variables ***
+${COURSE_PAGE}  http://localhost:3000/?course=INFR08018
+${BROWSER}  chrome
+
+*** Test Cases ***
+Post a question
+  Wait Until Page Contains Element  id=newQuestion
+  Click Element  id=newQuestion
+  Wait Until Page Contains Element  id=postTitleInput
+  Input Text  id=postTitleInput  Test Question
+  Click Element  id=composeTinyMCE_ifr
+  Press Key  id=composeTinyMCE_ifr  $
+  Press Key  id=composeTinyMCE_ifr  2
+  Press Key  id=composeTinyMCE_ifr  +
+  Press Key  id=composeTinyMCE_ifr  2
+  Press Key  id=composeTinyMCE_ifr  $
+  Click Button  id=composeSubmitBtn
+  Wait Until Page Contains  Test Question
+
+Search for a question
+  Wait Until Page Contains Element  id=search-link
+  Click Element  id=search-link
+  Input Text  id=overlay-search  Test Question
+  Wait Until Page Contains Element  jquery=.search-card:contains("$2+2$")
+
+Test Mathjax
+  Wait Until Page Contains Element  jquery=p:contains("Test Question")
+  Click Element  jquery=p:contains("Test Question")
+  Wait Until Page Contains Element  jquery=.MathJax
+
+Post an answer
+  Wait Until Page Contains Element  jquery=p:contains("Test Question")
+  Click Element  jquery=p:contains("Test Question")
+  Wait Until Page Contains Element  id=answerTinyMCE_ifr
+  Click Element  id=answerTinyMCE_ifr
+  Press Key  id=answerTinyMCE_ifr  t
+  Press Key  id=answerTinyMCE_ifr  3
+  Press Key  id=answerTinyMCE_ifr  s
+  Press Key  id=answerTinyMCE_ifr  7
+  Click Button  id=sendAnswerBtn
+  Wait Until Page Contains  t3s7
+
+Post a comment
+  Wait Until Page Contains Element  jquery=p:contains("Test Question")
+  Click Element  jquery=p:contains("Test Question")
+  Wait Until Page Contains  t3s7
+  Click Element  id=addCommentBtn
+  Click Element  css=.commentTinyMCE-wrapper iframe
+  Press Key  css=.commentTinyMCE-wrapper iframe  7
+  Press Key  css=.commentTinyMCE-wrapper iframe  e
+  Press Key  css=.commentTinyMCE-wrapper iframe  z
+  Press Key  css=.commentTinyMCE-wrapper iframe  t
+  Click Button  id=sendCommentBtn
+  Wait Until Page Contains  7ezt
+
+Delete an answer
+  Wait Until Page Contains Element  jquery=p:contains("Test Question")
+  Click Element  jquery=p:contains("Test Question")
+  Wait Until Page Contains  t3s7
+  Wait Until Page Contains Element  id=openDeleteAnswerModal
+  Click Element  id=openDeleteAnswerModal
+  Wait Until Page Contains Element  id=deleteAnswer
+  Click Element  id=deleteAnswer
+  Sleep  1
+  Page Should Not Contain  t3s7
+
+Delete a question
+  Wait Until Page Contains Element  jquery=p:contains("Test Question")
+  Click Element  jquery=p:contains("Test Question")
+  Wait Until Page Contains Element  jquery=button.delete
+  Click Element  jquery=button.delete
+  Wait Until Page Contains Element  id=deletePost
+  Click Button  id=deletePost
+  Page Should Not Contain Element  jquery=p:contains("Test Question")
+
+# The user must be an instructor and a question with name "Test upvote" and answer "upvote answer" must exist for these tests to work.
+Upvote a question
+  Wait Until Page Contains Element  jquery=p:contains("Test upvote")
+  Click Element  jquery=p:contains("Test upvote")
+  Wait Until Page Contains Element  id=upvoteQuestion
+  Click Element  id=upvoteQuestion
+  Page Should Contain Element  jquery=#upvoteQuestion:contains("1")
+  Page Should Contain  An instructor thinks this is a good question:
+  Click Element  id=upvoteQuestion
+  Page Should Contain Element  jquery=#upvoteQuestion:contains("0")
+
+Upvote an answer
+  Wait Until Page Contains Element  jquery=p:contains("Test upvote")
+  Click Element  jquery=p:contains("Test upvote")
+  Wait Until Page Contains Element  id=upvoteAnswer
+  Click Element  id=upvoteAnswer
+  Page Should Contain Element  jquery=.votingContainer:contains("1")
+  Page Should Contain Element  jquery=.votingContainer:has(i.fa-check-circle)
+  Click Element  id=upvoteAnswer
+  Page Should Not Contain Element  jquery=.votingContainer:contains("0")
+  Page Should Not Contain Element  jquery=.votingContainer:contains("1")
+  Page Should Not Contain Element  jquery=.votingContainer:has(i.fa-check-circle)
+
+*** Keywords ***
+Setup before each test
+  Go To  ${COURSE_PAGE}
+  Set Selenium Speed  0.2
+  Set Browser Implicit Wait	 10 seconds
+  Set Selenium Implicit Wait	10 seconds

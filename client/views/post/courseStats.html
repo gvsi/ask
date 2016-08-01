@@ -1,213 +1,213 @@
 <template name="courseStats">
-  {{#with course}}
-  <div class="container-fluid">
-    <div class="row">
-      <div class="col-md-8 col-lg-6">
-        <div class="row">
-          <div class="ar-1-1">
-            <div class="widget-1 panel no-border bg-complete no-margin">
-              <div class="panel-body">
-                <div class="pull-bottom bottom-left bottom-right ">
-                  <span class="label font-montserrat fs-12" style="text-shadow: 1px 1px rgba(0, 0, 0, 0.3);">{{courseCode}}</span>
-                  <br>
-                  <h3 class="text-white">{{name}}</h3>
-                  <span class="font-montserrat text-white fs-13">Academic year {{year}} ({{semester}})</span>
-                  {{#if isUserEnrolled}}
-                    <hr>
-                    {{#if isUserInstructor}}
-                      <button class="composeBtn btn btn-default btn-rounded m-r-10">Post new note</button><span class="text-white fs-14">or &nbsp;</span><button class="openCourseSettingsBtn btn btn-default btn-rounded m-r-10" data-target="#courseSettingsModal" data-toggle="modal">Edit Course Settings</button>
-                    {{else}}
-                      <button class="composeBtn btn btn-default btn-rounded m-r-10">Ask question</button><span class="text-white fs-14">or browse questions in the sidebar</span>
-                    {{/if}}
-                  {{/if}}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-md-6 col-lg-6 p-t-20" style="margin-left: -15px;margin-right: 15px;">
-            <div class="ar-1-1">
-              <div class="widget-2 panel no-border bg-complete no-margin widget-loader-bar">
-                <div class="panel-body no-padding">
-                  <div class="metro live-tile" data-mode="carousel" data-start-now="true" data-delay="3000">
-                    {{#if lastPost}}
-                    {{#with lastPost}}
-                    <div class="slide-front tiles slide active">
-                      {{>latestPostSlide}}
+    {{#with course}}
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-md-8 col-lg-6">
+                    <div class="row">
+                        <div class="ar-1-1">
+                            <div class="widget-1 panel no-border bg-complete no-margin">
+                                <div class="panel-body">
+                                    <div class="pull-bottom bottom-left bottom-right ">
+                                        <span class="label font-montserrat fs-12" style="text-shadow: 1px 1px rgba(0, 0, 0, 0.3);">{{courseCode}}</span>
+                                        <br>
+                                        <h3 class="text-white">{{name}}</h3>
+                                        <span class="font-montserrat text-white fs-13">Academic year {{year}} ({{semester}})</span>
+                                        {{#if isUserEnrolled}}
+                                            <hr>
+                                            {{#if isUserInstructor}}
+                                                <button class="composeBtn btn btn-default btn-rounded m-r-10">Post new note</button><span class="text-white fs-14">or &nbsp;</span><button class="openCourseSettingsBtn btn btn-default btn-rounded m-r-10" data-target="#courseSettingsModal" data-toggle="modal">Edit Course Settings</button>
+                                            {{else}}
+                                                <button class="composeBtn btn btn-default btn-rounded m-r-10">Ask question</button><span class="text-white fs-14">or browse questions in the sidebar</span>
+                                            {{/if}}
+                                        {{/if}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    {{/with}}
-                    {{else}}
-                      <div class="text-white" style="text-align: center;margin-top: 45%;font-weight: bold;font-size: 1.3em;">No posts yet</div>
-                    {{/if}}
-                    {{#each latestPosts}}
-                    <div class="slide-back tiles">
-                      {{>latestPostSlide}}
+                    <div class="row">
+                        <div class="col-md-6 col-lg-6 p-t-20" style="margin-left: -15px;margin-right: 15px;">
+                            <div class="ar-1-1">
+                                <div class="widget-2 panel no-border bg-complete no-margin widget-loader-bar">
+                                    <div class="panel-body no-padding">
+                                        <div class="metro live-tile" data-mode="carousel" data-start-now="true" data-delay="3000">
+                                            {{#if lastPost}}
+                                                {{#with lastPost}}
+                                                    <div class="slide-front tiles slide active">
+                                                        {{>latestPostSlide}}
+                                                    </div>
+                                                {{/with}}
+                                            {{else}}
+                                                <div class="text-white" style="text-align: center;margin-top: 45%;font-weight: bold;font-size: 1.3em;">No posts yet</div>
+                                            {{/if}}
+                                            {{#each latestPosts}}
+                                                <div class="slide-back tiles">
+                                                    {{>latestPostSlide}}
+                                                </div>
+                                            {{/each}}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 col-lg-6 p-t-20" style="padding-right: 0px;">
+                            <div class="ar-1-1">
+                                <div class="widget-3 panel no-border  no-margin">
+                                    <div class="panel-heading ">
+                                        <div class="panel-title fs-18">Other statistics
+                                        </div>
+                                    </div>
+                                    <div class="widget-3-table auto-overflow">
+                                        <table class="table table-hover">
+                                            <tbody>
+                                            <tr>
+                                                <td class="font-montserrat all-caps fs-12 padding-10">Total<br>posts</td>
+                                                <td>
+                                                    <span class="font-montserrat fs-12">{{getPublishedCount 'totalPosts'}}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-montserrat all-caps fs-12 padding-10">Total answers</td>
+                                                <td>
+                                                    <span class="font-montserrat fs-12 text-primary">{{getPublishedCount 'answers'}}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-montserrat all-caps fs-12 padding-10">Average <br>response time</td>
+                                                <td>
+                                                    <span class="font-montserrat fs-12 padding-10">{{averageResponseTime}}&nbsp;min</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-montserrat all-caps fs-12 padding-10">Instructors'<br>responses</td>
+                                                <td>
+                                                    <span class="font-montserrat fs-12">{{getPublishedCount 'instructorResponses'}}</span>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td class="font-montserrat all-caps fs-12 padding-10">Students'<br>responses</td>
+                                                <td>
+                                                    <span class="font-montserrat fs-12 text-primary">{{studentResponsesCount}}</span>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    {{/each}}
-                  </div>
                 </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-md-6 col-lg-6 p-t-20" style="padding-right: 0px;">
-            <div class="ar-1-1">
-              <div class="widget-3 panel no-border  no-margin">
-                <div class="panel-heading ">
-                  <div class="panel-title fs-18">Other statistics
-                  </div>
-                </div>
-                <div class="widget-3-table auto-overflow">
-                  <table class="table table-hover">
-                    <tbody>
-                      <tr>
-                        <td class="font-montserrat all-caps fs-12 padding-10">Total<br>posts</td>
-                        <td>
-                          <span class="font-montserrat fs-12">{{getPublishedCount 'totalPosts'}}</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="font-montserrat all-caps fs-12 padding-10">Total answers</td>
-                        <td>
-                          <span class="font-montserrat fs-12 text-primary">{{getPublishedCount 'answers'}}</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="font-montserrat all-caps fs-12 padding-10">Average <br>response time</td>
-                        <td>
-                          <span class="font-montserrat fs-12 padding-10">{{averageResponseTime}}&nbsp;min</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="font-montserrat all-caps fs-12 padding-10">Instructors'<br>responses</td>
-                        <td>
-                          <span class="font-montserrat fs-12">{{getPublishedCount 'instructorResponses'}}</span>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td class="font-montserrat all-caps fs-12 padding-10">Students'<br>responses</td>
-                        <td>
-                          <span class="font-montserrat fs-12 text-primary">{{studentResponsesCount}}</span>
-                        </td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 col-lg-6">
-        <div class="row">
-          <div class="col-lg-6">
-            <div class="ar-1-1">
-              <div class="widget-4 panel no-border bg-success widget no-margin" style="overflow:scroll">
-                <div class="panel-body">
-                  <span class="label font-montserrat fs-11 m-t-10">WHO'S ONLINE?</span>
-                  <div class="onlineUsersContainer">
-                    <br>
-                    <div class="text-white"><i class="fa fa-user"></i> {{{studentsOnlineText}}}</div>
-                    <div class="text-white m-t-10"><i class="fa fa-university"></i> {{{instructorsOnlineText}}}</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-6">
-            <div class="ar-1-1">
-              <div class="widget-4 panel no-border bg-info widget no-margin">
-                <div class="panel-body text-white">
-                  <div class="panel-title hint-text">
-                    <span class="font-montserrat fs-11 all-caps">UNANSWERED QUESTIONS:</span>
-                  </div>
-                  {{{unansweredQuestionsText}}}
+                <div class="col-md-4 col-lg-6">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="ar-1-1">
+                                <div class="widget-4 panel no-border bg-success widget no-margin" style="overflow:scroll">
+                                    <div class="panel-body">
+                                        <span class="label font-montserrat fs-11 m-t-10">WHO'S ONLINE?</span>
+                                        <div class="onlineUsersContainer">
+                                            <br>
+                                            <div class="text-white"><i class="fa fa-user"></i> {{{studentsOnlineText}}}</div>
+                                            <div class="text-white m-t-10"><i class="fa fa-university"></i> {{{instructorsOnlineText}}}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <div class="ar-1-1">
+                                <div class="widget-4 panel no-border bg-info widget no-margin">
+                                    <div class="panel-body text-white">
+                                        <div class="panel-title hint-text">
+                                            <span class="font-montserrat fs-11 all-caps">UNANSWERED QUESTIONS:</span>
+                                        </div>
+                                        {{{unansweredQuestionsText}}}
 
-                  <br><br>
+                                        <br><br>
 
-                  <div class="panel-title hint-text">
-                    <span class="font-montserrat fs-11 all-caps">UNREAD POSTS:</span>
-                  </div>
-                  {{{unreadPostsText}}}
+                                        <div class="panel-title hint-text">
+                                            <span class="font-montserrat fs-11 all-caps">UNREAD POSTS:</span>
+                                        </div>
+                                        {{{unreadPostsText}}}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row hidden-md m-t-30">
+                        <div class="col-lg-12">
+                            {{>visitsGraph selector='graph-lg'}}
+                        </div>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
+            <div class="row hidden-lg m-t-20">
+                <div class="col-md-12">
+                    {{>visitsGraph selector='graph-md'}}
+                </div>
+            </div>
         </div>
-        <div class="row hidden-md m-t-30">
-          <div class="col-lg-12">
-            {{>visitsGraph selector='graph-lg'}}
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="row hidden-lg m-t-20">
-      <div class="col-md-12">
-        {{>visitsGraph selector='graph-md'}}
-      </div>
-    </div>
-  </div>
 
-  {{/with}}
+    {{/with}}
 </template>
 
 <template name="latestPostSlide">
-  <div class="padding-30">
-    <div class="pull-top">
-      <div class="pull-left visible-lg visible-xlg">
-        <i class="fa fa-question-circle" style="font-size:40px"></i>
-      </div>
-      <div class="pull-right">
-        <div class="viewCountLabel badge-icon simptip-position-bottom simptip-smooth simptip-movable" data-tooltip="Views">
-          <i class="fa fa-eye"></i> {{viewCount}}&nbsp;
-        </div>
+    <div class="padding-30">
+        <div class="pull-top">
+            <div class="pull-left visible-lg visible-xlg">
+                <i class="fa fa-question-circle" style="font-size:40px"></i>
+            </div>
+            <div class="pull-right">
+                <div class="viewCountLabel badge-icon simptip-position-bottom simptip-smooth simptip-movable" data-tooltip="Views">
+                    <i class="fa fa-eye"></i> {{viewCount}}&nbsp;
+                </div>
 
-        <div class="upvoteCountLabel badge-icon simptip-position-bottom simptip-smooth simptip-movable" data-tooltip="Upvotes">
-          <i class="fa fa-thumbs-up"></i> {{upvotesCount}}&nbsp;
-        </div>
+                <div class="upvoteCountLabel badge-icon simptip-position-bottom simptip-smooth simptip-movable" data-tooltip="Upvotes">
+                    <i class="fa fa-thumbs-up"></i> {{upvotesCount}}&nbsp;
+                </div>
 
-        <div class="answerCountLabel badge-icon simptip-position-bottom simptip-smooth simptip-movable" data-tooltip="Answers">
-          <i class="fa fa-comment"></i> {{answersCount}}
+                <div class="answerCountLabel badge-icon simptip-position-bottom simptip-smooth simptip-movable" data-tooltip="Answers">
+                    <i class="fa fa-comment"></i> {{answersCount}}
+                </div>
+            </div>
+            <div class="clearfix"></div>
         </div>
-      </div>
-      <div class="clearfix"></div>
+        <div class="pull-bottom p-b-20">
+            <p class="p-t-10 fs-12 p-b-5 hint-text">{{dateFromNow}}</p>
+            <h5 class="postTitle no-margin text-white p-b-10" style="cursor:pointer">{{title}}</h5>
+        </div>
     </div>
-    <div class="pull-bottom p-b-20">
-      <p class="p-t-10 fs-12 p-b-5 hint-text">{{dateFromNow}}</p>
-      <h5 class="postTitle no-margin text-white p-b-10" style="cursor:pointer">{{title}}</h5>
-    </div>
-  </div>
 </template>
 
 <template name="visitsGraph">
-  <div class="ar-1-1">
-    <div class="widget-5 panel panel-condensed  no-margin no-border widget-loader-circle" style="background-color: transparent">
-      <div class="panel-body no-padding">
-        <div class="tab-content p-l-20 p-r-20">
-          <div class="tab-pane no-padding active" id="dailyVisitsTab">
-            <div class="full-width">
-              <div id="{{selector}}"></div>
-            </div>
-          </div>
-        </div>
-        <div class="p-t-20 p-l-20 p-r-20 p-b-30">
-          <div class="row">
-            <div class="col-md-5">
-              <div class="row"><span class="fs-16 text-black">Visits today:</span></div>
-              <div class="row"><span class="fs-16 text-black">Visits this week:</span></div>
-            </div>
-            <div class="col-md-7">
-              <div class="row">
-                <span class="font-montserrat bold text-success m-r-20 fs-16">{{visitsToday}}</span>
-              </div>
-              <div class="row">
-                <p class="font-montserrat bold text-danger m-r-20 fs-16">{{getPublishedCount 'thisWeekVisits'}}</p>
-              </div>
-            </div>
+    <div class="ar-1-1">
+        <div class="widget-5 panel panel-condensed  no-margin no-border widget-loader-circle" style="background-color: transparent">
+            <div class="panel-body no-padding">
+                <div class="tab-content p-l-20 p-r-20">
+                    <div class="tab-pane no-padding active" id="dailyVisitsTab">
+                        <div class="full-width">
+                            <div id="{{selector}}"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="p-t-20 p-l-20 p-r-20 p-b-30">
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="row"><span class="fs-16 text-black">Visits today:</span></div>
+                            <div class="row"><span class="fs-16 text-black">Visits this week:</span></div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="row">
+                                <span class="font-montserrat bold text-success m-r-20 fs-16">{{visitsToday}}</span>
+                            </div>
+                            <div class="row">
+                                <p class="font-montserrat bold text-danger m-r-20 fs-16">{{getPublishedCount 'thisWeekVisits'}}</p>
+                            </div>
+                        </div>
 
-          </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
     </div>
-  </div>
 </template>

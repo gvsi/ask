@@ -4,18 +4,18 @@
 # 'meteor add' and 'meteor remove' will edit this file for you,
 # but you can also edit it by hand.
 
-less
+less@2.7.4
 mizzao:bootstrap-3
-jquery
+jquery@1.11.9
 momentjs:moment
 mrt:modernizr-meteor
 fortawesome:fontawesome
 revox:pages-core
 iron:router
 themeteorchef:jquery-validation
-check
-accounts-password
-accounts-base
+check@1.2.3
+accounts-password@1.2.12
+accounts-base@1.2.9
 hillmark:meteor-identicon
 matteodem:easy-search
 tomi:upload-server
@@ -30,7 +30,7 @@ tmeasday:publish-counts
 agnito:simptip
 houston:admin
 nvd3:nvd3
-email
+email@1.1.16
 percolate:synced-cron
 maazalik:highcharts
 risul:autocomplete
@@ -43,15 +43,18 @@ dreamerslab:jquery.actual
 anti:fake
 gadicohen:headers
 chuangbo:cookie
-standard-minifiers
-meteor-base
-mobile-experience
-mongo
-blaze-html-templates
-session
-tracker
-logging
-reload
-random
-ejson
-spacebars
+meteor-base@1.0.4
+mobile-experience@1.0.4
+mongo@1.1.10
+blaze-html-templates@1.0.4
+session@1.1.6
+tracker@1.1.0
+logging@1.1.14
+reload@1.1.10
+random@1.0.10
+ejson@1.0.12
+spacebars@1.0.12
+standard-minifier-css@1.1.8
+standard-minifier-js@1.1.8
+okgrow:analytics
+mizzao:timesync

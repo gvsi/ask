@@ -24,7 +24,7 @@ Meteor.methods({
 								name : toTitleCase(students[i].STU_FUSD),
 								surname: toTitleCase(students[i].STU_SURN),
 								emailPreferences: 'realTime',
-								//email: students[i].STU_CODE.toLowerCase() + '@sms.ed.ac.uk'
+								email: students[i].STU_CODE.toLowerCase() + '@sms.ed.ac.uk'
 							}
 						},
 						$unset : {
@@ -104,8 +104,6 @@ Meteor.methods({
 				}
 			});
 		}
-
-
 	}
 }
 

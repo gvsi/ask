@@ -1,22 +1,22 @@
 <template name="courses">
-  <table class="table table-hover" cellspacing="0" style="width: 70%;margin-left: auto;margin-right: auto;">
-      <thead>
-          <tr>
-              <th>Course code</th>
-              <th>Course name</th>
-              <th>Year</th>
-              <th>Questions</th>
-          </tr>
-      </thead>
-      <tbody>
+    <table class="table table-hover" cellspacing="0" style="width: 70%;margin-left: auto;margin-right: auto;">
+        <thead>
+        <tr>
+            <th>Course code</th>
+            <th>Course name</th>
+            <th>Year</th>
+            <th>Questions</th>
+        </tr>
+        </thead>
+        <tbody>
         {{#each allCourses}}
-          <tr class="courseLink" style="cursor:pointer;">
-              <td>{{courseCode}}</td>
-              <td>{{name}}</td>
-              <td>{{year}}</td>
-              <td>{{semester}}</td>
-          </tr>
+            <tr class="courseLink" style="cursor:pointer;">
+                <td>{{courseCode}}</td>
+                <td>{{name}}</td>
+                <td>{{year}}</td>
+                <td>{{semester}}</td>
+            </tr>
         {{/each}}
-      </tbody>
-  </table>
+        </tbody>
+    </table>
 </template>

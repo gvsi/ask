@@ -354,9 +354,17 @@
     }
 
     .answer{
+      .answerButtonsContainer {
+        opacity: 0;
+      }
       overflow: hidden;
       position: relative;
 
+      &:hover {
+        & .answerButtonsContainer {
+          opacity: 1;
+        }
+      }
       p {
         margin: 0px 0px 2px 0px;
       }
@@ -427,52 +435,65 @@
       }
     }
 
+    .reportedAnswer {
+      text-align: center;
+      padding: 20px;
+      font-style: italic;
+    }
+
     .comments{
       overflow:hidden;
       margin-left:75px;
       hr {
         margin-top: 20px!important;
       }
-      .thumbnail-wrapper{
-        width:30px;
-        margin:0px 10px 0px 10px;
-        border-width:1px;
-        border-style: solid;
-        color: #C3C3C3;
-      }
-      .commentBodyContainer {
-        display:table;
-        .commentBody {
-          min-height: 25px;
-          p {
-            font-size: 12.5px;
-            line-height: 18px;
-            margin: 0;
+      .comment {
+        &:hover {
+          & .commentCtrlBtns {
+
           }
         }
-        .commentCtrlBtns {
-          margin-top: 10px;
-          .label {
-            border-style: solid;
-            border-width: 1px;
-            border-radius: 5px;
-            background-color: #fff;
-            border-color: #f0f0f0;
-            font-weight: 100;
+        .thumbnail-wrapper {
+          width: 30px;
+          margin: 0px 10px 0px 10px;
+          border-width: 1px;
+          border-style: solid;
+          color: #C3C3C3;
+        }
+        .commentBodyContainer {
+          display: table;
+          .commentBody {
+            min-height: 25px;
+            p {
+              font-size: 12.5px;
+              line-height: 18px;
+              margin: 0;
+            }
           }
-          #editCommentBtn:hover {
-            font-weight: 600;
-            border-width: 0px;
-            cursor: pointer;
-            background-color: @color-complete;
-            color: #fff;
-          }
-          #deleteCommentBtn:hover {
-            font-weight: 600;
-            border-width: 0px;
-            cursor: pointer;
-            background-color: @color-danger;
-            color: #fff;
+          .commentCtrlBtns {
+            margin-top: 10px;
+            .label {
+              border-style: solid;
+              border-width: 1px;
+              border-radius: 5px;
+              background-color: #fff;
+              border-color: #f0f0f0;
+              font-weight: 100;
+            }
+            #editCommentBtn:hover {
+              font-weight: 600;
+              border-width: 0px;
+              cursor: pointer;
+              background-color: @color-complete;
+              color: #fff;
+            }
+            #deleteCommentBtn:hover {
+              font-weight: 600;
+              border-width: 0px;
+              cursor: pointer;
+              background-color: @color-danger;
+              color: #fff;
+            }
           }
         }
       }

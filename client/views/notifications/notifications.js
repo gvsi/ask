@@ -1,41 +1,41 @@
 Template.notifications.rendered = function(){
-		// close sidebar for mobile
-	  $("body").removeClass("sidebar-open")
+	// close sidebar for mobile
+	$("body").removeClass("sidebar-open")
 
-		//Set Title
-		Session.set("DocumentTitle","Notifications | Ask");
+	//Set Title
+	Session.set("DocumentTitle","Notifications | Ask");
 
-		//hide timeline blocks which are outside the viewport
-		setTimeout(function () {
-			var $timeline_block = $('.timeline-block');
+	//hide timeline blocks which are outside the viewport
+	setTimeout(function () {
+		var $timeline_block = $('.timeline-block');
 
+		$timeline_block.each(function(){
+			if($(this).offset().top > $(window).scrollTop()+$(window).height()*0.75) {
+				$(this).find('.timeline-point, .timeline-content').addClass('is-hidden');
+			}
+		});
+
+		//on scolling, show/animate timeline blocks when enter the viewport
+		$(window).on('scroll', function(){
 			$timeline_block.each(function(){
-				if($(this).offset().top > $(window).scrollTop()+$(window).height()*0.75) {
-					$(this).find('.timeline-point, .timeline-content').addClass('is-hidden');
+				if( $(this).offset().top <= $(window).scrollTop()+$(window).height()*0.75 && $(this).find('.timeline-point').hasClass('is-hidden') ) {
+					$(this).find('.timeline-point, .timeline-content').removeClass('is-hidden').addClass('bounce-in');
 				}
 			});
+		});
+	}, 500);
 
-			//on scolling, show/animate timeline blocks when enter the viewport
-			$(window).on('scroll', function(){
-				$timeline_block.each(function(){
-					if( $(this).offset().top <= $(window).scrollTop()+$(window).height()*0.75 && $(this).find('.timeline-point').hasClass('is-hidden') ) {
-						$(this).find('.timeline-point, .timeline-content').removeClass('is-hidden').addClass('bounce-in');
-					}
-				});
-			});
-		}, 500);
+	var notifications = Notifications.find({seen: false}).fetch();
+	notifications.forEach(function (notification) {
+		Meteor.call("seeNotification", notification._id , function(error, result){
+			if(error){
+				console.log("error", error);
+			}
+			if(result){
 
-		var notifications = Notifications.find({seen: false}).fetch();
-		notifications.forEach(function (notification) {
-				 Meteor.call("seeNotification", notification._id , function(error, result){
-					if(error){
-						console.log("error", error);
-					}
-					if(result){
-
-					}
-				 });
-		 });
+			}
+		});
+	});
 }
 
 Template.notifications.events({
@@ -73,24 +73,26 @@ Template.notifications.helpers({
 		}
 	},
 	dateFromNow: function() {
-    return moment(this.createdAt).fromNow();
-  },
-  textWithoutTags: function() {
-    var dummyNode = document.createElement('div'),
-    resultText = '';
-    dummyNode.innerHTML = this.text;
-    resultText = dummyNode.innerText || dummyNode.textContent
+		return moment(this.createdAt).fromNow();
+	},
+	textWithoutTags: function() {
+		var dummyNode = document.createElement('div'),
+			resultText = '';
+		dummyNode.innerHTML = this.text;
+		resultText = dummyNode.innerText || dummyNode.textContent
 		if(resultText.length > 350){
-    	return resultText.substring(0,350) + "...";
+			return resultText.substring(0,350) + "...";
 		}else{
 			return resultText;
 		}
-  },
+	},
 	iconType: function(){
 		var iconType="";
 		if(this.type == "instructorNote"){
 			iconType = '  <div class="timeline-point warning"><i style="margin-left:-6px;" class="fa fa-file-o"></i></div>';
-		}else{
+		} else if (this.type == "reportedPost" || this.type == "reportAnswer") {
+			iconType = '  <div class="timeline-point warning"><i class="fa fa-exclamation-triangle"></i></div>';
+		} else {
 			iconType = '  <div class="timeline-point success"><i class="pg-comment"></i></div>';
 		}
 

@@ -1,7 +1,22 @@
 Meteor.publish('posts', function(courseId) {
 	if (this.userId) {
 		var self = this;
-		var cursor = Posts.find({courseId: courseId, isDeleted: { $ne: true}},{fields: {revisionHistory: 0, type: 0, isDeleted: 0, responseTime: 0}},{sort: {createdAt: -1}});
+		var cursor = Posts.find(
+			{
+				courseId: courseId,
+				isDeleted: { $ne: true},
+				$and: [{report: {$ne: "violating"}}, {report: {$ne: "in_review"}}]
+			},
+			{
+				fields: {
+					revisionHistory: 0,
+					type: 0,
+					isDeleted: 0,
+					responseTime: 0
+				}
+			},
+			{sort: {createdAt: -1}}
+		);
 
 		var handle = cursor.observeChanges({
 			added: function (id, doc) {
@@ -63,14 +78,57 @@ Meteor.publish('posts', function(courseId) {
 	}
 });
 
-Meteor.publish('coursesForStudent', function () {
-	var user = Meteor.users.findOne({_id: this.userId}, {fields: {'profile.courses': 1}});
+Meteor.publish('reportedPosts', function () {
+	var user = Meteor.users.findOne({_id: this.userId});
 	if (user) {
-		courses = user.profile.courses;
-		if (!courses) {
-			throw new Meteor.Error("No courses for this student");
+		if (ADMINS.indexOf(user.username) != -1) {
+			return Posts.find({report: "in_review"});
+		} else {
+			return []
 		}
-		return Courses.find({'_id': {$in: courses}});
+	} else {
+		throw new Meteor.Error('invalid-user', 'This user does not exist');
+	}
+});
+
+Meteor.publish('allReports', function() {
+	var user = Meteor.users.findOne({_id: this.userId});
+	if (user) {
+		if (ADMINS.indexOf(user.username) != -1) {
+			return Reports.find({}, {sort: {createdAt: -1}});
+		} else {
+			return []
+		}
+	} else {
+		throw new Meteor.Error('invalid-user', 'This user does not exist');
+	}
+});
+
+Meteor.publish('allAdmins', function() {
+	var user = Meteor.users.findOne({_id: this.userId});
+	if (user) {
+		if (ADMINS.indexOf(user.username) != -1) {
+			return Reports.find({}, {sort: {createdAt: -1}});
+		} else {
+			return []
+		}
+	} else {
+		throw new Meteor.Error('invalid-user', 'This user does not exist');
+	}
+});
+
+Meteor.publish('coursesForUser', function () {
+	var user = Meteor.users.findOne({_id: this.userId});
+	if (user) {
+		if (ADMINS.indexOf(user.username) != -1) {
+			return Courses.find({}); //TODO: only active courses
+		} else {
+			courses = user.profile.courses;
+			if (!courses) {
+				throw new Meteor.Error("No courses for this student");
+			}
+			return Courses.find({'_id': {$in: courses}});
+		}
 	} else {
 		throw new Meteor.Error('invalid-user', 'This user does not exist');
 	}
@@ -104,7 +162,7 @@ Meteor.publish('answers', function (postId) {
 		var post = Posts.find({_id: postId, isDeleted: { $ne: true}});
 		if(post){
 			var self = this;
-			var cursor = Answers.find({'postId': postId, isDeleted: {$ne: true}},{fields: {revisionHistory: 0}},{sort: {isInstructor: -1, isInstructorUpvoted: -1, voteCount: -1, createdAt: 1}});
+			var cursor = Answers.find({'postId': postId, isDeleted: {$ne: true}, report: {$ne: "violating"}},{fields: {revisionHistory: 0}},{sort: {isInstructor: -1, isInstructorUpvoted: -1, voteCount: -1, createdAt: 1}});
 
 			var handle = cursor.observeChanges({
 				added: function (id, doc) {
@@ -315,7 +373,7 @@ var instructors = Courses.findOne({'_id':courseId}).instructors;
 var users = Meteor.users.find({'username': {$in: instructors}, 'status.online':true},{fields: {'username': 1, 'profile.name': 1, 'profile.surname': 1,'profile.image':1, 'status.online': 1}});
 return users;
 
-})
+});
 
 Meteor.publish("draft", function(id, type){
 	if (type == "post") {
